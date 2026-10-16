@@ -57,7 +57,15 @@ ${row.map((cell, j) => `                    <td class="px-4 py-4 ${j === 0 ? 'fo
 }
 
 export function render(spec) {
-  const tocItems = [...spec.toc, ['mistakes', 'Common Mistakes'], ['faq', 'FAQ']];
+  // The product cards are a numbered section of their own, so they take a slot in
+  // the table of contents too — otherwise every entry after them is off by one.
+  const tocItems = [
+    ...spec.toc.slice(0, spec.picksAfter),
+    ['top-picks', spec.picksToc ?? 'Our Top Picks'],
+    ...spec.toc.slice(spec.picksAfter),
+    ['mistakes', 'Common Mistakes'],
+    ['faq', 'FAQ'],
+  ];
   const toc = tocItems.map(([a, l], i) =>
     `          <a href="#${a}" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">${i + 1}. ${l}</a>`
   ).join('\n');

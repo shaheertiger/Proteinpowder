@@ -1,0 +1,1002 @@
+---
+import Layout from "../layouts/Layout.astro";
+import MoreInCategory from "../components/MoreInCategory.astro";
+import { AUTHORS, DEFAULT_AUTHOR, authorSchema } from "../data/authors";
+import { SITE_NAME, SITE_URL } from "../data/site";
+import AuthorAvatar from "../components/AuthorAvatar.astro";
+import QuickPicks from "../components/QuickPicks.astro";
+import AuthorBio from "../components/AuthorBio.astro";
+import { amazonLink } from "../data/affiliate";
+import TrustBadge from "../components/TrustBadge.astro";
+import SocialProof from "../components/SocialProof.astro";
+import SpecGrid from "../components/SpecGrid.astro";
+import productImages from "../data/product-images.json";
+import { pageDates } from "../data/dates";
+
+const moreInCategory = [
+  {
+    "title": "Whey vs Plant Protein",
+    "url": "/whey-vs-plant-protein/"
+  },
+  {
+    "title": "How Much Protein Do I Need?",
+    "url": "/how-much-protein-do-i-need/"
+  },
+  {
+    "title": "When to Take Protein Powder",
+    "url": "/when-to-take-protein-powder/"
+  }
+];
+const author = AUTHORS[DEFAULT_AUTHOR];
+const dates = pageDates(Astro.url.pathname, { published: "2026-10-16", modified: "2026-10-16" });
+const title = "Best Plant-Based Protein Powder: 6 Picks Worth Buying";
+const description =
+  "Six plant-based protein powders ranked by protein per scoop, leucine, cost per 25 g and third-party testing, plus why plant users need a slightly bigger scoop.";
+
+const PRODUCTS: {
+  id: string;
+  name: string;
+  brand?: string;
+  badge: string;
+  category: string;
+  description: string;
+  pros: string[];
+  cons: string[];
+  bottomLine: string;
+  specs?: Record<string, string>;
+  rating?: number;
+  reviewCount?: number;
+  amazonUrl?: string;
+}[] = [
+  {
+    "id": "plant-garden-of-life-sport",
+    "name": "Garden of Life Sport Organic Plant-Based Protein",
+    "brand": "Garden of Life",
+    "badge": "Best Overall",
+    "category": "Multi-source blend (pea, navy bean, lentil, garbanzo)",
+    "description": "The most complete package in the category: about 30 g of protein per serving from an organic multi-legume blend, NSF Certified for Sport, and a dose that clears the leucine threshold without any adjustment. It suits lifters and tested athletes who want one plant protein that covers dose, certification and organic sourcing in one tub.",
+    "pros": [
+      "About 30 g of protein per serving, enough to match a 25 g whey scoop on leucine",
+      "NSF Certified for Sport, per the brand and NSF listing at the time of writing",
+      "Multi-source legume blend covers amino acid gaps better than single-source pea"
+    ],
+    "cons": [
+      "Mid-to-premium cost per 25 g of protein",
+      "Stevia-sweetened flavors draw aftertaste complaints from some buyers"
+    ],
+    "bottomLine": "If you want one plant protein that gets dose, testing and sourcing right, this is the one to buy.",
+    "specs": {
+      "Protein / serving": "About 30 g (label, varies by flavor)",
+      "Calories": "About 160-170 (flavor-dependent)",
+      "Third-party tested": "NSF Certified for Sport (verify flavor)",
+      "Best for": "Lifters and tested athletes"
+    }
+  },
+  {
+    "id": "plant-vega-sport-premium",
+    "name": "Vega Sport Premium Protein",
+    "brand": "Vega",
+    "badge": "Best for Performance",
+    "category": "Multi-source blend (pea, pumpkin seed, sunflower seed)",
+    "description": "Vega Sport is the long-running performance plant protein, with about 30 g of protein per serving from pea, pumpkin and sunflower seed and NSF Certified for Sport status. Buyers commonly report it as one of the more drinkable plant shakes in water. It is a close second to Garden of Life Sport and the better pick if you prefer its flavors.",
+    "pros": [
+      "About 30 g of protein per serving, a full leucine-matched dose",
+      "NSF Certified for Sport, per the brand at the time of writing",
+      "Widely reported as one of the easier plant proteins to drink straight"
+    ],
+    "cons": [
+      "Mid-to-premium cost per 25 g of protein",
+      "Not organic, if that matters to you"
+    ],
+    "bottomLine": "A proven, certified 30 g plant protein that is a near tie with our top pick.",
+    "specs": {
+      "Protein / serving": "About 30 g (label, varies by flavor)",
+      "Calories": "About 160 (flavor-dependent)",
+      "Third-party tested": "NSF Certified for Sport (verify flavor)",
+      "Best for": "Endurance and strength athletes"
+    }
+  },
+  {
+    "id": "plant-now-sports-pea-protein",
+    "name": "NOW Sports Pea Protein (Unflavored)",
+    "brand": "NOW",
+    "badge": "Best Budget",
+    "category": "Single-source pea protein isolate",
+    "description": "NOW's unflavored pea protein delivers about 24 g of protein per scoop with nothing added, at one of the lowest costs per 25 g in the category. NOW runs its own in-house testing lab, which is more than most budget brands can say. It tastes like plain pea protein, so it works best blended into smoothies, oats or baking rather than mixed with water.",
+    "pros": [
+      "Budget-tier cost per 25 g of protein at typical retail prices",
+      "No sweeteners, gums or flavorings",
+      "Large tubs bring the cost per gram down further"
+    ],
+    "cons": [
+      "Earthy taste and thick texture if mixed with water alone",
+      "Single-source pea, so slightly lower in methionine than blends"
+    ],
+    "bottomLine": "The cheapest honest gram of plant protein on our list, if you are willing to blend it into something.",
+    "specs": {
+      "Protein / serving": "About 24 g (label)",
+      "Calories": "About 120",
+      "Third-party tested": "Brand in-house lab testing",
+      "Best for": "Budget buyers and smoothies"
+    }
+  },
+  {
+    "id": "plant-naked-pea",
+    "name": "Naked Pea Protein",
+    "brand": "Naked Nutrition",
+    "badge": "Best Single Ingredient",
+    "category": "Single-source yellow pea protein",
+    "description": "Naked Pea has one ingredient: yellow pea protein, sourced from US and Canadian farms according to the brand. That gives it the best protein-per-calorie ratio on our list, about 27 g in roughly 120 calories, and makes it the easiest to cook with. It suits people who want to control exactly what goes into their shake and are not chasing a sport certification.",
+    "pros": [
+      "About 27 g of protein in roughly 120 calories per serving",
+      "One ingredient, with no sweeteners or gums",
+      "Budget-tier cost per 25 g of protein"
+    ],
+    "cons": [
+      "Unflavored base tastes earthy on its own",
+      "No NSF or Informed Sport certification we could confirm"
+    ],
+    "bottomLine": "The cleanest label and best protein density here, ideal for cooking and smoothies.",
+    "specs": {
+      "Protein / serving": "About 27 g (label)",
+      "Calories": "About 120",
+      "Third-party tested": "No sport certification confirmed",
+      "Best for": "Cutting, cooking and baking"
+    }
+  },
+  {
+    "id": "plant-orgain-organic-protein",
+    "name": "Orgain Organic Protein Plant-Based Powder",
+    "brand": "Orgain",
+    "badge": "Best for Easy Drinking",
+    "category": "Organic blend (pea, brown rice, chia seed)",
+    "description": "Orgain is the plant protein most people find in a supermarket, and buyers widely report it as one of the milder, sweeter options to drink. The catch is the dose: about 21 g of protein per two-scoop serving and roughly 150 calories, so you need about one and a half servings after training to reach a leucine-matched dose. It suits beginners and casual users more than serious lifters.",
+    "pros": [
+      "Widely reported as easy to drink, even in water",
+      "USDA Organic pea, brown rice and chia seed blend",
+      "Easy to find in grocery stores and big-box retailers"
+    ],
+    "cons": [
+      "Only about 21 g of protein per serving, so cost per 25 g is higher than it looks",
+      "Contains erythritol, which can upset some stomachs"
+    ],
+    "bottomLine": "Pleasant and widely available, but buy it for taste, not for protein value.",
+    "specs": {
+      "Protein / serving": "About 21 g (label, 2 scoops)",
+      "Calories": "About 150",
+      "Third-party tested": "No sport certification confirmed",
+      "Best for": "Beginners and casual use"
+    }
+  },
+  {
+    "id": "plant-momentous-essential",
+    "name": "Momentous Essential Plant-Based Protein",
+    "brand": "Momentous",
+    "badge": "Best for Tested Athletes",
+    "category": "Pea and brown rice blend",
+    "description": "Momentous built its name on certification, and its plant protein carries both NSF Certified for Sport and Informed Sport status, per the brand at the time of writing. That double coverage is the main reason to pay its premium price. At about 20 g of protein per serving, you need roughly one and a half servings to match a 25 g whey scoop on leucine, which pushes the effective cost higher still.",
+    "pros": [
+      "NSF Certified for Sport and Informed Sport, per the brand (verify flavor)",
+      "Short ingredient list built on a complementary pea and rice blend",
+      "Strong fit for athletes in drug-tested sport"
+    ],
+    "cons": [
+      "Premium cost per 25 g of protein",
+      "About 20 g per serving means 1.5 servings for a leucine-matched dose"
+    ],
+    "bottomLine": "Worth the premium only if double certification matters to you; otherwise our top two give more protein for less.",
+    "specs": {
+      "Protein / serving": "About 20 g (label)",
+      "Calories": "Varies by flavor; see label",
+      "Third-party tested": "NSF Certified for Sport, Informed Sport (verify)",
+      "Best for": "Drug-tested athletes"
+    }
+  }
+];
+
+const schema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Home",
+          item: `${SITE_URL}/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Best Lists",
+          item: `${SITE_URL}/best-of/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 3,
+          name: "Best Plant-Based Protein Powder",
+          item: `${SITE_URL}/best-plant-based-protein-powder/`,
+        },
+      ],
+    },
+    {
+      "@type": "FAQPage",
+      mainEntity: [
+        {
+          "@type": "Question",
+          "name": "Is plant-based protein as good as whey for building muscle?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "At matched doses, mostly yes. Trials comparing pea, rice or soy protein with whey during resistance training have found broadly similar gains in muscle and strength, and a 12-week study found vegans and omnivores eating about 1.6 g/kg per day gained at similar rates. Whey wins gram for gram on leucine, so plant users should simply take a slightly bigger scoop, around 30-35 g."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the best plant protein source?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Soy isolate and pea protein are the strongest single sources, with soy closest to dairy on digestibility scores. Blends of pea with rice, or with other legumes and seeds, cover each other's limiting amino acids and are the safest default. Hemp and rice alone are weaker as a main protein source and work better as part of a blend or as a smoothie booster."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Do plant-based protein powders have heavy metals?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Many contain small amounts, and independent testing has found plant powders carry more lead on average than dairy ones, with chocolate flavors tending higher. The risk is cumulative, not acute. Choose a third-party tested product, favor unflavored or vanilla if you take several servings daily, and talk to a doctor first if you are pregnant or have kidney disease."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How many grams of plant protein should be in a shake?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Aim for about 30-35 g of plant protein per shake, which supplies roughly the 2.5 g of leucine you would get from 25 g of whey. Older adults can go toward 35-40 g. If your powder lists 20 g per serving, use one and a half servings after training, or pair a single serving with a meal that adds protein of its own."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is pea protein a complete protein?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Pea protein contains all nine essential amino acids, but methionine is relatively low, so on digestibility scores it ranks below whey and soy. In practice, at a 25-35 g dose and alongside a varied diet that includes grains, nuts or soy, the shortfall is small. Pea and rice blends close the gap entirely, which is why they are so common."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can plant protein powder cause bloating?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, for some people. The usual causes are added ingredients rather than the protein itself: sugar alcohols such as erythritol, fibers such as inulin, and gums such as xanthan or guar. Large single servings and fast drinking can contribute too. An unflavored single-ingredient pea isolate is the simplest way to test whether the protein or the extras are the problem."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Are plant protein powders safe during pregnancy?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Many people use protein powder during pregnancy, but because of the heavy-metal findings in plant powders, this is a question for your doctor or a registered dietitian rather than a label. If you are cleared to use one, choose a third-party tested product, prefer unflavored or vanilla, keep it to one serving a day, and get most of your protein from whole foods."
+          }
+        }
+      ],
+    },
+    {
+      "@type": "Article",
+      headline: title,
+      author: authorSchema(),
+      datePublished: dates.published,
+      dateModified: dates.modified,
+      publisher: { "@type": "Organization", name: SITE_NAME, url: SITE_URL },
+    },
+    {
+      "@type": "ItemList",
+      name: title,
+      numberOfItems: PRODUCTS.length,
+      itemListElement: PRODUCTS.map((product, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name: product.name,
+        url: new URL(`#${product.id}`, Astro.url).toString(),
+      })),
+    },
+    ...PRODUCTS.map((product) => ({
+      "@type": "Product",
+      name: product.name,
+      description: product.description,
+      brand: {
+        "@type": "Brand",
+        name: product.brand ?? product.name.split(" ")[0],
+      },
+    })),
+  ],
+};
+---
+
+<Layout
+  title={title}
+  description={description}
+  ogType="article"
+  article={{
+    publishedTime: dates.published,
+    modifiedTime: dates.modified,
+    author: author.name,
+    section: "Plant Protein",
+    tags: [
+      "best plant based protein powder",
+      "vegan protein powder",
+      "pea protein powder",
+      "plant protein heavy metals",
+      "plant protein cost per serving"
+    ],
+  }}
+  jsonLd={schema}
+>
+  <article class="relative overflow-hidden">
+    <!-- Hero Section -->
+    <div class="bg-gray-900 py-16 lg:py-24 relative overflow-hidden">
+      <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(circle at 20% 20%, #38BDF8 0, transparent 45%), radial-gradient(circle at 80% 60%, #FF4500 0, transparent 40%);"></div>
+      <div class="max-w-4xl mx-auto px-4 relative z-10 text-center">
+        <div class="flex justify-center mb-6">
+          <TrustBadge />
+        </div>
+        <div class="flex justify-center gap-3 mb-6">
+          <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#FF4500]/20 text-[#FF4500] text-xs font-black uppercase tracking-widest border border-[#FF4500]/30">
+            Buyer's Guide
+          </span>
+          <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-green-500/10 text-green-400 text-xs font-bold uppercase tracking-widest border border-green-500/20">
+            Updated October 2026
+          </span>
+        </div>
+        <h1 class="text-4xl lg:text-6xl font-black text-white leading-tight mb-8">
+          Best <span class="text-[#38BDF8]">Plant-Based</span> Protein Powder
+        </h1>
+        <p class="text-xl text-gray-300 leading-relaxed mb-8 max-w-3xl mx-auto">
+          Six vegan protein powders ranked on what the label can prove: protein per scoop, amino acid completeness, cost per 25 g of protein and independent testing.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a
+            href="#plant-garden-of-life-sport"
+            class="px-8 py-4 bg-[#FF4500] hover:bg-[#E63E00] text-white font-black rounded-xl shadow-lg transition-all no-underline"
+          >
+            See Our #1 Pick
+          </a>
+          <a
+            href="#how-we-picked"
+            class="px-8 py-4 bg-white/10 hover:bg-white/20 text-white font-bold rounded-xl border border-white/10 no-underline"
+          >
+            How We Picked
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Author & Meta -->
+    <div class="max-w-3xl mx-auto px-4 pt-12">
+      <div class="flex items-center gap-6 border-b border-gray-100 pb-8">
+        <div class="flex items-center gap-3">
+          <AuthorAvatar size={48} />
+          <div>
+            <p class="text-sm font-bold text-gray-900">{author.name}</p>
+            <p class="text-xs text-gray-500 uppercase tracking-widest">{author.role}</p>
+          </div>
+        </div>
+        <div class="h-10 w-px bg-gray-200 hidden sm:block"></div>
+        <div class="hidden sm:block">
+          <p class="text-sm font-bold text-gray-900">Last Updated</p>
+          <p class="text-xs text-gray-500">{dates.display}</p>
+        </div>
+        <div class="hidden sm:block ml-auto">
+          <SocialProof />
+        </div>
+      </div>
+    </div>
+
+    <!-- Table of Contents -->
+    <div class="max-w-3xl mx-auto px-4 py-10">
+      <div class="bg-gray-50 border border-gray-200 rounded-2xl p-6 lg:p-8">
+        <h2 class="text-lg font-black text-gray-900 mb-4 flex items-center gap-2">
+          In This Guide
+        </h2>
+        <nav class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <a href="#protein-sources" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">1. Pea, Soy, Rice, Hemp &amp; Blends</a>
+          <a href="#leucine-dose" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">2. Leucine and Dose</a>
+          <a href="#top-picks" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">3. Our Top Picks</a>
+          <a href="#how-we-picked" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">4. How We Picked</a>
+          <a href="#heavy-metals" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">5. Heavy Metals</a>
+          <a href="#cost-per-25g" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">6. Protein and Cost per 25 g</a>
+          <a href="#texture-sweeteners" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">7. Texture and Sweeteners</a>
+          <a href="#how-much" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">8. How Much You Need</a>
+          <a href="#plant-vs-whey" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">9. Plant vs Whey</a>
+          <a href="#timing" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">10. Timing and the Bigger Picture</a>
+          <a href="#mistakes" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">11. Common Mistakes</a>
+          <a href="#faq" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">12. FAQ</a>
+        </nav>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="max-w-3xl mx-auto px-4 pb-16 lg:pb-24">
+      <div class="prose prose-lg prose-blue max-w-none text-gray-700 leading-relaxed">
+        <p class="text-2xl font-medium text-gray-900 mb-8 italic">
+          A good plant protein can build muscle about as well as whey, but only if you buy the right one and take enough of it. Most plant powders carry a little less leucine per gram than dairy, so the practical fix is a slightly bigger scoop: roughly 30-35 g of protein instead of 25 g. After dose, the two things that separate a good tub from a bad one are third-party testing, because plant proteins tend to carry more heavy metals, and an honest cost per 25 g of protein.
+        </p>
+
+        <QuickPicks products={PRODUCTS} />
+
+        <div id="protein-sources" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            1. Pea, Soy, Rice, Hemp or a Blend: Which Source Is Complete?
+          </h2>
+
+          <p>
+            Protein is built from 20 amino acids, nine of which your body cannot make and must get from food. A protein is called complete when it supplies all nine in roughly the proportions your body needs. Almost every plant protein technically contains all nine; the real issue is that one or two come in low. That low one is called the limiting amino acid, and it caps how much of the protein your body can turn into new tissue.
+          </p>
+
+          <p>
+            <strong>Pea</strong> is the base of most vegan powders for good reason. It is rich in lysine and arginine, mild in flavor once isolated, and cheap to produce at scale. Its weak spot is the sulfur amino acids, methionine and cysteine. <strong>Soy isolate</strong> is the closest plant match to dairy and scores at or near the top of the digestibility scales, but soy is one of the major food allergens and a lot of buyers avoid it, so fewer premium vegan powders use it now.
+          </p>
+
+          <p>
+            <strong>Brown rice</strong> protein has the opposite profile to pea: lower in lysine, better in methionine. That is why pea and rice blends became the industry standard; each covers the other's gap. <strong>Hemp</strong> brings fiber, magnesium and some omega-3 fat, but hemp protein powders are often only around half protein by weight and run low in lysine, so they work better as a smoothie booster than as your main protein source.
+          </p>
+
+          <p>
+            Multi-source blends go further. Garden of Life Sport combines pea with navy bean, lentil and garbanzo bean, while Vega Sport adds pumpkin and sunflower seed protein to pea. Single-ingredient pea is still a perfectly sound choice: at a 25-35 g dose, inside a diet that includes grains, nuts or soy foods, the methionine shortfall is small. The practical rule is to build on pea isolate, soy isolate or a multi-source blend, and not to rely on rice-only or hemp-only powders as your main shake when muscle is the goal.
+          </p>
+
+          <div class="overflow-hidden border border-gray-200 rounded-2xl my-8">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Source</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Main strength</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Limiting amino acid</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Leucine (approx. share of protein)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Pea</td>
+                    <td class="px-4 py-4 text-gray-700">High lysine, mild flavor</td>
+                    <td class="px-4 py-4 text-gray-700">Methionine</td>
+                    <td class="px-4 py-4 text-gray-700">About 7-8%</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Soy isolate</td>
+                    <td class="px-4 py-4 text-gray-700">Closest plant match to dairy</td>
+                    <td class="px-4 py-4 text-gray-700">Methionine (minor)</td>
+                    <td class="px-4 py-4 text-gray-700">About 7-8%</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Brown rice</td>
+                    <td class="px-4 py-4 text-gray-700">Complements pea</td>
+                    <td class="px-4 py-4 text-gray-700">Lysine</td>
+                    <td class="px-4 py-4 text-gray-700">About 7-8%</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Hemp</td>
+                    <td class="px-4 py-4 text-gray-700">Fiber and omega-3 fat</td>
+                    <td class="px-4 py-4 text-gray-700">Lysine</td>
+                    <td class="px-4 py-4 text-gray-700">About 6%</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Whey (for reference)</td>
+                    <td class="px-4 py-4 text-gray-700">Highest leucine density</td>
+                    <td class="px-4 py-4 text-gray-700">None meaningful</td>
+                    <td class="px-4 py-4 text-gray-700">About 10-12%</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div id="leucine-dose" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            2. Leucine and Dose: Why Plant Users Need a Slightly Bigger Scoop
+          </h2>
+
+          <p>
+            Leucine is the amino acid that acts as the on switch for muscle protein synthesis. Research on the so-called leucine threshold suggests that a meal needs roughly 2-3 g of leucine to produce a near-maximal muscle-building response in young adults, with older adults sitting toward the top of that range. Total protein still matters, but leucine is the quickest way to see why plant and dairy powders are not interchangeable gram for gram.
+          </p>
+
+          <p>
+            The arithmetic is simple. Whey is roughly 10-12% leucine, so a 25 g scoop delivers somewhere around 2.5-3 g. Pea, soy and rice proteins sit nearer 7-8%, so the same 25 g gives you closer to 1.8-2 g, which is under the threshold. To reach about 2.5 g of leucine from a typical pea or pea-rice blend, you need roughly 30-35 g of protein. That is the whole case for a bigger plant scoop, and it costs you maybe 40-60 extra calories.
+          </p>
+
+          <p>
+            This changes how you read a label. A product with 20-21 g of protein per serving, like Orgain Organic Protein or Momentous Essential Plant-Based, lands at roughly 1.5-1.7 g of leucine as sold. That is fine as a snack or alongside a meal, but after training you would want one and a half servings. Garden of Life Sport and Vega Sport list 30 g per serving, which crosses the threshold without any adjustment. Some brands also add free leucine or BCAAs; that helps, but check that the headline protein figure comes from intact protein rather than added amino acids.
+          </p>
+
+          <p>
+            Dose matters more than source. In a 12-week trial led by Hevia-Larraín, vegans who supplemented with soy protein and omnivores who supplemented with whey were both brought to about 1.6 g of protein per kg of body weight per day, and they gained muscle and strength at similar rates. The plant group did not need a special protein; it needed enough protein. Older lifters, who respond less to each meal, should lean toward 35-40 g of plant protein per shake.
+          </p>
+
+          <div class="bg-gray-900 text-white rounded-2xl p-6 lg:p-8 my-8">
+            <p class="text-xs font-black uppercase tracking-widest text-[#38BDF8] mb-3">The Rule</p>
+            <p class="text-xl font-bold text-white mb-3">Aim for 30-35 g of plant protein per shake</p>
+            <p class="text-gray-300 leading-relaxed m-0">That is roughly the amount needed to match the leucine in a standard 25 g scoop of whey. If your tub lists 20 g per serving, use one and a half servings after training, or have the shake with a meal that adds protein of its own.</p>
+          </div>
+
+          <div class="bg-gray-900 text-white rounded-2xl p-6 lg:p-8 my-8">
+            <p class="text-xs font-black uppercase tracking-widest text-[#38BDF8] mb-4">By the Numbers</p>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+              <div>
+                <p class="text-3xl font-black text-white">2-3 g</p>
+                <p class="text-gray-400 text-xs mt-1">Leucine per meal for a near-maximal response</p>
+              </div>
+              <div>
+                <p class="text-3xl font-black text-[#38BDF8]">7-8%</p>
+                <p class="text-gray-400 text-xs mt-1">Approximate leucine share of pea protein</p>
+              </div>
+              <div>
+                <p class="text-3xl font-black text-white">10-12%</p>
+                <p class="text-gray-400 text-xs mt-1">Approximate leucine share of whey</p>
+              </div>
+              <div>
+                <p class="text-3xl font-black text-[#38BDF8]">30-35 g</p>
+                <p class="text-gray-400 text-xs mt-1">Plant protein to match 25 g of whey</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Picks -->
+        <div id="top-picks" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            3. The Best Plant-Based Protein Powders, Ranked
+          </h2>
+
+          <p>
+            These six are ranked on label analysis, certification status and cost per 25 g of protein at typical retail prices, not on a tasting panel. Figures come from each product's label at the time of writing and vary slightly by flavor, so check the tub you actually buy. Where a certification is listed, confirm the exact product and flavor in the certifier's own database, because listings change.
+          </p>
+
+          {PRODUCTS.map((product, index) => (
+            <div id={product.id} class="scroll-mt-24 mt-12 first:mt-8">
+              <div class="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                <div class="bg-gray-900 px-6 py-4 flex items-center justify-between">
+                  <div class="flex items-center gap-3">
+                    <span class="bg-[#FF4500] text-white w-8 h-8 rounded-full flex items-center justify-center text-sm font-black">
+                      {index + 1}
+                    </span>
+                    {productImages[product.id] && (
+                      <img
+                        src={productImages[product.id]}
+                        alt={product.name}
+                        loading="lazy"
+                        width="40"
+                        height="40"
+                        class="w-10 h-10 rounded-lg bg-white object-contain p-1 shrink-0"
+                      />
+                    )}
+                    <div>
+                      <p class="text-white font-black text-lg">{product.name}</p>
+                      <p class="text-gray-400 text-xs">{product.category}</p>
+                    </div>
+                  </div>
+                  <span class="bg-[#38BDF8]/20 text-[#38BDF8] px-3 py-1 rounded-full text-xs font-bold hidden sm:block">
+                    {product.badge}
+                  </span>
+                </div>
+                <div class="p-6">
+                  {product.rating && (
+                  <div class="flex items-center gap-2 mb-4">
+                    <div class="flex text-yellow-400">
+                      {[...Array(5)].map((_, i) => (
+                        <svg
+                          class={`w-4 h-4 ${i < Math.floor(product.rating) ? "fill-current" : "text-gray-200"}`}
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                        >
+                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        </svg>
+                      ))}
+                    </div>
+                    <span class="text-gray-500 text-sm font-bold">{product.rating}</span>
+                    {product.reviewCount && <span class="text-gray-400 text-xs">({product.reviewCount.toLocaleString()} retailer reviews)</span>}
+                  </div>
+                  )}
+
+                  <SpecGrid specs={product.specs} />
+
+                  <p class="text-gray-700 leading-relaxed mb-6">{product.description}</p>
+
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                    <div class="bg-green-50 rounded-xl p-4">
+                      <p class="text-xs font-black uppercase tracking-widest text-green-700 mb-3">Pros</p>
+                      <ul class="space-y-2">
+                        {product.pros.map((pro) => (
+                          <li class="flex items-start gap-2 text-sm text-green-800">
+                            <svg class="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            {pro}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div class="bg-red-50 rounded-xl p-4">
+                      <p class="text-xs font-black uppercase tracking-widest text-red-700 mb-3">Cons</p>
+                      <ul class="space-y-2">
+                        {product.cons.map((con) => (
+                          <li class="flex items-start gap-2 text-sm text-red-800">
+                            <svg class="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                            {con}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+
+                  <div class="bg-gray-50 rounded-xl p-4 border border-gray-100">
+                    <p class="text-xs font-black uppercase tracking-widest text-gray-500 mb-1">The Bottom Line</p>
+                    <p class="text-gray-900 font-bold">{product.bottomLine}</p>
+                  </div>
+
+                  <a
+                    href={amazonLink(product.amazonUrl, product.name, product.id)}
+                    target="_blank"
+                    rel="sponsored nofollow noopener"
+                    class="mt-6 block bg-[#FF4500] hover:bg-[#E63E00] text-white text-center py-4 rounded-xl font-black no-underline transition-colors uppercase tracking-widest text-sm"
+                  >
+                    Check Price &rarr;
+                  </a>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div id="how-we-picked" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            4. How We Picked
+          </h2>
+
+          <p>
+            We did not run lab tests or a taste panel, and we will not pretend otherwise. These rankings come from label analysis, certification status and published research. For every candidate we recorded protein per serving, calories per serving, the protein sources used, the leucine-adjusted dose needed to match a 25 g whey scoop, the sweeteners and additives, independent testing, and cost per 25 g of protein at typical retail prices.
+          </p>
+
+          <p>
+            Testing and protein density carried the most weight. NSF Certified for Sport and Informed Sport exist mainly to screen for banned substances, which matters to drug-tested athletes, but the programs also verify that what is in the tub matches the label, and NSF's program screens for contaminants. For a category with known heavy-metal concerns, an independent auditor checking the product is worth paying something extra for.
+          </p>
+
+          <p>
+            Several things knocked products out. We skipped powders that hide protein amounts inside proprietary blends, premium-priced products with under 20 g of protein per serving, and greens or superfood powders marketed as protein when protein is a minority of the scoop. We also discounted labels where a big BCAA or amino acid claim could inflate the apparent protein content, a practice known as amino spiking that has hit the supplement industry before.
+          </p>
+
+          <p>
+            Labels change. Brands reformulate, swap sweeteners and adjust scoop sizes, and certification listings come and go by product and flavor. Every figure on this page reflects the label at the time of writing. Before you buy, check the current tub, and if certification matters to you, search the exact product and flavor in the NSF or Informed Sport database rather than trusting a logo on an old product photo.
+          </p>
+        </div>
+
+        <div id="heavy-metals" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            5. Heavy Metals in Plant Proteins: The Real Trade-Off
+          </h2>
+
+          <p>
+            Plants pull lead, cadmium and arsenic out of the soil they grow in, and concentrating a crop down to its protein can concentrate some of those metals too. Independent testing published by Consumer Reports and by the nonprofit Clean Label Project has repeatedly found that plant-based protein powders, on average, carry more lead than dairy-based ones. Chocolate flavors tend to test higher again, because cacao carries lead and cadmium of its own, and rice protein draws particular attention for arsenic and cadmium.
+          </p>
+
+          <p>
+            Keep the scale in view. The amounts involved are usually measured in micrograms per serving, and the concern is cumulative exposure from daily use over years, not a single shake. The sensible response is a handful of free habits: choose a third-party tested product, prefer unflavored or vanilla over chocolate if you have more than one serving a day, and do not take three scoops a day of the same product indefinitely. A California Proposition 65 warning means a product exceeded a deliberately conservative threshold; it does not prove harm, but it is a data point.
+          </p>
+
+          <p>
+            Some people should be more careful than others: anyone who is pregnant or breastfeeding, children and teenagers, and people with kidney disease. If you fall into one of those groups, talk to your doctor or a registered dietitian before making a protein powder a daily habit. Our full guide to <a href="/is-protein-powder-safe/">whether protein powder is safe</a> covers contaminants, testing programs and who should be cautious in more detail.
+          </p>
+
+          <p>
+            One caveat on certifications: no seal guarantees zero heavy metals. Sport certifications are built around banned substances first, and contaminant limits differ between programs. A brand that publishes lot-level certificates of analysis, including metals, earns extra credit with us, because it lets you check the batch you are actually drinking rather than trusting a general claim.
+          </p>
+
+          <div class="bg-gray-900 text-white rounded-2xl p-6 lg:p-8 my-8">
+            <p class="text-xs font-black uppercase tracking-widest text-[#38BDF8] mb-3">The Shortcut</p>
+            <p class="text-xl font-bold text-white mb-3">Tested, lightly flavored, one or two scoops a day</p>
+            <p class="text-gray-300 leading-relaxed m-0">You do not need to fear plant protein, but you should not be casual about it either. A third-party tested powder, unflavored or vanilla rather than chocolate, used once or twice a day as part of a mixed diet, keeps your exposure low without giving up the benefits.</p>
+          </div>
+        </div>
+
+        <div id="cost-per-25g" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            6. Protein per Serving and Cost per 25 g
+          </h2>
+
+          <p>
+            Price per tub tells you almost nothing. Plant powders range from about 20 g to 30 g of protein per serving, and servings per container vary widely, so two tubs at the same shelf price can differ in real value by half. The number that matters is cost per 25 g of protein: divide the price by the number of servings, divide again by the grams of protein per serving, then multiply by 25. Run that sum once and the cheap-looking tubs often stop looking cheap.
+          </p>
+
+          <p>
+            On our list, the unflavored single-ingredient pea powders, Naked Pea and NOW Sports Pea Protein, sit in the budget tier at typical retail prices. Orgain Organic Protein looks inexpensive per tub, but at about 21 g of protein per two-scoop serving its cost per 25 g lands in the middle. Garden of Life Sport and Vega Sport sit in the mid-to-premium tier, where you are paying for certification and a full 30 g dose. Momentous is a premium product and priced like one.
+          </p>
+
+          <p>
+            Protein per calorie matters if you are cutting. A clean pea isolate like Naked Pea gives about 27 g of protein in roughly 120 calories, close to 22 g of protein per 100 calories. Orgain gives about 21 g in roughly 150 calories, nearer 14 g per 100 calories, because its formula includes fiber, gums and other ingredients that add calories without adding protein. Neither is wrong, but they are not the same product.
+          </p>
+
+          <p>
+            Remember the leucine adjustment too. If you need 1.5 servings of a 20 g product to match one 30 g serving of another, its effective cost per shake is 50% higher than the label suggests. Buying the largest tub you will finish before it goes stale, and using subscribe-and-save discounts, cuts cost per gram meaningfully. Just do not let cost per 25 g override testing; the cheapest gram of protein is not a bargain if you have no idea what else is in the tub.
+          </p>
+
+          <div class="overflow-hidden border border-gray-200 rounded-2xl my-8">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Product</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Protein per serving (label)</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Servings for about 30 g</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Cost per 25 g tier</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Naked Pea</td>
+                    <td class="px-4 py-4 text-gray-700">About 27 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 1.1</td>
+                    <td class="px-4 py-4 text-gray-700">Budget</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">NOW Sports Pea Protein</td>
+                    <td class="px-4 py-4 text-gray-700">About 24 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 1.25</td>
+                    <td class="px-4 py-4 text-gray-700">Budget</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Orgain Organic Protein</td>
+                    <td class="px-4 py-4 text-gray-700">About 21 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 1.5</td>
+                    <td class="px-4 py-4 text-gray-700">Budget to mid</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Garden of Life Sport</td>
+                    <td class="px-4 py-4 text-gray-700">About 30 g</td>
+                    <td class="px-4 py-4 text-gray-700">1</td>
+                    <td class="px-4 py-4 text-gray-700">Mid to premium</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Vega Sport Premium Protein</td>
+                    <td class="px-4 py-4 text-gray-700">About 30 g</td>
+                    <td class="px-4 py-4 text-gray-700">1</td>
+                    <td class="px-4 py-4 text-gray-700">Mid to premium</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Momentous Essential Plant-Based</td>
+                    <td class="px-4 py-4 text-gray-700">About 20 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 1.5</td>
+                    <td class="px-4 py-4 text-gray-700">Premium</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div id="texture-sweeteners" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            7. Texture, Taste and Sweeteners: What Buyers Report
+          </h2>
+
+          <p>
+            We did not run a taste panel, so this section summarizes what buyers widely report and what the ingredient lists tell you. The most common complaint about plant protein is texture: earthier, chalkier and grittier than whey, and noticeably thicker in a shaker. That tends to be strongest with single-source pea and with hemp, and milder with finely milled multi-source blends. Buyers commonly describe Orgain and Vega Sport as among the easier ones to drink straight, and unflavored pea as best hidden in something else.
+          </p>
+
+          <p>
+            Sweeteners divide people. Most flavored plant powders use stevia, monk fruit, erythritol or some combination, and a share of buyers find stevia and monk fruit leave a bitter or lingering aftertaste. Erythritol, used in Orgain, is a sugar alcohol that some people find causes gas or loose stools at larger doses. If you are sensitive to sweeteners, an unflavored powder sidesteps the problem entirely and lets you sweeten with fruit or nothing at all.
+          </p>
+
+          <p>
+            A few habits fix most texture complaints. Use a blender or a shaker with a mixing ball, add liquid before powder, and use more liquid than you would with whey, because plant proteins absorb more of it. Frozen banana, berries, nut butter, cocoa or coffee all mask earthiness well, and soy milk adds roughly 7-8 g of extra protein per cup. Unflavored pea also disappears into oatmeal, pancakes and baked goods better than most people expect.
+          </p>
+
+          <p>
+            Watch the extras. Gums such as xanthan, guar and acacia improve mouthfeel, and added fibers like inulin are marketed as gut-friendly, but both can cause bloating in some people. Several plant powders add probiotics or digestive enzymes; the evidence that these make a meaningful difference in a protein shake is thin, so treat them as neither a reason to buy nor a reason to avoid.
+          </p>
+        </div>
+
+        <div id="how-much" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            8. How Much Plant Protein Do You Actually Need?
+          </h2>
+
+          <p>
+            The RDA of 0.8 g of protein per kg of body weight is a minimum to avoid deficiency in sedentary adults, not a target for anyone who trains. The International Society of Sports Nutrition position stand recommends 1.4-2.0 g/kg per day for exercising people, and a 2018 meta-analysis led by Morton found that gains in lean mass from resistance training plateaued at around 1.6 g/kg per day, with the upper end of the confidence interval near 2.2 g/kg.
+          </p>
+
+          <p>
+            If most of your protein comes from plants, aiming toward the upper half of that range, around 1.6-2.0 g/kg, is a reasonable hedge for slightly lower digestibility and leucine content. Per meal, the useful target is about 0.4 g/kg, which works out to roughly 20-40 g depending on body size. Plant eaters should sit at the upper end of that per-meal range, which is exactly why the 30-35 g shake recommendation keeps coming up.
+          </p>
+
+          <p>
+            Powder should fill a gap, not carry the whole diet. Take a 75 kg lifter aiming for 1.6 g/kg: that is 120 g a day. Tofu, tempeh, seitan, lentils, edamame and soy milk can supply 85-90 g without much effort, and a single 30-35 g shake closes the gap. Our guide to <a href="/how-much-protein-do-i-need/">how much protein you need</a> breaks this down by goal, and the <a href="/protein-calculator/">protein calculator</a> will give you a daily and per-meal number in a few seconds.
+          </p>
+
+          <p>
+            A caveat that applies to every protein source: if you have chronic kidney disease or reduced kidney function, higher protein intakes may not be appropriate, and you should set your target with your doctor or a registered dietitian. The same goes if you are pregnant, managing another medical condition, or taking medications that interact with diet. This page is general information, not medical advice.
+          </p>
+        </div>
+
+        <div id="plant-vs-whey" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            9. Plant vs Whey: When Plant Protein Is the Right Call
+          </h2>
+
+          <p>
+            Plant protein is the right choice if you are vegan, have a milk allergy, or simply prefer to avoid dairy for ethical or environmental reasons. When the dose is matched for leucine or total protein, published trials comparing pea, rice or soy protein with whey have found broadly similar gains in muscle and strength. We go through that research, along with digestibility scores and allergens, in our full <a href="/whey-vs-plant-protein/">whey vs plant protein</a> comparison.
+          </p>
+
+          <p>
+            If your only reason for choosing plant protein is that whey upsets your stomach, test that assumption first. The culprit is usually lactose, and whey concentrate can carry a few grams of it per serving. Whey isolate is filtered further and typically contains less than 1 g of lactose per serving, which most lactose-intolerant people tolerate. If you can tolerate dairy otherwise, consider an isolate from our <a href="/best-whey-protein-isolate/">best whey protein isolate</a> rankings. A milk allergy is different: it is a reaction to the milk proteins themselves, so isolate is not safe.
+          </p>
+
+          <p>
+            Whey's advantages are real: more leucine per gram, a smoother texture, usually a lower cost per 25 g of protein, and on average lower heavy-metal levels in independent testing. Plant protein's advantages are just as real: no dairy, often some fiber, a fit with vegan diets, and in most lifecycle analyses a lower environmental footprint per gram of protein, though whey's status as a cheese by-product narrows that gap.
+          </p>
+
+          <p>
+            You do not have to pick a side forever. Plenty of people keep a tub of each, using whey after training for its leucine density and an unflavored plant protein in oatmeal, smoothies or baking. What matters far more than the source is that you hit your daily protein target, dose each serving properly, and buy a product that has been independently tested.
+          </p>
+        </div>
+
+        <div id="timing" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            10. Timing, and Where Plant Protein Fits Your Plan
+          </h2>
+
+          <p>
+            Timing matters much less than your daily total. The old idea of a 30-minute anabolic window has given way to evidence that the muscle-building effect of training lasts many hours, and that spreading protein across three to five meals of about 0.4 g/kg works better than cramming it into one or two. Our guide on <a href="/when-to-take-protein-powder/">when to take protein powder</a> covers the research on post-workout, morning and bedtime shakes.
+          </p>
+
+          <p>
+            For plant eaters, the most useful slot is often breakfast. Typical plant breakfasts of oats, toast or fruit can come in under 15 g of protein, well short of the per-meal target, and a 30 g shake stirred into oats or blended with fruit fixes that in a minute. After training is the other obvious slot, mostly because it is convenient. A shake before bed is fine too; casein is the traditional dairy choice there, and a generous pea or soy shake is a reasonable plant alternative.
+          </p>
+
+          <p>
+            If you are not tied to plant protein and want to see how these products stack up against whey, casein and blends, our overall <a href="/best-protein-powder/">best protein powder</a> rankings compare every category on the same criteria: protein per serving, cost per 25 g and third-party testing.
+          </p>
+
+          <p>
+            The short version for plant protein buyers: pick a pea, soy or multi-source blend; take 30-35 g per serving; choose a third-party tested product, especially if you use it daily; prefer unflavored or vanilla if you take more than one serving a day; and judge value by cost per 25 g of protein, not price per tub. Follow those five rules and the specific brand matters much less than the marketing suggests.
+          </p>
+        </div>
+
+        <!-- Common Mistakes -->
+        <div id="mistakes" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            11. Common Mistakes to Avoid
+          </h2>
+
+          <div class="space-y-6 my-8">
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Copying a whey-sized scoop</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Plant proteins carry roughly 7-8% leucine against whey's 10-12%, so a 25 g plant shake usually falls short of the 2-3 g leucine threshold. If your tub lists 20-21 g per serving, use one and a half servings after training, or aim for 30-35 g of plant protein per shake as a general rule.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Judging value by price per tub</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Serving sizes and protein per scoop vary so much that the shelf price is close to meaningless. Divide the price by servings, then by grams of protein per serving, then multiply by 25. A cheap tub at 21 g per serving can cost more per 25 g than a pricier one at 30 g.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Ignoring third-party testing</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Plant proteins tend to carry more lead and cadmium than dairy in independent testing, so an outside auditor matters more here than for almost any other supplement. Prefer NSF Certified for Sport or Informed Sport products, and confirm the exact product and flavor in the certifier's database before you trust the logo.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Drinking chocolate rice protein three times a day</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Chocolate flavors and rice-based proteins both tend to test higher for heavy metals, and exposure is cumulative. One chocolate shake is not a problem; several a day, every day, for years is a habit worth changing. Rotate products, favor unflavored or vanilla, and get most of your protein from whole foods.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Mistaking greens or hemp powders for protein powders</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Many superfood and hemp powders are only around half protein, or much less, with the rest fiber, fat and plant extracts. They can be useful, but they will not deliver a 30 g leucine-matched dose at a sensible calorie cost. Check grams of protein per serving before you assume a powder is a protein supplement.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ -->
+        <div id="faq" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            12. Frequently Asked Questions
+          </h2>
+
+          <div class="space-y-6">
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is plant-based protein as good as whey for building muscle?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                At matched doses, mostly yes. Trials comparing pea, rice or soy protein with whey during resistance training have found broadly similar gains in muscle and strength, and a 12-week study found vegans and omnivores eating about 1.6 g/kg per day gained at similar rates. Whey wins gram for gram on leucine, so plant users should simply take a slightly bigger scoop, around 30-35 g.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">What is the best plant protein source?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Soy isolate and pea protein are the strongest single sources, with soy closest to dairy on digestibility scores. Blends of pea with rice, or with other legumes and seeds, cover each other's limiting amino acids and are the safest default. Hemp and rice alone are weaker as a main protein source and work better as part of a blend or as a smoothie booster.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Do plant-based protein powders have heavy metals?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Many contain small amounts, and independent testing has found plant powders carry more lead on average than dairy ones, with chocolate flavors tending higher. The risk is cumulative, not acute. Choose a third-party tested product, favor unflavored or vanilla if you take several servings daily, and talk to a doctor first if you are pregnant or have kidney disease.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">How many grams of plant protein should be in a shake?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Aim for about 30-35 g of plant protein per shake, which supplies roughly the 2.5 g of leucine you would get from 25 g of whey. Older adults can go toward 35-40 g. If your powder lists 20 g per serving, use one and a half servings after training, or pair a single serving with a meal that adds protein of its own.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is pea protein a complete protein?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Pea protein contains all nine essential amino acids, but methionine is relatively low, so on digestibility scores it ranks below whey and soy. In practice, at a 25-35 g dose and alongside a varied diet that includes grains, nuts or soy, the shortfall is small. Pea and rice blends close the gap entirely, which is why they are so common.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Can plant protein powder cause bloating?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Yes, for some people. The usual causes are added ingredients rather than the protein itself: sugar alcohols such as erythritol, fibers such as inulin, and gums such as xanthan or guar. Large single servings and fast drinking can contribute too. An unflavored single-ingredient pea isolate is the simplest way to test whether the protein or the extras are the problem.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Are plant protein powders safe during pregnancy?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Many people use protein powder during pregnancy, but because of the heavy-metal findings in plant powders, this is a question for your doctor or a registered dietitian rather than a label. If you are cleared to use one, choose a third-party tested product, prefer unflavored or vanilla, keep it to one serving a day, and get most of your protein from whole foods.
+              </p>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Related Guides -->
+        <div class="mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">Related Plant Protein Guides</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <a href="/whey-vs-plant-protein/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#38BDF8] font-black text-xs uppercase tracking-widest mb-2">Comparison</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Whey vs Plant Protein</h3>
+              <p class="text-gray-500 text-sm mt-2">Leucine, digestibility scores, allergens and cost per 25 g, compared side by side.</p>
+            </a>
+            <a href="/is-protein-powder-safe/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#FF4500] font-black text-xs uppercase tracking-widest mb-2">Safety</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Is Protein Powder Safe?</h3>
+              <p class="text-gray-500 text-sm mt-2">Heavy metals, contamination, third-party testing and who should be careful.</p>
+            </a>
+            <a href="/best-protein-powder/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#FF4500] font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Protein Powder</h3>
+              <p class="text-gray-500 text-sm mt-2">Our overall rankings across whey, casein and plant proteins.</p>
+            </a>
+          </div>
+        </div>
+
+        <!-- Closing -->
+        <div class="mt-16 bg-gray-900 text-white rounded-2xl p-8">
+          <h2 class="text-2xl font-black text-white mb-4">The Bottom Line</h2>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            The best plant-based protein powder for most people is Garden of Life Sport Organic Plant-Based Protein: about 30 g of protein per serving, a multi-source blend and NSF Certified for Sport status, with Vega Sport a near tie. On a budget, NOW Sports Pea Protein and Naked Pea give you clean, unflavored pea protein at the lowest cost per 25 g, as long as you blend them into something.
+          </p>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            Whichever tub you choose, the rules are the same: take 30-35 g of plant protein per serving, choose a third-party tested product, favor unflavored or vanilla if you use it more than once a day, and judge value by cost per 25 g of protein. Get those right and plant protein builds muscle just as well as the dairy alternative.
+          </p>
+        </div>
+
+        <MoreInCategory category="Plant Protein" links={moreInCategory} />
+
+        <AuthorBio />
+      </div>
+    </div>
+  </article>
+</Layout>
