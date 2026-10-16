@@ -1,0 +1,337 @@
+---
+import SEO from "../components/SEO.astro";
+import MobileNav from "../components/MobileNav";
+import Analytics from "@vercel/analytics/astro";
+import AdUnit from "../components/AdUnit.astro";
+import { ADSENSE_CLIENT, GA_MEASUREMENT_ID, SITE_NAME } from "../data/site";
+import { NAV_GROUPS } from "../data/nav";
+
+interface Props {
+  title?: string;
+  description?: string;
+  stickyCta?: { text: string; link: string };
+  ogImage?: string;
+  ogType?: "website" | "article";
+  article?: {
+    publishedTime?: string;
+    modifiedTime?: string;
+    author?: string;
+    section?: string;
+    tags?: string[];
+  };
+  jsonLd?: Record<string, unknown> | Record<string, unknown>[];
+  noindex?: boolean;
+}
+
+const {
+  title = `${SITE_NAME} | Independent Protein Powder Reviews`,
+  description = "Independent protein powder reviews built on the label: protein per scoop, cost per gram, ingredients and third-party testing. No paid placements.",
+  stickyCta,
+  ogImage,
+  ogType,
+  article,
+  jsonLd,
+  noindex,
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    {GA_MEASUREMENT_ID && (
+      <>
+        <!-- Google tag (gtag.js) -->
+        <script async src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}></script>
+        <script is:inline define:vars={{ GA_MEASUREMENT_ID }}>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+
+          gtag('config', GA_MEASUREMENT_ID);
+        </script>
+      </>
+    )}
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <meta name="google-adsense-account" content={ADSENSE_CLIENT}>
+    <script async src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT}`}
+     crossorigin="anonymous"></script>
+    <Analytics />
+    <SEO
+      title={title}
+      description={description}
+      ogImage={ogImage}
+      ogType={ogType}
+      article={article}
+      jsonLd={jsonLd}
+      noindex={noindex}
+    />
+  </head>
+  <body
+    class="bg-white text-[#333333] selection:bg-[#FF4500] selection:text-white font-sans"
+  >
+    <div class="min-h-screen flex flex-col bg-white">
+      <!-- Header -->
+      <header
+        class="sticky top-0 z-50 bg-white border-b border-gray-100 shadow-sm"
+      >
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="flex justify-between items-center h-16">
+            <a
+              href="/"
+              class="flex items-center gap-2 cursor-pointer no-underline"
+            >
+              <span class="text-2xl font-black tracking-tighter text-[#1E90FF]"
+                >BEST PROTEIN</span
+              >
+              <span class="text-2xl font-black tracking-tighter text-[#333333]"
+                >POWDER</span
+              >
+            </a>
+
+            <!-- Desktop Nav -->
+            <nav class="hidden md:flex space-x-8 items-center">
+              <a
+                href="/"
+                class="text-gray-600 hover:text-[#1E90FF] font-medium no-underline"
+                >Home</a
+              >
+              <a
+                href="/best-of/"
+                class="text-gray-600 hover:text-[#1E90FF] font-medium no-underline"
+                >Best Lists</a
+              >
+              {NAV_GROUPS.map((group) => (
+                <div class="relative group">
+                  <button
+                    class="flex items-center gap-1 text-gray-600 hover:text-[#1E90FF] font-medium cursor-pointer bg-transparent border-0 p-0"
+                  >
+                    {group.label}
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="14"
+                      height="14"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      class="transition-transform group-hover:rotate-180"
+                      ><path d="M6 9l6 6 6-6"></path></svg
+                    >
+                  </button>
+                  <div
+                    class="absolute top-full left-1/2 -translate-x-1/2 mt-3 w-64 bg-white border border-gray-100 rounded-2xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50"
+                  >
+                    <div class="p-2">
+                      {group.links.map((link) => (
+                        <a
+                          href={link.url}
+                          class="flex items-start gap-3 p-3 rounded-xl hover:bg-gray-50 no-underline group/item transition-colors"
+                        >
+                          <span class="text-xl shrink-0 mt-0.5">{link.icon}</span>
+                          <div>
+                            <p
+                              class="text-sm font-bold text-gray-900 group-hover/item:text-[#1E90FF]"
+                            >
+                              {link.title}
+                            </p>
+                            <p class="text-xs text-gray-400 mt-0.5">
+                              {link.blurb}
+                            </p>
+                          </div>
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              ))}
+              <a
+                href="/protein-calculator/"
+                class="bg-[#FF4500] hover:bg-[#E63E00] text-white font-bold text-sm px-4 py-2 rounded-lg no-underline transition-colors"
+                >Protein Calculator</a
+              >
+            </nav>
+
+            <!-- Mobile menu (React island) -->
+            <MobileNav client:load groups={NAV_GROUPS} />
+          </div>
+        </div>
+      </header>
+
+      <!-- Main Content -->
+      <main class="flex-grow">
+        <div class="top-ad max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 my-6">
+          <AdUnit variant="top" />
+        </div>
+        <slot />
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 my-8">
+          <AdUnit variant="display" />
+        </div>
+      </main>
+
+      <!-- Mobile Sticky CTA -->
+      {
+        stickyCta && (
+          <div data-layout-sticky class="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 z-50 shadow-[0_-4px_10px_rgba(0,0,0,0.05)]">
+            <a
+              href={stickyCta.link}
+              target={/^https?:/.test(stickyCta.link ?? "") ? "_blank" : undefined}
+              rel={/^https?:/.test(stickyCta.link ?? "") ? "sponsored nofollow noopener" : undefined}
+              class="w-full bg-[#FF4500] hover:bg-[#E63E00] text-white py-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-all active:scale-95 shadow-lg no-underline"
+            >
+              {stickyCta.text}
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="m9 18 6-6-6-6" />
+              </svg>
+            </a>
+          </div>
+        )
+      }
+
+      <!-- Ad Unit -->
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 my-8">
+        <AdUnit />
+      </div>
+
+      <!-- Footer -->
+      <footer
+        class="bg-gray-50 border-t border-gray-200 pt-16 pb-24 md:pb-16 mt-20"
+      >
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="grid grid-cols-1 md:grid-cols-4 gap-12">
+            <div class="col-span-1 md:col-span-2">
+              <h2 class="text-xl font-bold mb-4">{SITE_NAME}</h2>
+              <p class="text-gray-600 max-w-sm mb-6 leading-relaxed">
+                We read the label so you do not have to: protein per scoop,
+                cost per gram, what else is in the tub, and who has actually
+                tested it. Then we tell you which one to buy.
+              </p>
+              <div
+                class="bg-[#1E90FF]/10 p-4 rounded-lg border border-[#1E90FF]/20 mb-4"
+              >
+                <p
+                  class="text-xs text-[#1E90FF] font-bold uppercase tracking-wider mb-1"
+                >
+                  Affiliate Disclosure
+                </p>
+                <p class="text-xs text-gray-500 leading-tight">
+                  We are a participant in the Amazon Services LLC Associates
+                  Program, an affiliate advertising program designed to provide
+                  a means for us to earn fees by linking to Amazon.com and
+                  affiliated sites.
+                </p>
+              </div>
+              <p class="text-xs text-gray-500 leading-tight max-w-sm">
+                Content on this site is for general information and is not
+                medical or dietary advice. Talk to a doctor or registered
+                dietitian before changing your diet, especially if you are
+                pregnant, have kidney disease, or take medication.
+              </p>
+            </div>
+            <div>
+              <h3 class="font-bold mb-4">Categories</h3>
+              <ul class="space-y-2 text-gray-600 list-none p-0">
+                <li>
+                  <a
+                    href="/best-protein-powder/"
+                    class="hover:text-[#1E90FF] no-underline text-gray-600"
+                    >Best Protein Powder</a>
+                </li>
+                <li>
+                  <a
+                    href="/best-whey-protein-isolate/"
+                    class="hover:text-[#1E90FF] no-underline text-gray-600"
+                    >Whey Protein</a>
+                </li>
+                <li>
+                  <a
+                    href="/best-plant-based-protein-powder/"
+                    class="hover:text-[#1E90FF] no-underline text-gray-600"
+                    >Plant Protein</a>
+                </li>
+                <li>
+                  <a
+                    href="/how-much-protein-do-i-need/"
+                    class="hover:text-[#1E90FF] no-underline text-gray-600"
+                    >Protein Basics</a>
+                </li>
+                <li>
+                  <a
+                    href="/protein-calculator/"
+                    class="hover:text-[#1E90FF] no-underline text-gray-600"
+                    >Protein Calculator</a>
+                </li>
+                <li>
+                  <a
+                    href="/best-of/"
+                    class="hover:text-[#1E90FF] no-underline text-gray-600"
+                    >All Guides</a>
+                </li>
+              </ul>
+            </div>
+            <div>
+              <h3 class="font-bold mb-4">Company</h3>
+              <ul class="space-y-2 text-gray-600 list-none p-0">
+                <li>
+                  <a
+                    href="/how-we-test/"
+                    class="hover:text-[#1E90FF] no-underline text-gray-600"
+                    >How We Test</a>
+                </li>
+                <li>
+                  <a
+                    href="/about/"
+                    class="hover:text-[#1E90FF] no-underline text-gray-600"
+                    >About Our Team</a>
+                </li>
+                <li>
+                  <a
+                    href="/contact/"
+                    class="hover:text-[#1E90FF] no-underline text-gray-600"
+                    >Contact Us</a>
+                </li>
+                <li>
+                  <a
+                    href="/privacy-policy/"
+                    class="hover:text-[#1E90FF] no-underline text-gray-600"
+                    >Privacy Policy</a>
+                </li>
+                <li>
+                  <a
+                    href="/terms/"
+                    class="hover:text-[#1E90FF] no-underline text-gray-600"
+                    >Terms of Service</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div
+            class="mt-12 pt-8 border-t border-gray-200 text-center text-gray-400 text-sm"
+          >
+            &copy; {new Date().getFullYear()} {SITE_NAME}. All rights reserved.
+          </div>
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>

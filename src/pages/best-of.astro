@@ -1,0 +1,201 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { SITE_NAME, SITE_URL } from '../data/site';
+
+// Every published guide, by category. The daily publishing run adds a row here
+// for each new page (see .claude/skills/daily-publish/SKILL.md). Category ids are
+// the anchors the home page category tiles link to.
+const categories = [
+  {
+    name: 'Protein Powder Rankings',
+    id: 'rankings',
+    guides: [
+      { title: 'Best Protein Powder', description: 'Our overall picks by goal and budget — ranked on protein per scoop, cost per 25 g of protein, ingredients and third-party testing.', badge: '#1 Guide', url: '/best-protein-powder/' },
+    ],
+  },
+  {
+    name: 'Whey Protein',
+    id: 'whey',
+    guides: [
+      { title: 'Best Whey Protein Isolate', description: 'The leanest, lowest-lactose whey powders compared on protein per scoop, cost per gram and certification.', badge: "Buyer's Guide", url: '/best-whey-protein-isolate/' },
+      { title: 'Whey vs Whey Isolate', description: 'What the extra filtering removes, what it costs per 25 g of protein, and who actually needs isolate.', badge: 'Comparison', url: '/whey-vs-whey-isolate/' },
+    ],
+  },
+  {
+    name: 'Plant Protein',
+    id: 'plant',
+    guides: [
+      { title: 'Best Plant-Based Protein Powder', description: 'Pea, soy and blended vegan powders ranked on amino acid profile, protein per scoop, heavy-metal testing and value.', badge: "Buyer's Guide", url: '/best-plant-based-protein-powder/' },
+      { title: 'Whey vs Plant Protein', description: 'Leucine, digestibility, muscle-building evidence, digestion and cost — which one suits you.', badge: 'Comparison', url: '/whey-vs-plant-protein/' },
+    ],
+  },
+  {
+    name: 'Protein Basics',
+    id: 'basics',
+    guides: [
+      { title: 'Protein Calculator', description: 'Your daily target in grams, per meal, and how many scoops it takes to close the gap.', badge: 'Tool', url: '/protein-calculator/' },
+      { title: 'How Much Protein Do I Need?', description: 'Grams per kilo by goal, per-meal targets, and when the RDA is not enough.', badge: 'Guide', url: '/how-much-protein-do-i-need/' },
+      { title: 'When to Take Protein Powder', description: 'The anabolic window, before bed, morning or post-workout — what the research actually supports.', badge: 'Guide', url: '/when-to-take-protein-powder/' },
+    ],
+  },
+  {
+    name: 'Safety & Labels',
+    id: 'safety',
+    guides: [
+      { title: 'Is Protein Powder Safe?', description: 'Heavy metals, label accuracy, banned substances, and who should talk to a doctor first.', badge: 'Safety', url: '/is-protein-powder-safe/' },
+    ],
+  },
+];
+
+const allGuides = categories.flatMap(c => c.guides);
+const pageDescription = 'Every protein powder guide we publish: rankings, whey and plant comparisons, intake and timing, and label safety. Independent, no paid placements.';
+
+const bestOfSchema = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Home', item: `${SITE_URL}/` },
+        { '@type': 'ListItem', position: 2, name: 'Best Lists', item: `${SITE_URL}/best-of/` },
+      ],
+    },
+    {
+      '@type': 'CollectionPage',
+      name: `All Protein Powder Guides | ${SITE_NAME}`,
+      description: pageDescription,
+      url: `${SITE_URL}/best-of/`,
+    },
+    {
+      '@type': 'ItemList',
+      name: `All Protein Powder Guides | ${SITE_NAME}`,
+      description: pageDescription,
+      itemListElement: allGuides.map((guide, idx) => ({
+        '@type': 'ListItem',
+        position: idx + 1,
+        item: {
+          '@type': 'Article',
+          name: guide.title,
+          description: guide.description,
+          url: `${SITE_URL}${guide.url}`,
+        },
+      })),
+    },
+  ],
+};
+---
+<Layout
+  title="All Protein Powder Guides"
+  description={pageDescription}
+  jsonLd={bestOfSchema}
+>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-20">
+    <header class="text-center mb-16">
+      <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-yellow-50 text-yellow-700 text-sm font-black uppercase tracking-widest border border-yellow-200 mb-6">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"></circle><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"></path></svg>
+        Updated Regularly
+      </div>
+      <h1 class="text-4xl lg:text-7xl font-black text-[#333333] mb-6 tracking-tight">
+        All <span class="text-[#1E90FF]">Protein Powder</span> Guides
+      </h1>
+      <p class="text-xl text-gray-500 max-w-2xl mx-auto mb-8">
+        {allGuides.length} guides covering whey, isolate and plant protein, how much you need, when to take it, and how to tell a safe tub from a risky one. No sponsored picks.
+      </p>
+
+      <!-- Quick Navigation -->
+      <div class="flex flex-wrap justify-center gap-2 mb-8">
+        {categories.map(cat => (
+          <a href={`#${cat.id}`} class="px-4 py-2 bg-white border border-gray-200 rounded-full text-sm font-bold text-gray-700 hover:bg-[#1E90FF] hover:text-white hover:border-[#1E90FF] transition-colors no-underline">
+            {cat.name}
+          </a>
+        ))}
+      </div>
+
+      <!-- Methodology -->
+      <div class="max-w-3xl mx-auto bg-gray-50 border border-gray-200 rounded-2xl p-6 text-left">
+        <div class="flex items-start gap-3">
+          <div class="w-10 h-10 bg-[#1E90FF]/10 rounded-xl flex items-center justify-center shrink-0 mt-0.5">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1E90FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><path d="m9 11 3 3L22 4"></path></svg>
+          </div>
+          <div>
+            <p class="font-bold text-gray-900 text-sm mb-1">How We Pick</p>
+            <p class="text-gray-600 text-sm leading-relaxed">
+              Every powder is judged on its full nutrition panel, its cost per 25 g of protein, its ingredient list and its third-party certification — not on the claims on the front of the tub. <a href="/how-we-test/" class="text-[#1E90FF] font-bold no-underline hover:underline">Read our full process</a>.
+            </p>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Categorized Guides -->
+    {categories.map(category => (
+      <section id={category.id} class="mb-16 scroll-mt-24">
+        <h2 class="text-2xl lg:text-3xl font-black text-[#333333] mb-8 pb-4 border-b-2 border-gray-200">
+          {category.name}
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {category.guides.map(guide => (
+            <a
+              href={guide.url}
+              class="block bg-white border border-gray-200 rounded-2xl p-6 shadow-sm hover:shadow-xl hover:border-[#1E90FF]/30 transition-all group no-underline"
+            >
+              <div class="flex items-center gap-2 mb-3">
+                <span class="bg-[#FF4500]/10 text-[#FF4500] px-2.5 py-0.5 rounded-full text-xs font-black uppercase">
+                  {guide.badge}
+                </span>
+              </div>
+              <h3 class="text-lg font-black text-gray-900 group-hover:text-[#1E90FF] transition-colors mb-2">
+                {guide.title}
+              </h3>
+              <p class="text-gray-500 text-sm mb-4 leading-relaxed">{guide.description}</p>
+              <div class="flex items-center gap-1 text-[#1E90FF] text-sm font-bold">
+                Read Guide
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+              </div>
+            </a>
+          ))}
+        </div>
+      </section>
+    ))}
+
+    <!-- ========== WHY TRUST OUR PICKS ========== -->
+    <section class="mt-8 mb-8">
+      <div class="bg-gradient-to-br from-gray-900 to-gray-800 rounded-3xl overflow-hidden">
+        <div class="p-10 lg:p-14">
+          <h2 class="text-3xl font-black text-white mb-6">Why Trust Our Guides?</h2>
+          <p class="text-gray-400 leading-relaxed mb-6">
+            Every powder is scored on the same five questions:
+          </p>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+            <div class="bg-white/5 rounded-xl p-4">
+              <span class="bg-[#FF4500] text-white w-8 h-8 rounded-lg flex items-center justify-center text-sm font-black mb-2">1</span>
+              <p class="font-bold text-white text-sm">Protein Quality (30%)</p>
+              <p class="text-gray-400 text-xs">Protein per scoop, share of the scoop, amino acid profile, no spiking.</p>
+            </div>
+            <div class="bg-white/5 rounded-xl p-4">
+              <span class="bg-[#FF4500] text-white w-8 h-8 rounded-lg flex items-center justify-center text-sm font-black mb-2">2</span>
+              <p class="font-bold text-white text-sm">Verification (25%)</p>
+              <p class="text-gray-400 text-xs">Third-party certification and published testing for contaminants.</p>
+            </div>
+            <div class="bg-white/5 rounded-xl p-4">
+              <span class="bg-[#FF4500] text-white w-8 h-8 rounded-lg flex items-center justify-center text-sm font-black mb-2">3</span>
+              <p class="font-bold text-white text-sm">Value (20%)</p>
+              <p class="text-gray-400 text-xs">Cost per 25 g of protein at typical retail prices.</p>
+            </div>
+            <div class="bg-white/5 rounded-xl p-4">
+              <span class="bg-[#FF4500] text-white w-8 h-8 rounded-lg flex items-center justify-center text-sm font-black mb-2">4</span>
+              <p class="font-bold text-white text-sm">Ingredients (15%)</p>
+              <p class="text-gray-400 text-xs">Sweeteners, added sugar, fillers and common gut irritants.</p>
+            </div>
+            <div class="bg-white/5 rounded-xl p-4">
+              <span class="bg-[#FF4500] text-white w-8 h-8 rounded-lg flex items-center justify-center text-sm font-black mb-2">5</span>
+              <p class="font-bold text-white text-sm">Buyer Feedback (10%)</p>
+              <p class="text-gray-400 text-xs">Recurring complaints about taste, mixing and digestion.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</Layout>

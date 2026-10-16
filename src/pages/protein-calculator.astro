@@ -1,0 +1,204 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { AUTHORS, DEFAULT_AUTHOR, authorSchema } from "../data/authors";
+import { SITE_NAME, SITE_URL } from "../data/site";
+import AuthorAvatar from "../components/AuthorAvatar.astro";
+import AuthorBio from "../components/AuthorBio.astro";
+import TrustBadge from "../components/TrustBadge.astro";
+import ProteinCalculator from "../components/ProteinCalculator.tsx";
+import { pageDates } from "../data/dates";
+
+const author = AUTHORS[DEFAULT_AUTHOR];
+const dates = pageDates(Astro.url.pathname, { published: "2026-10-16", modified: "2026-10-16" });
+const title = "Protein Calculator: How Many Grams a Day?";
+const description =
+  "A free daily protein calculator. Enter your weight and goal to get a target in grams per day, per meal, and how many scoops of protein powder close the gap.";
+
+const RANGES = [
+  ["General health, mostly inactive", "0.8–1.0 g/kg", "0.36–0.45 g/lb"],
+  ["Active / regular exercise", "1.2–1.6 g/kg", "0.55–0.73 g/lb"],
+  ["Building muscle", "1.6–2.2 g/kg", "0.73–1.0 g/lb"],
+  ["Losing fat while lifting", "1.8–2.4 g/kg", "0.82–1.1 g/lb"],
+  ["Endurance training", "1.2–1.6 g/kg", "0.55–0.73 g/lb"],
+  ["Age 65+ (general health)", "1.0–1.2 g/kg", "0.45–0.55 g/lb"],
+];
+
+const FAQ = [
+  [
+    "How many grams of protein do I need a day?",
+    "The RDA for adults is 0.8 g per kilogram of body weight, which is a minimum to avoid deficiency rather than an optimum. People who exercise regularly generally do better at 1.2 to 1.6 g/kg, and people trying to build muscle at around 1.6 g/kg, with little evidence of extra benefit beyond about 2.2 g/kg.",
+  ],
+  [
+    "Should I use my current weight or my goal weight?",
+    "If you are lean or close to a healthy weight, use your current weight. If you carry a lot of extra body fat, using your current weight overstates your needs, because fat tissue needs very little protein. Use your goal weight, or a weight in the healthy range for your height, instead.",
+  ],
+  [
+    "How much protein can my body absorb in one meal?",
+    "Your gut absorbs nearly all the protein you eat; the question is how much drives muscle building at once. Research suggests about 0.4 g/kg per meal (often 20 to 40 g) maximises the response for most people, which is why spreading intake across three or four meals is a sensible default.",
+  ],
+  [
+    "Do I need protein powder to hit my target?",
+    "No. Protein powder is a convenient food, not a requirement. If meat, fish, eggs, dairy, legumes or soy already get you to your number, a powder adds nothing. It earns its place when it is the cheapest or easiest way to close a gap of 20 to 50 g a day.",
+  ],
+  [
+    "Is a high-protein diet safe?",
+    "For healthy adults, intakes up to around 2 g/kg have not been shown to harm kidney function in the research to date. People with existing chronic kidney disease are a different case and are usually advised to limit protein, so they should follow their doctor's or dietitian's advice rather than any calculator.",
+  ],
+];
+
+const schema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Home", item: `${SITE_URL}/` },
+        { "@type": "ListItem", position: 2, name: "Guides", item: `${SITE_URL}/best-of/` },
+        { "@type": "ListItem", position: 3, name: "Protein Calculator", item: `${SITE_URL}/protein-calculator/` },
+      ],
+    },
+    {
+      "@type": "WebApplication",
+      name: "Daily Protein Calculator",
+      url: `${SITE_URL}/protein-calculator/`,
+      applicationCategory: "HealthApplication",
+      operatingSystem: "Any",
+      offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+    },
+    {
+      "@type": "FAQPage",
+      mainEntity: FAQ.map(([name, text]) => ({
+        "@type": "Question",
+        name,
+        acceptedAnswer: { "@type": "Answer", text },
+      })),
+    },
+    {
+      "@type": "Article",
+      headline: title,
+      description,
+      author: authorSchema(),
+      datePublished: dates.published,
+      dateModified: dates.modified,
+      publisher: { "@type": "Organization", name: SITE_NAME, url: SITE_URL },
+    },
+  ],
+};
+---
+
+<Layout
+  title={title}
+  description={description}
+  ogType="article"
+  article={{
+    publishedTime: dates.published,
+    modifiedTime: dates.modified,
+    author: author.name,
+    section: "Protein Basics",
+    tags: ["protein calculator", "how much protein per day", "protein intake calculator"],
+  }}
+  jsonLd={schema}
+  stickyCta={{ text: "See Our Top Protein Powders", link: "/best-protein-powder/" }}
+>
+  <article class="relative overflow-hidden">
+    <!-- Hero -->
+    <div class="bg-gray-900 py-16 lg:py-20 relative overflow-hidden">
+      <div class="max-w-4xl mx-auto px-4 relative z-10 text-center">
+        <div class="flex justify-center mb-6">
+          <TrustBadge />
+        </div>
+        <h1 class="text-4xl lg:text-6xl font-black text-white leading-tight mb-6">
+          Protein <span class="text-[#38BDF8]">Calculator</span>
+        </h1>
+        <p class="text-xl text-gray-300 leading-relaxed max-w-3xl mx-auto m-0">
+          Your daily protein target in grams, split across your meals — and how many scoops of powder it takes to close the gap, if any.
+        </p>
+      </div>
+    </div>
+
+    <div class="max-w-4xl mx-auto px-4 -mt-8 relative z-20">
+      <ProteinCalculator client:load />
+    </div>
+
+    <!-- Author & Meta -->
+    <div class="max-w-3xl mx-auto px-4 pt-12">
+      <div class="flex items-center gap-6 border-b border-gray-100 pb-8">
+        <div class="flex items-center gap-3">
+          <AuthorAvatar size={48} />
+          <div>
+            <p class="text-sm font-bold text-gray-900">{author.name}</p>
+            <p class="text-xs text-gray-500 uppercase tracking-widest">{author.role}</p>
+          </div>
+        </div>
+        <div class="h-10 w-px bg-gray-200 hidden sm:block"></div>
+        <div class="hidden sm:block">
+          <p class="text-sm font-bold text-gray-900">Last Updated</p>
+          <p class="text-xs text-gray-500">{dates.display}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="max-w-3xl mx-auto px-4 py-12 lg:pb-24">
+      <div class="prose prose-lg max-w-none text-gray-700 leading-relaxed">
+        <h2 class="text-3xl font-black text-gray-900 mb-6">How the calculator works</h2>
+        <p class="mb-4">
+          The calculator multiplies your body weight in kilograms by a range of grams per kilogram for your goal, then shows the middle of that range as your target. The ranges come from the research consensus rather than from supplement marketing: the adult RDA of 0.8 g/kg as the floor, the International Society of Sports Nutrition's position stand of 1.4–2.0 g/kg for people who exercise, and a widely cited 2018 meta-analysis by Morton and colleagues that found the muscle-building benefit of extra protein flattening out around 1.6 g/kg, with an upper confidence limit near 2.2 g/kg.
+        </p>
+        <p class="mb-8">
+          The per-meal figure simply divides your target by the number of meals you eat. If you also enter the protein you already get from food, it works out the gap and how many standard 25 g scoops of protein powder would close it. For most people eating meat, fish, dairy or soy, that gap is smaller than they expect — often one scoop or none. See <a href="/how-much-protein-do-i-need/" class="text-[#1E90FF] font-bold">how much protein you need</a> for the full explanation.
+        </p>
+
+        <h2 class="text-3xl font-black text-gray-900 mb-6">Protein targets by goal</h2>
+        <div class="overflow-hidden border border-gray-200 rounded-2xl mb-8 not-prose">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left">
+              <thead class="bg-gray-50 border-b border-gray-200">
+                <tr>
+                  <th class="px-4 py-4 font-bold text-gray-600 text-sm">Goal</th>
+                  <th class="px-4 py-4 font-bold text-gray-600 text-sm">Per kg</th>
+                  <th class="px-4 py-4 font-bold text-gray-600 text-sm">Per lb</th>
+                </tr>
+              </thead>
+              <tbody>
+                {RANGES.map((row, i) => (
+                  <tr class={`${i % 2 ? "bg-gray-50" : "bg-white"} border-b border-gray-100`}>
+                    <td class="px-4 py-4 font-black text-gray-900">{row[0]}</td>
+                    <td class="px-4 py-4 text-gray-700">{row[1]}</td>
+                    <td class="px-4 py-4 text-gray-700">{row[2]}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <h2 class="text-3xl font-black text-gray-900 mb-6">Using your number</h2>
+        <p class="mb-4">
+          Hit the daily total first; it matters far more than timing. Then spread it out — three or four meals of 20 to 40 g each beats one huge dinner for muscle building. If you want to know whether a shake belongs before or after training, read <a href="/when-to-take-protein-powder/" class="text-[#1E90FF] font-bold">when to take protein powder</a>.
+        </p>
+        <p class="mb-8">
+          If you do need a powder to close the gap, compare them on cost per 25 g of protein and on third-party testing rather than on the claims on the front of the tub. Our <a href="/best-protein-powder/" class="text-[#1E90FF] font-bold">best protein powder</a> rankings do that work, with separate guides for <a href="/best-whey-protein-isolate/" class="text-[#1E90FF] font-bold">whey isolate</a> and <a href="/best-plant-based-protein-powder/" class="text-[#1E90FF] font-bold">plant-based protein</a>.
+        </p>
+
+        <div class="bg-gray-900 text-white rounded-2xl p-6 lg:p-8 my-8 not-prose">
+          <p class="text-xs font-black uppercase tracking-widest text-[#38BDF8] mb-3">Before you change your diet</p>
+          <p class="text-gray-300 leading-relaxed m-0">
+            This calculator is for healthy adults. If you have chronic kidney disease, are pregnant or breastfeeding, are under 18, or have a medical condition that affects what you eat, ask your doctor or a registered dietitian for your target instead.
+          </p>
+        </div>
+
+        <h2 class="text-3xl font-black text-gray-900 mb-6">Frequently Asked Questions</h2>
+        <div class="space-y-6 not-prose">
+          {FAQ.map(([q, a]) => (
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">{q}</h3>
+              <p class="text-gray-700 text-sm leading-relaxed m-0">{a}</p>
+            </div>
+          ))}
+        </div>
+
+        <AuthorBio />
+      </div>
+    </div>
+  </article>
+</Layout>
