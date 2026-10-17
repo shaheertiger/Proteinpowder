@@ -1,0 +1,927 @@
+---
+import Layout from "../layouts/Layout.astro";
+import MoreInCategory from "../components/MoreInCategory.astro";
+import { AUTHORS, DEFAULT_AUTHOR, authorSchema } from "../data/authors";
+import { SITE_NAME, SITE_URL } from "../data/site";
+import AuthorAvatar from "../components/AuthorAvatar.astro";
+import QuickPicks from "../components/QuickPicks.astro";
+import AuthorBio from "../components/AuthorBio.astro";
+import { amazonLink } from "../data/affiliate";
+import TrustBadge from "../components/TrustBadge.astro";
+import SocialProof from "../components/SocialProof.astro";
+import SpecGrid from "../components/SpecGrid.astro";
+import productImages from "../data/product-images.json";
+import { pageDates } from "../data/dates";
+
+const moreInCategory = [
+  {
+    "title": "Best Protein Powder",
+    "url": "/best-protein-powder/"
+  },
+  {
+    "title": "Best Cheap Protein Powder",
+    "url": "/best-cheap-protein-powder/"
+  },
+  {
+    "title": "Best Optimum Nutrition Protein Powder",
+    "url": "/best-optimum-nutrition-protein-powder/"
+  },
+  {
+    "title": "Best Whey Protein Isolate",
+    "url": "/best-whey-protein-isolate/"
+  },
+  {
+    "title": "Best Protein Powder for Muscle Gain",
+    "url": "/best-protein-powder-for-muscle-gain/"
+  },
+  {
+    "title": "Protein Powder Comparison",
+    "url": "/protein-powder-comparison/"
+  }
+];
+const author = AUTHORS[DEFAULT_AUTHOR];
+const dates = pageDates(Astro.url.pathname, { published: "2026-10-17", modified: "2026-10-17" });
+const title = "Highest Protein Powder: Most Grams per Scoop, Gram and Calorie";
+const description =
+  "The highest protein powders ranked by protein per scoop, per calorie and by weight, with why oversized scoops inflate the headline number and how isolate compares.";
+
+const PRODUCTS: {
+  id: string;
+  name: string;
+  brand?: string;
+  badge: string;
+  category: string;
+  description: string;
+  pros: string[];
+  cons: string[];
+  bottomLine: string;
+  specs?: Record<string, string>;
+  rating?: number;
+  reviewCount?: number;
+  amazonUrl?: string;
+}[] = [
+  {
+    "id": "isopure-zero-carb",
+    "name": "Isopure Zero Carb Protein Powder",
+    "brand": "Isopure",
+    "badge": "Most Protein per Calorie",
+    "category": "Whey protein isolate",
+    "description": "Isopure Zero Carb lists about 25 g of protein for roughly 100 calories with zero carbohydrate, per the label; the unflavored version uses a 29 g scoop, which puts it around 86 percent protein by weight, and flavored versions use a slightly larger scoop. That makes it about as close to pure protein per calorie as a commercial powder gets. Buyers report flavor opinions are more mixed than for some rivals, so the unflavored version is a good place to start.",
+    "pros": [
+      "About 25 g protein for roughly 100 calories, per the label",
+      "Zero carbohydrate and sugar per the label",
+      "Unflavored version is about 86% protein by weight"
+    ],
+    "cons": [
+      "Flavor reviews are mixed",
+      "No sport certification we could confirm; check certifier databases"
+    ],
+    "bottomLine": "The densest protein per calorie on this list and the pick for strict diets.",
+    "specs": {
+      "Protein / serving": "About 25 g",
+      "Calories": "About 100 (flavor-dependent)",
+      "Protein by weight": "About 86% (unflavored)",
+      "Best for": "Maximum protein per calorie"
+    }
+  },
+  {
+    "id": "transparent-labs-grass-fed-whey-protein-isolate",
+    "name": "Transparent Labs 100% Grass-Fed Whey Protein Isolate",
+    "brand": "Transparent Labs",
+    "badge": "Most Protein per Standard Scoop",
+    "category": "Grass-fed whey protein isolate",
+    "description": "Transparent Labs lists about 28 g of protein per scoop across its flavors, one of the highest single-scoop doses among isolates, with label databases showing roughly 130 to 150 calories depending on flavor. The unflavored version reaches about 85 percent protein by weight; peanut butter flavors drop into the mid-70s because of their larger scoop. It is sweetened with stevia rather than sucralose and the brand publishes third-party lab results.",
+    "pros": [
+      "About 28 g protein per scoop, per the label",
+      "Stevia-sweetened, no artificial sweeteners",
+      "Brand publishes third-party lab results"
+    ],
+    "cons": [
+      "Premium cost per 25 g of protein",
+      "Density varies noticeably by flavor"
+    ],
+    "bottomLine": "The pick for the biggest dose per ordinary-sized scoop without giving up density.",
+    "specs": {
+      "Protein / serving": "About 28 g",
+      "Calories": "About 130-150 (flavor-dependent)",
+      "Third-party tested": "Published lab results",
+      "Best for": "High dose per scoop"
+    }
+  },
+  {
+    "id": "now-sports-whey-protein-isolate",
+    "name": "NOW Sports Whey Protein Isolate (Unflavored)",
+    "brand": "NOW Foods",
+    "badge": "Densest Whey by Weight",
+    "category": "Whey protein isolate (unflavored)",
+    "description": "NOW's unflavored isolate lists about 24 to 25 g of protein in a 28 g scoop with under a gram of carbohydrate and half a gram of fat, per the label, which puts it around 86 to 89 percent protein by weight and roughly 110 calories. With no flavoring or sweetener there is almost nothing in the scoop but protein, and it costs less per 25 g than most isolates. Buyers describe it as neutral and easy to stir into coffee or smoothies.",
+    "pros": [
+      "About 86-89% protein by weight",
+      "Very low carbohydrate and fat",
+      "Lower cost per 25 g than most isolates"
+    ],
+    "cons": [
+      "Unflavored only, bland in water",
+      "Smaller per-scoop dose than the top two picks"
+    ],
+    "bottomLine": "The densest whey on this list per gram of powder, and the best value isolate.",
+    "specs": {
+      "Protein / serving": "About 24-25 g",
+      "Calories": "About 110",
+      "Third-party tested": "Informed Sport (confirm)",
+      "Best for": "Density on a budget"
+    }
+  },
+  {
+    "id": "naked-nutrition-naked-pea",
+    "name": "Naked Pea Protein",
+    "brand": "Naked Nutrition",
+    "badge": "Highest-Protein Plant Powder",
+    "category": "Pea protein isolate (unflavored)",
+    "description": "Naked Pea lists about 27 g of protein for roughly 120 calories in a 30 g, two-scoop serving, per the label, which puts it around 90 percent protein by weight and 90 percent protein by calories. That is as dense as any whey isolate here. It is a single-ingredient pea protein with no sweeteners or flavors, and the brand says its nutritional values are verified by third-party testing. Buyers are candid that it tastes earthy alone and works best in smoothies or baking.",
+    "pros": [
+      "About 27 g protein per 30 g serving, per the label",
+      "Around 90% protein by weight and by calories",
+      "Single ingredient, dairy-free"
+    ],
+    "cons": [
+      "Earthy taste on its own",
+      "Lower in leucine and methionine than whey"
+    ],
+    "bottomLine": "The densest dairy-free option and as protein-dense as the best isolates.",
+    "specs": {
+      "Protein / serving": "About 27 g (2 scoops)",
+      "Calories": "About 120",
+      "Protein by weight": "About 90%",
+      "Best for": "Dairy-free density"
+    }
+  },
+  {
+    "id": "dymatize-iso100-hydrolyzed",
+    "name": "Dymatize ISO100 Hydrolyzed Whey Isolate",
+    "brand": "Dymatize",
+    "badge": "Best-Tasting Dense Isolate",
+    "category": "Hydrolyzed whey isolate + whey isolate",
+    "description": "ISO100 delivers about 25 g of protein for roughly 110 to 120 calories per scoop, depending on flavor, per the label, which works out to roughly 83 to 90 percent protein by calories. It combines hydrolyzed whey isolate and whey isolate with very little fat or carbohydrate, and it is promoted as Informed Choice certified. Its biggest advantage over the plainer isolates here is a wide flavor range that buyers consistently rate well.",
+    "pros": [
+      "About 25 g protein for roughly 110-120 calories, per the label",
+      "Promoted as Informed Choice certified",
+      "Wide, well-reviewed flavor range"
+    ],
+    "cons": [
+      "Premium cost per 25 g of protein",
+      "Hydrolyzed fraction adds cost, not protein"
+    ],
+    "bottomLine": "The dense isolate to buy when you also want a flavor you will look forward to.",
+    "specs": {
+      "Protein / serving": "About 25 g",
+      "Calories": "About 110-120 (flavor-dependent)",
+      "Third-party tested": "Informed Choice (confirm flavor)",
+      "Best for": "Flavored density"
+    }
+  },
+  {
+    "id": "optimum-nutrition-platinum-hydrowhey",
+    "name": "Optimum Nutrition Platinum Hydrowhey",
+    "brand": "Optimum Nutrition",
+    "badge": "Biggest Single Scoop",
+    "category": "Hydrolyzed whey protein isolate",
+    "description": "Platinum Hydrowhey lists about 30 g of protein per scoop for roughly 140 calories, per the label at the time of writing, the largest single-scoop dose on this list. Its scoop weighs around 39 to 41 g depending on the label version, so its protein share by weight is about 73 to 77 percent, similar to a good flavored powder rather than above it. It suits big lifters who want 30 g or more in one scoop and people who find hydrolyzed whey easier to digest.",
+    "pros": [
+      "About 30 g protein per scoop, per the label",
+      "Hydrolyzed isolate base digests quickly",
+      "About 86% of calories from protein"
+    ],
+    "cons": [
+      "Big dose comes partly from a big scoop",
+      "Top of the price range per 25 g"
+    ],
+    "bottomLine": "The pick for the most protein in a single scoop, not the most per gram.",
+    "specs": {
+      "Protein / serving": "About 30 g",
+      "Calories": "About 140",
+      "Protein by weight": "About 73-77%",
+      "Best for": "Big doses in one scoop"
+    }
+  }
+];
+
+const schema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Home",
+          item: `${SITE_URL}/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Best Lists",
+          item: `${SITE_URL}/best-of/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 3,
+          name: "Highest Protein Powder",
+          item: `${SITE_URL}/best-high-protein-powder/`,
+        },
+      ],
+    },
+    {
+      "@type": "FAQPage",
+      mainEntity: [
+        {
+          "@type": "Question",
+          "name": "What protein powder has the most protein per scoop?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Among mainstream powders, Optimum Nutrition Platinum Hydrowhey lists about 30 g per scoop and Transparent Labs Grass-Fed Isolate about 28 g, per the labels at the time of writing. Remember that per-scoop numbers depend on scoop size, so check protein by weight before assuming either is denser than a 25 g isolate with a smaller scoop."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What protein powder has the most protein per calorie?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Unflavored and lightly flavored whey isolates lead. Isopure Zero Carb lists about 25 g of protein for roughly 100 calories, and NOW Sports Whey Isolate about 24 to 25 g for roughly 110, per the label. Because labels round, anything above about 90 percent of calories from protein is effectively pure protein."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I calculate protein percentage by weight?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Divide the grams of protein per serving by the serving weight in grams, both from the nutrition panel, and multiply by 100. A 25 g dose in a 28 g scoop is about 89 percent protein. Plain isolates usually land in the mid to high 80s; flavored blends in the mid to high 70s."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is whey isolate higher in protein than concentrate?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Isolate is at least 90 percent protein on a dry basis, while sports concentrates are commonly around 80 percent. On a finished label that typically means about 85 to 90 percent protein by weight for plain isolate versus the 70s for flavored concentrate. For muscle gain the two perform similarly when the dose is matched."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is 30 g of protein per scoop better than 25 g?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Not necessarily. It depends on whether the extra protein comes from a denser powder or a bigger scoop, and on your needs. Most adults do well with 20 to 40 g per meal. A larger dose is convenient for big lifters, but total daily protein matters far more than the size of a single shake."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Which plant protein powder is highest in protein?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Unflavored pea isolates tend to be the densest. Naked Pea lists about 27 g of protein in a 30 g serving, roughly 90 percent by weight, per the label. Pea is lower in methionine and leucine than whey, so a slightly bigger serving or a pea and rice blend helps close the gap."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can too much protein powder be harmful?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "For healthy adults, protein intakes well above the recommended minimum appear safe in the research. People with kidney disease, those who are pregnant and anyone on medication or a medically supervised diet should agree a target with a doctor or registered dietitian. Choose independently tested powders to limit contaminant exposure."
+          }
+        }
+      ],
+    },
+    {
+      "@type": "Article",
+      headline: title,
+      author: authorSchema(),
+      datePublished: dates.published,
+      dateModified: dates.modified,
+      publisher: { "@type": "Organization", name: SITE_NAME, url: SITE_URL },
+    },
+    {
+      "@type": "ItemList",
+      name: title,
+      numberOfItems: PRODUCTS.length,
+      itemListElement: PRODUCTS.map((product, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name: product.name,
+        url: new URL(`#${product.id}`, Astro.url).toString(),
+      })),
+    },
+    ...PRODUCTS.map((product) => ({
+      "@type": "Product",
+      name: product.name,
+      description: product.description,
+      brand: {
+        "@type": "Brand",
+        name: product.brand ?? product.name.split(" ")[0],
+      },
+    })),
+  ],
+};
+---
+
+<Layout
+  title={title}
+  description={description}
+  ogType="article"
+  article={{
+    publishedTime: dates.published,
+    modifiedTime: dates.modified,
+    author: author.name,
+    section: "Protein Powder",
+    tags: [
+      "highest protein powder",
+      "high protein supplement powder",
+      "highest protein per scoop",
+      "protein density",
+      "protein percentage by weight"
+    ],
+  }}
+  jsonLd={schema}
+>
+  <article class="relative overflow-hidden">
+    <!-- Hero Section -->
+    <div class="bg-gray-900 py-16 lg:py-24 relative overflow-hidden">
+      <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(circle at 20% 20%, #38BDF8 0, transparent 45%), radial-gradient(circle at 80% 60%, #FF4500 0, transparent 40%);"></div>
+      <div class="max-w-4xl mx-auto px-4 relative z-10 text-center">
+        <div class="flex justify-center mb-6">
+          <TrustBadge />
+        </div>
+        <div class="flex justify-center gap-3 mb-6">
+          <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#FF4500]/20 text-[#FF4500] text-xs font-black uppercase tracking-widest border border-[#FF4500]/30">
+            Buyer's Guide
+          </span>
+          <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-green-500/10 text-green-400 text-xs font-bold uppercase tracking-widest border border-green-500/20">
+            Protein Density
+          </span>
+        </div>
+        <h1 class="text-4xl lg:text-6xl font-black text-white leading-tight mb-8">
+          Highest <span class="text-[#38BDF8]">Protein Powder</span>
+        </h1>
+        <p class="text-xl text-gray-300 leading-relaxed mb-8 max-w-3xl mx-auto">
+          Six powders that pack the most real protein into each scoop and each calorie, and the simple label math that exposes products whose big number comes from a big scoop.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a
+            href="#isopure-zero-carb"
+            class="px-8 py-4 bg-[#FF4500] hover:bg-[#E63E00] text-white font-black rounded-xl shadow-lg transition-all no-underline"
+          >
+            See Our #1 Pick
+          </a>
+          <a
+            href="#scoop-inflation"
+            class="px-8 py-4 bg-white/10 hover:bg-white/20 text-white font-bold rounded-xl border border-white/10 no-underline"
+          >
+            See the Scoop Math
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Author & Meta -->
+    <div class="max-w-3xl mx-auto px-4 pt-12">
+      <div class="flex items-center gap-6 border-b border-gray-100 pb-8">
+        <div class="flex items-center gap-3">
+          <AuthorAvatar size={48} />
+          <div>
+            <p class="text-sm font-bold text-gray-900">{author.name}</p>
+            <p class="text-xs text-gray-500 uppercase tracking-widest">{author.role}</p>
+          </div>
+        </div>
+        <div class="h-10 w-px bg-gray-200 hidden sm:block"></div>
+        <div class="hidden sm:block">
+          <p class="text-sm font-bold text-gray-900">Last Updated</p>
+          <p class="text-xs text-gray-500">{dates.display}</p>
+        </div>
+        <div class="hidden sm:block ml-auto">
+          <SocialProof />
+        </div>
+      </div>
+    </div>
+
+    <!-- Table of Contents -->
+    <div class="max-w-3xl mx-auto px-4 py-10">
+      <div class="bg-gray-50 border border-gray-200 rounded-2xl p-6 lg:p-8">
+        <h2 class="text-lg font-black text-gray-900 mb-4 flex items-center gap-2">
+          In This Guide
+        </h2>
+        <nav class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <a href="#what-highest-means" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">1. What Highest Protein Means</a>
+          <a href="#how-we-ranked" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">2. How We Ranked Them</a>
+          <a href="#top-picks" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">3. Our Top Picks</a>
+          <a href="#scoop-inflation" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">4. Why Big Scoops Inflate the Number</a>
+          <a href="#per-calorie" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">5. Protein per Calorie</a>
+          <a href="#isolate-concentrate" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">6. Isolate vs Concentrate</a>
+          <a href="#premium-labels" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">7. Hydrolyzed, Clear and Other Labels</a>
+          <a href="#how-much-per-scoop" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">8. How Much per Scoop You Need</a>
+          <a href="#plant-density" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">9. Plant Protein Density</a>
+          <a href="#gainers-blends" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">10. Gainers and High-Protein Blends</a>
+          <a href="#mistakes" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">11. Common Mistakes</a>
+          <a href="#faq" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">12. FAQ</a>
+        </nav>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="max-w-3xl mx-auto px-4 pb-16 lg:pb-24">
+      <div class="prose prose-lg prose-blue max-w-none text-gray-700 leading-relaxed">
+        <p class="text-2xl font-medium text-gray-900 mb-8 italic">
+          The biggest number on the front of a tub is not the same thing as the most protein. A 30 g claim can come from a dense isolate or from a scoop half again as large as everyone else's. The powders that genuinely lead on protein deliver the most per gram of powder and per calorie, and this guide ranks six of them on exactly those measures, then shows you how to check any product yourself.
+        </p>
+
+        <QuickPicks products={PRODUCTS} />
+
+        <div id="what-highest-means" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            1. Highest Protein: Per Scoop, per Calorie or per Gram?
+          </h2>
+
+          <p>
+            There are three honest ways to measure how high in protein a powder is, and they give different answers. Protein per scoop is the number brands print largest, and it is the least informative on its own, because a scoop is whatever size the brand decides. Protein per calorie tells you how much of the energy in a shake comes from protein rather than carbohydrate and fat. Protein by weight tells you how much of the powder you are paying for is actually protein.
+          </p>
+
+          <p>
+            Each measure answers a different question. If you want the fewest scoops to hit a daily target, protein per scoop matters. If you are dieting and every calorie counts, protein per calorie is the deciding number. If you want to know whether a product is padded with flavoring, sweeteners, thickeners or carbohydrate, protein by weight is the cleanest test, and it is the one that exposes oversized scoops.
+          </p>
+
+          <p>
+            The best high protein supplement powders score well on all three at once. A plain whey isolate typically delivers 25 g or more per scoop, gets close to 90 percent of its calories from protein and is somewhere between 80 and 90 percent protein by weight. A typical flavored whey blend lands closer to 24 g per scoop, 80 percent protein by calories and 75 to 80 percent by weight. A mass gainer can have 50 g of protein per serving and still be one of the lowest-density products in the store.
+          </p>
+
+          <p>
+            So when we call a powder the highest protein powder, we mean it ranks near the top on density, not just on the headline dose. A product that hits 30 g per serving by using a 45 g scoop is not higher in protein than one that hits 25 g with a 28 g scoop; it simply gives you more powder. The rest of this guide shows you how to tell the difference in a few seconds.
+          </p>
+        </div>
+
+        <div id="how-we-ranked" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            2. How We Ranked Protein Density
+          </h2>
+
+          <p>
+            We did not send products to a lab or run our own taste tests for this guide. The rankings come from label analysis, published certification status and the research on protein dosing, the method laid out on our <a href="/how-we-test/">how we test page</a>. Any comments on taste or mixing reflect what buyers widely report, not a claim of hands-on testing.
+          </p>
+
+          <p>
+            For every candidate we took the protein per serving, the serving weight in grams and the calories from the label, then calculated two ratios: protein as a percentage of serving weight, and protein calories as a percentage of total calories, using four calories per gram of protein. Products had to deliver at least 24 g of protein per serving, at least roughly three-quarters of their weight as protein and the large majority of their calories from protein to be considered.
+          </p>
+
+          <p>
+            We then screened for honesty. We excluded proprietary blends that hide the protein sources, and products listing free amino acids such as glycine or taurine in a way that could inflate a nitrogen-based protein figure, a practice known as amino spiking. We gave credit for independent certifications such as Informed Choice and for brands that publish third-party lab results, because a high protein claim is only valuable if it is true.
+          </p>
+
+          <p>
+            Finally, we weighed practicality. A product that wins on paper but that buyers consistently say is hard to drink did not make the cut, because the most protein-dense powder in the world does nothing in the cupboard. We kept one plant option so that dairy-free readers have a genuinely dense choice, and we included one high single-scoop product so you can see how dose and density differ. If cost per gram matters more than density, our <a href="/best-cheap-protein-powder/">best cheap protein powder guide</a> ranks budget options on cost per 25 g instead.
+          </p>
+        </div>
+
+        <!-- Picks -->
+        <div id="top-picks" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            3. The Highest Protein Powders
+          </h2>
+
+          <p>
+            Every pick below delivers at least 24 g of protein per serving, gets roughly three-quarters or more of its weight from protein, and gets the large majority of its calories from protein. They are ranked on a balance of protein per calorie, protein share by weight and dose per scoop. Figures are per the label at the time of writing and vary by flavor, so check the panel on the tub you buy.
+          </p>
+
+          {PRODUCTS.map((product, index) => (
+            <div id={product.id} class="scroll-mt-24 mt-12 first:mt-8">
+              <div class="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                <div class="bg-gray-900 px-6 py-4 flex items-center justify-between">
+                  <div class="flex items-center gap-3">
+                    <span class="bg-[#FF4500] text-white w-8 h-8 rounded-full flex items-center justify-center text-sm font-black">
+                      {index + 1}
+                    </span>
+                    {productImages[product.id] && (
+                      <img
+                        src={productImages[product.id]}
+                        alt={product.name}
+                        loading="lazy"
+                        width="40"
+                        height="40"
+                        class="w-10 h-10 rounded-lg bg-white object-contain p-1 shrink-0"
+                      />
+                    )}
+                    <div>
+                      <p class="text-white font-black text-lg">{product.name}</p>
+                      <p class="text-gray-400 text-xs">{product.category}</p>
+                    </div>
+                  </div>
+                  <span class="bg-[#38BDF8]/20 text-[#38BDF8] px-3 py-1 rounded-full text-xs font-bold hidden sm:block">
+                    {product.badge}
+                  </span>
+                </div>
+                <div class="p-6">
+                  {product.rating && (
+                  <div class="flex items-center gap-2 mb-4">
+                    <div class="flex text-yellow-400">
+                      {[...Array(5)].map((_, i) => (
+                        <svg
+                          class={`w-4 h-4 ${i < Math.floor(product.rating) ? "fill-current" : "text-gray-200"}`}
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                        >
+                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        </svg>
+                      ))}
+                    </div>
+                    <span class="text-gray-500 text-sm font-bold">{product.rating}</span>
+                    {product.reviewCount && <span class="text-gray-400 text-xs">({product.reviewCount.toLocaleString()} retailer reviews)</span>}
+                  </div>
+                  )}
+
+                  <SpecGrid specs={product.specs} />
+
+                  <p class="text-gray-700 leading-relaxed mb-6">{product.description}</p>
+
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                    <div class="bg-green-50 rounded-xl p-4">
+                      <p class="text-xs font-black uppercase tracking-widest text-green-700 mb-3">Pros</p>
+                      <ul class="space-y-2">
+                        {product.pros.map((pro) => (
+                          <li class="flex items-start gap-2 text-sm text-green-800">
+                            <svg class="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            {pro}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div class="bg-red-50 rounded-xl p-4">
+                      <p class="text-xs font-black uppercase tracking-widest text-red-700 mb-3">Cons</p>
+                      <ul class="space-y-2">
+                        {product.cons.map((con) => (
+                          <li class="flex items-start gap-2 text-sm text-red-800">
+                            <svg class="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                            {con}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+
+                  <div class="bg-gray-50 rounded-xl p-4 border border-gray-100">
+                    <p class="text-xs font-black uppercase tracking-widest text-gray-500 mb-1">The Bottom Line</p>
+                    <p class="text-gray-900 font-bold">{product.bottomLine}</p>
+                  </div>
+
+                  <a
+                    href={amazonLink(product.amazonUrl, product.name, product.id)}
+                    target="_blank"
+                    rel="sponsored nofollow noopener"
+                    class="mt-6 block bg-[#FF4500] hover:bg-[#E63E00] text-white text-center py-4 rounded-xl font-black no-underline transition-colors uppercase tracking-widest text-sm"
+                  >
+                    Check Price &rarr;
+                  </a>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div id="scoop-inflation" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            4. Why Bigger Scoops Inflate the Headline Number
+          </h2>
+
+          <p>
+            Protein per serving is a function of two things: how dense the powder is and how much powder is in a serving. Brands control the second number completely. A product that is 70 percent protein by weight will show 21 g of protein in a 30 g scoop and 31.5 g in a 45 g scoop. Same powder, same quality, 50 percent bigger headline. Nothing on the front of the tub tells you which version you are looking at.
+          </p>
+
+          <p>
+            That is why the serving weight on the nutrition panel is the most important number most people never read. Divide protein per serving by serving weight and you get protein by weight, a figure that cannot be gamed by changing the scoop. Plain isolates and unflavored single-ingredient powders tend to land between about 83 and 90 percent. Flavored isolates often sit in the high 70s or low 80s, flavored blends in the mid to high 70s, and anything below about 70 percent is carrying a lot of non-protein material per scoop.
+          </p>
+
+          <div class="overflow-hidden border border-gray-200 rounded-2xl my-8">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Pick</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Protein / serving</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Serving weight</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Protein by weight</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Naked Pea</td>
+                    <td class="px-4 py-4 text-gray-700">About 27 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 30 g (2 scoops)</td>
+                    <td class="px-4 py-4 text-gray-700">About 90%</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">NOW Sports Whey Isolate</td>
+                    <td class="px-4 py-4 text-gray-700">About 24-25 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 28 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 86-89%</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Isopure Zero Carb (unflavored)</td>
+                    <td class="px-4 py-4 text-gray-700">About 25 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 29 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 86%</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Transparent Labs Isolate</td>
+                    <td class="px-4 py-4 text-gray-700">About 28 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 33-38 g (flavor-dependent)</td>
+                    <td class="px-4 py-4 text-gray-700">About 74-85%</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">ON Platinum Hydrowhey</td>
+                    <td class="px-4 py-4 text-gray-700">About 30 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 39-41 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 73-77%</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <p>
+            Figures are per the label or label databases at the time of writing and vary by flavor. Look at the bottom row. Platinum Hydrowhey has the biggest per-scoop dose in the table, and it is a genuinely excellent product, but its density is in line with a good flavored powder rather than above it. It gets to 30 g partly because its scoop is around 40 g. That is not a criticism; it is just a reminder that per-scoop and per-gram rankings are different lists.
+          </p>
+
+          <p>
+            The same logic applies to products that define a serving as two scoops. There is nothing dishonest about a two-scoop serving, but it makes side-by-side comparison harder. Always convert to protein per gram of powder before deciding which product is higher in protein, and use protein per scoop only to decide how many scoops you need.
+          </p>
+        </div>
+
+        <div id="per-calorie" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            5. Protein per Calorie: The Metric That Matters on a Diet
+          </h2>
+
+          <p>
+            If you are trying to lose fat, protein per calorie is the number to care about. Protein supplies about four calories per gram, so multiply the grams of protein by four and divide by total calories. A shake with 25 g of protein and 100 calories is essentially all protein. One with 24 g of protein and 120 calories is 80 percent protein. A shake with 20 g of protein and 160 calories is only half protein, and the rest is carbohydrate and fat you may not need.
+          </p>
+
+          <p>
+            Be aware that labels round. Calories are rounded to the nearest 5 or 10 and protein to the nearest gram, and some products calculate calories with slightly different conversion factors. That is why a very lean isolate can appear to get 100 percent or more of its calories from protein. Treat anything above about 90 percent as effectively pure protein and do not split hairs between 91 and 94 percent.
+          </p>
+
+          <p>
+            The reason protein density matters so much on a diet is that protein is the most filling macronutrient and the one that best protects lean mass when calories are low. A dense powder lets you add 25 g of protein for about 100 to 120 calories, which is hard to match with whole foods outside lean meat, egg whites and nonfat dairy. A less dense one can quietly add an extra 50 to 100 calories per shake, which adds up over a months-long cut.
+          </p>
+
+          <p>
+            On this measure Isopure Zero Carb, NOW Sports Whey Isolate and Naked Pea lead our list, with Dymatize ISO100 and Transparent Labs close behind. For a full ranking built specifically around dieting, including how to use shakes in a deficit, see our <a href="/best-protein-powder-for-weight-loss/">best protein powder for weight loss guide</a>.
+          </p>
+        </div>
+
+        <div id="isolate-concentrate" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            6. Isolate vs Concentrate: Where the Extra Protein Comes From
+          </h2>
+
+          <p>
+            Whey starts as a by-product of cheese making. Filtering it produces whey protein concentrate, which is commonly sold as about 80 percent protein on a dry basis, with the rest mainly lactose, fat and minerals. Further filtration removes most of that remaining lactose and fat to produce whey protein isolate, which by definition is at least 90 percent protein on a dry basis. That extra filtration is the main reason isolates dominate any list of the highest protein powders.
+          </p>
+
+          <p>
+            Dry-basis percentages are higher than what you see on a label, because a finished powder contains some moisture and, if flavored, cocoa, flavoring, sweeteners and thickeners. That is why even an unflavored isolate tends to show 85 to 90 percent protein by weight on the label rather than 90-plus, and why a flavored concentrate drops into the 70s. The more a product adds for taste and texture, the lower its density falls.
+          </p>
+
+          <p>
+            For muscle building, the difference between isolate and concentrate is small when the protein dose is matched. Both are complete proteins rich in leucine, and research has not shown that the extra purity of isolate builds more muscle. What isolate buys you is a few grams less lactose, carbohydrate and fat per scoop, which matters if you are lactose sensitive or counting calories closely. Our <a href="/whey-vs-whey-isolate/">whey vs whey isolate guide</a> covers the trade-offs in more depth.
+          </p>
+
+          <p>
+            If your goal is simply the most protein per scoop at the lowest cost, a good concentrate taken in a slightly larger serving will often get you there more cheaply than an isolate. If your goal is the most protein per calorie, isolate is the clear winner, which is why five of our six picks are isolates or isolate-based.
+          </p>
+        </div>
+
+        <div id="premium-labels" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            7. Hydrolyzed, Clear and Other Premium Labels
+          </h2>
+
+          <p>
+            Hydrolyzed whey has been partly broken down into shorter peptides during processing. It digests a little faster and some people find it easier on the stomach, but it does not contain more protein than the isolate it was made from, and research has not shown that hydrolyzed whey builds more muscle than regular isolate at the same dose. It mainly adds cost and, sometimes, a slightly bitter taste that flavorings have to cover.
+          </p>
+
+          <p>
+            Clear whey isolates are processed and acidified to drink like juice rather than a milkshake. They are often very lean, with a high share of calories from protein, but many have smaller doses of around 20 g per serving and use acids and flavorings that dilute the protein share by weight. They are a good choice if you dislike milky shakes, less so if you want the most protein per scoop. Our <a href="/best-clear-protein-powder/">clear protein powder guide</a> covers the category.
+          </p>
+
+          <p>
+            Labels such as grass-fed, cold-processed or undenatured describe sourcing or processing rather than protein content. They may matter to you for other reasons, but they do not make a powder higher in protein. The same goes for added digestive enzymes, probiotics or extra amino acids: none of them increases the amount of intact protein in a scoop, and added free amino acids can actually make a protein claim less trustworthy.
+          </p>
+
+          <p>
+            The practical rule is to judge every premium label by the same two ratios. If a hydrolyzed or clear product delivers excellent protein by weight and by calorie at a cost you are happy with, buy it. If the premium label comes with lower density than a plain isolate, you are paying extra for processing rather than protein.
+          </p>
+        </div>
+
+        <div id="how-much-per-scoop" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            8. How Much Protein per Scoop Do You Actually Need?
+          </h2>
+
+          <p>
+            More protein per scoop is only useful up to a point. Research on muscle protein synthesis suggests that around 0.4 g of protein per kilogram of body weight per meal, which works out to roughly 20 to 40 g for most adults, is a sensible target for maximizing the muscle-building response to a single meal. Early studies in young men found the response to whey after leg training largely plateaued around 20 g.
+          </p>
+
+          <p>
+            Later work complicated that picture in a helpful way. A 2016 study found that 40 g of whey after whole-body resistance exercise produced a larger response than 20 g, and a 2023 study reported that a 100 g protein dose produced a larger and much longer-lasting anabolic response than 25 g. The emerging view is that bigger doses are not wasted; they are used over a longer period. Even so, total daily protein matters far more than squeezing the maximum into one scoop.
+          </p>
+
+          <p>
+            For most people, the daily target is the number to plan around. A widely cited 2018 meta-analysis found that gains in lean mass from resistance training plateaued at about 1.6 g of protein per kilogram of body weight per day, with an upper confidence bound around 2.2 g. Our <a href="/protein-calculator/">protein calculator</a> will give you a daily figure, and our <a href="/how-much-protein-do-i-need/">daily protein targets guide</a> explains how to split it across meals.
+          </p>
+
+          <p>
+            What a high protein powder really buys you, then, is efficiency: fewer scoops and fewer calories to reach your target. A 30 g scoop is convenient for a large lifter who wants to hit 40 g in one shake without measuring a scoop and a half. A 25 g scoop of a lean isolate is plenty for most people. People with kidney disease or other medical conditions should check protein targets with a doctor or registered dietitian before increasing intake.
+          </p>
+        </div>
+
+        <div id="plant-density" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            9. Can Plant Protein Match Whey on Density?
+          </h2>
+
+          <p>
+            On protein by weight, the best plant isolates are as dense as whey isolate or denser. Single-ingredient pea isolates in particular often reach close to 90 percent protein by weight on the label, because there is nothing in the bag but the protein itself. Naked Pea, our plant pick, lists about 27 g of protein in a 30 g serving, which puts it at the top of our density table.
+          </p>
+
+          <p>
+            Where plant protein falls short is the amino acid profile. Pea protein is lower in methionine and somewhat lower in leucine than whey, and leucine is the amino acid most closely tied to switching on muscle protein synthesis. A gram of pea protein is therefore not quite equivalent to a gram of whey for muscle building. The usual fix is a slightly larger dose or a blend with rice protein, and studies comparing pea and whey at decent doses alongside training have generally found similar results.
+          </p>
+
+          <p>
+            Flavored plant blends are usually much less dense than unflavored isolates. Gums, creamers, cocoa and natural sweeteners take up a lot of room, so many flavored plant powders land in the 60s or low 70s for protein by weight. If you want a high protein plant shake, buy an unflavored isolate and flavor it yourself, or check the serving weight carefully before buying a flavored blend.
+          </p>
+
+          <p>
+            Plant proteins also tend to carry more heavy metals than dairy, a finding highlighted again by Consumer Reports testing in 2025. Favor brands that publish third-party results, and see our <a href="/best-pea-protein-powder/">pea protein rankings</a> for more options that pass that check.
+          </p>
+        </div>
+
+        <div id="gainers-blends" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            10. Gainers, Blends and High Protein Marketing
+          </h2>
+
+          <p>
+            Mass gainers routinely print some of the biggest protein numbers in the store, often 50 g or more per serving. They are also among the least protein-dense products you can buy, because those servings are enormous and most of the calories come from carbohydrate. A gainer that delivers 50 g of protein in roughly 1,250 calories gets only about 16 percent of its energy from protein. That is useful if you struggle to eat enough, but it is not a high protein powder in any meaningful sense.
+          </p>
+
+          <p>
+            Multi-source blends sit in the middle. A typical blend of whey concentrate, isolate, casein and egg might deliver 24 g of protein in a 32 g scoop, a perfectly respectable density. The things to check are whether the blend is disclosed, whether free amino acids appear among the protein sources, and whether the serving weight has been inflated to hit a round number. Our <a href="/protein-powder-comparison/">protein powder comparison</a> lays twelve popular products side by side on these measures.
+          </p>
+
+          <p>
+            Be skeptical of products marketed as high protein that list a long ingredient panel of added extras: creatine, BCAAs, glutamine, energy blends or recovery matrices. Each extra takes up space that protein could have filled, and some nitrogen-rich extras can inflate a protein test. If you want those ingredients, buy them separately and dose them properly.
+          </p>
+
+          <p>
+            The reliable formula is simple. Pick a powder with a short ingredient list, a disclosed protein source and a high protein share by weight and by calorie, then take as many scoops as your daily target requires. If you want the brand-by-brand view of one of the biggest names in the category, our <a href="/best-optimum-nutrition-protein-powder/">Optimum Nutrition lineup guide</a> shows how the density of each of its tubs compares.
+          </p>
+        </div>
+
+        <!-- Common Mistakes -->
+        <div id="mistakes" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            11. Common Mistakes to Avoid
+          </h2>
+
+          <div class="space-y-6 my-8">
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Ranking powders by protein per serving alone</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Protein per serving depends on scoop size, which brands set themselves. Divide protein by serving weight to get protein by weight, and divide protein calories by total calories for protein per calorie. Those two numbers cannot be gamed by a bigger scoop and they are the honest measures of density.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Treating mass gainers as high protein powders</h3>
+              <p class="text-gray-700 text-sm m-0">
+                A gainer with 50 g of protein per serving can get only a sixth of its calories from protein. That suits people who cannot eat enough, but it is the opposite of a dense protein powder. If you want protein without the carbohydrate, buy an isolate and add food separately.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Paying extra for hydrolyzed whey to get more protein</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Hydrolysis breaks protein into smaller peptides; it does not add protein. Research has not shown hydrolyzed whey builds more muscle than isolate at the same dose. Buy it if you prefer it or find it easier to digest, not because you expect a higher protein figure.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Assuming a flavored plant blend is as dense as a pea isolate</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Gums, creamers and cocoa can push flavored plant powders down to the 60s for protein by weight. Unflavored isolates often reach close to 90 percent. Check the serving weight on the panel, and flavor a plain isolate yourself if density matters most to you.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Chasing the biggest single dose instead of the daily total</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Total daily protein drives results far more than the size of any one shake. A 25 g scoop of a lean isolate is plenty for most people per serving. Use the biggest-scoop products for convenience, and plan around a daily target set with a calculator or a dietitian.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ -->
+        <div id="faq" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            12. Frequently Asked Questions
+          </h2>
+
+          <div class="space-y-6">
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">What protein powder has the most protein per scoop?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Among mainstream powders, Optimum Nutrition Platinum Hydrowhey lists about 30 g per scoop and Transparent Labs Grass-Fed Isolate about 28 g, per the labels at the time of writing. Remember that per-scoop numbers depend on scoop size, so check protein by weight before assuming either is denser than a 25 g isolate with a smaller scoop.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">What protein powder has the most protein per calorie?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Unflavored and lightly flavored whey isolates lead. Isopure Zero Carb lists about 25 g of protein for roughly 100 calories, and NOW Sports Whey Isolate about 24 to 25 g for roughly 110, per the label. Because labels round, anything above about 90 percent of calories from protein is effectively pure protein.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">How do I calculate protein percentage by weight?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Divide the grams of protein per serving by the serving weight in grams, both from the nutrition panel, and multiply by 100. A 25 g dose in a 28 g scoop is about 89 percent protein. Plain isolates usually land in the mid to high 80s; flavored blends in the mid to high 70s.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is whey isolate higher in protein than concentrate?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Yes. Isolate is at least 90 percent protein on a dry basis, while sports concentrates are commonly around 80 percent. On a finished label that typically means about 85 to 90 percent protein by weight for plain isolate versus the 70s for flavored concentrate. For muscle gain the two perform similarly when the dose is matched.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is 30 g of protein per scoop better than 25 g?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Not necessarily. It depends on whether the extra protein comes from a denser powder or a bigger scoop, and on your needs. Most adults do well with 20 to 40 g per meal. A larger dose is convenient for big lifters, but total daily protein matters far more than the size of a single shake.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Which plant protein powder is highest in protein?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Unflavored pea isolates tend to be the densest. Naked Pea lists about 27 g of protein in a 30 g serving, roughly 90 percent by weight, per the label. Pea is lower in methionine and leucine than whey, so a slightly bigger serving or a pea and rice blend helps close the gap.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Can too much protein powder be harmful?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                For healthy adults, protein intakes well above the recommended minimum appear safe in the research. People with kidney disease, those who are pregnant and anyone on medication or a medically supervised diet should agree a target with a doctor or registered dietitian. Choose independently tested powders to limit contaminant exposure.
+              </p>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Related Guides -->
+        <div class="mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">Related Protein Powder Guides</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <a href="/best-whey-protein-isolate/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#FF4500] font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Whey Protein Isolate</h3>
+              <p class="text-gray-500 text-sm mt-2">Six isolates that earn their premium on purity and certification.</p>
+            </a>
+            <a href="/best-cheap-protein-powder/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#1E90FF] font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Cheap Protein Powder</h3>
+              <p class="text-gray-500 text-sm mt-2">Budget powders ranked on cost per 25 g of real protein.</p>
+            </a>
+            <a href="/best-protein-powder-for-weight-loss/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-green-600 font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Protein Powder for Weight Loss</h3>
+              <p class="text-gray-500 text-sm mt-2">Most protein per calorie, and how to use shakes in a deficit.</p>
+            </a>
+          </div>
+        </div>
+
+        <!-- Closing -->
+        <div class="mt-16 bg-gray-900 text-white rounded-2xl p-8">
+          <h2 class="text-2xl font-black text-white mb-4">The Bottom Line</h2>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            The highest protein powder is the one that delivers the most protein per gram of powder and per calorie, not the one with the biggest number on the tub. On those measures, plain and lightly flavored whey isolates such as Isopure Zero Carb, NOW Sports Whey Isolate, Dymatize ISO100 and Transparent Labs lead, with Naked Pea the densest plant option.
+          </p>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            If you want the biggest single scoop, Platinum Hydrowhey delivers about 30 g, just know that part of that comes from a larger scoop. Whatever you choose, read the serving weight, run the two ratios, and plan around your daily total rather than a single shake.
+          </p>
+        </div>
+
+        <MoreInCategory category="Protein Powder" links={moreInCategory} />
+
+        <AuthorBio />
+      </div>
+    </div>
+  </article>
+</Layout>

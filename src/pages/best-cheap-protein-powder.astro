@@ -1,0 +1,927 @@
+---
+import Layout from "../layouts/Layout.astro";
+import MoreInCategory from "../components/MoreInCategory.astro";
+import { AUTHORS, DEFAULT_AUTHOR, authorSchema } from "../data/authors";
+import { SITE_NAME, SITE_URL } from "../data/site";
+import AuthorAvatar from "../components/AuthorAvatar.astro";
+import QuickPicks from "../components/QuickPicks.astro";
+import AuthorBio from "../components/AuthorBio.astro";
+import { amazonLink } from "../data/affiliate";
+import TrustBadge from "../components/TrustBadge.astro";
+import SocialProof from "../components/SocialProof.astro";
+import SpecGrid from "../components/SpecGrid.astro";
+import productImages from "../data/product-images.json";
+import { pageDates } from "../data/dates";
+
+const moreInCategory = [
+  {
+    "title": "Best Protein Powder",
+    "url": "/best-protein-powder/"
+  },
+  {
+    "title": "Highest Protein Powder",
+    "url": "/best-high-protein-powder/"
+  },
+  {
+    "title": "Best Optimum Nutrition Protein Powder",
+    "url": "/best-optimum-nutrition-protein-powder/"
+  },
+  {
+    "title": "Best Whey Protein Powder",
+    "url": "/best-whey-protein-powder/"
+  },
+  {
+    "title": "Best Unflavored Protein Powder",
+    "url": "/best-unflavored-protein-powder/"
+  },
+  {
+    "title": "Protein Powder Comparison",
+    "url": "/protein-powder-comparison/"
+  }
+];
+const author = AUTHORS[DEFAULT_AUTHOR];
+const dates = pageDates(Astro.url.pathname, { published: "2026-10-17", modified: "2026-10-17" });
+const title = "Best Cheap Protein Powder: Ranked by Cost per 25 g of Protein";
+const description =
+  "The best cheap protein powders ranked on cost per 25 g of protein, plus how to spot amino spiking and underdosed blends that make a low price a false economy.";
+
+const PRODUCTS: {
+  id: string;
+  name: string;
+  brand?: string;
+  badge: string;
+  category: string;
+  description: string;
+  pros: string[];
+  cons: string[];
+  bottomLine: string;
+  specs?: Record<string, string>;
+  rating?: number;
+  reviewCount?: number;
+  amazonUrl?: string;
+}[] = [
+  {
+    "id": "optimum-nutrition-gold-standard-100-whey",
+    "name": "Optimum Nutrition Gold Standard 100% Whey",
+    "brand": "Optimum Nutrition",
+    "badge": "Best Overall Value",
+    "category": "Whey blend (isolate, concentrate, peptides)",
+    "description": "Gold Standard is rarely the absolute cheapest whey, but at typical retail and sale prices its cost per 25 g of protein sits toward the low end of the market, and it backs that up with something most budget wheys lack: it is promoted as Informed Choice certified. The label gives about 24 g of protein for roughly 120 calories per scoop, varying by flavor, and buyers widely rate its flavors highly. It is the safest way to save money without wondering what is in the tub.",
+    "pros": [
+      "About 24 g protein per roughly 30 g scoop, per the label",
+      "Promoted as Informed Choice certified (confirm your flavor)",
+      "Frequently discounted in the 5 lb size"
+    ],
+    "cons": [
+      "Not the lowest cost per 25 g on any given day",
+      "Contains concentrate, so some lactose"
+    ],
+    "bottomLine": "The budget whey to buy if you want a low cost per gram and independent testing in the same tub.",
+    "specs": {
+      "Protein / serving": "About 24 g (varies by flavor)",
+      "Calories": "About 120",
+      "Third-party tested": "Informed Choice (confirm flavor)",
+      "Best for": "Value with verification"
+    }
+  },
+  {
+    "id": "nutricost-whey-protein-concentrate",
+    "name": "Nutricost Whey Protein Concentrate",
+    "brand": "Nutricost",
+    "badge": "Lowest-Cost Flavored Whey",
+    "category": "Whey protein concentrate",
+    "description": "Nutricost's flavored whey concentrate lists about 25 g of protein for roughly 130 calories per 36 g scoop in vanilla, per the label at the time of writing, with a short ingredient list of whey concentrate, sunflower lecithin, natural flavor, salt and sucralose. It is usually among the lowest costs per 25 g of any flavored whey in the 5 lb size. Nutricost describes its products as third-party tested and made in an NSF-registered, GMP-compliant facility; that is a facility claim rather than a product certification such as NSF Certified for Sport.",
+    "pros": [
+      "About 25 g protein per scoop, per the label",
+      "Simple formula with no proprietary blend",
+      "Typically one of the cheapest flavored wheys per 25 g"
+    ],
+    "cons": [
+      "Lower protein share by weight than plainer powders (about 69%)",
+      "No product-level sport certification we could confirm"
+    ],
+    "bottomLine": "The pick when lowest cost per gram of flavored whey matters most and you do not need sport certification.",
+    "specs": {
+      "Protein / serving": "About 25 g (36 g scoop)",
+      "Calories": "About 130 (vanilla)",
+      "Third-party tested": "Brand states third-party tested",
+      "Best for": "Lowest cost flavored whey"
+    }
+  },
+  {
+    "id": "myprotein-impact-whey-protein",
+    "name": "Myprotein Impact Whey Protein",
+    "brand": "Myprotein",
+    "badge": "Best on Sale",
+    "category": "Whey protein concentrate",
+    "description": "Impact Whey is a straightforward whey concentrate with about 20 to 21 g of protein per 25 g scoop in the US version, per the label, which works out to a high protein share for a flavored powder. Myprotein runs deep discounts so often that its sale price, not its list price, is the one to compare, and at those prices it is consistently among the cheapest ways to buy 25 g of whey. The flavor range is enormous. Certification varies by market, so check the certifier database for the version you buy.",
+    "pros": [
+      "High protein share by weight for a flavored whey",
+      "Very frequent deep discounts",
+      "Huge flavor range"
+    ],
+    "cons": [
+      "Smaller scoop means about 1.2 scoops for 25 g",
+      "List price is much less competitive than sale price"
+    ],
+    "bottomLine": "Buy it on sale and it is one of the cheapest honest wheys available; at full price, compare first.",
+    "specs": {
+      "Protein / serving": "About 20-21 g per 25 g scoop",
+      "Calories": "Check label (flavor-dependent)",
+      "Third-party tested": "Check certifier database",
+      "Best for": "Sale-hunters"
+    }
+  },
+  {
+    "id": "naked-nutrition-naked-whey",
+    "name": "Naked Whey",
+    "brand": "Naked Nutrition",
+    "badge": "Best Unflavored Bulk Buy",
+    "category": "Whey protein concentrate (unflavored)",
+    "description": "Naked Whey is a single-ingredient grass-fed whey concentrate with about 25 g of protein per two-scoop, 30 g serving, per the label. With nothing added there is nothing to dilute the protein, and the large bag sizes bring its cost per 25 g down into budget territory. Because it is unflavored and unsweetened it suits oats, smoothies and baking far better than a shaker of water, and buyers say it tastes like mild milk powder.",
+    "pros": [
+      "Single ingredient: whey concentrate only",
+      "About 25 g protein per 30 g serving, per the label",
+      "Bulk sizes keep cost per 25 g low"
+    ],
+    "cons": [
+      "Bland in water without your own flavoring",
+      "No sport certification we could confirm"
+    ],
+    "bottomLine": "The best value for people who cook with protein or want total control over sweeteners.",
+    "specs": {
+      "Protein / serving": "About 25 g (2 scoops)",
+      "Calories": "About 120",
+      "Third-party tested": "Verify current status",
+      "Best for": "Unflavored bulk buyers"
+    }
+  },
+  {
+    "id": "now-sports-whey-protein-isolate",
+    "name": "NOW Sports Whey Protein Isolate (Unflavored)",
+    "brand": "NOW Foods",
+    "badge": "Cheapest Isolate",
+    "category": "Whey protein isolate (unflavored)",
+    "description": "NOW's unflavored isolate lists about 24 to 25 g of protein per 28 g scoop with under a gram of carbohydrate, per the label, giving it one of the highest protein shares by weight of any powder here. Isolate costs more to make than concentrate, but skipping flavoring and sweeteners keeps this one at one of the lower costs per 25 g for an isolate. NOW runs its own testing labs, and the brand states many of its Sports products carry Informed Sport certification; confirm this product in the certifier database.",
+    "pros": [
+      "About 24-25 g protein per 28 g scoop, per the label",
+      "Low lactose and almost no carbohydrate",
+      "Neutral taste mixes into coffee and cold drinks"
+    ],
+    "cons": [
+      "Costs more per 25 g than the concentrates here",
+      "Unflavored only"
+    ],
+    "bottomLine": "The budget answer for anyone who needs isolate for lactose or macros.",
+    "specs": {
+      "Protein / serving": "About 24-25 g",
+      "Calories": "About 110",
+      "Third-party tested": "Informed Sport (confirm)",
+      "Best for": "Isolate on a budget"
+    }
+  },
+  {
+    "id": "now-sports-pea-protein",
+    "name": "NOW Sports Pea Protein (Unflavored)",
+    "brand": "NOW Foods",
+    "badge": "Best Budget Plant",
+    "category": "Pea protein isolate (unflavored)",
+    "description": "NOW's unflavored pea protein delivers about 24 g of protein per scoop for roughly 120 calories, per the label, at one of the lowest costs per 25 g of protein in the plant category, especially in the larger bags. NOW runs its own in-house testing laboratory, which matters more for plant protein than for dairy given the heavy metal concerns raised by recent independent testing. Like every unflavored pea isolate, it tastes earthy on its own and works best blended.",
+    "pros": [
+      "About 24 g protein per scoop, per the label",
+      "One of the cheapest plant proteins per 25 g",
+      "Brand runs in-house testing"
+    ],
+    "cons": [
+      "Earthy taste and gritty texture in water",
+      "Slightly less leucine per gram than whey"
+    ],
+    "bottomLine": "The cheapest credible plant protein for smoothies, oats and baking.",
+    "specs": {
+      "Protein / serving": "About 24 g",
+      "Calories": "About 120",
+      "Third-party tested": "Brand in-house lab testing",
+      "Best for": "Vegan and dairy-free budgets"
+    }
+  }
+];
+
+const schema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Home",
+          item: `${SITE_URL}/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Best Lists",
+          item: `${SITE_URL}/best-of/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 3,
+          name: "Best Cheap Protein Powder",
+          item: `${SITE_URL}/best-cheap-protein-powder/`,
+        },
+      ],
+    },
+    {
+      "@type": "FAQPage",
+      mainEntity: [
+        {
+          "@type": "Question",
+          "name": "What is the cheapest way to buy protein powder?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Buy a plain whey concentrate or a single-ingredient pea protein in the largest size you will finish, ideally on sale, and compare products on cost per 25 g of protein rather than tub price. Unflavored versions usually give the most protein per scoop for the money, and you can flavor them cheaply at home."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is cheap protein powder bad for you?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Not inherently. Many budget powders are simple whey or pea protein with a short ingredient list. The risks at the low end are inflated protein claims and, for plant products, heavy metals. Choose products with disclosed formulas and some form of independent testing, and a cheap powder can be just as good as an expensive one."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I calculate cost per gram of protein?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Divide the price by the number of servings to get cost per serving, then divide that by the grams of protein per serving to get cost per gram. Multiply by 25 for cost per 25 g. Using the same unit for every product cancels out differences in tub size and scoop size."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is whey concentrate as good as isolate?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "For building muscle, yes, when the protein dose is matched. Concentrate contains a little more lactose, fat and carbohydrate per scoop, which matters if you are lactose intolerant or counting calories very closely. For most people it delivers nearly the same result as isolate for noticeably less money."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is amino spiking?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Amino spiking is adding cheap nitrogen-containing ingredients such as glycine, taurine or creatine to a protein product so that a nitrogen-based lab test reports more protein than is really there. It was the subject of a wave of US class-action lawsuits starting in 2014. Reading the ingredients list is the best defense."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Are budget plant protein powders safe?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Many are, but plant proteins on average carry more heavy metals than dairy proteins, according to Consumer Reports testing in 2025. Look for published lab results or a recognized certification, and favor brands that answer questions about lead. Pregnant people and anyone with health conditions should ask a doctor or dietitian."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is protein powder cheaper than food?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sometimes, not always. Milk, eggs, Greek yogurt, canned fish, lentils and chicken thighs are often competitive per 25 g of protein, depending on prices where you live. Powder usually wins on convenience and on protein per calorie, so it is most useful when you are short on time or dieting."
+          }
+        }
+      ],
+    },
+    {
+      "@type": "Article",
+      headline: title,
+      author: authorSchema(),
+      datePublished: dates.published,
+      dateModified: dates.modified,
+      publisher: { "@type": "Organization", name: SITE_NAME, url: SITE_URL },
+    },
+    {
+      "@type": "ItemList",
+      name: title,
+      numberOfItems: PRODUCTS.length,
+      itemListElement: PRODUCTS.map((product, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name: product.name,
+        url: new URL(`#${product.id}`, Astro.url).toString(),
+      })),
+    },
+    ...PRODUCTS.map((product) => ({
+      "@type": "Product",
+      name: product.name,
+      description: product.description,
+      brand: {
+        "@type": "Brand",
+        name: product.brand ?? product.name.split(" ")[0],
+      },
+    })),
+  ],
+};
+---
+
+<Layout
+  title={title}
+  description={description}
+  ogType="article"
+  article={{
+    publishedTime: dates.published,
+    modifiedTime: dates.modified,
+    author: author.name,
+    section: "Protein Powder",
+    tags: [
+      "best cheap protein powder",
+      "budget friendly protein powder",
+      "affordable protein powder",
+      "cheap protein powder",
+      "cost per gram of protein"
+    ],
+  }}
+  jsonLd={schema}
+>
+  <article class="relative overflow-hidden">
+    <!-- Hero Section -->
+    <div class="bg-gray-900 py-16 lg:py-24 relative overflow-hidden">
+      <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(circle at 20% 20%, #38BDF8 0, transparent 45%), radial-gradient(circle at 80% 60%, #FF4500 0, transparent 40%);"></div>
+      <div class="max-w-4xl mx-auto px-4 relative z-10 text-center">
+        <div class="flex justify-center mb-6">
+          <TrustBadge />
+        </div>
+        <div class="flex justify-center gap-3 mb-6">
+          <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#FF4500]/20 text-[#FF4500] text-xs font-black uppercase tracking-widest border border-[#FF4500]/30">
+            Buyer's Guide
+          </span>
+          <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-green-500/10 text-green-400 text-xs font-bold uppercase tracking-widest border border-green-500/20">
+            Budget Picks
+          </span>
+        </div>
+        <h1 class="text-4xl lg:text-6xl font-black text-white leading-tight mb-8">
+          Best Cheap <span class="text-[#38BDF8]">Protein Powder</span>
+        </h1>
+        <p class="text-xl text-gray-300 leading-relaxed mb-8 max-w-3xl mx-auto">
+          Six budget-friendly powders ranked on what you actually pay for 25 g of real protein, and the label tricks that make some cheap tubs more expensive than they look.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a
+            href="#optimum-nutrition-gold-standard-100-whey"
+            class="px-8 py-4 bg-[#FF4500] hover:bg-[#E63E00] text-white font-black rounded-xl shadow-lg transition-all no-underline"
+          >
+            See Our #1 Pick
+          </a>
+          <a
+            href="#cost-math"
+            class="px-8 py-4 bg-white/10 hover:bg-white/20 text-white font-bold rounded-xl border border-white/10 no-underline"
+          >
+            Do the Cost Math
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Author & Meta -->
+    <div class="max-w-3xl mx-auto px-4 pt-12">
+      <div class="flex items-center gap-6 border-b border-gray-100 pb-8">
+        <div class="flex items-center gap-3">
+          <AuthorAvatar size={48} />
+          <div>
+            <p class="text-sm font-bold text-gray-900">{author.name}</p>
+            <p class="text-xs text-gray-500 uppercase tracking-widest">{author.role}</p>
+          </div>
+        </div>
+        <div class="h-10 w-px bg-gray-200 hidden sm:block"></div>
+        <div class="hidden sm:block">
+          <p class="text-sm font-bold text-gray-900">Last Updated</p>
+          <p class="text-xs text-gray-500">{dates.display}</p>
+        </div>
+        <div class="hidden sm:block ml-auto">
+          <SocialProof />
+        </div>
+      </div>
+    </div>
+
+    <!-- Table of Contents -->
+    <div class="max-w-3xl mx-auto px-4 py-10">
+      <div class="bg-gray-50 border border-gray-200 rounded-2xl p-6 lg:p-8">
+        <h2 class="text-lg font-black text-gray-900 mb-4 flex items-center gap-2">
+          In This Guide
+        </h2>
+        <nav class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <a href="#what-cheap-means" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">1. What Cheap Should Mean</a>
+          <a href="#how-we-ranked" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">2. How We Ranked Them</a>
+          <a href="#top-picks" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">3. Our Top Picks</a>
+          <a href="#cost-math" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">4. Cost per 25 g Math</a>
+          <a href="#false-economy" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">5. When Cheap Is a False Economy</a>
+          <a href="#label-tricks" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">6. Underdosed Blends and Scoop Tricks</a>
+          <a href="#concentrate" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">7. Why Concentrate Wins on Budget</a>
+          <a href="#plant-budget" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">8. Cheap Plant Protein</a>
+          <a href="#save-more" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">9. Ways to Cut Cost Further</a>
+          <a href="#pay-more" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">10. When Paying More Is Worth It</a>
+          <a href="#mistakes" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">11. Common Mistakes</a>
+          <a href="#faq" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">12. FAQ</a>
+        </nav>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="max-w-3xl mx-auto px-4 pb-16 lg:pb-24">
+      <div class="prose prose-lg prose-blue max-w-none text-gray-700 leading-relaxed">
+        <p class="text-2xl font-medium text-gray-900 mb-8 italic">
+          The cheapest tub on the shelf is rarely the cheapest protein. What matters is how much you pay for each 25 g of genuine, honestly labelled protein, and on that measure a handful of plain, well-made powders beat almost everything else. This guide ranks six of them, shows you how to run the numbers on any tub in under a minute, and explains when a low price is hiding a protein you are not really getting.
+        </p>
+
+        <QuickPicks products={PRODUCTS} />
+
+        <div id="what-cheap-means" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            1. What Cheap Should Mean: Cost per 25 g, Not Cost per Tub
+          </h2>
+
+          <p>
+            Shelf prices are designed to be compared badly. One tub is two pounds, the next is five, a third is sold by servings, and the serving sizes themselves range from a 25 g scoop to a 75 g double scoop. The sticker tells you what leaves your bank account today. It does not tell you what a gram of protein costs, which is the only thing you are buying a protein powder for.
+          </p>
+
+          <p>
+            The fix is to compare every product on the same unit: the cost of 25 g of protein. We use 25 g because it is close to a typical single scoop and sits in the range that research on muscle protein synthesis suggests is a sensible per-meal dose for most adults. Convert every tub to that unit and the market sorts itself very quickly. A tub that looks expensive can turn out to be one of the cheapest per gram, and a bargain bin tub with a small protein dose per scoop can be one of the dearest.
+          </p>
+
+          <p>
+            Cost per 25 g is only half the test, though, because it assumes the label is telling the truth. A powder that claims 25 g of protein but delivers 19 g of real protein plus a few grams of cheap free amino acids is not cheap at all; you are paying for nitrogen that a lab test counts as protein but your muscles do not use the same way. So the second half of the test is honesty: a disclosed formula, no proprietary blends, and ideally some form of independent testing.
+          </p>
+
+          <p>
+            Put those two together and the definition of a good cheap protein powder becomes simple. It is the lowest cost per 25 g of protein you can find among products whose protein figure you have a good reason to believe. Everything in this guide follows from that sentence, and once you can apply it yourself you will not need a ranking at all.
+          </p>
+        </div>
+
+        <div id="how-we-ranked" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            2. How We Ranked the Budget Picks
+          </h2>
+
+          <p>
+            We did not run our own lab tests, taste panels or price-tracking software for this guide. The ranking is built on label analysis, published certification status, the brands' own testing disclosures and the published research on protein dosing, the same method set out on our <a href="/how-we-test/">how we test page</a>. Where we mention taste or mixing, we are reporting what buyers widely say rather than claiming a result of our own.
+          </p>
+
+          <p>
+            The first filter was cost. Every product here sits toward the lower end of the market on cost per 25 g of protein at typical retail prices we saw at the time of writing, especially in the larger tub or bag sizes. We did not chase the absolute lowest number on any given day, because sale prices rotate and a product that is cheapest this week is often mid-pack the next.
+          </p>
+
+          <p>
+            The second filter was label honesty. We excluded anything with a proprietary protein blend that hides how much comes from each source, and anything listing free amino acids such as glycine or taurine alongside the protein in a way that could inflate the protein figure. We gave extra credit to products with an independent certification such as Informed Choice, Informed Sport or NSF Certified for Sport, and some credit to brands that run documented in-house or third-party testing.
+          </p>
+
+          <p>
+            The third filter was the protein dose itself. We favoured products that deliver close to 25 g of protein per serving, or that make it easy to get there, and we looked at protein as a share of the scoop weight, because a high share means you are paying for protein rather than flavouring, sweetener and filler. Finally, every pick had to be widely available and long established, with buyer feedback suggesting people actually finish the tub. If none of these suits you, our <a href="/best-whey-protein-powder/">whey protein value rankings</a> cover a wider price range.
+          </p>
+        </div>
+
+        <!-- Picks -->
+        <div id="top-picks" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            3. The Best Cheap Protein Powders
+          </h2>
+
+          <p>
+            Each pick below clears the same bars: a disclosed formula, protein that comes from real protein rather than added amino acids, a long track record and a cost per 25 g of protein toward the low end of the market at typical retail prices. Nutrition figures are per the label at the time of writing and vary by flavor. Prices move constantly, so we describe cost in relative terms rather than quoting numbers that will be wrong next week.
+          </p>
+
+          {PRODUCTS.map((product, index) => (
+            <div id={product.id} class="scroll-mt-24 mt-12 first:mt-8">
+              <div class="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                <div class="bg-gray-900 px-6 py-4 flex items-center justify-between">
+                  <div class="flex items-center gap-3">
+                    <span class="bg-[#FF4500] text-white w-8 h-8 rounded-full flex items-center justify-center text-sm font-black">
+                      {index + 1}
+                    </span>
+                    {productImages[product.id] && (
+                      <img
+                        src={productImages[product.id]}
+                        alt={product.name}
+                        loading="lazy"
+                        width="40"
+                        height="40"
+                        class="w-10 h-10 rounded-lg bg-white object-contain p-1 shrink-0"
+                      />
+                    )}
+                    <div>
+                      <p class="text-white font-black text-lg">{product.name}</p>
+                      <p class="text-gray-400 text-xs">{product.category}</p>
+                    </div>
+                  </div>
+                  <span class="bg-[#38BDF8]/20 text-[#38BDF8] px-3 py-1 rounded-full text-xs font-bold hidden sm:block">
+                    {product.badge}
+                  </span>
+                </div>
+                <div class="p-6">
+                  {product.rating && (
+                  <div class="flex items-center gap-2 mb-4">
+                    <div class="flex text-yellow-400">
+                      {[...Array(5)].map((_, i) => (
+                        <svg
+                          class={`w-4 h-4 ${i < Math.floor(product.rating) ? "fill-current" : "text-gray-200"}`}
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                        >
+                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        </svg>
+                      ))}
+                    </div>
+                    <span class="text-gray-500 text-sm font-bold">{product.rating}</span>
+                    {product.reviewCount && <span class="text-gray-400 text-xs">({product.reviewCount.toLocaleString()} retailer reviews)</span>}
+                  </div>
+                  )}
+
+                  <SpecGrid specs={product.specs} />
+
+                  <p class="text-gray-700 leading-relaxed mb-6">{product.description}</p>
+
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                    <div class="bg-green-50 rounded-xl p-4">
+                      <p class="text-xs font-black uppercase tracking-widest text-green-700 mb-3">Pros</p>
+                      <ul class="space-y-2">
+                        {product.pros.map((pro) => (
+                          <li class="flex items-start gap-2 text-sm text-green-800">
+                            <svg class="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            {pro}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div class="bg-red-50 rounded-xl p-4">
+                      <p class="text-xs font-black uppercase tracking-widest text-red-700 mb-3">Cons</p>
+                      <ul class="space-y-2">
+                        {product.cons.map((con) => (
+                          <li class="flex items-start gap-2 text-sm text-red-800">
+                            <svg class="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                            {con}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+
+                  <div class="bg-gray-50 rounded-xl p-4 border border-gray-100">
+                    <p class="text-xs font-black uppercase tracking-widest text-gray-500 mb-1">The Bottom Line</p>
+                    <p class="text-gray-900 font-bold">{product.bottomLine}</p>
+                  </div>
+
+                  <a
+                    href={amazonLink(product.amazonUrl, product.name, product.id)}
+                    target="_blank"
+                    rel="sponsored nofollow noopener"
+                    class="mt-6 block bg-[#FF4500] hover:bg-[#E63E00] text-white text-center py-4 rounded-xl font-black no-underline transition-colors uppercase tracking-widest text-sm"
+                  >
+                    Check Price &rarr;
+                  </a>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div id="cost-math" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            4. How to Work Out Cost per 25 g in Under a Minute
+          </h2>
+
+          <p>
+            You need three numbers from the tub: the price, the number of servings, and the grams of protein per serving. Divide the price by the number of servings to get cost per serving. Then divide 25 by the protein per serving and multiply the two. That gives you the cost of 25 g of protein, and you can compare any two products on it regardless of tub size or scoop size.
+          </p>
+
+          <p>
+            Here is the arithmetic with round, made-up numbers so you can see it work. A tub priced at 60 dollars with 60 servings costs 1 dollar per serving. If each serving has 20 g of protein, you need 1.25 servings to reach 25 g, so the cost per 25 g is 1.25 dollars. A second tub priced at 75 dollars with 60 servings of 30 g each costs 1.25 dollars per serving but only needs 0.83 servings to reach 25 g, so its cost per 25 g is about 1.04 dollars. The tub with the higher sticker price is the cheaper protein.
+          </p>
+
+          <p>
+            A useful cross-check is protein as a share of the scoop weight. Divide the grams of protein by the serving weight in grams. Plain isolates and unflavored single-ingredient powders often land between 85 and 90 percent. Flavored concentrates usually sit between about 70 and 80 percent. Anything well below 70 percent means a large part of each scoop is something other than protein, which is fine in a deliberate mass gainer and a warning sign in a product sold as a protein powder.
+          </p>
+
+          <div class="overflow-hidden border border-gray-200 rounded-2xl my-8">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Pick</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Protein / serving</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Serving weight</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Protein by weight</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Naked Whey</td>
+                    <td class="px-4 py-4 text-gray-700">About 25 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 30 g (2 scoops)</td>
+                    <td class="px-4 py-4 text-gray-700">About 83%</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">NOW Sports Whey Isolate</td>
+                    <td class="px-4 py-4 text-gray-700">About 24-25 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 28 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 86-89%</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Myprotein Impact Whey (US)</td>
+                    <td class="px-4 py-4 text-gray-700">About 20-21 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 25 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 80-84%</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">ON Gold Standard 100% Whey</td>
+                    <td class="px-4 py-4 text-gray-700">About 24 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 30-31 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 77-80%</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Nutricost Whey Concentrate</td>
+                    <td class="px-4 py-4 text-gray-700">About 25 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 36 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 69%</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <p>
+            Figures are per the label at the time of writing and vary by flavor. Notice that the cheapest product per tub is not automatically the leanest per scoop. A flavored concentrate with a 69 percent protein share can still be an excellent buy if its price is low enough; the percentage simply tells you how much of what you pay for is sweetener, flavour and the natural carbohydrate and fat of concentrate. Run both numbers and you will rarely be fooled by packaging again.
+          </p>
+        </div>
+
+        <div id="false-economy" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            5. When Cheap Is a False Economy: Amino Spiking
+          </h2>
+
+          <p>
+            The standard way to measure protein in food does not measure protein directly. Methods such as Kjeldahl and Dumas measure nitrogen and multiply it by a conversion factor, usually 6.25, on the assumption that the nitrogen came from intact protein. That assumption is exactly what amino spiking exploits. Cheap nitrogen-containing ingredients such as glycine, taurine, creatine or other free amino acids raise the nitrogen reading, so a crude test reports more protein than the product really contains.
+          </p>
+
+          <p>
+            This is not a hypothetical. Starting in 2014, a wave of class-action lawsuits in the United States accused several sports nutrition brands of inflating protein claims this way, and trade publications covered the practice under the names protein spiking and nitrogen spiking. Many of those cases were allegations rather than findings, and the industry has tightened up considerably since, but the incentive has not gone away: whey costs far more per kilogram than glycine, and the price pressure is greatest at the bottom of the market.
+          </p>
+
+          <p>
+            Spiked protein is a bad deal even when the free amino acids are harmless. Glycine and taurine are not the amino acids that drive muscle protein synthesis; leucine and the other essential amino acids are. A scoop labelled 25 g that contains 20 g of whey and 5 g of glycine gives you the muscle-building value of roughly 20 g of whey, which means your real cost per 25 g of useful protein is a quarter higher than the label suggests, and the cheap tub may no longer be cheap.
+          </p>
+
+          <p>
+            The defence is mostly reading the ingredients list. Be wary when free amino acids, an amino acid matrix or a branded recovery blend sits inside or right after the protein blend, particularly if the product does not separate how much protein comes from whole protein. Prefer products with short ingredient lists, a single named protein source and an independent certification or published test results. Every pick in this guide passes that check on the label as it stood when we wrote it.
+          </p>
+        </div>
+
+        <div id="label-tricks" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            6. Underdosed Blends, Big Scoops and Other Label Tricks
+          </h2>
+
+          <p>
+            Spiking is the dramatic version. The everyday version is subtler and perfectly legal: making a product look more generous than it is. The commonest trick is the oversized serving. A tub that advertises 30 g of protein per serving may define a serving as two heaped scoops weighing 45 g or more, which is how a protein share of 65 percent can still produce a big headline number. Always compare protein per gram of powder, not protein per serving.
+          </p>
+
+          <p>
+            The second trick is the proprietary blend. When a label lists a protein blend of whey concentrate, whey isolate, milk protein and soy protein with one combined weight, you cannot tell whether the expensive isolate is a meaningful share or a token pinch included for the front-of-tub claim. Ingredients are listed in descending order by weight, so the first one named is the largest, but that is all you learn. Cheap products lean on this because it lets them market an isolate while mostly selling a cheaper concentrate or plant protein.
+          </p>
+
+          <p>
+            The third is the underdosed serving. Some budget powders deliver 15 to 18 g of protein per scoop, which looks fine until you realise you need closer to two scoops to reach a dose that research supports for most adults after training. That doubles your real cost per serving. If you are unsure how much protein you need in a day or a meal, our <a href="/how-much-protein-do-i-need/">daily protein targets guide</a> walks through it by body weight and goal.
+          </p>
+
+          <p>
+            The last is the servings count on the front of the tub. It is usually honest arithmetic, but it is calculated from the brand's serving size, which may not be the serving you use. If you need 25 g of protein and the label serving gives 20 g, a tub advertised as 74 servings is really about 59 servings for you. Re-run the servings count with your own dose and you will see the true cost of each shake.
+          </p>
+        </div>
+
+        <div id="concentrate" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            7. Why Whey Concentrate Is the Budget Sweet Spot
+          </h2>
+
+          <p>
+            Whey protein concentrate is the least processed form of whey sold as a powder, and it is almost always the cheapest per gram of protein among dairy options. Most sports concentrates are sold as roughly 80 percent protein on a dry basis, with the rest made up mainly of lactose, milk fat and minerals. Isolate goes through extra filtration to reach 90 percent protein or more, and that extra step is a big part of why it costs more.
+          </p>
+
+          <p>
+            For most people the extra filtration buys very little. Both forms provide a complete amino acid profile with plenty of leucine, and research comparing them has not shown a meaningful difference in muscle gain when the protein dose is matched. The real difference is a few grams of lactose, carbohydrate and fat per scoop. If dairy sits well with you, concentrate gives you nearly the same result for less money, which is exactly what a budget pick should do.
+          </p>
+
+          <p>
+            Isolate earns its premium in two situations. If you are lactose intolerant, the lower lactose content can be the difference between a shake you tolerate and one you do not, although many people with mild intolerance handle a single scoop of concentrate fine. And if you are counting every calorie on a strict cut, the leaner macros of isolate add up over months. Our <a href="/whey-vs-whey-isolate/">whey vs whey isolate comparison</a> goes through the trade-off in detail.
+          </p>
+
+          <p>
+            That is why four of our six picks are concentrate or concentrate-led blends, and why our cheapest isolate is an unflavored one. Flavoring, sweeteners and cocoa add cost and dilute the protein share; an unflavored isolate skips them, which partly offsets the higher cost of the protein itself. If you want isolate on a budget, buying it plain and flavoring your own shakes is usually the way to get there.
+          </p>
+        </div>
+
+        <div id="plant-budget" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            8. Cheap Plant Protein: What You Give Up and What to Check
+          </h2>
+
+          <p>
+            Pea protein is the most affordable plant protein by a wide margin and the one most budget vegans and dairy-free buyers end up using. Single-ingredient pea isolates are often competitive with whey concentrate on cost per 25 g, and unflavored versions tend to be dense in protein by weight. The trade-offs are taste, texture and a slightly weaker amino acid profile.
+          </p>
+
+          <p>
+            Pea protein is lower in methionine than dairy and contains somewhat less leucine per gram than whey, so a matched dose is not quite equivalent. In practice the fix is simple: take a slightly larger serving, or use a blend that pairs pea with rice, which complements its weak spots. Research comparing pea and whey at decent doses alongside resistance training has generally found similar strength and muscle outcomes. Our <a href="/best-pea-protein-powder/">pea protein rankings</a> cover the category in more depth.
+          </p>
+
+          <p>
+            The bigger issue at the budget end is contaminants. Plant proteins draw minerals from soil, and that includes heavy metals. In its October 2025 testing of protein powders and shakes, Consumer Reports found that plant-based products on average contained substantially more lead than dairy-based ones. That does not mean every pea protein is unsafe, but it does mean that independent testing matters more for cheap plant protein than for almost anything else in this guide.
+          </p>
+
+          <p>
+            So the checklist for a budget plant powder is a little longer: a single named source or a disclosed blend, published test results or a recognised certification, and a brand willing to answer questions about heavy metals. If a plant protein you are considering cannot show any testing at all, the money you save is not worth the uncertainty. Our <a href="/is-protein-powder-safe/">guide to protein powder safety</a> explains how to read heavy metal results and certification claims.
+          </p>
+        </div>
+
+        <div id="save-more" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            9. Ways to Cut Your Protein Cost Further
+          </h2>
+
+          <p>
+            Buy the biggest size you will finish before it goes stale. Five-pound tubs and bags almost always cost less per gram than two-pound ones, and unopened whey keeps for a long time when stored somewhere cool and dry. The exception is a flavor you have not tried: buy the small size first, because a cheap five-pound tub you cannot stand drinking is the most expensive protein you will ever own.
+          </p>
+
+          <p>
+            Go unflavored where you can. Plain whey and pea protein disappear into oats, smoothies, yogurt and coffee, and you can flavor a shake with cocoa, cinnamon, instant coffee or a spoon of peanut butter for very little. Unflavored powders also tend to have a higher protein share per scoop because there is no cocoa, flavoring or sweetener taking up room. Our <a href="/best-unflavored-protein-powder/">unflavored protein guide</a> lists plain options across price points.
+          </p>
+
+          <p>
+            Time your purchases. Several of the brands here run frequent site-wide sales, and some are reliably discounted on retailer sale days. Subscribe-and-save discounts on retailer sites can also cut the cost of a product you buy every month anyway. Just recalculate cost per 25 g at the sale price instead of trusting the percentage-off badge, because a discount on an underdosed product can still lose to a full-price honest one.
+          </p>
+
+          <p>
+            Finally, remember that powder competes with food. Milk, Greek yogurt, cottage cheese, eggs, canned fish, dried lentils and chicken thighs are often competitive with protein powder on cost per 25 g of protein, depending on where you shop, and they bring other nutrients with them. Powder wins on convenience and calories per gram of protein, not always on price. If you only need a little extra protein each day, a carton of Greek yogurt may be the real budget pick.
+          </p>
+        </div>
+
+        <div id="pay-more" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            10. When Paying More Is Worth It
+          </h2>
+
+          <p>
+            If you compete in a drug-tested sport, certification is not optional and it is worth paying for. A product carrying NSF Certified for Sport or Informed Sport has been screened for banned substances on a batch basis, and a failed test costs far more than a pricier tub. Some budget products do carry these certifications, but if the one you want does not, choose a certified product even if it costs more per 25 g.
+          </p>
+
+          <p>
+            If you are lactose intolerant to the point that concentrate causes real symptoms, an isolate or a plant protein will be worth the extra money. Cheap protein you cannot digest comfortably is not cheap. The same logic applies to taste: the best-tasting powder you will drink every day beats a cheaper one that sits half-full in the cupboard, so a modest premium for a flavor you like is money well spent.
+          </p>
+
+          <p>
+            If you need more protein per calorie because you are dieting hard, the leaner macros of an isolate can justify a higher cost per gram, and our <a href="/best-high-protein-powder/">highest protein powder guide</a> ranks options on protein per scoop and per calorie. And if you want one brand that covers whey, isolate, casein and gainers in one place, our <a href="/best-optimum-nutrition-protein-powder/">Optimum Nutrition lineup guide</a> maps each tub to a goal.
+          </p>
+
+          <p>
+            For everyone else, the conclusion is reassuringly boring. A plain, honestly labelled whey concentrate or a well-tested pea protein bought in a large size gives you nearly everything an expensive powder does. Spend the difference on food, or on a gym membership you will use.
+          </p>
+        </div>
+
+        <!-- Common Mistakes -->
+        <div id="mistakes" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            11. Common Mistakes to Avoid
+          </h2>
+
+          <div class="space-y-6 my-8">
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Comparing tub prices instead of cost per 25 g</h3>
+              <p class="text-gray-700 text-sm m-0">
+                A two-pound tub and a five-pound bag are not comparable at the shelf. Divide the price by the servings, then scale to 25 g of protein. It takes a minute on a phone calculator and it regularly reverses which product looks cheaper, especially when serving sizes differ.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Trusting the protein number without reading the ingredients</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Free amino acids such as glycine, taurine or creatine listed inside or beside the protein blend can inflate a nitrogen-based protein test. Prefer short ingredient lists with a single named protein source, and favor products with independent certification or published lab results.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Ignoring the serving size behind the headline</h3>
+              <p class="text-gray-700 text-sm m-0">
+                A big protein figure per serving often comes from a big serving. Check the serving weight in grams and divide protein by it. A product that needs two heaped scoops to hit its claim is not generous, it is simply asking you to use more powder.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Buying five pounds of an untested flavor</h3>
+              <p class="text-gray-700 text-sm m-0">
+                The lowest cost per gram is only real if you finish the tub. Try a small size or a sample of an unfamiliar flavor first, or buy unflavored and season it yourself, before committing to the bulk size that makes budget protein cheap.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Skipping testing on cheap plant protein</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Plant proteins tend to carry more heavy metals than dairy, and independent testing matters most where margins are thinnest. If a budget plant powder offers no certification or published results for lead and other metals, the small saving is not worth the uncertainty.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ -->
+        <div id="faq" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            12. Frequently Asked Questions
+          </h2>
+
+          <div class="space-y-6">
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">What is the cheapest way to buy protein powder?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Buy a plain whey concentrate or a single-ingredient pea protein in the largest size you will finish, ideally on sale, and compare products on cost per 25 g of protein rather than tub price. Unflavored versions usually give the most protein per scoop for the money, and you can flavor them cheaply at home.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is cheap protein powder bad for you?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Not inherently. Many budget powders are simple whey or pea protein with a short ingredient list. The risks at the low end are inflated protein claims and, for plant products, heavy metals. Choose products with disclosed formulas and some form of independent testing, and a cheap powder can be just as good as an expensive one.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">How do I calculate cost per gram of protein?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Divide the price by the number of servings to get cost per serving, then divide that by the grams of protein per serving to get cost per gram. Multiply by 25 for cost per 25 g. Using the same unit for every product cancels out differences in tub size and scoop size.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is whey concentrate as good as isolate?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                For building muscle, yes, when the protein dose is matched. Concentrate contains a little more lactose, fat and carbohydrate per scoop, which matters if you are lactose intolerant or counting calories very closely. For most people it delivers nearly the same result as isolate for noticeably less money.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">What is amino spiking?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Amino spiking is adding cheap nitrogen-containing ingredients such as glycine, taurine or creatine to a protein product so that a nitrogen-based lab test reports more protein than is really there. It was the subject of a wave of US class-action lawsuits starting in 2014. Reading the ingredients list is the best defense.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Are budget plant protein powders safe?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Many are, but plant proteins on average carry more heavy metals than dairy proteins, according to Consumer Reports testing in 2025. Look for published lab results or a recognized certification, and favor brands that answer questions about lead. Pregnant people and anyone with health conditions should ask a doctor or dietitian.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is protein powder cheaper than food?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Sometimes, not always. Milk, eggs, Greek yogurt, canned fish, lentils and chicken thighs are often competitive per 25 g of protein, depending on prices where you live. Powder usually wins on convenience and on protein per calorie, so it is most useful when you are short on time or dieting.
+              </p>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Related Guides -->
+        <div class="mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">Related Protein Powder Guides</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <a href="/best-whey-protein-powder/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#FF4500] font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Whey Protein Powder</h3>
+              <p class="text-gray-500 text-sm mt-2">Six wheys ranked on real value, from budget concentrates to premium blends.</p>
+            </a>
+            <a href="/best-high-protein-powder/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#1E90FF] font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Highest Protein Powder</h3>
+              <p class="text-gray-500 text-sm mt-2">The most protein per scoop and per calorie, and why big scoops inflate the number.</p>
+            </a>
+            <a href="/is-protein-powder-safe/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-green-600 font-black text-xs uppercase tracking-widest mb-2">Safety</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Is Protein Powder Safe?</h3>
+              <p class="text-gray-500 text-sm mt-2">Heavy metals, certifications and how to read a lab result.</p>
+            </a>
+          </div>
+        </div>
+
+        <!-- Closing -->
+        <div class="mt-16 bg-gray-900 text-white rounded-2xl p-8">
+          <h2 class="text-2xl font-black text-white mb-4">The Bottom Line</h2>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            The best cheap protein powder is the one with the lowest cost per 25 g of protein among products whose label you can trust. For most people that means a plain whey concentrate such as Gold Standard, Nutricost or Myprotein Impact bought in a large size, or Naked Whey and NOW Sports Whey Isolate if you prefer unflavored.
+          </p>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            Avoid the tub with the lowest sticker price and the longest ingredients list. Read the serving size, check for free amino acids, favor independent testing, and run the cost math yourself. It takes a minute and it will save you money on every tub you buy from now on.
+          </p>
+        </div>
+
+        <MoreInCategory category="Protein Powder" links={moreInCategory} />
+
+        <AuthorBio />
+      </div>
+    </div>
+  </article>
+</Layout>

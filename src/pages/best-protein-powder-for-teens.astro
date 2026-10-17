@@ -1,0 +1,968 @@
+---
+import Layout from "../layouts/Layout.astro";
+import MoreInCategory from "../components/MoreInCategory.astro";
+import { AUTHORS, DEFAULT_AUTHOR, authorSchema } from "../data/authors";
+import { SITE_NAME, SITE_URL } from "../data/site";
+import AuthorAvatar from "../components/AuthorAvatar.astro";
+import QuickPicks from "../components/QuickPicks.astro";
+import AuthorBio from "../components/AuthorBio.astro";
+import { amazonLink } from "../data/affiliate";
+import TrustBadge from "../components/TrustBadge.astro";
+import SocialProof from "../components/SocialProof.astro";
+import SpecGrid from "../components/SpecGrid.astro";
+import productImages from "../data/product-images.json";
+import { pageDates } from "../data/dates";
+
+const moreInCategory = [
+  {
+    "title": "Best Protein Powder for Athletes",
+    "url": "/best-protein-powder-for-athletes/"
+  },
+  {
+    "title": "Best Clean Protein Powder",
+    "url": "/best-clean-protein-powder/"
+  },
+  {
+    "title": "Best Protein Powder for Muscle Gain",
+    "url": "/best-protein-powder-for-muscle-gain/"
+  },
+  {
+    "title": "Best Protein Drink",
+    "url": "/best-protein-drink/"
+  },
+  {
+    "title": "Best Protein Powder for Pregnancy",
+    "url": "/best-protein-powder-for-pregnancy/"
+  }
+];
+const author = AUTHORS[DEFAULT_AUTHOR];
+const dates = pageDates(Astro.url.pathname, { published: "2026-10-17", modified: "2026-10-17" });
+const title = "Best Protein Powder for Teens: Certified Picks and When Food Is Enough";
+const description =
+  "The best protein powder for teens, limited to NSF and Informed Choice certified picks with no stimulants, plus when a teen actually needs one and when food is enough.";
+
+const PRODUCTS: {
+  id: string;
+  name: string;
+  brand?: string;
+  badge: string;
+  category: string;
+  description: string;
+  pros: string[];
+  cons: string[];
+  bottomLine: string;
+  specs?: Record<string, string>;
+  rating?: number;
+  reviewCount?: number;
+  amazonUrl?: string;
+}[] = [
+  {
+    "id": "klean-athlete-klean-isolate",
+    "name": "Klean Athlete Klean Isolate",
+    "brand": "Klean Athlete",
+    "badge": "Best Overall",
+    "category": "Whey protein isolate (unflavored)",
+    "description": "Klean Isolate is whey protein isolate plus a little sunflower lecithin, per the label at the time of writing, with no sweetener, flavor, caffeine or added extras. It provides about 20 g of protein per scoop and is NSF Certified for Sport, per the brand, the certification most widely recognized in drug-tested sport. The unflavored base stirs into milk, oatmeal, yogurt or smoothies, so it adds protein to food a teen already eats rather than replacing it.",
+    "pros": [
+      "NSF Certified for Sport, per the brand (verify)",
+      "Two-ingredient label with nothing that acts like a drug",
+      "Unflavored, so it works in food as well as shakes"
+    ],
+    "cons": [
+      "Plain taste in water; most teens will want it in milk or a smoothie",
+      "Premium price per gram of protein"
+    ],
+    "bottomLine": "The safest default for a teen athlete: certified, minimal and easy to hide in real food.",
+    "specs": {
+      "Protein / serving": "About 20 g (label)",
+      "Stimulants / extras": "None",
+      "Third-party tested": "NSF Certified for Sport (verify)",
+      "Best for": "Drug-tested athletes; mixing into food"
+    }
+  },
+  {
+    "id": "thorne-whey-protein-isolate",
+    "name": "Thorne Whey Protein Isolate",
+    "brand": "Thorne",
+    "badge": "Best Flavored Certified",
+    "category": "Whey protein isolate (flavored)",
+    "description": "Thorne Whey Protein Isolate provides about 21 g of protein for roughly 100 calories per scoop, per the label at the time of writing, and carries NSF Certified for Sport status. It is flavored, which matters for teens who will not drink plain protein, but the label stays short: whey isolate, flavor, a little cane sugar and stevia, and thickeners. It contains no caffeine, creatine or boosters. You pay a clear premium for that certification.",
+    "pros": [
+      "NSF Certified for Sport, per the brand and NSF (verify flavor)",
+      "About 21 g protein per scoop, per the label",
+      "Flavored but without stimulants or performance additives"
+    ],
+    "cons": [
+      "Expensive per 25 g of protein",
+      "Smaller scoop than many mainstream wheys"
+    ],
+    "bottomLine": "The pick for a teen who wants a ready-flavored shake with top-tier certification.",
+    "specs": {
+      "Protein / serving": "About 21 g (label)",
+      "Stimulants / extras": "None",
+      "Third-party tested": "NSF Certified for Sport (verify)",
+      "Best for": "Certified flavored shakes"
+    }
+  },
+  {
+    "id": "optimum-nutrition-gold-standard-100-whey",
+    "name": "Optimum Nutrition Gold Standard 100% Whey",
+    "brand": "Optimum Nutrition",
+    "badge": "Best Budget",
+    "category": "Whey blend (isolate, concentrate, peptides)",
+    "description": "Gold Standard gives about 24 g of protein for roughly 120 calories per scoop, per the label at the time of writing, and Optimum Nutrition states it carries Informed Choice certification. It costs less per 25 g of protein than most certified isolates, comes in flavors buyers widely rate highly, and is sold almost everywhere, which makes it the practical choice for families buying a tub every month. It contains a little more lactose than an isolate; confirm your flavor in the Informed Choice database.",
+    "pros": [
+      "Lower cost per 25 g of protein than certified isolates",
+      "Informed Choice certified, per the brand (confirm flavor)",
+      "Widely liked flavors and easy mixing, buyers report"
+    ],
+    "cons": [
+      "Contains some lactose; not ideal for very sensitive stomachs",
+      "Flavored versions use artificial sweeteners"
+    ],
+    "bottomLine": "The best value for families who want a certified, widely available whey.",
+    "specs": {
+      "Protein / serving": "About 24 g (label)",
+      "Stimulants / extras": "None",
+      "Third-party tested": "Informed Choice (confirm flavor)",
+      "Best for": "Budget-conscious families"
+    }
+  },
+  {
+    "id": "garden-of-life-sport-organic-plant-based-protein",
+    "name": "Garden of Life Sport Organic Plant-Based Protein",
+    "brand": "Garden of Life",
+    "badge": "Best Plant-Based",
+    "category": "Organic pea-based protein blend",
+    "description": "Garden of Life Sport provides about 30 g of protein per two-scoop serving from an organic pea and legume blend, per the label, and Garden of Life states it is NSF Certified for Sport. That combination of certification and a complete-enough plant blend makes it the strongest option for vegetarian, vegan or dairy-allergic teen athletes. The formula also includes probiotics and a small fruit-and-turmeric recovery blend; plant proteins as a group have tested higher for lead than dairy, so stick to one serving a day.",
+    "pros": [
+      "NSF Certified for Sport, per the brand (verify flavor)",
+      "About 30 g plant protein per two-scoop serving",
+      "Dairy-free option for vegan or milk-allergic teens"
+    ],
+    "cons": [
+      "Includes a recovery blend and probiotics a teen does not need",
+      "Earthier taste and thicker texture than whey, buyers report"
+    ],
+    "bottomLine": "The certified choice for plant-based and dairy-allergic teen athletes.",
+    "specs": {
+      "Protein / serving": "About 30 g (2 scoops)",
+      "Stimulants / extras": "No stimulants; recovery blend",
+      "Third-party tested": "NSF Certified for Sport (verify)",
+      "Best for": "Vegan or dairy-free teens"
+    }
+  },
+  {
+    "id": "dymatize-iso100-hydrolyzed",
+    "name": "Dymatize ISO100 Hydrolyzed Whey Isolate",
+    "brand": "Dymatize",
+    "badge": "Best for Sensitive Stomachs",
+    "category": "Hydrolyzed whey isolate + whey isolate",
+    "description": "ISO100 delivers about 25 g of protein for roughly 110 to 120 calories per scoop, per the label at the time of writing, with very little lactose, fat or carbohydrate. That makes it a good fit for teens who feel bloated after regular whey or milk-based shakes. Dymatize states it carries Informed Choice certification; confirm the flavor in the certifier database. Buyers widely report that it mixes thin in water, and the flavor range is large enough to keep a teen interested.",
+    "pros": [
+      "About 25 g protein per scoop, per the label",
+      "Very low in lactose; gentle for many sensitive stomachs",
+      "Informed Choice certified, per the brand (confirm flavor)"
+    ],
+    "cons": [
+      "Costs more per 25 g of protein than a whey blend",
+      "Flavored versions use artificial sweeteners"
+    ],
+    "bottomLine": "The pick for teens who find regular whey hard on the stomach.",
+    "specs": {
+      "Protein / serving": "About 25 g (label)",
+      "Stimulants / extras": "None",
+      "Third-party tested": "Informed Choice (confirm flavor)",
+      "Best for": "Lactose-sensitive teens"
+    }
+  },
+  {
+    "id": "fairlife-core-power-26g",
+    "name": "Fairlife Core Power High Protein Shake (26 g)",
+    "brand": "Fairlife",
+    "badge": "Best Ready-to-Drink",
+    "category": "Ready-to-drink ultra-filtered milk shake",
+    "description": "Core Power is made from ultra-filtered milk and carries about 26 g of milk protein for about 170 calories per bottle, per the label at the time of writing. It is lactose-free and shelf-stable until opened, so it can sit in a sports bag for the ride home from practice, and buyers say it tastes closer to chocolate milk than most shakes. It provides carbohydrate as well as protein, which suits recovery. We could not confirm a sport certification, so drug-tested athletes should check certifier databases.",
+    "pros": [
+      "About 26 g complete milk protein per bottle, per the label",
+      "No mixing; shelf-stable until opened",
+      "Protein plus carbohydrate for after practice"
+    ],
+    "cons": [
+      "No sport certification we could confirm",
+      "Costs more per gram of protein than powder"
+    ],
+    "bottomLine": "The easiest after-practice option for teens who will not mix a shake.",
+    "specs": {
+      "Protein / bottle": "About 26 g (label)",
+      "Calories": "About 170 (14 fl oz)",
+      "Third-party tested": "Check certifier databases",
+      "Best for": "Sports bag and car rides"
+    }
+  }
+];
+
+const schema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Home",
+          item: `${SITE_URL}/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Best Lists",
+          item: `${SITE_URL}/best-of/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 3,
+          name: "Best Protein Powder for Teens",
+          item: `${SITE_URL}/best-protein-powder-for-teens/`,
+        },
+      ],
+    },
+    {
+      "@type": "FAQPage",
+      mainEntity: [
+        {
+          "@type": "Question",
+          "name": "Is protein powder safe for teenagers?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "For a healthy teen, one serving a day of a plain, third-party certified protein powder is generally considered safe as a supplement to food. The risks are contamination, hidden stimulants or banned substances in poorly regulated products, and shakes replacing meals. Choose NSF Certified for Sport or Informed Choice products, and check with a pediatrician if your teen has a medical condition."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the best protein powder for teens?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "An independently certified, plain protein with nothing extra. Klean Athlete Klean Isolate and Thorne Whey Protein Isolate are NSF Certified for Sport, Optimum Nutrition Gold Standard is a lower-cost Informed Choice option, and Garden of Life Sport is the certified plant-based pick. Avoid anything with caffeine, creatine or testosterone-booster claims."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How much protein does a teenager need?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The RDA is 46 g a day for girls and 52 g a day for boys aged 14 to 18, or about 0.85 g per kg of body weight. Teen athletes may need roughly 1.2 to 1.6 g per kg, sometimes more during heavy training, which most reach through regular meals. A pediatrician or dietitian can personalize the number."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "At what age can you start taking protein powder?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "There is no official minimum age, because protein powder is a food product, but pediatric guidance favors food first for children and teens. Most teens do not need it. For older teen athletes with genuine gaps, one serving of a certified product is reasonable. For younger children, use protein powder only if a pediatrician recommends it."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can protein powder stunt growth or hurt kidneys?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "There is no good evidence that plain protein powder stunts growth, and normal intakes do not harm healthy kidneys. Growth problems are more likely when shakes displace meals and a teen eats too few total calories. Teens with kidney disease or other conditions should only use supplements under medical supervision. Steroid-contaminated products are a separate, serious risk."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Should teens take creatine with their protein?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The American Academy of Pediatrics recommends that pediatricians discourage performance-enhancing substances, including creatine, in adolescents, and many creatine labels say they are not for people under 18. Long-term data in growing athletes are limited. If your teen is interested, discuss it with a pediatrician or sports medicine physician rather than buying it alongside protein."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is protein powder okay for kids?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Usually it is unnecessary. Children aged 4 to 8 need about 19 g of protein a day and those aged 9 to 13 about 34 g, which normal meals cover. One adult scoop can supply most of a young child's daily need and displace other foods. Talk to your pediatrician before giving a child protein powder or a nutrition drink."
+          }
+        }
+      ],
+    },
+    {
+      "@type": "Article",
+      headline: title,
+      author: authorSchema(),
+      datePublished: dates.published,
+      dateModified: dates.modified,
+      publisher: { "@type": "Organization", name: SITE_NAME, url: SITE_URL },
+    },
+    {
+      "@type": "ItemList",
+      name: title,
+      numberOfItems: PRODUCTS.length,
+      itemListElement: PRODUCTS.map((product, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name: product.name,
+        url: new URL(`#${product.id}`, Astro.url).toString(),
+      })),
+    },
+    ...PRODUCTS.map((product) => ({
+      "@type": "Product",
+      name: product.name,
+      description: product.description,
+      brand: {
+        "@type": "Brand",
+        name: product.brand ?? product.name.split(" ")[0],
+      },
+    })),
+  ],
+};
+---
+
+<Layout
+  title={title}
+  description={description}
+  ogType="article"
+  article={{
+    publishedTime: dates.published,
+    modifiedTime: dates.modified,
+    author: author.name,
+    section: "Protein Powder",
+    tags: [
+      "best protein powder for teens",
+      "protein powder for kids",
+      "is protein powder safe for teenagers",
+      "protein powder for teenage athletes",
+      "teen protein needs"
+    ],
+  }}
+  jsonLd={schema}
+>
+  <article class="relative overflow-hidden">
+    <!-- Hero Section -->
+    <div class="bg-gray-900 py-16 lg:py-24 relative overflow-hidden">
+      <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(circle at 20% 20%, #38BDF8 0, transparent 45%), radial-gradient(circle at 80% 60%, #FF4500 0, transparent 40%);"></div>
+      <div class="max-w-4xl mx-auto px-4 relative z-10 text-center">
+        <div class="flex justify-center mb-6">
+          <TrustBadge />
+        </div>
+        <div class="flex justify-center gap-3 mb-6">
+          <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#FF4500]/20 text-[#FF4500] text-xs font-black uppercase tracking-widest border border-[#FF4500]/30">
+            Buyer's Guide
+          </span>
+          <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-green-500/10 text-green-400 text-xs font-bold uppercase tracking-widest border border-green-500/20">
+            For Parents and Teen Athletes
+          </span>
+        </div>
+        <h1 class="text-4xl lg:text-6xl font-black text-white leading-tight mb-8">
+          Best Protein Powder for <span class="text-[#38BDF8]">Teens</span>
+        </h1>
+        <p class="text-xl text-gray-300 leading-relaxed mb-8 max-w-3xl mx-auto">
+          Most teenagers get enough protein from food. For the athletes and picky eaters who do not, these are the certified, stimulant-free powders worth buying, and the red flags to walk past.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a
+            href="#klean-athlete-klean-isolate"
+            class="px-8 py-4 bg-[#FF4500] hover:bg-[#E63E00] text-white font-black rounded-xl shadow-lg transition-all no-underline"
+          >
+            See Our #1 Pick
+          </a>
+          <a
+            href="#when-it-helps"
+            class="px-8 py-4 bg-white/10 hover:bg-white/20 text-white font-bold rounded-xl border border-white/10 no-underline"
+          >
+            When a Shake Helps
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Author & Meta -->
+    <div class="max-w-3xl mx-auto px-4 pt-12">
+      <div class="flex items-center gap-6 border-b border-gray-100 pb-8">
+        <div class="flex items-center gap-3">
+          <AuthorAvatar size={48} />
+          <div>
+            <p class="text-sm font-bold text-gray-900">{author.name}</p>
+            <p class="text-xs text-gray-500 uppercase tracking-widest">{author.role}</p>
+          </div>
+        </div>
+        <div class="h-10 w-px bg-gray-200 hidden sm:block"></div>
+        <div class="hidden sm:block">
+          <p class="text-sm font-bold text-gray-900">Last Updated</p>
+          <p class="text-xs text-gray-500">{dates.display}</p>
+        </div>
+        <div class="hidden sm:block ml-auto">
+          <SocialProof />
+        </div>
+      </div>
+    </div>
+
+    <!-- Table of Contents -->
+    <div class="max-w-3xl mx-auto px-4 py-10">
+      <div class="bg-gray-50 border border-gray-200 rounded-2xl p-6 lg:p-8">
+        <h2 class="text-lg font-black text-gray-900 mb-4 flex items-center gap-2">
+          In This Guide
+        </h2>
+        <nav class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <a href="#do-teens-need-it" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">1. Do Teens Need It?</a>
+          <a href="#how-we-picked" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">2. How We Picked</a>
+          <a href="#top-picks" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">3. Our Top Picks</a>
+          <a href="#when-it-helps" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">4. When a Shake Helps</a>
+          <a href="#how-much" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">5. How Much Protein Teens Need</a>
+          <a href="#is-it-safe" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">6. Is It Safe?</a>
+          <a href="#red-flags" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">7. Red Flags</a>
+          <a href="#drug-testing" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">8. Drug-Tested Athletes</a>
+          <a href="#kids" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">9. Protein Powder for Kids</a>
+          <a href="#mistakes" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">10. Common Mistakes</a>
+          <a href="#faq" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">11. FAQ</a>
+        </nav>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="max-w-3xl mx-auto px-4 pb-16 lg:pb-24">
+      <div class="prose prose-lg prose-blue max-w-none text-gray-700 leading-relaxed">
+        <p class="text-2xl font-medium text-gray-900 mb-8 italic">
+          Protein powder is now as normal in a high school locker room as a water bottle, and parents are right to ask whether it belongs there. The honest answer is that most teenagers already eat more protein than they need, and no powder builds muscle that good food, sleep and a sensible training program would not. But a shake can be a genuinely useful tool for a busy athlete with early practices, a vegetarian teen, or a picky eater who struggles to hit a meal. If you are going to buy one, the standard should be higher than for adults: independently certified, a short label, and nothing in it that acts like a drug. Here are six picks that meet that bar, how much protein teens really need, and when to involve a pediatrician or registered dietitian.
+        </p>
+
+        <QuickPicks products={PRODUCTS} />
+
+        <div id="do-teens-need-it" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            1. Do Teens Need Protein Powder? Usually Not
+          </h2>
+
+          <p>
+            Start with the numbers, because they surprise most families. The US Dietary Reference Intakes set the protein RDA at 34 g a day for children aged 9 to 13, 46 g a day for girls aged 14 to 18 and 52 g a day for boys aged 14 to 18. Per kilogram of body weight, that works out to roughly 0.95 g for younger children and 0.85 g for older teens. A teenager who eats eggs at breakfast, a sandwich with meat or cheese at lunch, a glass of milk and a normal dinner with chicken, fish, beans or tofu is very likely already above those targets, and national survey data have long shown that average protein intakes among American teens comfortably exceed the RDA.
+          </p>
+
+          <p>
+            Teen athletes need more than sedentary teens, but not as much more as supplement marketing implies. The American Academy of Pediatrics' guidance for young athletes notes that while athletes have higher protein needs, they can usually meet them with a balanced diet, and that even the higher intakes some young athletes may need are readily reached with a typical mixed diet. What a growing athlete is more often short on is total calories: two-a-day practices, a growth spurt and a skipped breakfast can leave them underfueled, which no protein shake fixes on its own.
+          </p>
+
+          <p>
+            That is the main reason pediatric sports medicine groups lean toward food first. Food delivers protein alongside the carbohydrate a teen needs for training, the calcium and vitamin D for bones that are still building density, iron for growing blood volume, and fiber and micronutrients that powders lack. It is also cheaper. A glass of milk, a carton of Greek yogurt or a peanut butter sandwich after practice does most of what a scoop of powder does, for a fraction of the price.
+          </p>
+
+          <p>
+            None of this makes protein powder harmful in sensible amounts for a healthy teenager. It makes it optional. The rest of this guide is about the situations where it is genuinely useful, and how to choose one so that the convenience does not come with contaminants, stimulants or banned substances. For a broader look at daily targets by goal, our <a href="/how-much-protein-do-i-need/">guide to how much protein you need</a> covers adults, and the principles carry over.
+          </p>
+
+          <div class="bg-gray-900 text-white rounded-2xl p-6 lg:p-8 my-8">
+            <p class="text-xs font-black uppercase tracking-widest text-[#38BDF8] mb-4">By the Numbers</p>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+              <div>
+                <p class="text-3xl font-black text-white">34 g</p>
+                <p class="text-gray-400 text-xs mt-1">Daily protein RDA, ages 9-13</p>
+              </div>
+              <div>
+                <p class="text-3xl font-black text-[#38BDF8]">46 g</p>
+                <p class="text-gray-400 text-xs mt-1">Daily RDA, girls 14-18</p>
+              </div>
+              <div>
+                <p class="text-3xl font-black text-white">52 g</p>
+                <p class="text-gray-400 text-xs mt-1">Daily RDA, boys 14-18</p>
+              </div>
+              <div>
+                <p class="text-3xl font-black text-[#38BDF8]">20-25 g</p>
+                <p class="text-gray-400 text-xs mt-1">Protein in one typical scoop</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="how-we-picked" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            2. How We Picked: Certification and Nothing Extra
+          </h2>
+
+          <p>
+            We did not lab-test these products or run taste panels with teenagers. The picks come from label analysis, publicly listed third-party certifications and published guidance from pediatric and sports nutrition bodies, the method described on our <a href="/how-we-test/">how we test page</a>. Comments on taste and mixing reflect what buyers commonly report.
+          </p>
+
+          <p>
+            Certification was the first and hardest filter. Every powder on the list carries NSF Certified for Sport or Informed Choice status according to the brand or certifier. NSF Certified for Sport screens for more than 270 substances banned in sport, verifies that the label matches what is in the tub and, according to NSF, checks for harmful levels of contaminants such as heavy metals. Informed Choice tests batches for banned substances and audits manufacturing. For a teenager, that matters for two reasons: supplements in the US are not approved before sale, and contamination with stimulants or steroid-like compounds has been found repeatedly in products sold as muscle builders.
+          </p>
+
+          <p>
+            The second filter was what is not in the product. We excluded anything containing caffeine or other stimulants, creatine, so-called testosterone boosters, fat burners, nitric oxide or pump blends, and proprietary blends that list ingredients without amounts. Plenty of excellent adult products include some of these; none of them belongs in a teenager's daily shake. We also skipped mass gainers, whose 600 to 1,200 calorie servings are rarely appropriate without a pediatrician or dietitian involved.
+          </p>
+
+          <p>
+            Only then did we weigh protein per serving, tolerance, taste and price. Most picks are whey, because it is a complete protein that is easy to digest and, as a group, dairy proteins have tested lower for lead than plant proteins in independent testing. We included one certified plant protein for vegetarian, vegan and dairy-allergic teens, one isolate for sensitive stomachs, a budget option and a ready-to-drink shake for the bag.
+          </p>
+
+          <div class="bg-gray-900 text-white rounded-2xl p-6 lg:p-8 my-8">
+            <p class="text-xs font-black uppercase tracking-widest text-[#38BDF8] mb-3">THE RULE</p>
+            <p class="text-xl font-bold text-white mb-3">If it promises more than protein, put it back.</p>
+            <p class="text-gray-300 leading-relaxed m-0">Labels that mention anabolic effects, testosterone, energy, pumps or fat burning are selling something other than protein. A teen needs plain, certified protein at most, and food first.</p>
+          </div>
+        </div>
+
+        <!-- Picks -->
+        <div id="top-picks" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            3. The Best Protein Powders for Teens
+          </h2>
+
+          <p>
+            Five of the six picks carry NSF Certified for Sport or Informed Choice status, according to the brand or certifier at the time of writing, and the sixth is a ready-to-drink milk shake from a mainstream dairy brand. None contains caffeine, creatine, testosterone boosters, fat burners or proprietary blends. They are ordinary protein, from milk or peas, which is all a teenager needs from a supplement. Figures come from the labels at the time of writing and vary by flavor, so read the panel on the product you buy and look it up in the certifier database, especially if your teen is subject to drug testing. If your teen has a medical condition, food allergy or a history of disordered eating, check with their pediatrician first.
+          </p>
+
+          {PRODUCTS.map((product, index) => (
+            <div id={product.id} class="scroll-mt-24 mt-12 first:mt-8">
+              <div class="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                <div class="bg-gray-900 px-6 py-4 flex items-center justify-between">
+                  <div class="flex items-center gap-3">
+                    <span class="bg-[#FF4500] text-white w-8 h-8 rounded-full flex items-center justify-center text-sm font-black">
+                      {index + 1}
+                    </span>
+                    {productImages[product.id] && (
+                      <img
+                        src={productImages[product.id]}
+                        alt={product.name}
+                        loading="lazy"
+                        width="40"
+                        height="40"
+                        class="w-10 h-10 rounded-lg bg-white object-contain p-1 shrink-0"
+                      />
+                    )}
+                    <div>
+                      <p class="text-white font-black text-lg">{product.name}</p>
+                      <p class="text-gray-400 text-xs">{product.category}</p>
+                    </div>
+                  </div>
+                  <span class="bg-[#38BDF8]/20 text-[#38BDF8] px-3 py-1 rounded-full text-xs font-bold hidden sm:block">
+                    {product.badge}
+                  </span>
+                </div>
+                <div class="p-6">
+                  {product.rating && (
+                  <div class="flex items-center gap-2 mb-4">
+                    <div class="flex text-yellow-400">
+                      {[...Array(5)].map((_, i) => (
+                        <svg
+                          class={`w-4 h-4 ${i < Math.floor(product.rating) ? "fill-current" : "text-gray-200"}`}
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                        >
+                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        </svg>
+                      ))}
+                    </div>
+                    <span class="text-gray-500 text-sm font-bold">{product.rating}</span>
+                    {product.reviewCount && <span class="text-gray-400 text-xs">({product.reviewCount.toLocaleString()} retailer reviews)</span>}
+                  </div>
+                  )}
+
+                  <SpecGrid specs={product.specs} />
+
+                  <p class="text-gray-700 leading-relaxed mb-6">{product.description}</p>
+
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                    <div class="bg-green-50 rounded-xl p-4">
+                      <p class="text-xs font-black uppercase tracking-widest text-green-700 mb-3">Pros</p>
+                      <ul class="space-y-2">
+                        {product.pros.map((pro) => (
+                          <li class="flex items-start gap-2 text-sm text-green-800">
+                            <svg class="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            {pro}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div class="bg-red-50 rounded-xl p-4">
+                      <p class="text-xs font-black uppercase tracking-widest text-red-700 mb-3">Cons</p>
+                      <ul class="space-y-2">
+                        {product.cons.map((con) => (
+                          <li class="flex items-start gap-2 text-sm text-red-800">
+                            <svg class="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                            {con}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+
+                  <div class="bg-gray-50 rounded-xl p-4 border border-gray-100">
+                    <p class="text-xs font-black uppercase tracking-widest text-gray-500 mb-1">The Bottom Line</p>
+                    <p class="text-gray-900 font-bold">{product.bottomLine}</p>
+                  </div>
+
+                  <a
+                    href={amazonLink(product.amazonUrl, product.name, product.id)}
+                    target="_blank"
+                    rel="sponsored nofollow noopener"
+                    class="mt-6 block bg-[#FF4500] hover:bg-[#E63E00] text-white text-center py-4 rounded-xl font-black no-underline transition-colors uppercase tracking-widest text-sm"
+                  >
+                    Check Price &rarr;
+                  </a>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div id="when-it-helps" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            4. When a Protein Shake Actually Helps a Teen
+          </h2>
+
+          <p>
+            The best case for a shake is a scheduling problem rather than a nutrition problem. Think of a swimmer with 5:30 am practice who cannot face food that early, a soccer player who goes straight from school to training to homework with no real meal until 8 pm, or a wrestler juggling weight classes and a packed schedule. A shake mixed with milk, or blended with a banana and oats, can deliver 25 to 35 g of protein plus useful carbohydrate in a form they will actually consume between commitments.
+          </p>
+
+          <p>
+            Vegetarian and vegan teens are another fair case. A well-planned plant-based diet can provide all the protein a teenager needs, but it takes more deliberate choices, such as beans, lentils, tofu, tempeh, soy milk, nuts and seeds at most meals. Teens who are new to plant-based eating, or who mostly swap meat for pasta and cheese, can fall short. A certified plant protein can help bridge that gap while they learn, though seeing a registered dietitian is worth more than any tub.
+          </p>
+
+          <p>
+            Picky eaters and teens with small appetites sometimes benefit too. If a teen eats very little meat, dislikes dairy and has narrow food preferences, a shake can be a low-stress way to add protein. The caution here is to treat it as a bridge rather than a replacement for building a wider diet, and to involve a pediatrician if picky eating is severe, if the teen is losing weight or not growing as expected, or if eating seems tied to anxiety or body image.
+          </p>
+
+          <p>
+            What does not justify a shake is the belief that more protein equals more muscle. Teenagers gain strength from puberty itself, consistent training, enough calories and sleep. Once protein needs are met, extra protein is simply burned for energy or stored like any other surplus calories. The American Academy of Pediatrics supports properly supervised strength training for young people, and that training, not the powder, does the work. Teens who want to build muscle are better served by a qualified coach and three solid meals than by a second daily shake. Our <a href="/do-protein-supplements-build-muscle/">explainer on whether protein supplements build muscle</a> walks through the research in adults.
+          </p>
+        </div>
+
+        <div id="how-much" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            5. How Much Protein Teen Athletes Need, and When
+          </h2>
+
+          <p>
+            For most teenage athletes, a practical target is somewhere around 1.2 to 1.6 g of protein per kilogram of body weight a day, with some sports nutrition guidance allowing up to about 2 g per kilogram during heavy training or growth. For a 60 kg (132 lb) athlete, that means roughly 70 to 100 g a day. Compare that with the RDA of 46 to 52 g and you can see why athletes need more than sedentary teens, and compare it with a normal day of eating and you can see why food usually covers it.
+          </p>
+
+          <p>
+            Distribution matters more than chasing a big total. Spreading protein across breakfast, lunch, an after-school snack and dinner, at roughly 20 to 30 g per meal for older teens, supports muscle repair better than a tiny breakfast followed by a huge dinner. Breakfast is where most teens fall short. Eggs, Greek yogurt, milk with cereal or a smoothie can fix that faster than any supplement.
+          </p>
+
+          <p>
+            After training, a mix of protein and carbohydrate helps recovery and refuels the muscles for the next session. Plain chocolate milk is the classic example: a cup provides about 8 g of protein along with carbohydrate, fluid and calcium, and two cups get close to what a scoop of powder provides. A shake is a reasonable alternative when there is no fridge or meal nearby, but there is no evidence that a teen needs to drink one within minutes of the final whistle. Getting a real meal within the next couple of hours matters more.
+          </p>
+
+          <p>
+            One scoop a day is enough for nearly every teen who uses powder at all. If your teen is drinking two or three shakes daily, look at what they are replacing: usually it is meals, and with them the calories, carbohydrate, iron and calcium that a growing athlete needs. If a coach is recommending specific numbers, it is worth checking them with a pediatrician or a registered dietitian who works with young athletes, especially in weight-class sports such as wrestling and rowing, where restriction can be risky. Our <a href="/best-protein-powder-for-athletes/">best protein powder for athletes</a> guide covers adult athletes' needs in more detail.
+          </p>
+
+          <div class="overflow-hidden border border-gray-200 rounded-2xl my-8">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">After-practice option</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Approx. protein</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Notes</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">2 cups chocolate milk</td>
+                    <td class="px-4 py-4 text-gray-700">About 16 g</td>
+                    <td class="px-4 py-4 text-gray-700">Protein plus carbs, fluid and calcium</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Turkey or chicken sandwich</td>
+                    <td class="px-4 py-4 text-gray-700">20-25 g</td>
+                    <td class="px-4 py-4 text-gray-700">A real meal-sized recovery snack</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Greek yogurt and granola</td>
+                    <td class="px-4 py-4 text-gray-700">15-20 g</td>
+                    <td class="px-4 py-4 text-gray-700">Easy to pack in a cooler bag</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">1 scoop whey in milk</td>
+                    <td class="px-4 py-4 text-gray-700">30-33 g</td>
+                    <td class="px-4 py-4 text-gray-700">Convenient when food is not available</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Ready-to-drink milk shake</td>
+                    <td class="px-4 py-4 text-gray-700">About 26 g</td>
+                    <td class="px-4 py-4 text-gray-700">No mixing; costs more per gram</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div id="is-it-safe" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            6. Is Protein Powder Safe for Teenagers?
+          </h2>
+
+          <p>
+            For a healthy teenager, the protein in a powder is not the safety issue. Whey, casein, pea and soy protein are foods, and one serving a day sits well within normal intakes. Worries that protein damages healthy kidneys are not supported by the evidence at sensible intakes, though teens with kidney disease or other medical conditions should only use supplements under their doctor's direction. The real concerns are what else can end up in the tub and what the shake displaces.
+          </p>
+
+          <p>
+            Contamination is the first concern. In October 2025, Consumer Reports tested 23 protein powders and shakes and reported that more than two-thirds contained more lead in a serving than its experts' conservative daily level of concern, with plant-based products averaging about nine times the lead of dairy-based ones. Separately, government and academic testing has found products sold as muscle-building supplements that contained undeclared stimulants, steroid-like compounds or prescription drug ingredients. Third-party certification does not remove every risk, but it is the best filter available to a parent standing in a supplement aisle. Our <a href="/is-protein-powder-safe/">protein powder safety guide</a> explains what testing covers.
+          </p>
+
+          <p>
+            Displacement is the second. A teen who drinks a shake instead of eating breakfast or lunch can miss out on carbohydrate for training and on iron, calcium, vitamin D and fiber, which matter a great deal during growth. Teen girls in particular often fall short on iron and calcium, and a protein shake in water provides little of either. The fix is simple: use a shake alongside meals, not instead of them, and mix it with milk or blend it with fruit when you can.
+          </p>
+
+          <p>
+            Body image is the third, and the one parents most often miss. Researchers have linked heavy use of muscle-building supplements in adolescents with body dissatisfaction, muscle dysmorphia and disordered eating, particularly in boys, who are less often screened for these problems. A teen who is anxious about missing a shake, counts protein grams obsessively, trains through injury or talks constantly about getting bigger or leaner deserves a gentle conversation and, if needed, a referral from their pediatrician. Powder is not the cause, but it can be part of the picture.
+          </p>
+        </div>
+
+        <div id="red-flags" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            7. Red Flags: Stimulants, Creatine and Testosterone Boosters
+          </h2>
+
+          <p>
+            The supplement aisle markets to teenage boys in particular, and many of the products next to protein powder are a different category entirely. Pre-workout powders often contain 200 to 300 mg or more of caffeine per scoop, sometimes with other stimulants, which is more than many teens should have in a whole day. The American Academy of Pediatrics has long advised that energy drinks have no place in the diets of children and adolescents, and stimulant-heavy pre-workouts raise the same concerns about heart rate, blood pressure, sleep and anxiety.
+          </p>
+
+          <p>
+            Creatine is the most researched sports supplement in adults, but the picture for teenagers is different. The AAP's clinical report on performance-enhancing substances groups creatine with other performance enhancers and recommends that pediatricians discourage their use by adolescents, and many creatine labels themselves state that the product is not intended for people under 18. Some researchers argue it is likely safe for older teens, but long-term data in growing athletes are limited, and the AAP report also notes that early use of over-the-counter performance supplements may be associated with later use of anabolic steroids. Creatine decisions belong with a pediatrician or sports medicine physician, not a store clerk.
+          </p>
+
+          <p>
+            Testosterone boosters, so-called natural anabolics and anything mentioning hormones, prohormones or SARMs should be off the table entirely. At best, the herbal versions do little; at worst, some products sold this way have been found to contain actual steroids or unapproved drugs that can affect growth, mood and fertility and trigger failed drug tests. Fat burners, appetite suppressants and detox products fall into the same bucket for teenagers.
+          </p>
+
+          <p>
+            The practical check is quick. Turn the tub around. If the ingredient list contains anything other than protein, sweetener, flavor, thickener, lecithin and perhaps added vitamins, ask why it is there. If you see a proprietary blend, caffeine, green tea or guarana extract, creatine, beta-alanine, yohimbe, tribulus or words like anabolic, test or shred, choose something else. Plain protein is boring, and for a teenager boring is exactly right.
+          </p>
+
+          <div class="overflow-hidden border border-gray-200 rounded-2xl my-8">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">On the label</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Why it is a problem for teens</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Verdict</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Caffeine, guarana, green tea extract</td>
+                    <td class="px-4 py-4 text-gray-700">Stimulant load often exceeds sensible teen limits</td>
+                    <td class="px-4 py-4 text-gray-700">Avoid</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Creatine</td>
+                    <td class="px-4 py-4 text-gray-700">AAP discourages performance enhancers in adolescents</td>
+                    <td class="px-4 py-4 text-gray-700">Only with a physician</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Testosterone booster, prohormone, SARM</td>
+                    <td class="px-4 py-4 text-gray-700">Risk of hidden steroids or drugs; hormonal effects</td>
+                    <td class="px-4 py-4 text-gray-700">Never</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Fat burner or appetite suppressant</td>
+                    <td class="px-4 py-4 text-gray-700">Stimulants; can feed disordered eating</td>
+                    <td class="px-4 py-4 text-gray-700">Never</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Proprietary blend</td>
+                    <td class="px-4 py-4 text-gray-700">Doses hidden</td>
+                    <td class="px-4 py-4 text-gray-700">Avoid</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">NSF Certified for Sport or Informed Choice seal</td>
+                    <td class="px-4 py-4 text-gray-700">Independent banned-substance screening</td>
+                    <td class="px-4 py-4 text-gray-700">Look for it</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div id="drug-testing" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            8. Drug-Tested Athletes: Why the Certification Matters
+          </h2>
+
+          <p>
+            Many high school associations, college programs and youth national teams drug-test athletes, and anti-doping rules generally work on strict liability: the athlete is responsible for whatever is in their body, whether or not they knew a supplement was contaminated. A positive test caused by a tainted protein powder can still cost an eligibility season or a scholarship. For any teen who competes, or hopes to compete, at a level where testing happens, certification is not a nice extra but the baseline.
+          </p>
+
+          <p>
+            NSF Certified for Sport is the program most widely recognized by professional leagues and many college athletic departments, and it is the safest default for a teen who might be tested. Informed Choice and its sister program Informed Sport are also well established and test batches against banned-substance lists. All of these certifiers acknowledge that screening reduces risk rather than eliminating it, and US anti-doping authorities make the same point.
+          </p>
+
+          <p>
+            Two habits make certification meaningful. First, verify the exact product and flavor in the certifier's online database rather than trusting a seal on a website, because certification can apply to some flavors or sizes and not others. Second, keep the tub or a photo of the lot number until it is finished, so there is a record if a question ever comes up. Buying from the brand or a major retailer rather than third-party marketplace sellers reduces the risk of counterfeit or tampered products.
+          </p>
+
+          <p>
+            Coaches and athletic trainers can help here, and many college programs have sports dietitians who maintain approved supplement lists. If your teen is being recruited or already competes at a high level, ask the program what they use. For a list of certified options aimed at adult competitors, see our <a href="/best-protein-powder-for-athletes/">athletes guide</a>, and for products ranked first on contaminant screening, our <a href="/best-clean-protein-powder/">best clean protein powder</a> guide.
+          </p>
+        </div>
+
+        <div id="kids" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            9. What About Protein Powder for Kids?
+          </h2>
+
+          <p>
+            For younger children, the case for protein powder is weaker still. The protein RDA is 19 g a day for children aged 4 to 8 and 34 g a day for ages 9 to 13, amounts that a cup of milk, an egg and a small portion of meat, beans or tofu largely cover. A single scoop of adult powder delivers 20 to 25 g, which can be most or all of a young child's daily requirement in one drink, displacing foods that provide the energy, iron, calcium and fiber children need to grow.
+          </p>
+
+          <p>
+            If you are worried that a child is not eating enough protein, or is not growing as expected, the first step is the pediatrician, not the supplement aisle. They can track growth on a chart, look for underlying problems and, if needed, refer you to a pediatric registered dietitian. Children who need nutritional support are sometimes advised to use pediatric nutrition drinks, which are formulated for children's needs and are a different category from adult protein powders. Use them on your pediatrician's advice rather than as a routine snack.
+          </p>
+
+          <p>
+            For picky eaters, small food-based strategies usually work better than powders: adding milk to oats, offering yogurt, cheese, eggs, hummus or peanut butter in familiar forms, and serving a protein food the child already accepts at each meal. If a pediatrician does suggest adding a little protein powder to food, an unflavored, certified product with no added sweeteners, herbs or stimulants is the most predictable choice, and the amount should be what they recommend, not a full adult scoop.
+          </p>
+
+          <p>
+            The same red flags apply with even more force at younger ages: no caffeine, no creatine, no herbal blends, no weight-loss products and nothing marketed with muscle or body-shape claims. If a child or young teen is asking for protein powder because of how they want their body to look, that conversation is often more important than the purchase. For family-friendly ways to add protein to food, our <a href="/best-protein-powder-for-smoothies/">smoothie guide</a> and <a href="/best-protein-powder-for-baking/">baking guide</a> show how unflavored powders work in recipes for older teens.
+          </p>
+        </div>
+
+        <!-- Common Mistakes -->
+        <div id="mistakes" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            10. Common Mistakes to Avoid
+          </h2>
+
+          <div class="space-y-6 my-8">
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Buying from the supplement aisle's loudest shelf</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Products marketed to teenage boys often bundle protein with caffeine, creatine, test boosters or proprietary blends. None of those belong in a teen's shake, and some carry a real risk of contamination with banned substances. Buy plain protein with an NSF Certified for Sport or Informed Choice listing, and verify it in the certifier database.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Replacing meals with shakes</h3>
+              <p class="text-gray-700 text-sm m-0">
+                A scoop in water provides protein but almost none of the carbohydrate, iron, calcium, vitamin D and fiber a growing athlete needs. Teens who swap breakfast or lunch for a shake often end up underfueled for training. Use a shake alongside meals, mixed with milk or blended with fruit, never as the meal itself.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Assuming more protein builds more muscle</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Once a teen meets their protein needs, extra protein does not add muscle. Strength comes from puberty, consistent supervised training, enough calories and sleep. Two or three shakes a day mostly add cost and displace food. One scoop is plenty for nearly every teen who uses powder at all.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Trusting a seal without checking the database</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Certification can apply to some flavors and sizes but not others, and counterfeit products exist on third-party marketplaces. Look up the exact product in the NSF or Informed Choice database, buy from the brand or a major retailer, and keep the lot number until the tub is finished, especially for drug-tested athletes.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Missing signs of body-image stress</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Heavy supplement use in adolescents has been linked with body dissatisfaction and disordered eating, including in boys. Obsessive protein counting, anxiety about missed shakes, or constant talk about getting bigger or leaner deserve a calm conversation and, if needed, a referral from the pediatrician. The powder is rarely the real issue.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ -->
+        <div id="faq" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            11. Frequently Asked Questions
+          </h2>
+
+          <div class="space-y-6">
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is protein powder safe for teenagers?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                For a healthy teen, one serving a day of a plain, third-party certified protein powder is generally considered safe as a supplement to food. The risks are contamination, hidden stimulants or banned substances in poorly regulated products, and shakes replacing meals. Choose NSF Certified for Sport or Informed Choice products, and check with a pediatrician if your teen has a medical condition.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">What is the best protein powder for teens?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                An independently certified, plain protein with nothing extra. Klean Athlete Klean Isolate and Thorne Whey Protein Isolate are NSF Certified for Sport, Optimum Nutrition Gold Standard is a lower-cost Informed Choice option, and Garden of Life Sport is the certified plant-based pick. Avoid anything with caffeine, creatine or testosterone-booster claims.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">How much protein does a teenager need?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                The RDA is 46 g a day for girls and 52 g a day for boys aged 14 to 18, or about 0.85 g per kg of body weight. Teen athletes may need roughly 1.2 to 1.6 g per kg, sometimes more during heavy training, which most reach through regular meals. A pediatrician or dietitian can personalize the number.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">At what age can you start taking protein powder?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                There is no official minimum age, because protein powder is a food product, but pediatric guidance favors food first for children and teens. Most teens do not need it. For older teen athletes with genuine gaps, one serving of a certified product is reasonable. For younger children, use protein powder only if a pediatrician recommends it.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Can protein powder stunt growth or hurt kidneys?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                There is no good evidence that plain protein powder stunts growth, and normal intakes do not harm healthy kidneys. Growth problems are more likely when shakes displace meals and a teen eats too few total calories. Teens with kidney disease or other conditions should only use supplements under medical supervision. Steroid-contaminated products are a separate, serious risk.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Should teens take creatine with their protein?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                The American Academy of Pediatrics recommends that pediatricians discourage performance-enhancing substances, including creatine, in adolescents, and many creatine labels say they are not for people under 18. Long-term data in growing athletes are limited. If your teen is interested, discuss it with a pediatrician or sports medicine physician rather than buying it alongside protein.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is protein powder okay for kids?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Usually it is unnecessary. Children aged 4 to 8 need about 19 g of protein a day and those aged 9 to 13 about 34 g, which normal meals cover. One adult scoop can supply most of a young child's daily need and displace other foods. Talk to your pediatrician before giving a child protein powder or a nutrition drink.
+              </p>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Related Guides -->
+        <div class="mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">Related Protein Powder Guides</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <a href="/best-protein-powder-for-athletes/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#FF4500] font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Protein Powder for Athletes</h3>
+              <p class="text-gray-500 text-sm mt-2">Certified picks for drug-tested adult competitors.</p>
+            </a>
+            <a href="/is-protein-powder-safe/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#38BDF8] font-black text-xs uppercase tracking-widest mb-2">Safety</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Is Protein Powder Safe?</h3>
+              <p class="text-gray-500 text-sm mt-2">Heavy metals, certifications and what testing really proves.</p>
+            </a>
+            <a href="/how-much-protein-do-i-need/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#FF4500] font-black text-xs uppercase tracking-widest mb-2">Explainer</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">How Much Protein Do I Need?</h3>
+              <p class="text-gray-500 text-sm mt-2">Daily protein targets by goal, body weight and training.</p>
+            </a>
+          </div>
+        </div>
+
+        <!-- Closing -->
+        <div class="mt-16 bg-gray-900 text-white rounded-2xl p-8">
+          <h2 class="text-2xl font-black text-white mb-4">The Bottom Line</h2>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            Most teenagers do not need protein powder. Regular meals with eggs, dairy, meat, fish, beans or tofu cover the RDA and usually the higher needs of teen athletes too. A shake earns its place when schedules, a plant-based diet or a small appetite leave a genuine gap, and even then one serving a day alongside meals is plenty.
+          </p>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            If you buy one, buy plain, certified protein: Klean Isolate or Thorne for drug-tested athletes, Gold Standard on a budget, Garden of Life Sport for plant-based teens. Walk past anything with caffeine, creatine, boosters or fat burners, and involve a pediatrician or registered dietitian for younger children, medical conditions or any sign of body-image stress.
+          </p>
+        </div>
+
+        <MoreInCategory category="Protein Powder" links={moreInCategory} />
+
+        <AuthorBio />
+      </div>
+    </div>
+  </article>
+</Layout>

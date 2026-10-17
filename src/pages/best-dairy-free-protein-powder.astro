@@ -1,0 +1,960 @@
+---
+import Layout from "../layouts/Layout.astro";
+import MoreInCategory from "../components/MoreInCategory.astro";
+import { AUTHORS, DEFAULT_AUTHOR, authorSchema } from "../data/authors";
+import { SITE_NAME, SITE_URL } from "../data/site";
+import AuthorAvatar from "../components/AuthorAvatar.astro";
+import QuickPicks from "../components/QuickPicks.astro";
+import AuthorBio from "../components/AuthorBio.astro";
+import { amazonLink } from "../data/affiliate";
+import TrustBadge from "../components/TrustBadge.astro";
+import SocialProof from "../components/SocialProof.astro";
+import SpecGrid from "../components/SpecGrid.astro";
+import productImages from "../data/product-images.json";
+import { pageDates } from "../data/dates";
+
+const moreInCategory = [
+  {
+    "title": "Best Pea Protein Powder",
+    "url": "/best-pea-protein-powder/"
+  },
+  {
+    "title": "Best Plant-Based Protein Powder",
+    "url": "/best-plant-based-protein-powder/"
+  },
+  {
+    "title": "Whey vs Plant Protein",
+    "url": "/whey-vs-plant-protein/"
+  },
+  {
+    "title": "Types of Protein Powder",
+    "url": "/types-of-protein-powder/"
+  }
+];
+const author = AUTHORS[DEFAULT_AUTHOR];
+const dates = pageDates(Astro.url.pathname, { published: "2026-10-17", modified: "2026-10-17" });
+const title = "Best Dairy-Free Protein Powder: Plant, Egg and Beef Picks";
+const description =
+  "The best dairy-free protein powders, from plant blends to egg white and beef isolate, and why lactose-free whey is not safe for anyone with a milk allergy.";
+
+const PRODUCTS: {
+  id: string;
+  name: string;
+  brand?: string;
+  badge: string;
+  category: string;
+  description: string;
+  pros: string[];
+  cons: string[];
+  bottomLine: string;
+  specs?: Record<string, string>;
+  rating?: number;
+  reviewCount?: number;
+  amazonUrl?: string;
+}[] = [
+  {
+    "id": "garden-of-life-sport-organic-plant-based-protein",
+    "name": "Garden of Life Sport Organic Plant-Based Protein",
+    "brand": "Garden of Life",
+    "badge": "Best Overall Dairy-Free",
+    "category": "Organic pea-based plant protein blend",
+    "description": "Garden of Life Sport delivers about 30 g of protein per two-scoop serving from an organic pea-based legume blend, per the label, enough to cover the slightly lower leucine content of plant protein without doubling up. It is certified vegan and USDA Organic, and Garden of Life states it is NSF Certified for Sport. It contains no milk ingredients, which makes it the strongest all-round choice for anyone avoiding dairy completely.",
+    "pros": [
+      "About 30 g protein per serving, per the label",
+      "NSF Certified for Sport, per the brand (verify flavor)",
+      "Vegan, organic and free of milk ingredients"
+    ],
+    "cons": [
+      "Earthier and thicker than whey, buyers report",
+      "Higher calories per serving than a single-ingredient pea isolate"
+    ],
+    "bottomLine": "The best single dairy-free powder for most people: full dose, sport certification and no milk.",
+    "specs": {
+      "Protein / serving": "About 30 g (2 scoops)",
+      "Protein source": "Pea-based legume blend",
+      "Third-party tested": "NSF Certified for Sport (verify flavor)",
+      "Best for": "Milk allergy, vegans, athletes"
+    }
+  },
+  {
+    "id": "vega-sport-premium-protein",
+    "name": "Vega Sport Premium Protein",
+    "brand": "Vega",
+    "badge": "Best for Athletes",
+    "category": "Pea, pumpkin and sunflower seed protein blend",
+    "description": "Vega Sport combines pea, pumpkin seed and sunflower seed protein for about 30 g of protein per serving, with roughly 6 g of carbohydrate, per the label and retailer listings at the time of writing. Vega states it is NSF Certified for Sport and the formula is vegan and dairy-free. Buyers have long rated it among the more drinkable plant shakes in water, though some say the newer formula is chalkier than the original.",
+    "pros": [
+      "About 30 g protein per serving, per the label",
+      "NSF Certified for Sport, per the brand",
+      "Vegan, dairy-free and gluten-free"
+    ],
+    "cons": [
+      "Some buyers report a chalkier texture after reformulation",
+      "Premium cost per 25 g of protein"
+    ],
+    "bottomLine": "A close second to Garden of Life and the better buy if you prefer its flavors.",
+    "specs": {
+      "Protein / serving": "About 30 g (varies by flavor)",
+      "Protein source": "Pea, pumpkin and sunflower seed",
+      "Third-party tested": "NSF Certified for Sport (verify flavor)",
+      "Best for": "Drug-tested and endurance athletes"
+    }
+  },
+  {
+    "id": "naked-nutrition-naked-pea",
+    "name": "Naked Pea Protein",
+    "brand": "Naked Nutrition",
+    "badge": "Best Single-Ingredient",
+    "category": "Pea protein isolate (unflavored)",
+    "description": "Naked Pea has one ingredient, yellow pea protein, which the brand says comes from farms in the United States and Canada. It delivers about 27 g of protein for roughly 120 calories and around 2 g of carbohydrate per two-scoop serving, per the label, which makes it the most protein-dense plant pick here. With no sweetener, gum or flavoring, it is also the easiest to fit around other allergies and the easiest to cook with.",
+    "pros": [
+      "About 27 g protein for roughly 120 calories, per the label",
+      "Single ingredient, no sweeteners or gums",
+      "Low cost per 25 g of protein for a plant isolate"
+    ],
+    "cons": [
+      "Earthy and chalky in water; best blended",
+      "No sport certification we could confirm"
+    ],
+    "bottomLine": "The cleanest dairy-free base for smoothies, oats and baking.",
+    "specs": {
+      "Protein / serving": "About 27 g (2 scoops)",
+      "Protein source": "Yellow pea protein only",
+      "Third-party tested": "No sport certification confirmed",
+      "Best for": "Multiple allergies, cooking"
+    }
+  },
+  {
+    "id": "orgain-organic-protein-plant-based",
+    "name": "Orgain Organic Protein Plant-Based Powder",
+    "brand": "Orgain",
+    "badge": "Easiest to Find",
+    "category": "Organic pea, brown rice and chia blend",
+    "description": "Orgain is the dairy-free powder most people find in a supermarket, and buyers widely describe it as one of the milder, creamier plant shakes. It provides about 21 g of protein for roughly 150 calories per two-scoop serving, per the label at the time of writing, and is sweetened with erythritol and stevia. The smaller dose makes it better suited to casual use and smoothies than to serious training.",
+    "pros": [
+      "Widely available in grocery stores and online",
+      "Buyers commonly rate its taste highly for a plant protein",
+      "Organic, vegan and dairy-free"
+    ],
+    "cons": [
+      "About 21 g protein per two scoops, lower than the top picks",
+      "Contains erythritol, which can upset some stomachs"
+    ],
+    "bottomLine": "The friendliest first dairy-free protein for casual users who care most about taste.",
+    "specs": {
+      "Protein / serving": "About 21 g (2 scoops)",
+      "Calories": "About 150",
+      "Third-party tested": "No sport certification confirmed",
+      "Best for": "Beginners, smoothies"
+    }
+  },
+  {
+    "id": "now-sports-egg-white-protein",
+    "name": "NOW Sports Egg White Protein (Unflavored)",
+    "brand": "NOW Sports",
+    "badge": "Best Egg White",
+    "category": "Pasteurized egg white protein (unflavored)",
+    "description": "NOW Sports Egg White Protein is dried, pasteurized egg white with a little sunflower lecithin, per the listing, and lists about 15 to 16 g of protein for roughly 70 calories and about 1 g of carbohydrate per 20 g scoop, per the label at the time of writing. It is a complete, high-quality protein with no milk ingredients, and its neutral flavor makes it as useful for pancakes and baking as for shakes. Two scoops give a full serving.",
+    "pros": [
+      "Complete protein with no milk ingredients",
+      "Very low in fat and carbohydrate, per the label",
+      "Neutral flavor works in cooking and baking"
+    ],
+    "cons": [
+      "Smaller scoop; most people need two for a full dose",
+      "Not suitable for egg allergy or vegans"
+    ],
+    "bottomLine": "The best choice for people who are dairy-free but eat eggs and dislike plant protein.",
+    "specs": {
+      "Protein / serving": "About 15-16 g (20 g scoop)",
+      "Calories": "About 70 per scoop",
+      "Third-party tested": "Check certifier databases",
+      "Best for": "Dairy-free, not vegan; baking"
+    }
+  },
+  {
+    "id": "musclemeds-carnivor-beef-protein-isolate",
+    "name": "MuscleMeds Carnivor Beef Protein Isolate",
+    "brand": "MuscleMeds",
+    "badge": "Best Beef Isolate",
+    "category": "Hydrolyzed beef protein isolate",
+    "description": "Carnivor is a hydrolyzed beef protein isolate that mixes and tastes like a conventional flavored shake. It lists about 23 g of protein per scoop with no fat or sugar, per the label at the time of writing, and is marketed as lactose-free; MuscleMeds states it is Informed Choice certified. Like most beef isolates it tends to carry less leucine per gram than whey, and flavored versions use artificial sweeteners, so check the ingredient list for your flavor.",
+    "pros": [
+      "About 23 g protein per scoop with no fat, per the label",
+      "No milk ingredients; mixes like a whey shake",
+      "Informed Choice certified, per the brand (verify)"
+    ],
+    "cons": [
+      "Typically less leucine per gram than whey",
+      "Uses sucralose and acesulfame potassium in flavored versions"
+    ],
+    "bottomLine": "The pick for dairy-free lifters who want a shake that drinks like whey, without plant protein.",
+    "specs": {
+      "Protein / serving": "About 23 g (varies by flavor)",
+      "Protein source": "Hydrolyzed beef protein isolate",
+      "Third-party tested": "Informed Choice (per brand; verify)",
+      "Best for": "Dairy-free, paleo-style diets"
+    }
+  },
+  {
+    "id": "isopure-zero-carb",
+    "name": "Isopure Zero Carb Protein Powder",
+    "brand": "Isopure",
+    "badge": "Lactose-Free, Not Dairy-Free",
+    "category": "Whey protein isolate (contains milk)",
+    "description": "Isopure Zero Carb is a whey protein isolate marketed as lactose-free, with about 25 g of protein for roughly 100 calories and essentially no carbohydrate per scoop, per the label at the time of writing. It is the right answer for people with lactose intolerance who want a complete, high-leucine protein that mixes thin in water. It is still milk protein, so it is not suitable for anyone with a milk allergy or following a vegan diet.",
+    "pros": [
+      "Marketed as lactose-free; suits most lactose intolerance",
+      "About 25 g protein for roughly 100 calories, per the label",
+      "Complete protein with high leucine content"
+    ],
+    "cons": [
+      "Contains milk protein; unsafe for milk allergy",
+      "Flavor opinions among buyers are mixed"
+    ],
+    "bottomLine": "The pick if lactose, not milk protein, is your problem.",
+    "specs": {
+      "Protein / serving": "About 25 g",
+      "Calories": "About 100 (flavor-dependent)",
+      "Third-party tested": "Check certifier databases",
+      "Best for": "Lactose intolerance only"
+    }
+  }
+];
+
+const schema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Home",
+          item: `${SITE_URL}/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Best Lists",
+          item: `${SITE_URL}/best-of/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 3,
+          name: "Best Dairy-Free Protein Powder",
+          item: `${SITE_URL}/best-dairy-free-protein-powder/`,
+        },
+      ],
+    },
+    {
+      "@type": "FAQPage",
+      mainEntity: [
+        {
+          "@type": "Question",
+          "name": "What is the best dairy-free protein powder?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "For most people, Garden of Life Sport Organic Plant-Based Protein: about 30 g of protein per serving, no milk ingredients and NSF Certified for Sport per the brand. Vega Sport is a close second. If you eat eggs or meat but dislike plant protein, NOW Sports Egg White Protein or a beef isolate such as Carnivor are good dairy-free alternatives."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is whey protein isolate dairy-free?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Whey isolate is filtered to remove most lactose and fat, but it is still milk protein and must be labeled as containing milk. Many people with lactose intolerance tolerate it well, but it is not safe for a milk allergy and not suitable for vegans. For a truly dairy-free powder, choose plant, egg white or beef protein."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the best lactose-free protein powder?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "If you only need to avoid lactose, a whey isolate marketed as lactose-free, such as Isopure Zero Carb, is usually the easiest option, with about 25 g of protein per scoop and a high leucine content. Any dairy-free powder is also lactose-free. People with severe intolerance should start with a small serving and see how they respond."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is non-dairy protein powder good for building muscle?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, when the dose is large enough. Plant proteins contain somewhat less leucine per gram than whey, but studies comparing pea or rice protein with whey at reasonable servings have generally found similar strength and muscle gains. Aim for about 30 g of plant protein per shake and enough total daily protein, and the source matters little."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is egg white protein dairy-free?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Egg white protein is made from dried, pasteurized egg whites and contains no milk, so it suits people with a milk allergy who eat eggs. It is not vegan, and it is not suitable for anyone with an egg allergy. Check the allergen statement, since flavored egg protein products sometimes add other ingredients."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I mix dairy-free protein powder with milk?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "You can mix it with any liquid, but cow's milk defeats the purpose if you are avoiding dairy. Unsweetened soy, pea, almond or oat milk adds creaminess without milk protein, and soy or pea milk also adds a few grams of protein. Water keeps calories lowest. A blender with frozen fruit improves the texture of most plant powders."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Do plant protein powders contain heavy metals?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Plant protein powders tend to carry more lead and other heavy metals on average than dairy-based ones, because plants absorb them from soil. Levels vary widely between brands. Choose products with sport certification or published batch testing, avoid relying on several servings a day, and consult a doctor or dietitian if you are pregnant or buying for a child."
+          }
+        }
+      ],
+    },
+    {
+      "@type": "Article",
+      headline: title,
+      author: authorSchema(),
+      datePublished: dates.published,
+      dateModified: dates.modified,
+      publisher: { "@type": "Organization", name: SITE_NAME, url: SITE_URL },
+    },
+    {
+      "@type": "ItemList",
+      name: title,
+      numberOfItems: PRODUCTS.length,
+      itemListElement: PRODUCTS.map((product, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name: product.name,
+        url: new URL(`#${product.id}`, Astro.url).toString(),
+      })),
+    },
+    ...PRODUCTS.map((product) => ({
+      "@type": "Product",
+      name: product.name,
+      description: product.description,
+      brand: {
+        "@type": "Brand",
+        name: product.brand ?? product.name.split(" ")[0],
+      },
+    })),
+  ],
+};
+---
+
+<Layout
+  title={title}
+  description={description}
+  ogType="article"
+  article={{
+    publishedTime: dates.published,
+    modifiedTime: dates.modified,
+    author: author.name,
+    section: "Plant Protein",
+    tags: [
+      "best dairy free protein powder",
+      "best non dairy protein powder",
+      "best lactose free protein powder",
+      "dairy free protein powder",
+      "non dairy protein powder"
+    ],
+  }}
+  jsonLd={schema}
+>
+  <article class="relative overflow-hidden">
+    <!-- Hero Section -->
+    <div class="bg-gray-900 py-16 lg:py-24 relative overflow-hidden">
+      <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(circle at 20% 20%, #38BDF8 0, transparent 45%), radial-gradient(circle at 80% 60%, #FF4500 0, transparent 40%);"></div>
+      <div class="max-w-4xl mx-auto px-4 relative z-10 text-center">
+        <div class="flex justify-center mb-6">
+          <TrustBadge />
+        </div>
+        <div class="flex justify-center gap-3 mb-6">
+          <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#FF4500]/20 text-[#FF4500] text-xs font-black uppercase tracking-widest border border-[#FF4500]/30">
+            Buyer's Guide
+          </span>
+          <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-green-500/10 text-green-400 text-xs font-bold uppercase tracking-widest border border-green-500/20">
+            Updated October 2026
+          </span>
+        </div>
+        <h1 class="text-4xl lg:text-6xl font-black text-white leading-tight mb-8">
+          Best <span class="text-[#38BDF8]">Dairy-Free</span> Protein Powder
+        </h1>
+        <p class="text-xl text-gray-300 leading-relaxed mb-8 max-w-3xl mx-auto">
+          Seven powders sorted by what you are actually avoiding: milk protein because of an allergy, lactose because of intolerance, or animal products altogether. Buying for the wrong problem is the most common mistake in this category.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a
+            href="#garden-of-life-sport-organic-plant-based-protein"
+            class="px-8 py-4 bg-[#FF4500] hover:bg-[#E63E00] text-white font-black rounded-xl shadow-lg transition-all no-underline"
+          >
+            See Our #1 Pick
+          </a>
+          <a
+            href="#plant-proteins"
+            class="px-8 py-4 bg-white/10 hover:bg-white/20 text-white font-bold rounded-xl border border-white/10 no-underline"
+          >
+            Plant Proteins Explained
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Author & Meta -->
+    <div class="max-w-3xl mx-auto px-4 pt-12">
+      <div class="flex items-center gap-6 border-b border-gray-100 pb-8">
+        <div class="flex items-center gap-3">
+          <AuthorAvatar size={48} />
+          <div>
+            <p class="text-sm font-bold text-gray-900">{author.name}</p>
+            <p class="text-xs text-gray-500 uppercase tracking-widest">{author.role}</p>
+          </div>
+        </div>
+        <div class="h-10 w-px bg-gray-200 hidden sm:block"></div>
+        <div class="hidden sm:block">
+          <p class="text-sm font-bold text-gray-900">Last Updated</p>
+          <p class="text-xs text-gray-500">{dates.display}</p>
+        </div>
+        <div class="hidden sm:block ml-auto">
+          <SocialProof />
+        </div>
+      </div>
+    </div>
+
+    <!-- Table of Contents -->
+    <div class="max-w-3xl mx-auto px-4 py-10">
+      <div class="bg-gray-50 border border-gray-200 rounded-2xl p-6 lg:p-8">
+        <h2 class="text-lg font-black text-gray-900 mb-4 flex items-center gap-2">
+          In This Guide
+        </h2>
+        <nav class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <a href="#which-problem" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">1. Dairy-Free vs Lactose-Free</a>
+          <a href="#how-we-picked" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">2. How We Picked</a>
+          <a href="#top-picks" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">3. Our Top Picks</a>
+          <a href="#plant-proteins" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">4. Plant Proteins</a>
+          <a href="#egg-and-beef" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">5. Egg White and Beef Isolate</a>
+          <a href="#lactose-free-whey" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">6. When Lactose-Free Is Enough</a>
+          <a href="#reading-labels" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">7. Hidden Milk on Labels</a>
+          <a href="#protein-quality" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">8. Protein Quality Without Dairy</a>
+          <a href="#taste-texture" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">9. Taste and Mixing</a>
+          <a href="#testing" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">10. Testing and Heavy Metals</a>
+          <a href="#mistakes" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">11. Common Mistakes</a>
+          <a href="#faq" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">12. FAQ</a>
+        </nav>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="max-w-3xl mx-auto px-4 pb-16 lg:pb-24">
+      <div class="prose prose-lg prose-blue max-w-none text-gray-700 leading-relaxed">
+        <p class="text-2xl font-medium text-gray-900 mb-8 italic">
+          Dairy-free and lactose-free are not the same promise. A whey isolate can be almost free of lactose and still be pure milk protein, which is fine for a touchy stomach and dangerous for a milk allergy. Work out which problem you have first, and the shopping list mostly writes itself.
+        </p>
+
+        <QuickPicks products={PRODUCTS} />
+
+        <div id="which-problem" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            1. Dairy-Free vs Lactose-Free: Which Problem Do You Have?
+          </h2>
+
+          <p>
+            Two very different conditions send people looking for a non-dairy protein powder, and they call for different products. Lactose intolerance is a digestive problem: your gut makes too little lactase, the enzyme that breaks down milk sugar, so undigested lactose ferments in the colon and causes bloating, gas and loose stools. It is uncomfortable, it depends on the dose, and it is extremely common. A widely cited 2017 analysis in The Lancet Gastroenterology and Hepatology estimated that around two-thirds of the world's population has reduced ability to digest lactose.
+          </p>
+
+          <p>
+            A milk allergy is an immune reaction to the proteins in milk, mainly casein and the whey proteins. The amount of lactose is irrelevant, because the immune system is reacting to the protein itself. Reactions range from hives and stomach pain to anaphylaxis, and they can be triggered by small amounts. Whey protein, whey isolate, hydrolyzed whey, casein and milk protein isolate are all milk protein, however heavily filtered they are, so none of them is safe for someone with a milk allergy.
+          </p>
+
+          <p>
+            That gives you a simple rule. If you have a diagnosed milk allergy, or you avoid dairy for vegan or ethical reasons, you need a truly dairy-free powder: plant protein, egg white or beef protein isolate. If lactose is your only problem, a well-filtered whey isolate is usually fine and often the easier option, as our guide to <a href="/whey-vs-whey-isolate/">whey vs whey isolate</a> explains. If you are not sure which you have, an allergist or your doctor can tell you, and that answer is worth more than any product review.
+          </p>
+
+          <div class="overflow-hidden border border-gray-200 rounded-2xl my-8">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Your situation</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">What to avoid</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">What works</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Milk allergy</td>
+                    <td class="px-4 py-4 text-gray-700">All milk protein, including whey isolate and casein</td>
+                    <td class="px-4 py-4 text-gray-700">Plant, egg white or beef isolate powders</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Lactose intolerance</td>
+                    <td class="px-4 py-4 text-gray-700">Whey concentrate, milk-based blends</td>
+                    <td class="px-4 py-4 text-gray-700">Whey isolate, or any dairy-free powder</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Vegan or plant-based</td>
+                    <td class="px-4 py-4 text-gray-700">All animal products</td>
+                    <td class="px-4 py-4 text-gray-700">Plant proteins only</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Egg allergy plus dairy-free</td>
+                    <td class="px-4 py-4 text-gray-700">Egg white and milk powders</td>
+                    <td class="px-4 py-4 text-gray-700">Plant or beef isolate powders</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <p>
+            People with both a milk allergy and an egg allergy, which often travel together in childhood, should also skip egg white powder. Anyone managing a diagnosed food allergy should treat this guide as a starting point and confirm every product's allergen statement, and ideally their choice, with an allergist or registered dietitian.
+          </p>
+        </div>
+
+        <div id="how-we-picked" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            2. How We Picked: Label, Allergen Statement, Dose
+          </h2>
+
+          <p>
+            We did not run lab tests or taste panels for this guide. The picks come from label analysis, published third-party certifications and the research on protein quality, the same approach set out on our <a href="/how-we-test/">how we test page</a>. Where we mention taste or texture, we are passing on what buyers widely report rather than claiming a result of our own.
+          </p>
+
+          <p>
+            The first screen was the ingredient list. Every dairy-free pick had to contain no milk-derived ingredient at all, which rules out anything with whey, casein, caseinate, milk protein, lactose or milk solids, even in small amounts as a flavor carrier or creamer. The second screen was dose. We wanted at least roughly 20 g of protein per serving, and preferably 25 to 30 g, because a smaller serving forces you to buy and drink more powder to reach a useful amount.
+          </p>
+
+          <p>
+            Third, we gave credit for independent certification. NSF Certified for Sport and Informed Choice both test for banned substances, and NSF also checks that the label matches the contents. Certification does not test for allergen cross-contact the way an allergist would, but it is a meaningful signal that a brand runs a tight process. Finally, every product had to be long established, widely sold and stocked on Amazon in the United States, so you can actually buy what we recommend.
+          </p>
+
+          <p>
+            We deliberately spread the list across protein sources rather than ranking seven nearly identical pea blends. Plant powders dominate the category, but egg white and beef isolate solve real problems for people who are dairy-free without being vegan, and a lactose-free whey isolate is the honest answer for the large group who only need to avoid lactose. If you want a deeper look at the plant side alone, our <a href="/best-plant-based-protein-powder/">best plant-based protein powder</a> guide ranks more vegan options.
+          </p>
+
+          <div class="bg-gray-900 text-white rounded-2xl p-6 lg:p-8 my-8">
+            <p class="text-xs font-black uppercase tracking-widest text-[#38BDF8] mb-4">By the Numbers</p>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+              <div>
+                <p class="text-3xl font-black text-white">~2/3</p>
+                <p class="text-gray-400 text-xs mt-1">Of people worldwide with reduced lactose digestion</p>
+              </div>
+              <div>
+                <p class="text-3xl font-black text-[#38BDF8]">0 g</p>
+                <p class="text-gray-400 text-xs mt-1">Milk protein allowed in a dairy-free pick</p>
+              </div>
+              <div>
+                <p class="text-3xl font-black text-white">25-30 g</p>
+                <p class="text-gray-400 text-xs mt-1">Target protein per serving</p>
+              </div>
+              <div>
+                <p class="text-3xl font-black text-[#38BDF8]">2</p>
+                <p class="text-gray-400 text-xs mt-1">Sport certifications we checked: NSF and Informed Choice</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Picks -->
+        <div id="top-picks" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            3. The Best Dairy-Free Protein Powders, Ranked
+          </h2>
+
+          <p>
+            The first six picks contain no milk ingredients at all: four plant proteins, one egg white powder and one beef protein isolate. The seventh is a whey isolate marketed as lactose-free, included because many people searching for a non-dairy powder only need to avoid lactose, and it is clearly labeled as a milk product. Nutrition figures come from the labels at the time of writing and vary by flavor, so check the tub in front of you, and always read the allergen statement on the exact product you buy.
+          </p>
+
+          {PRODUCTS.map((product, index) => (
+            <div id={product.id} class="scroll-mt-24 mt-12 first:mt-8">
+              <div class="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                <div class="bg-gray-900 px-6 py-4 flex items-center justify-between">
+                  <div class="flex items-center gap-3">
+                    <span class="bg-[#FF4500] text-white w-8 h-8 rounded-full flex items-center justify-center text-sm font-black">
+                      {index + 1}
+                    </span>
+                    {productImages[product.id] && (
+                      <img
+                        src={productImages[product.id]}
+                        alt={product.name}
+                        loading="lazy"
+                        width="40"
+                        height="40"
+                        class="w-10 h-10 rounded-lg bg-white object-contain p-1 shrink-0"
+                      />
+                    )}
+                    <div>
+                      <p class="text-white font-black text-lg">{product.name}</p>
+                      <p class="text-gray-400 text-xs">{product.category}</p>
+                    </div>
+                  </div>
+                  <span class="bg-[#38BDF8]/20 text-[#38BDF8] px-3 py-1 rounded-full text-xs font-bold hidden sm:block">
+                    {product.badge}
+                  </span>
+                </div>
+                <div class="p-6">
+                  {product.rating && (
+                  <div class="flex items-center gap-2 mb-4">
+                    <div class="flex text-yellow-400">
+                      {[...Array(5)].map((_, i) => (
+                        <svg
+                          class={`w-4 h-4 ${i < Math.floor(product.rating) ? "fill-current" : "text-gray-200"}`}
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                        >
+                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        </svg>
+                      ))}
+                    </div>
+                    <span class="text-gray-500 text-sm font-bold">{product.rating}</span>
+                    {product.reviewCount && <span class="text-gray-400 text-xs">({product.reviewCount.toLocaleString()} retailer reviews)</span>}
+                  </div>
+                  )}
+
+                  <SpecGrid specs={product.specs} />
+
+                  <p class="text-gray-700 leading-relaxed mb-6">{product.description}</p>
+
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                    <div class="bg-green-50 rounded-xl p-4">
+                      <p class="text-xs font-black uppercase tracking-widest text-green-700 mb-3">Pros</p>
+                      <ul class="space-y-2">
+                        {product.pros.map((pro) => (
+                          <li class="flex items-start gap-2 text-sm text-green-800">
+                            <svg class="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            {pro}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div class="bg-red-50 rounded-xl p-4">
+                      <p class="text-xs font-black uppercase tracking-widest text-red-700 mb-3">Cons</p>
+                      <ul class="space-y-2">
+                        {product.cons.map((con) => (
+                          <li class="flex items-start gap-2 text-sm text-red-800">
+                            <svg class="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                            {con}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+
+                  <div class="bg-gray-50 rounded-xl p-4 border border-gray-100">
+                    <p class="text-xs font-black uppercase tracking-widest text-gray-500 mb-1">The Bottom Line</p>
+                    <p class="text-gray-900 font-bold">{product.bottomLine}</p>
+                  </div>
+
+                  <a
+                    href={amazonLink(product.amazonUrl, product.name, product.id)}
+                    target="_blank"
+                    rel="sponsored nofollow noopener"
+                    class="mt-6 block bg-[#FF4500] hover:bg-[#E63E00] text-white text-center py-4 rounded-xl font-black no-underline transition-colors uppercase tracking-widest text-sm"
+                  >
+                    Check Price &rarr;
+                  </a>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div id="plant-proteins" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            4. Plant Proteins: Pea, Rice and Blends
+          </h2>
+
+          <p>
+            Plant protein is the default dairy-free choice, and for good reason: it is vegan, widely available and easy to find without major allergens beyond the occasional soy. Pea protein is the backbone of most modern plant powders. It is relatively high in protein per calorie, mild compared with older soy and hemp products, and rich in lysine, an essential amino acid that grains run short of. Our <a href="/best-pea-protein-powder/">best pea protein powder</a> guide covers single-source pea isolates in more detail.
+          </p>
+
+          <p>
+            Most performance-oriented plant powders blend pea with rice, pumpkin seed, sunflower seed or other legumes. The logic is sound. Pea is relatively low in the sulfur amino acid methionine, while rice is lower in lysine, so a blend evens out the amino acid profile and gets closer to the completeness of dairy or egg. In practice, at a full serving of 25 to 30 g, a good blend gives you enough of every essential amino acid for most goals.
+          </p>
+
+          <p>
+            The trade-offs are taste, texture and calories. Plant proteins carry an earthy note that many buyers notice in water, and they tend to make a thicker, grittier shake than whey. Blends with added fiber, gums or superfood powders also add calories and carbohydrate. A single-ingredient pea isolate such as Naked Pea delivers about 27 g of protein for roughly 120 calories, while some blended, sweetened plant powders deliver 20 to 21 g for around 150 calories. Neither is wrong, but you should know which one you are buying.
+          </p>
+
+          <p>
+            Soy deserves a mention. Soy protein isolate is a complete protein, inexpensive and dairy-free, but soy is itself one of the major food allergens and some people simply prefer to avoid it. None of our plant picks relies on soy, which keeps them usable for the widest group of people avoiding common allergens.
+          </p>
+        </div>
+
+        <div id="egg-and-beef" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            5. Egg White and Beef Isolate: Dairy-Free but Not Vegan
+          </h2>
+
+          <p>
+            Not everyone who avoids dairy avoids animal foods. Plenty of people with a milk allergy or a paleo-style diet are happy to eat eggs and meat, and for them two animal proteins are worth knowing about. Both are dairy-free by nature, both are complete proteins, and both mix differently from the plant powders that fill most of the dairy-free shelf.
+          </p>
+
+          <p>
+            Egg white protein is simply dried, pasteurized egg white. It has a long record as a high-quality protein, scoring near the top of the older PDCAAS protein-quality scale, and it carries almost no fat or carbohydrate. NOW Sports Egg White Protein lists about 15 to 16 g of protein in a 20 g scoop for roughly 70 calories, per the label at the time of writing, so most people will use two scoops per shake. Pasteurization matters: raw egg white contains avidin, a protein that binds the vitamin biotin, and heat treatment deactivates it. Egg is a major allergen in its own right, so this option is out for anyone allergic to eggs.
+          </p>
+
+          <p>
+            Beef protein isolate is made by hydrolyzing and filtering beef protein into a powder that mixes like a flavored whey shake rather than tasting of meat. MuscleMeds Carnivor lists about 23 g of protein per scoop with no fat or sugar, per the label, and is marketed as lactose-free. One caveat is amino acid balance. Beef protein isolates tend to be richer in glycine, proline and hydroxyproline, the amino acids typical of connective tissue, than whey, which generally leaves them with less leucine per gram. A slightly larger serving offsets that.
+          </p>
+
+          <p>
+            Both options suit people who find plant proteins hard on the stomach or dislike their taste. Egg white is the cleaner, more neutral ingredient for cooking and baking; beef isolate is the one that most resembles a conventional flavored protein shake. Neither is suitable for vegans, and neither is necessary if a plant protein already agrees with you.
+          </p>
+        </div>
+
+        <div id="lactose-free-whey" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            6. When Lactose-Free Whey Isolate Is Enough
+          </h2>
+
+          <p>
+            If your only problem is lactose, you may not need to give up whey at all. Whey protein isolate is filtered until it is at least 90 percent protein, which strips out most of the lactose and fat. A typical isolate carries well under a gram of lactose per scoop, and some brands, including Isopure, market their isolates as lactose-free. Whey concentrate, by contrast, can carry a few grams of lactose per serving, and milk-based shakes much more.
+          </p>
+
+          <p>
+            Dose matters with lactose intolerance in a way it does not with an allergy. A 2010 systematic review in the Annals of Internal Medicine, by Shaukat and colleagues, concluded that most people with lactose intolerance can tolerate around 12 g of lactose, roughly a cup of milk, with few or no symptoms. A scoop of isolate is a small fraction of that. People with very severe intolerance, or anyone mixing powder into a large glass of cow's milk, may still notice symptoms, but for most, isolate removes the problem.
+          </p>
+
+          <p>
+            The advantages of staying with whey are real. Isolate is a complete protein with a high leucine content, it typically delivers about 25 g of protein for 100 to 120 calories, and it mixes thin and neutral in water. It is also often cheaper per gram of protein than the most popular certified plant powders. Our <a href="/best-whey-protein-isolate/">best whey protein isolate</a> rankings cover the best options in more depth.
+          </p>
+
+          <div class="bg-gray-900 text-white rounded-2xl p-6 lg:p-8 my-8">
+            <p class="text-xs font-black uppercase tracking-widest text-[#38BDF8] mb-3">THE RULE</p>
+            <p class="text-xl font-bold text-white mb-3">Lactose-free is not milk-free.</p>
+            <p class="text-gray-300 leading-relaxed m-0">A whey isolate labeled lactose-free still contains milk protein and must still declare milk as an allergen. It is a good choice for lactose intolerance and the wrong choice for a milk allergy, no matter how small the lactose figure is.</p>
+          </div>
+
+          <p>
+            If you try an isolate and still feel bloated, lactose may not have been the cause. Sweeteners, sugar alcohols, gums and simply drinking a large shake quickly can all upset some stomachs. Switching to an unflavored isolate, or to a plant protein with a short ingredient list, is the quickest way to find out which ingredient is responsible.
+          </p>
+        </div>
+
+        <div id="reading-labels" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            7. Reading the Label: Hidden Milk and May-Contain Warnings
+          </h2>
+
+          <p>
+            In the United States, the Food Allergen Labeling and Consumer Protection Act of 2004 makes milk one of the major allergens that must be declared in plain language, either in the ingredient list or in a Contains statement. That gives you a reliable first check: if the label says Contains: Milk, the product is not dairy-free, whatever the front of the tub suggests. Check it every time you change flavor, because formulas can differ across a range.
+          </p>
+
+          <p>
+            The words non-dairy deserve special suspicion. Federal labeling rules allow certain foods described as non-dairy, such as some coffee creamers, to contain sodium caseinate, a milk protein, provided it is identified as a milk derivative in the ingredient list. That is fine for someone avoiding lactose and unacceptable for someone with a milk allergy. Treat dairy-free, vegan and a clear allergen statement as better signals than non-dairy on its own.
+          </p>
+
+          <p>
+            Precautionary statements such as may contain milk or made in a facility that also processes milk are a different matter. They are voluntary, they are not defined by federal regulation, and brands use them inconsistently. One company may print a warning for a remote risk while another prints nothing despite sharing equipment. For most people avoiding lactose, these warnings are irrelevant. For someone with a severe milk allergy, they matter, and the safest step is to contact the brand and ask how it controls cross-contact.
+          </p>
+
+          <p>
+            Finally, scan for milk under other names: whey, casein, caseinate, milk protein concentrate, milk solids, lactalbumin and lactose. Flavor systems and creamers are where milk most often hides in otherwise plant-based products, so a chocolate or salted caramel version can carry milk when the unflavored version does not.
+          </p>
+        </div>
+
+        <div id="protein-quality" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            8. Protein Quality Without Dairy: Leucine and Dose
+          </h2>
+
+          <p>
+            The usual knock on dairy-free protein is that it builds less muscle than whey. There is a grain of truth in that, and a simple fix. Whey is unusually rich in leucine, the amino acid that acts as the main signal for muscle protein synthesis, and it digests quickly. Most plant proteins contain somewhat less leucine per gram, and some are missing enough of one essential amino acid to score lower on protein-quality scales.
+          </p>
+
+          <p>
+            In practice, dose closes most of the gap. Studies comparing pea or rice protein with whey at reasonably large servings have generally found similar gains in strength and muscle over training programs of several weeks, particularly when total daily protein is adequate. A plant serving of 30 g usually delivers about the same leucine as 25 g of whey. That is why the plant powders at the top of our list carry 27 to 30 g of protein per serving rather than the 20 g common in older vegan products.
+          </p>
+
+          <p>
+            Your total daily intake matters more than the source of any single shake. Most people who train benefit from roughly 1.4 to 2.0 g of protein per kilogram of body weight per day, spread across three or four meals, and our <a href="/how-much-protein-do-i-need/">daily protein guide</a> shows how to work out your own number. If you eat eggs, fish, meat, tofu or legumes through the day, the leucine content of one shake becomes a minor detail.
+          </p>
+
+          <p>
+            Egg white and beef isolate sit in between. Egg white is a complete, high-quality protein with a respectable leucine content; beef isolate is complete but tends to carry less leucine than whey because of its connective-tissue origin. If muscle gain is your main goal, a well-dosed plant blend or egg white powder is as good a dairy-free base as any, and the right one is whichever you will use consistently.
+          </p>
+        </div>
+
+        <div id="taste-texture" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            9. Taste, Texture and Mixing Without Milk
+          </h2>
+
+          <p>
+            A lot of the appeal of a whey shake comes from mixing it with cow's milk, so going dairy-free means rethinking the liquid as well as the powder. Water is the leanest option and the least forgiving: plant proteins taste earthier and thinner in water, and buyers commonly describe single-ingredient pea as chalky when it is simply shaken. Unsweetened soy, pea or oat milk adds body and sweetness, at the cost of a few extra calories.
+          </p>
+
+          <p>
+            A blender changes everything. Frozen banana, berries, cocoa, peanut butter, oats or a spoon of nut butter mask earthy notes and smooth out grit, which is why so many buyers use plant protein mainly in smoothies. Our guide to the <a href="/best-protein-powder-for-smoothies/">best protein powder for smoothies</a> covers which powders blend best. If you only ever use a shaker bottle, a flavored, sweetened plant blend or a beef isolate will be easier to live with than an unflavored single-source powder.
+          </p>
+
+          <p>
+            Egg white powder has its own quirks. It is very neutral in flavor but foams when blended hard, and it shines in cooking: protein pancakes, oats and baking, where it behaves much like the egg white it came from. Beef isolate, by contrast, is designed for drinking and comes in conventional shake flavors such as chocolate and vanilla. Neither tastes of its source when made as directed, according to most buyer feedback.
+          </p>
+
+          <p>
+            Sweeteners are the last variable. Many plant powders use stevia, monk fruit or erythritol, while beef isolates and many whey products use sucralose and acesulfame potassium. If a powder tastes too sweet or leaves an aftertaste, try an unflavored version and add your own flavor, or switch sweetener systems rather than giving up on the protein source.
+          </p>
+        </div>
+
+        <div id="testing" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            10. Testing and Heavy Metals in Plant Powders
+          </h2>
+
+          <p>
+            Plants absorb minerals from soil, including trace amounts of lead, cadmium and arsenic, and plant protein concentrates them along with the protein. Independent testing has repeatedly found that plant-based powders carry higher heavy-metal levels on average than dairy-based ones. A 2024 Consumer Reports analysis of popular protein powders reached that conclusion for lead, though results varied widely between brands, and some plant powders tested low.
+          </p>
+
+          <p>
+            That is not a reason to avoid plant protein, but it is a reason to choose carefully and not to overdo it. One serving a day of a reputable plant powder is a different exposure from three servings a day of an untested one. Rotating between protein sources, including egg white or beef isolate if your diet allows, also spreads the risk. Our <a href="/is-protein-powder-safe/">protein powder safety guide</a> covers heavy metals and what the numbers mean.
+          </p>
+
+          <p>
+            Sport certification helps in a different way. NSF Certified for Sport and Informed Choice are primarily designed to screen for banned substances, which matters most for drug-tested athletes, but NSF's program also checks label accuracy and screens for contaminants. Garden of Life Sport and Vega Sport both carry NSF Certified for Sport status per their brands at the time of writing, and MuscleMeds states that Carnivor is Informed Choice certified. Confirm the current status in the certifier's own database before relying on it, because certifications apply to specific products and can lapse.
+          </p>
+
+          <p>
+            For brands without a sport certification, the next-best signal is published batch testing. Some companies post third-party results for heavy metals and microbial contamination on their websites; if a brand will not share any testing when asked, choose one that does. People who are pregnant, or buying powder for a teenager, should be especially selective, and a registered dietitian can help weigh food-first alternatives.
+          </p>
+        </div>
+
+        <!-- Common Mistakes -->
+        <div id="mistakes" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            11. Common Mistakes to Avoid
+          </h2>
+
+          <div class="space-y-6 my-8">
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Treating lactose-free as dairy-free</h3>
+              <p class="text-gray-700 text-sm m-0">
+                A lactose-free whey isolate is still milk protein. It is a good choice for lactose intolerance and the wrong choice for a milk allergy, where the immune system reacts to the protein, not the sugar. If you have a diagnosed allergy, buy only powders with no milk-derived ingredients at all.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Trusting the words non-dairy</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Some products described as non-dairy, especially creamers, can legally contain sodium caseinate, a milk protein. Read the ingredient list and the Contains statement instead of the front label, and look for milk under other names such as whey, casein, caseinate and milk solids before you buy.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Assuming every flavor is the same</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Unflavored or vanilla versions of a plant powder can be milk-free while a chocolate or caramel version uses a milk-based flavor system or creamer. Check the allergen statement on every flavor you buy, and check again after any reformulation, because recipes and facilities change over time.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Undershooting the plant dose</h3>
+              <p class="text-gray-700 text-sm m-0">
+                A 20 g serving of plant protein carries noticeably less leucine than 25 g of whey. If muscle gain or recovery is the goal, aim for about 30 g of plant protein per shake, or choose a powder like Garden of Life Sport or Vega Sport that already delivers that dose per serving.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Ignoring cross-contact with a severe allergy</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Precautionary may-contain statements are voluntary and inconsistent, so their absence does not guarantee a product was made without shared equipment. If you have a severe milk allergy, contact the brand about its allergen controls and discuss your choice with an allergist rather than relying on the label alone.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ -->
+        <div id="faq" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            12. Frequently Asked Questions
+          </h2>
+
+          <div class="space-y-6">
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">What is the best dairy-free protein powder?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                For most people, Garden of Life Sport Organic Plant-Based Protein: about 30 g of protein per serving, no milk ingredients and NSF Certified for Sport per the brand. Vega Sport is a close second. If you eat eggs or meat but dislike plant protein, NOW Sports Egg White Protein or a beef isolate such as Carnivor are good dairy-free alternatives.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is whey protein isolate dairy-free?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                No. Whey isolate is filtered to remove most lactose and fat, but it is still milk protein and must be labeled as containing milk. Many people with lactose intolerance tolerate it well, but it is not safe for a milk allergy and not suitable for vegans. For a truly dairy-free powder, choose plant, egg white or beef protein.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">What is the best lactose-free protein powder?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                If you only need to avoid lactose, a whey isolate marketed as lactose-free, such as Isopure Zero Carb, is usually the easiest option, with about 25 g of protein per scoop and a high leucine content. Any dairy-free powder is also lactose-free. People with severe intolerance should start with a small serving and see how they respond.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is non-dairy protein powder good for building muscle?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Yes, when the dose is large enough. Plant proteins contain somewhat less leucine per gram than whey, but studies comparing pea or rice protein with whey at reasonable servings have generally found similar strength and muscle gains. Aim for about 30 g of plant protein per shake and enough total daily protein, and the source matters little.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is egg white protein dairy-free?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Yes. Egg white protein is made from dried, pasteurized egg whites and contains no milk, so it suits people with a milk allergy who eat eggs. It is not vegan, and it is not suitable for anyone with an egg allergy. Check the allergen statement, since flavored egg protein products sometimes add other ingredients.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Can I mix dairy-free protein powder with milk?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                You can mix it with any liquid, but cow's milk defeats the purpose if you are avoiding dairy. Unsweetened soy, pea, almond or oat milk adds creaminess without milk protein, and soy or pea milk also adds a few grams of protein. Water keeps calories lowest. A blender with frozen fruit improves the texture of most plant powders.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Do plant protein powders contain heavy metals?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Plant protein powders tend to carry more lead and other heavy metals on average than dairy-based ones, because plants absorb them from soil. Levels vary widely between brands. Choose products with sport certification or published batch testing, avoid relying on several servings a day, and consult a doctor or dietitian if you are pregnant or buying for a child.
+              </p>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Related Guides -->
+        <div class="mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">Related Plant Protein Guides</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <a href="/best-plant-based-protein-powder/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#10B981] font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Plant-Based Protein Powder</h3>
+              <p class="text-gray-500 text-sm mt-2">More vegan picks ranked on dose, certification and taste.</p>
+            </a>
+            <a href="/best-low-carb-protein-powder/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#FF4500] font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Low Carb Protein Powder</h3>
+              <p class="text-gray-500 text-sm mt-2">Powders ranked by net carbs per scoop, including a dairy-free option.</p>
+            </a>
+            <a href="/whey-vs-whey-isolate/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#38BDF8] font-black text-xs uppercase tracking-widest mb-2">Explainer</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Whey vs Whey Isolate</h3>
+              <p class="text-gray-500 text-sm mt-2">What the extra filtering removes, and how much lactose is left.</p>
+            </a>
+          </div>
+        </div>
+
+        <!-- Closing -->
+        <div class="mt-16 bg-gray-900 text-white rounded-2xl p-8">
+          <h2 class="text-2xl font-black text-white mb-4">The Bottom Line</h2>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            Start with the question that decides everything: are you avoiding milk protein or just lactose? With a milk allergy or a vegan diet, choose a powder with no milk ingredients at all. Garden of Life Sport or Vega Sport for a fully dosed, certified plant protein, Naked Pea for a single-ingredient base, or egg white and beef isolate if you eat animal foods but not dairy.
+          </p>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            If lactose is the only problem, a lactose-free whey isolate such as Isopure Zero Carb is often the simplest and cheapest route to a complete protein. Either way, read the allergen statement on the exact flavor you buy, and let an allergist or registered dietitian have the final word if your reaction to dairy is more than mild discomfort.
+          </p>
+        </div>
+
+        <MoreInCategory category="Plant Protein" links={moreInCategory} />
+
+        <AuthorBio />
+      </div>
+    </div>
+  </article>
+</Layout>

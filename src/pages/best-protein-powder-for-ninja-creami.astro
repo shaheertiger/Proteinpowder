@@ -1,0 +1,947 @@
+---
+import Layout from "../layouts/Layout.astro";
+import MoreInCategory from "../components/MoreInCategory.astro";
+import { AUTHORS, DEFAULT_AUTHOR, authorSchema } from "../data/authors";
+import { SITE_NAME, SITE_URL } from "../data/site";
+import AuthorAvatar from "../components/AuthorAvatar.astro";
+import QuickPicks from "../components/QuickPicks.astro";
+import AuthorBio from "../components/AuthorBio.astro";
+import { amazonLink } from "../data/affiliate";
+import TrustBadge from "../components/TrustBadge.astro";
+import SocialProof from "../components/SocialProof.astro";
+import SpecGrid from "../components/SpecGrid.astro";
+import productImages from "../data/product-images.json";
+import { pageDates } from "../data/dates";
+
+const moreInCategory = [
+  {
+    "title": "Best Protein Powder for Smoothies",
+    "url": "/best-protein-powder-for-smoothies/"
+  },
+  {
+    "title": "Best Protein Drink",
+    "url": "/best-protein-drink/"
+  },
+  {
+    "title": "Best Low-Carb Protein Powder",
+    "url": "/best-low-carb-protein-powder/"
+  },
+  {
+    "title": "Best Protein Powder for Weight Loss",
+    "url": "/best-protein-powder-for-weight-loss/"
+  }
+];
+const author = AUTHORS[DEFAULT_AUTHOR];
+const dates = pageDates(Astro.url.pathname, { published: "2026-10-17", modified: "2026-10-17" });
+const title = "Best Protein Powder for Ninja Creami: Thick, Scoopable Pints";
+const description =
+  "The best protein powder for Ninja Creami pints: why casein and blends freeze thicker than whey, how xanthan and pudding mix help, and how to fix icy results.";
+
+const PRODUCTS: {
+  id: string;
+  name: string;
+  brand?: string;
+  badge: string;
+  category: string;
+  description: string;
+  pros: string[];
+  cons: string[];
+  bottomLine: string;
+  specs?: Record<string, string>;
+  rating?: number;
+  reviewCount?: number;
+  amazonUrl?: string;
+}[] = [
+  {
+    "id": "optimum-nutrition-gold-standard-100-casein",
+    "name": "Optimum Nutrition Gold Standard 100% Casein",
+    "brand": "Optimum Nutrition",
+    "badge": "Best Overall for Ninja Creami",
+    "category": "Micellar casein",
+    "description": "Gold Standard Casein delivers about 24 g of micellar casein per scoop, per the label. Casein thickens and binds water, which is exactly what a frozen protein base needs, and Creami owners widely report that casein pints come out thick and creamy with little or no added gum. Chocolate and other bold flavors hide casein's slight chalkiness best.",
+    "pros": [
+      "About 24 g of micellar casein per scoop (label)",
+      "Thick, creamy pints with minimal thickener, owners report",
+      "Widely available in many flavors"
+    ],
+    "cons": [
+      "Slight chalky taste in plain flavors",
+      "Thick to mix; blend the base rather than stirring"
+    ],
+    "bottomLine": "The most reliable powder for a thick, scoopable protein pint.",
+    "specs": {
+      "Protein / serving": "About 24 g",
+      "Protein type": "Micellar casein",
+      "Third-party tested": "Check certifier database",
+      "Best for": "Thick, gelato-style pints"
+    }
+  },
+  {
+    "id": "pescience-select-protein",
+    "name": "PEScience Select Protein",
+    "brand": "PEScience",
+    "badge": "Best Whey-Casein Blend",
+    "category": "Whey and casein blend",
+    "description": "Select Protein combines milk protein isolate, which contains casein, with whey concentrate. The Gourmet Vanilla flavor lists about 24 g of protein for roughly 120 calories per scoop, per the label at the time of writing, and some flavors include guar gum. That combination of casein, gum and a thick milkshake body is the profile that tends to freeze creamy rather than icy.",
+    "pros": [
+      "Whey-casein blend freezes thicker than whey alone",
+      "About 24 g protein for roughly 120 calories (Gourmet Vanilla)",
+      "Wide range of dessert flavors"
+    ],
+    "cons": [
+      "Sweetened with sucralose and acesulfame potassium",
+      "No sport certification we could confirm"
+    ],
+    "bottomLine": "The best-tasting middle ground between thick casein and milkshake-style whey.",
+    "specs": {
+      "Protein / serving": "About 24 g (varies by flavor)",
+      "Protein type": "Milk protein isolate + whey concentrate",
+      "Sweetener": "Sucralose, acesulfame K (label)",
+      "Best for": "Creamy soft-serve pints"
+    }
+  },
+  {
+    "id": "quest-protein-powder",
+    "name": "Quest Protein Powder",
+    "brand": "Quest Nutrition",
+    "badge": "Best Low-Carb Pint",
+    "category": "Whey isolate and micellar casein blend",
+    "description": "Quest Protein Powder blends whey isolate with micellar casein, so it gets some casein thickening while staying very lean. The Vanilla Milkshake flavor lists about 24 g of protein, roughly 110 calories and about 3 g of carbohydrate per scoop, per the label at the time of writing. It suits low-carb pints, especially paired with a pinch of xanthan gum instead of pudding mix.",
+    "pros": [
+      "Casein in the blend helps body in a frozen base",
+      "About 24 g protein, roughly 110 calories and 3 g carbs (label)",
+      "Easy to find in stores"
+    ],
+    "cons": [
+      "Contains sucralose and stevia",
+      "Lists milk and soy allergens"
+    ],
+    "bottomLine": "The pick for the leanest, lowest-carb protein pints.",
+    "specs": {
+      "Protein / serving": "About 24 g (label)",
+      "Calories": "About 110 (Vanilla Milkshake)",
+      "Protein type": "Whey isolate + micellar casein",
+      "Best for": "Low-carb pints"
+    }
+  },
+  {
+    "id": "ghost-whey-protein",
+    "name": "Ghost Whey Protein",
+    "brand": "Ghost",
+    "badge": "Best Dessert Flavors",
+    "category": "Whey blend (isolate, concentrate, hydrolyzed)",
+    "description": "Ghost is known for licensed cookie and cereal flavors, and buyers widely describe them as tasting close to the real thing, which helps in a frozen base where cold mutes flavor. It lists about 25 g of protein per scoop, per the label at the time of writing. As a whey blend it freezes lighter than casein, so most owners add xanthan gum or pudding mix and re-spin once.",
+    "pros": [
+      "Dessert and cereal flavors that buyers rate highly",
+      "About 25 g protein per scoop (label, varies by flavor)",
+      "Strong flavor survives freezing, buyers report"
+    ],
+    "cons": [
+      "Whey blend needs a thickener for creamy results",
+      "Premium cost per 25 g of protein"
+    ],
+    "bottomLine": "Buy it for flavor, and pair it with a thickener for texture.",
+    "specs": {
+      "Protein / serving": "About 25 g (varies by flavor)",
+      "Protein type": "Whey blend",
+      "Sweetener": "Non-nutritive sweeteners (check label)",
+      "Best for": "Cookie and cereal pints"
+    }
+  },
+  {
+    "id": "optimum-nutrition-gold-standard-100-whey",
+    "name": "Optimum Nutrition Gold Standard 100% Whey",
+    "brand": "Optimum Nutrition",
+    "badge": "Best Budget Whey",
+    "category": "Whey blend (isolate + concentrate)",
+    "description": "Gold Standard Whey lists about 24 g of protein for roughly 120 calories per scoop, per the label, at a lower cost per 25 g of protein than most premium powders. Owners commonly mention its vanilla and chocolate flavors as Creami bases. Because it is a whey blend, it freezes thinner than casein, so plan on a pinch of gum or a spoonful of pudding mix.",
+    "pros": [
+      "About 24 g protein for roughly 120 calories (label)",
+      "Good value per 25 g of protein",
+      "Informed Choice certified, per the brand (confirm flavor)"
+    ],
+    "cons": [
+      "Needs a thickener for a creamy pint",
+      "Contains some lactose"
+    ],
+    "bottomLine": "The value pick if you are happy to add xanthan or pudding mix.",
+    "specs": {
+      "Protein / serving": "About 24 g",
+      "Protein type": "Whey isolate + concentrate",
+      "Third-party tested": "Informed Choice (confirm flavor)",
+      "Best for": "Budget pints with a thickener"
+    }
+  },
+  {
+    "id": "naked-nutrition-naked-casein",
+    "name": "Naked Nutrition Naked Casein (Unflavored)",
+    "brand": "Naked Nutrition",
+    "badge": "Best Unflavored Base",
+    "category": "Micellar casein",
+    "description": "Naked Casein is a single-ingredient micellar casein with roughly 25 g of protein per two-scoop serving, per the label. With no sweetener or flavoring, it is a blank base for pints where you control everything: cocoa, espresso, fruit, peanut butter powder or your preferred sweetener. Its casein body gives a thick freeze without needing much gum.",
+    "pros": [
+      "Single-ingredient micellar casein (label)",
+      "Thick base with little or no gum needed",
+      "Full control over sweetener and flavor"
+    ],
+    "cons": [
+      "Needs sweetener and flavoring added",
+      "Chalky if under-flavored"
+    ],
+    "bottomLine": "The plain casein for owners who build their own flavors.",
+    "specs": {
+      "Protein / serving": "Roughly 25 g (2 scoops, label)",
+      "Ingredients": "Micellar casein only",
+      "Sweetener": "None",
+      "Best for": "DIY flavors"
+    }
+  }
+];
+
+const schema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Home",
+          item: `${SITE_URL}/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Best Lists",
+          item: `${SITE_URL}/best-of/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 3,
+          name: "Best Protein Powder for Ninja Creami",
+          item: `${SITE_URL}/best-protein-powder-for-ninja-creami/`,
+        },
+      ],
+    },
+    {
+      "@type": "FAQPage",
+      mainEntity: [
+        {
+          "@type": "Question",
+          "name": "What is the best protein powder for Ninja Creami?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Casein and whey-casein blends make the thickest, creamiest pints because they bind water and keep ice crystals small. Optimum Nutrition Gold Standard Casein and PEScience Select are good examples of each. Whey blends work too but usually need a thickener such as xanthan gum or pudding mix."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Why is my Ninja Creami protein ice cream powdery?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Protein bases are low in sugar and fat, so they freeze very hard and the first spin often comes out crumbly. Add one to two tablespoons of milk and re-spin. If it stays powdery, switch to casein or a blend, add a pinch of gum, or let the pint temper briefly first."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is casein or whey better for protein ice cream?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Casein is better for texture because it thickens and holds water, giving a dense, gelato-like pint. Whey blends taste closer to a milkshake and often have bigger flavor ranges but freeze lighter and icier. A whey-casein blend is a good compromise if you want both flavor and body."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How much xanthan gum should I add to a Creami pint?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Around an eighth to a quarter of a teaspoon per pint is the usual range shared by owners. Blend it in thoroughly so it does not clump. Too much makes the texture slimy or stretchy, so start at the low end and increase only if the pint is still icy."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Do I need pudding mix for Ninja Creami protein ice cream?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No, but it helps. A tablespoon or two of instant sugar-free pudding mix thickens the base and adds flavor. It also adds some carbohydrate and usually contains sweeteners such as aspartame, so check the label. Xanthan or guar gum is a leaner alternative with a similar effect."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I use plant protein in a Ninja Creami?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Pea and pea-rice blends absorb water and can freeze thick, but some owners find them gritty or earthy when frozen. Adding a little fat, such as nut butter or a richer plant milk, and choosing a bold flavor like chocolate helps. Expect more trial and error than with casein."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How much protein is in a protein ice cream pint?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "A pint made with about 1.25 cups of ultra-filtered milk and one scoop of casein typically lands around 40 g of protein for roughly 220 to 260 calories before mix-ins, based on common label values. Your numbers depend on the milk, powder, thickener and toppings you use."
+          }
+        }
+      ],
+    },
+    {
+      "@type": "Article",
+      headline: title,
+      author: authorSchema(),
+      datePublished: dates.published,
+      dateModified: dates.modified,
+      publisher: { "@type": "Organization", name: SITE_NAME, url: SITE_URL },
+    },
+    {
+      "@type": "ItemList",
+      name: title,
+      numberOfItems: PRODUCTS.length,
+      itemListElement: PRODUCTS.map((product, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name: product.name,
+        url: new URL(`#${product.id}`, Astro.url).toString(),
+      })),
+    },
+    ...PRODUCTS.map((product) => ({
+      "@type": "Product",
+      name: product.name,
+      description: product.description,
+      brand: {
+        "@type": "Brand",
+        name: product.brand ?? product.name.split(" ")[0],
+      },
+    })),
+  ],
+};
+---
+
+<Layout
+  title={title}
+  description={description}
+  ogType="article"
+  article={{
+    publishedTime: dates.published,
+    modifiedTime: dates.modified,
+    author: author.name,
+    section: "Protein Powder",
+    tags: [
+      "best protein powder for ninja creami",
+      "protein ice cream",
+      "ninja creami protein recipe",
+      "casein ice cream",
+      "high protein ice cream"
+    ],
+  }}
+  jsonLd={schema}
+>
+  <article class="relative overflow-hidden">
+    <!-- Hero Section -->
+    <div class="bg-gray-900 py-16 lg:py-24 relative overflow-hidden">
+      <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(circle at 20% 20%, #38BDF8 0, transparent 45%), radial-gradient(circle at 80% 60%, #FF4500 0, transparent 40%);"></div>
+      <div class="max-w-4xl mx-auto px-4 relative z-10 text-center">
+        <div class="flex justify-center mb-6">
+          <TrustBadge />
+        </div>
+        <div class="flex justify-center gap-3 mb-6">
+          <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#FF4500]/20 text-[#FF4500] text-xs font-black uppercase tracking-widest border border-[#FF4500]/30">
+            Buyer's Guide
+          </span>
+          <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-green-500/10 text-green-400 text-xs font-bold uppercase tracking-widest border border-green-500/20">
+            Updated October 2026
+          </span>
+        </div>
+        <h1 class="text-4xl lg:text-6xl font-black text-white leading-tight mb-8">
+          Best Protein Powder for <span class="text-[#38BDF8]">Ninja Creami</span>
+        </h1>
+        <p class="text-xl text-gray-300 leading-relaxed mb-8 max-w-3xl mx-auto">
+          Six powders that freeze into thick, creamy protein ice cream instead of powdery snow, plus the base ratios, thickeners and re-spin habits owners rely on.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a
+            href="#optimum-nutrition-gold-standard-100-casein"
+            class="px-8 py-4 bg-[#FF4500] hover:bg-[#E63E00] text-white font-black rounded-xl shadow-lg transition-all no-underline"
+          >
+            See Our #1 Pick
+          </a>
+          <a
+            href="#casein-vs-whey"
+            class="px-8 py-4 bg-white/10 hover:bg-white/20 text-white font-bold rounded-xl border border-white/10 no-underline"
+          >
+            See Casein vs Whey
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Author & Meta -->
+    <div class="max-w-3xl mx-auto px-4 pt-12">
+      <div class="flex items-center gap-6 border-b border-gray-100 pb-8">
+        <div class="flex items-center gap-3">
+          <AuthorAvatar size={48} />
+          <div>
+            <p class="text-sm font-bold text-gray-900">{author.name}</p>
+            <p class="text-xs text-gray-500 uppercase tracking-widest">{author.role}</p>
+          </div>
+        </div>
+        <div class="h-10 w-px bg-gray-200 hidden sm:block"></div>
+        <div class="hidden sm:block">
+          <p class="text-sm font-bold text-gray-900">Last Updated</p>
+          <p class="text-xs text-gray-500">{dates.display}</p>
+        </div>
+        <div class="hidden sm:block ml-auto">
+          <SocialProof />
+        </div>
+      </div>
+    </div>
+
+    <!-- Table of Contents -->
+    <div class="max-w-3xl mx-auto px-4 py-10">
+      <div class="bg-gray-50 border border-gray-200 rounded-2xl p-6 lg:p-8">
+        <h2 class="text-lg font-black text-gray-900 mb-4 flex items-center gap-2">
+          In This Guide
+        </h2>
+        <nav class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <a href="#why-powder-matters" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">1. Why the Powder Matters</a>
+          <a href="#how-we-picked" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">2. How We Picked</a>
+          <a href="#top-picks" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">3. Our Top Picks</a>
+          <a href="#casein-vs-whey" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">4. Casein vs Whey vs Plant</a>
+          <a href="#base-recipe" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">5. A Simple Protein Base</a>
+          <a href="#thickeners" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">6. Xanthan, Guar and Pudding Mix</a>
+          <a href="#fix-texture" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">7. Fixing Icy or Powdery Pints</a>
+          <a href="#flavors" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">8. Flavors and Mix-Ins</a>
+          <a href="#nutrition" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">9. Protein and Calories per Pint</a>
+          <a href="#mistakes" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">10. Common Mistakes</a>
+          <a href="#faq" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">11. FAQ</a>
+        </nav>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="max-w-3xl mx-auto px-4 pb-16 lg:pb-24">
+      <div class="prose prose-lg prose-blue max-w-none text-gray-700 leading-relaxed">
+        <p class="text-2xl font-medium text-gray-900 mb-8 italic">
+          A protein pint made in a Ninja Creami lives or dies on the powder. Regular ice cream stays soft because of sugar and fat; a protein base has little of either, so the wrong powder freezes into an icy block that spins into dust. Casein and whey-casein blends hold water and thicken the base, which is why they make the creamiest pints. Here are six powders worth using, chosen on protein type, label and buyer feedback, and the simple technique that turns a first-spin crumble into something that tastes like dessert.
+        </p>
+
+        <QuickPicks products={PRODUCTS} />
+
+        <div id="why-powder-matters" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            1. Why Protein Powder Makes or Breaks a Creami Pint
+          </h2>
+
+          <p>
+            The Ninja Creami works differently from a churning ice cream maker. You freeze a liquid base solid in a pint container, usually for about a day, and the machine's blade shaves and whips the frozen block into a soft texture. That means the base has to freeze into something the blade can turn creamy. In ordinary ice cream, sugar lowers the freezing point and fat coats ice crystals, so the block stays slightly soft and the result is smooth.
+          </p>
+
+          <p>
+            Protein ice cream removes most of that sugar and fat, which is the point, but it also removes what keeps ice crystals small. A base of milk, water and a thin whey isolate freezes into hard, coarse crystals. The first spin turns it into something closer to snow or powder, and owners often describe it as dusty or crumbly. This is the most common complaint in protein Creami recipes, and it is mostly a powder and ratio problem rather than a machine problem.
+          </p>
+
+          <p>
+            Protein powder can fix what it causes. Casein forms a thicker, gel-like mix with liquid and binds water, so less of it freezes into large crystals. Whey-casein blends do a milder version of the same thing, and many contain gums that act as stabilizers. Pick the right powder, add a small amount of thickener, and the same pint that would have been icy comes out dense and scoopable.
+          </p>
+
+          <div class="bg-gray-900 text-white rounded-2xl p-6 lg:p-8 my-8">
+            <p class="text-xs font-black uppercase tracking-widest text-[#38BDF8] mb-3">THE SHORT VERSION</p>
+            <p class="text-xl font-bold text-white mb-3">Casein and casein blends make thicker pints than whey isolate.</p>
+            <p class="text-gray-300 leading-relaxed m-0">They bind water and thicken the base, which keeps ice crystals small. Add a pinch of xanthan or guar gum, freeze for about a day, and expect to re-spin once with a splash of milk.</p>
+          </div>
+        </div>
+
+        <div id="how-we-picked" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            2. How We Picked
+          </h2>
+
+          <p>
+            We did not freeze and spin pints for this guide. The picks come from label analysis, protein type and the large body of public feedback from Creami owners about which powders give thick or icy results, using the method on our <a href="/how-we-test/">how we test page</a>. Any comment about texture or taste is buyer feedback reported as such, not our own result.
+          </p>
+
+          <p>
+            Protein type carried the most weight. Pure caseins and whey-casein blends ranked highest because of how they behave in a frozen base. Whey blends that buyers consistently say work well with a thickener came next. We also weighed flavor range, since a Creami pint is dessert and a flavor you enjoy matters more here than in a post-workout shake, and protein per scoop, so that a pint delivers a meaningful dose for its calories.
+          </p>
+
+          <p>
+            We favored widely sold products with long track records and full ingredient disclosure. We did not reward novelty ingredients, fat burners or proprietary blends. If you already own a powder that is not on this list, the same principles apply: a casein or blend will usually freeze thicker than an isolate, and a thin powder can be rescued with a thickener and a re-spin.
+          </p>
+        </div>
+
+        <!-- Picks -->
+        <div id="top-picks" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            3. The Best Protein Powders for Ninja Creami, Ranked
+          </h2>
+
+          <p>
+            The picks are ordered by how reliably they produce a thick, creamy pint with minimal fuss. Nutrition figures are per the label at the time of writing and vary by flavor. Comments on texture and taste summarize what Creami owners widely report in public reviews and forums; we did not run our own freezer trials. Ninja and Creami are trademarks of SharkNinja, which has no connection to this guide and has not endorsed any product here.
+          </p>
+
+          {PRODUCTS.map((product, index) => (
+            <div id={product.id} class="scroll-mt-24 mt-12 first:mt-8">
+              <div class="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                <div class="bg-gray-900 px-6 py-4 flex items-center justify-between">
+                  <div class="flex items-center gap-3">
+                    <span class="bg-[#FF4500] text-white w-8 h-8 rounded-full flex items-center justify-center text-sm font-black">
+                      {index + 1}
+                    </span>
+                    {productImages[product.id] && (
+                      <img
+                        src={productImages[product.id]}
+                        alt={product.name}
+                        loading="lazy"
+                        width="40"
+                        height="40"
+                        class="w-10 h-10 rounded-lg bg-white object-contain p-1 shrink-0"
+                      />
+                    )}
+                    <div>
+                      <p class="text-white font-black text-lg">{product.name}</p>
+                      <p class="text-gray-400 text-xs">{product.category}</p>
+                    </div>
+                  </div>
+                  <span class="bg-[#38BDF8]/20 text-[#38BDF8] px-3 py-1 rounded-full text-xs font-bold hidden sm:block">
+                    {product.badge}
+                  </span>
+                </div>
+                <div class="p-6">
+                  {product.rating && (
+                  <div class="flex items-center gap-2 mb-4">
+                    <div class="flex text-yellow-400">
+                      {[...Array(5)].map((_, i) => (
+                        <svg
+                          class={`w-4 h-4 ${i < Math.floor(product.rating) ? "fill-current" : "text-gray-200"}`}
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                        >
+                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        </svg>
+                      ))}
+                    </div>
+                    <span class="text-gray-500 text-sm font-bold">{product.rating}</span>
+                    {product.reviewCount && <span class="text-gray-400 text-xs">({product.reviewCount.toLocaleString()} retailer reviews)</span>}
+                  </div>
+                  )}
+
+                  <SpecGrid specs={product.specs} />
+
+                  <p class="text-gray-700 leading-relaxed mb-6">{product.description}</p>
+
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                    <div class="bg-green-50 rounded-xl p-4">
+                      <p class="text-xs font-black uppercase tracking-widest text-green-700 mb-3">Pros</p>
+                      <ul class="space-y-2">
+                        {product.pros.map((pro) => (
+                          <li class="flex items-start gap-2 text-sm text-green-800">
+                            <svg class="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            {pro}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div class="bg-red-50 rounded-xl p-4">
+                      <p class="text-xs font-black uppercase tracking-widest text-red-700 mb-3">Cons</p>
+                      <ul class="space-y-2">
+                        {product.cons.map((con) => (
+                          <li class="flex items-start gap-2 text-sm text-red-800">
+                            <svg class="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                            {con}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+
+                  <div class="bg-gray-50 rounded-xl p-4 border border-gray-100">
+                    <p class="text-xs font-black uppercase tracking-widest text-gray-500 mb-1">The Bottom Line</p>
+                    <p class="text-gray-900 font-bold">{product.bottomLine}</p>
+                  </div>
+
+                  <a
+                    href={amazonLink(product.amazonUrl, product.name, product.id)}
+                    target="_blank"
+                    rel="sponsored nofollow noopener"
+                    class="mt-6 block bg-[#FF4500] hover:bg-[#E63E00] text-white text-center py-4 rounded-xl font-black no-underline transition-colors uppercase tracking-widest text-sm"
+                  >
+                    Check Price &rarr;
+                  </a>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div id="casein-vs-whey" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            4. Casein, Blends, Whey and Plant: What Each Does in the Pint
+          </h2>
+
+          <p>
+            Casein is the closest thing to a shortcut. Because it thickens liquids and holds water, a casein base freezes into a denser block that spins into something like soft-serve or gelato. Many owners report that a casein pint needs only one re-spin and little or no added gum. The trade-off is flavor: casein can taste slightly chalky, so chocolate, peanut butter and cookie flavors hide it better than plain vanilla. Our <a href="/best-casein-protein-powder/">best casein protein powder</a> guide covers casein beyond the freezer.
+          </p>
+
+          <p>
+            Whey-casein blends are the most popular middle ground. They taste closer to a milkshake than pure casein, still thicken the base and often include gums already. Whey concentrate and standard whey blends work too, but they freeze thinner, so most owners add xanthan gum or a spoonful of pudding mix. Whey isolate, especially clear or hydrolyzed isolate, gives the iciest results and is the hardest to make creamy.
+          </p>
+
+          <p>
+            Plant powders are workable but less predictable. Pea and pea-rice blends absorb water and can freeze thick, though some owners find them gritty or earthy in a frozen dessert. Adding a little fat, such as a spoonful of nut butter or using a richer plant milk, helps. Dairy-free readers can find more options in our <a href="/best-dairy-free-protein-powder/">best dairy-free protein powder</a> guide.
+          </p>
+
+          <div class="overflow-hidden border border-gray-200 rounded-2xl my-8">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Protein type</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Typical Creami texture</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Thickener needed</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Notes</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Micellar casein</td>
+                    <td class="px-4 py-4 text-gray-700">Thick, gelato-like</td>
+                    <td class="px-4 py-4 text-gray-700">Little or none</td>
+                    <td class="px-4 py-4 text-gray-700">Can taste chalky; use bold flavors</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Whey-casein blend</td>
+                    <td class="px-4 py-4 text-gray-700">Creamy, soft-serve</td>
+                    <td class="px-4 py-4 text-gray-700">A pinch, sometimes none</td>
+                    <td class="px-4 py-4 text-gray-700">Most forgiving all-rounder</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Whey blend</td>
+                    <td class="px-4 py-4 text-gray-700">Lighter, can be icy</td>
+                    <td class="px-4 py-4 text-gray-700">Usually yes</td>
+                    <td class="px-4 py-4 text-gray-700">Big flavor ranges</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Whey isolate</td>
+                    <td class="px-4 py-4 text-gray-700">Icy, powdery</td>
+                    <td class="px-4 py-4 text-gray-700">Yes, plus re-spins</td>
+                    <td class="px-4 py-4 text-gray-700">Hardest to make creamy</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Plant blend</td>
+                    <td class="px-4 py-4 text-gray-700">Thick but variable</td>
+                    <td class="px-4 py-4 text-gray-700">Sometimes</td>
+                    <td class="px-4 py-4 text-gray-700">Add fat to reduce grit</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div id="base-recipe" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            5. A Simple Protein Ice Cream Base, and Why Each Part Is There
+          </h2>
+
+          <p>
+            Most protein Creami recipes shared by owners follow the same template. Start with roughly 1.25 to 1.5 cups of milk, leaving room below the pint's max fill line, then add one scoop of casein or a blend, a sweetener to taste and a thickener. Ultra-filtered milk such as Fairlife is a common choice because it adds extra protein and less sugar than regular milk. Blend the base with a blender or frother rather than stirring, because clumps of dry powder freeze into gritty pockets.
+          </p>
+
+          <p>
+            Freeze the pint level on a flat shelf. Ninja's own guidance is to freeze the base for about 24 hours, and owners widely report that a shorter freeze gives a softer core and uneven texture. A pint that freezes at an angle or with a hump in the middle spins unevenly. If your freezer is very cold, let the pint sit on the counter for five to ten minutes before spinning, which many owners say reduces the powdery first-spin result.
+          </p>
+
+          <p>
+            On machines that have it, run the Lite Ice Cream program, which product listings describe as designed for bases made with sugar substitutes or low-fat milk. Expect the first spin to look crumbly. Add one to two tablespoons of milk to the center, run Re-spin, and check again. Many protein pints need one re-spin and some need two. Mix-ins go in last using the mix-in program. For a full <a href="/best-protein-powder-for-baking/">baking with protein powder</a> walkthrough, which follows different rules, see our baking guide.
+          </p>
+
+          <div class="overflow-hidden border border-gray-200 rounded-2xl my-8">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Ingredient</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Typical amount</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Why it is there</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Milk (ultra-filtered or regular)</td>
+                    <td class="px-4 py-4 text-gray-700">About 1.25-1.5 cups</td>
+                    <td class="px-4 py-4 text-gray-700">Liquid, extra protein, some fat</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Casein or whey-casein blend</td>
+                    <td class="px-4 py-4 text-gray-700">1 scoop</td>
+                    <td class="px-4 py-4 text-gray-700">Protein, body, thickness</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Xanthan or guar gum</td>
+                    <td class="px-4 py-4 text-gray-700">1/8-1/4 tsp</td>
+                    <td class="px-4 py-4 text-gray-700">Smaller ice crystals, creamier spin</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Sugar-free pudding mix (optional)</td>
+                    <td class="px-4 py-4 text-gray-700">1-2 tbsp</td>
+                    <td class="px-4 py-4 text-gray-700">Thickness and flavor</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Sweetener</td>
+                    <td class="px-4 py-4 text-gray-700">To taste</td>
+                    <td class="px-4 py-4 text-gray-700">Cold dulls sweetness</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div id="thickeners" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            6. Xanthan, Guar and Pudding Mix: The Thickeners Explained
+          </h2>
+
+          <p>
+            Xanthan gum and guar gum are the two thickeners owners use most. Both are used in commercial ice cream as stabilizers, and both bind water so that ice crystals stay small. The amounts are tiny, around an eighth to a quarter of a teaspoon per pint. Too much gives a slimy, stretchy or gummy texture, so start small. Whisk or blend the gum into the liquid thoroughly, because a clump will not dissolve once frozen.
+          </p>
+
+          <p>
+            Instant sugar-free pudding mix is the other popular trick. A tablespoon or two thickens the base and adds flavor, which is why vanilla, cheesecake and chocolate pudding mixes are common in shared recipes. Read the label, though. Pudding mixes contain modified starch, and many sugar-free versions are sweetened with aspartame and acesulfame potassium, so people with phenylketonuria must avoid aspartame. The mix also adds some carbohydrate, which matters on a strict low-carb diet.
+          </p>
+
+          <p>
+            Gums are the leaner option, pudding the more flavorful one. If either upsets your stomach, as gums and sugar alcohols can for some people in larger amounts, a casein-heavy base with a little more fat, such as a spoonful of cream cheese, Greek yogurt or nut butter, can thicken the pint instead. Our <a href="/best-protein-powder-for-sensitive-stomach/">best protein powder for sensitive stomach</a> guide covers ingredients that commonly cause trouble.
+          </p>
+        </div>
+
+        <div id="fix-texture" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            7. Fixing Powdery, Icy or Gummy Pints
+          </h2>
+
+          <p>
+            A powdery or crumbly first spin is normal for protein bases and is not a failure. It means the base is very cold and low in sugar and fat. A tablespoon or two of milk and a re-spin usually fixes it. If you routinely need three re-spins, the base needs more body: switch to casein or a blend, add a pinch of gum, or let the pint temper on the counter for a few minutes before the first spin.
+          </p>
+
+          <p>
+            Icy pints, where you can see and taste crystals, come from too much water relative to protein, fat and thickener. Swap some water for milk, use a thicker powder or add a quarter teaspoon of xanthan. Gummy or stretchy pints are the opposite: too much gum or pudding mix. Halve the thickener next time. A pint that is soupy after spinning usually did not freeze long enough or was spun too many times; refreeze it and spin again.
+          </p>
+
+          <p>
+            Leftover pints freeze hard again in the freezer, so smooth the top before refreezing and expect to re-spin before eating. Follow Ninja's own instructions for the machine, including the max fill line and freezing the pint level, because an overfilled or uneven pint can strain the machine. Owners report that most texture problems come down to the same three levers: powder type, thickener and re-spinning with a splash of liquid.
+          </p>
+
+          <div class="overflow-hidden border border-gray-200 rounded-2xl my-8">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Problem</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Likely cause</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Fix</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Powdery or crumbly</td>
+                    <td class="px-4 py-4 text-gray-700">Very cold, low sugar and fat</td>
+                    <td class="px-4 py-4 text-gray-700">Add 1-2 tbsp milk, re-spin</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Icy crystals</td>
+                    <td class="px-4 py-4 text-gray-700">Too much water, thin powder</td>
+                    <td class="px-4 py-4 text-gray-700">Use casein or blend, add gum</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Gummy or stretchy</td>
+                    <td class="px-4 py-4 text-gray-700">Too much gum or pudding</td>
+                    <td class="px-4 py-4 text-gray-700">Halve the thickener</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Soupy</td>
+                    <td class="px-4 py-4 text-gray-700">Short freeze, too many spins</td>
+                    <td class="px-4 py-4 text-gray-700">Refreeze and spin again</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div id="flavors" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            8. Flavored Powders and Mix-Ins: What Buyers Use
+          </h2>
+
+          <p>
+            Cold dulls sweetness and flavor, so a powder that tastes strong in a shaker can taste muted frozen. That is why dessert-style flavors are so popular for protein ice cream. Buyers widely report that cookie, cereal and cake flavors from brands such as Ghost translate well, and that chocolate and peanut butter flavors hide casein's chalkiness best. Vanilla is the most flexible base for adding your own flavors, from cocoa and espresso to fruit.
+          </p>
+
+          <p>
+            Mix-ins should go in after the main spin using the mix-in program, so they stay in pieces. Crushed cookies, chopped protein bars, berries, peanut butter powder and dark chocolate are common. Fresh fruit blended into the base adds sugar and water, which can make the pint icier, so many owners prefer adding fruit as a mix-in or using frozen fruit purée in measured amounts.
+          </p>
+
+          <p>
+            If you want a pint that tastes as close to real ice cream as possible, accept a little more fat from whole or 2 percent milk or a spoonful of cream. If protein per calorie matters most, as it does on a cut, stick with fat-free ultra-filtered milk and a casein base. Our <a href="/best-tasting-protein-powder/">best tasting protein powder</a> guide covers the flavors buyers actually finish, and many owners also use a ready-to-drink shake as the entire base; our <a href="/best-protein-drink/">best protein drink</a> guide compares those.
+          </p>
+        </div>
+
+        <div id="nutrition" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            9. How Much Protein Is in a Pint, and Is It Worth It?
+          </h2>
+
+          <p>
+            A typical protein pint made with about 1.25 cups of fat-free ultra-filtered milk and one scoop of casein lands at roughly 40 g of protein and somewhere around 220 to 260 calories before mix-ins, based on common label values. A standard pint of premium ice cream can carry several times those calories with a fraction of the protein. That gap is why protein ice cream has become so popular with people tracking calories.
+          </p>
+
+          <p>
+            The numbers rise quickly with mix-ins, whole milk, pudding mix and sauces, so log what you actually add. A pint with cookies and peanut butter can double its calories. If you are eating protein ice cream as part of a weight-loss plan, our <a href="/best-protein-powder-for-weight-loss/">best protein powder for weight loss</a> guide explains how to fit protein into a calorie target, and our <a href="/best-low-carb-protein-powder/">best low-carb protein powder</a> guide helps if carbohydrates are your limit.
+          </p>
+
+          <p>
+            Protein ice cream is a useful tool, not a health food. It is a good way to reach a daily protein target with something that feels like a treat, and it can replace a higher-sugar dessert. Sweeteners, gums and sugar alcohols can cause bloating in some people when eaten by the pint. Anyone managing diabetes, kidney disease or another medical condition should check sweetener and protein amounts with a doctor or registered dietitian.
+          </p>
+        </div>
+
+        <!-- Common Mistakes -->
+        <div id="mistakes" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            10. Common Mistakes to Avoid
+          </h2>
+
+          <div class="space-y-6 my-8">
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Using whey isolate and expecting ice cream</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Isolate is thin and lean, so it freezes into coarse ice crystals and spins into powder. If isolate is all you have, add xanthan gum or pudding mix and plan on re-spinning. For thick pints without fuss, casein or a whey-casein blend is the better buy.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Stirring instead of blending the base</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Dry protein clumps do not dissolve once frozen and leave gritty pockets. Blend the base or use a frother so the powder and any gum are fully hydrated, then let it sit for a few minutes to release foam before pouring it into the pint.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Overdoing the xanthan gum</h3>
+              <p class="text-gray-700 text-sm m-0">
+                An eighth to a quarter teaspoon is enough for a pint. More than that gives a slimy, stretchy texture that many owners mistake for a powder problem. Start small, and increase only if the pint is still icy after a re-spin.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Skipping the re-spin</h3>
+              <p class="text-gray-700 text-sm m-0">
+                A crumbly first spin is normal for low-sugar protein bases. Add one to two tablespoons of milk to the center and run Re-spin. Most protein pints need one, and some need two, before they turn creamy.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Freezing too briefly or unevenly</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Ninja recommends freezing the base for about a day. Short freezes leave a soft core, and a pint frozen at an angle spins unevenly. Freeze it level on a flat shelf and stay below the max fill line marked on the pint.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ -->
+        <div id="faq" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            11. Frequently Asked Questions
+          </h2>
+
+          <div class="space-y-6">
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">What is the best protein powder for Ninja Creami?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Casein and whey-casein blends make the thickest, creamiest pints because they bind water and keep ice crystals small. Optimum Nutrition Gold Standard Casein and PEScience Select are good examples of each. Whey blends work too but usually need a thickener such as xanthan gum or pudding mix.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Why is my Ninja Creami protein ice cream powdery?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Protein bases are low in sugar and fat, so they freeze very hard and the first spin often comes out crumbly. Add one to two tablespoons of milk and re-spin. If it stays powdery, switch to casein or a blend, add a pinch of gum, or let the pint temper briefly first.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is casein or whey better for protein ice cream?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Casein is better for texture because it thickens and holds water, giving a dense, gelato-like pint. Whey blends taste closer to a milkshake and often have bigger flavor ranges but freeze lighter and icier. A whey-casein blend is a good compromise if you want both flavor and body.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">How much xanthan gum should I add to a Creami pint?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Around an eighth to a quarter of a teaspoon per pint is the usual range shared by owners. Blend it in thoroughly so it does not clump. Too much makes the texture slimy or stretchy, so start at the low end and increase only if the pint is still icy.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Do I need pudding mix for Ninja Creami protein ice cream?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                No, but it helps. A tablespoon or two of instant sugar-free pudding mix thickens the base and adds flavor. It also adds some carbohydrate and usually contains sweeteners such as aspartame, so check the label. Xanthan or guar gum is a leaner alternative with a similar effect.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Can I use plant protein in a Ninja Creami?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Yes. Pea and pea-rice blends absorb water and can freeze thick, but some owners find them gritty or earthy when frozen. Adding a little fat, such as nut butter or a richer plant milk, and choosing a bold flavor like chocolate helps. Expect more trial and error than with casein.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">How much protein is in a protein ice cream pint?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                A pint made with about 1.25 cups of ultra-filtered milk and one scoop of casein typically lands around 40 g of protein for roughly 220 to 260 calories before mix-ins, based on common label values. Your numbers depend on the milk, powder, thickener and toppings you use.
+              </p>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Related Guides -->
+        <div class="mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">Related Protein Powder Guides</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <a href="/best-casein-protein-powder/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#10B981] font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Casein Protein Powder</h3>
+              <p class="text-gray-500 text-sm mt-2">Slow-digesting casein for puddings, frozen desserts and nighttime protein.</p>
+            </a>
+            <a href="/best-tasting-protein-powder/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#FF4500] font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Tasting Protein Powder</h3>
+              <p class="text-gray-500 text-sm mt-2">The flavors buyers actually finish, from dessert to classic vanilla.</p>
+            </a>
+            <a href="/best-protein-powder-for-baking/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#1E90FF] font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Protein Powder for Baking</h3>
+              <p class="text-gray-500 text-sm mt-2">Blends that stay moist in the oven, with flour swap ratios.</p>
+            </a>
+          </div>
+        </div>
+
+        <!-- Closing -->
+        <div class="mt-16 bg-gray-900 text-white rounded-2xl p-8">
+          <h2 class="text-2xl font-black text-white mb-4">The Bottom Line</h2>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            The best protein powder for Ninja Creami pints is a casein or a whey-casein blend. Optimum Nutrition Gold Standard Casein is the most reliable for thick results, PEScience Select and Quest are strong blends, and dessert-flavored whey such as Ghost works well once you add a thickener. Whey isolate is the hardest powder to turn into ice cream.
+          </p>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            Technique closes the gap. Blend the base, add an eighth to a quarter teaspoon of xanthan or a spoonful of pudding mix, freeze level for about a day, and re-spin with a splash of milk. Follow Ninja's own instructions for your machine, and check sweeteners and portions with a professional if you have a medical condition.
+          </p>
+        </div>
+
+        <MoreInCategory category="Protein Powder" links={moreInCategory} />
+
+        <AuthorBio />
+      </div>
+    </div>
+  </article>
+</Layout>
