@@ -46,7 +46,8 @@ function brandTokens(name) {
 
 function isConfidentMatch(queryName, resultTitle) {
   if (!resultTitle) return false;
-  const title = resultTitle.toLowerCase();
+  // Strip punctuation the same way brandTokens does, so "Anthony's" matches "anthonys".
+  const title = resultTitle.toLowerCase().replace(/[^a-z0-9&\s-]/g, "");
   const tokens = brandTokens(queryName);
   // Require at least one brand token (min length 3) to appear in the result title.
   return tokens.some((t) => t.length >= 3 && title.includes(t));

@@ -34,6 +34,8 @@ const KEEP = new Set([
   'rust-oleum-triple-thick',     // Varathane is a Rust-Oleum brand
   'gutter-brush-basic',
   'levoit-core-300s',
+  'ritual-essential-protein-18', // Amazon lists the Essential Protein 18+ shake as "Ritual Pea Protein Powder 20g"
+  'plant-momentous-essential',   // Amazon lists Momentous Essential Plant-Based as "Momentous Vegan Protein Powder"
 ]);
 
 const quarantine = {};
