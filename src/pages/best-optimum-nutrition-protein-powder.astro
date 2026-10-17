@@ -1,0 +1,967 @@
+---
+import Layout from "../layouts/Layout.astro";
+import MoreInCategory from "../components/MoreInCategory.astro";
+import { AUTHORS, DEFAULT_AUTHOR, authorSchema } from "../data/authors";
+import { SITE_NAME, SITE_URL } from "../data/site";
+import AuthorAvatar from "../components/AuthorAvatar.astro";
+import QuickPicks from "../components/QuickPicks.astro";
+import AuthorBio from "../components/AuthorBio.astro";
+import { amazonLink } from "../data/affiliate";
+import TrustBadge from "../components/TrustBadge.astro";
+import SocialProof from "../components/SocialProof.astro";
+import SpecGrid from "../components/SpecGrid.astro";
+import productImages from "../data/product-images.json";
+import { pageDates } from "../data/dates";
+
+const moreInCategory = [
+  {
+    "title": "Best Protein Powder",
+    "url": "/best-protein-powder/"
+  },
+  {
+    "title": "Best Cheap Protein Powder",
+    "url": "/best-cheap-protein-powder/"
+  },
+  {
+    "title": "Highest Protein Powder",
+    "url": "/best-high-protein-powder/"
+  },
+  {
+    "title": "Best Protein Powder for Weight Gain",
+    "url": "/best-protein-powder-for-weight-gain/"
+  },
+  {
+    "title": "Best Protein Powder for Muscle Gain",
+    "url": "/best-protein-powder-for-muscle-gain/"
+  },
+  {
+    "title": "Protein Powder Brands",
+    "url": "/protein-powder-brands/"
+  }
+];
+const author = AUTHORS[DEFAULT_AUTHOR];
+const dates = pageDates(Astro.url.pathname, { published: "2026-10-17", modified: "2026-10-17" });
+const title = "Best Optimum Nutrition Protein Powder: Which ON Tub Fits Your Goal";
+const description =
+  "Every main Optimum Nutrition protein powder matched to a goal, from Gold Standard Whey and Isolate to Hydrowhey, Casein, Plant, Pro Gainer and Serious Mass.";
+
+const PRODUCTS: {
+  id: string;
+  name: string;
+  brand?: string;
+  badge: string;
+  category: string;
+  description: string;
+  pros: string[];
+  cons: string[];
+  bottomLine: string;
+  specs?: Record<string, string>;
+  rating?: number;
+  reviewCount?: number;
+  amazonUrl?: string;
+}[] = [
+  {
+    "id": "optimum-nutrition-gold-standard-100-whey",
+    "name": "Optimum Nutrition Gold Standard 100% Whey",
+    "brand": "Optimum Nutrition",
+    "badge": "Best All-Round ON Powder",
+    "category": "Whey blend (isolate, concentrate, peptides)",
+    "description": "Gold Standard 100% Whey lists whey protein isolate as its primary source, blended with concentrate and whey peptides, for about 24 g of protein and roughly 120 calories per scoop, per the label; figures vary by flavor. It is widely promoted as Informed Choice certified, has one of the widest flavor ranges in the category, and is discounted so often that its typical cost per 25 g of protein is competitive with many budget brands.",
+    "pros": [
+      "About 24 g protein for roughly 120 calories, per the label",
+      "Promoted as Informed Choice certified (confirm flavor)",
+      "Wide range of well-rated flavors"
+    ],
+    "cons": [
+      "Contains concentrate, so some lactose",
+      "Uses sucralose in flavored versions"
+    ],
+    "bottomLine": "The ON powder to buy unless you have a specific reason to choose another.",
+    "specs": {
+      "Protein / serving": "About 24 g (varies by flavor)",
+      "Calories": "About 120",
+      "Third-party tested": "Informed Choice (confirm flavor)",
+      "Best for": "Everyday use"
+    }
+  },
+  {
+    "id": "optimum-nutrition-gold-standard-100-isolate",
+    "name": "Optimum Nutrition Gold Standard 100% Isolate",
+    "brand": "Optimum Nutrition",
+    "badge": "Best ON for Cutting",
+    "category": "Whey protein isolate (partly hydrolyzed)",
+    "description": "Gold Standard 100% Isolate uses ultra-filtered whey isolate with a portion hydrolyzed, according to ON, and label listings give about 25 g of protein for roughly 100 to 110 calories, with around 1 g of carbohydrate and half a gram of fat per scoop. ON cites 5.5 g of naturally occurring BCAAs per serving. It is the leaner, lower-lactose sibling of the original Gold Standard and is described as banned-substance tested; the label lists milk and soy.",
+    "pros": [
+      "About 25 g protein for roughly 100-110 calories, per label listings",
+      "Less lactose, fat and carbohydrate than the original",
+      "Described by ON as banned-substance tested"
+    ],
+    "cons": [
+      "Costs more per 25 g than Gold Standard 100% Whey",
+      "Smaller flavor range; contains soy lecithin and sucralose"
+    ],
+    "bottomLine": "The ON pick for dieters and anyone who finds concentrate hard on the stomach.",
+    "specs": {
+      "Protein / serving": "About 25 g",
+      "Calories": "About 100-110 (flavor-dependent)",
+      "Third-party tested": "Banned-substance tested (per ON)",
+      "Best for": "Cutting, lactose sensitivity"
+    }
+  },
+  {
+    "id": "optimum-nutrition-gold-standard-100-casein",
+    "name": "Optimum Nutrition Gold Standard 100% Casein",
+    "brand": "Optimum Nutrition",
+    "badge": "Best ON Before Bed",
+    "category": "Micellar casein",
+    "description": "Gold Standard 100% Casein is built on micellar casein, the slow-digesting milk protein, and lists about 24 g of protein for roughly 120 calories per scoop, per the label. It releases amino acids over several hours, which suits a pre-bed shake or a long gap between meals. Buyers consistently describe it as thick in a shaker, and many mix it with less liquid to make a filling, pudding-like snack.",
+    "pros": [
+      "About 24 g protein for roughly 120 calories, per the label",
+      "Slow digestion suits evenings and long gaps",
+      "Thick texture makes a filling pudding"
+    ],
+    "cons": [
+      "Heavy in a shaker compared with whey",
+      "Not the natural choice for a quick post-workout shake"
+    ],
+    "bottomLine": "The ON pick for evening protein and appetite control.",
+    "specs": {
+      "Protein / serving": "About 24 g",
+      "Calories": "About 120",
+      "Third-party tested": "Check certifier database",
+      "Best for": "Before bed"
+    }
+  },
+  {
+    "id": "optimum-nutrition-platinum-hydrowhey",
+    "name": "Optimum Nutrition Platinum Hydrowhey",
+    "brand": "Optimum Nutrition",
+    "badge": "Biggest ON Scoop",
+    "category": "Hydrolyzed whey protein isolate",
+    "description": "Platinum Hydrowhey is ON's premium whey, built on hydrolyzed whey protein isolate, and lists about 30 g of protein for roughly 140 calories per scoop of around 40 g, per the label at the time of writing. Pre-digested peptides may suit people who find regular whey hard to digest, and the 30 g dose is convenient for larger lifters. It sits at the top of ON's price range per 25 g of protein.",
+    "pros": [
+      "About 30 g protein per scoop, per the label",
+      "Hydrolyzed isolate base digests quickly",
+      "Low in lactose, fat and carbohydrate"
+    ],
+    "cons": [
+      "Highest cost per 25 g in the ON protein lineup",
+      "Big dose comes partly from a bigger scoop"
+    ],
+    "bottomLine": "A convenience upgrade for big doses or sensitive stomachs, not a muscle-building one.",
+    "specs": {
+      "Protein / serving": "About 30 g",
+      "Calories": "About 140",
+      "Third-party tested": "Check certifier database",
+      "Best for": "Big single doses"
+    }
+  },
+  {
+    "id": "optimum-nutrition-gold-standard-100-plant",
+    "name": "Optimum Nutrition Gold Standard 100% Plant",
+    "brand": "Optimum Nutrition",
+    "badge": "Best ON for Vegans",
+    "category": "Pea, fava bean and brown rice protein blend",
+    "description": "Gold Standard 100% Plant blends pea protein, fava bean protein isolate and brown rice protein for 24 g of protein per serving with all nine essential amino acids, per ON. It has 0 g of sugar, is sweetened with stevia and has no artificial colors, flavors or sweeteners, and ON describes it as banned-substance tested. A retailer label shows about 150 calories per serving of roughly 37 g, so it is less dense than the whey products.",
+    "pros": [
+      "24 g protein per serving, per ON",
+      "Stevia-sweetened, no artificial sweeteners",
+      "Pea and rice blend complements amino acid profiles"
+    ],
+    "cons": [
+      "Less protein-dense than ON whey products",
+      "No published heavy metal results we could find"
+    ],
+    "bottomLine": "A sensible vegan option for buyers who want to stay with a brand they know.",
+    "specs": {
+      "Protein / serving": "About 24 g",
+      "Calories": "About 150",
+      "Third-party tested": "Banned-substance tested (per ON)",
+      "Best for": "Vegan, dairy-free"
+    }
+  },
+  {
+    "id": "optimum-nutrition-pro-gainer",
+    "name": "Optimum Nutrition Pro Gainer",
+    "brand": "Optimum Nutrition",
+    "badge": "Best ON for Lean Bulking",
+    "category": "High-protein weight gainer",
+    "description": "Pro Gainer sits between a protein powder and a full mass gainer, with roughly 650 calories and about 60 g of protein per full serving, per the label. That means around 37 percent of its calories come from protein, more than double the share in Serious Mass, which makes it far easier to fit into a controlled surplus. Many buyers find it easier to digest than the 1,250-calorie gainers.",
+    "pros": [
+      "About 60 g protein per full serving, per the label",
+      "Much higher protein share than classic gainers",
+      "Convenient calories for a lean bulk"
+    ],
+    "cons": [
+      "Most calories still come from carbohydrate",
+      "Unnecessary if you can eat more food"
+    ],
+    "bottomLine": "The ON gainer for people bulking on purpose rather than out of desperation.",
+    "specs": {
+      "Protein / serving": "About 60 g",
+      "Calories": "About 650",
+      "Third-party tested": "Check certifier database",
+      "Best for": "Lean bulking"
+    }
+  },
+  {
+    "id": "optimum-nutrition-serious-mass",
+    "name": "Optimum Nutrition Serious Mass",
+    "brand": "Optimum Nutrition",
+    "badge": "Best ON for Hardgainers",
+    "category": "High-calorie mass gainer",
+    "description": "Serious Mass is one of the longest-selling mass gainers on the market, delivering about 1,250 calories and 50 g of protein in a full serving mixed with water, per the label. Most of those calories come from maltodextrin, so only about 16 percent of its energy comes from protein. It is a blunt tool, but for people who genuinely cannot eat enough to gain weight it does what it promises. Buyers frequently recommend starting with half a serving.",
+    "pros": [
+      "About 1,250 calories per full serving, per the label",
+      "Easy way to add calories without cooking",
+      "Half servings give flexible dosing"
+    ],
+    "cons": [
+      "Low protein share of calories",
+      "Very high in carbohydrate; easy to overshoot a surplus"
+    ],
+    "bottomLine": "Only for true hardgainers; everyone else should choose Pro Gainer or real food.",
+    "specs": {
+      "Protein / serving": "About 50 g",
+      "Calories": "About 1,250 (with water)",
+      "Third-party tested": "Check certifier database",
+      "Best for": "Hardgainers"
+    }
+  }
+];
+
+const schema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Home",
+          item: `${SITE_URL}/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Best Lists",
+          item: `${SITE_URL}/best-of/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 3,
+          name: "Best Optimum Nutrition Protein Powder",
+          item: `${SITE_URL}/best-optimum-nutrition-protein-powder/`,
+        },
+      ],
+    },
+    {
+      "@type": "FAQPage",
+      mainEntity: [
+        {
+          "@type": "Question",
+          "name": "What is the best Optimum Nutrition protein powder?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "For most people, Gold Standard 100% Whey. It lists about 24 g of protein for roughly 120 calories per scoop, is widely promoted as Informed Choice certified, comes in many well-rated flavors and is frequently discounted. The isolate is better for lactose sensitivity or strict diets, and the casein for evenings."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is Gold Standard Isolate better than Gold Standard Whey?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It is leaner, not more effective. The isolate lists about 25 g of protein for roughly 100 to 110 calories with less lactose, fat and carbohydrate. For muscle gain the two perform similarly at matched doses. Choose the isolate if lactose or calories are a real constraint; otherwise the original is better value."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is Platinum Hydrowhey worth the extra cost?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "For most people, no. It delivers about 30 g of protein per scoop and digests quickly, but hydrolyzed whey has not been shown to build more muscle than isolate at the same dose. It makes sense if you want a large single-scoop dose or find regular whey hard on your stomach."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Should I take Gold Standard Casein or whey before bed?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Casein is the more logical choice because it digests slowly, and research suggests protein taken before sleep is used for overnight muscle building. Whey works too if it is what you have. Total daily protein matters more than timing, so take whichever helps you hit your target consistently."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the difference between Serious Mass and Pro Gainer?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Serious Mass delivers about 1,250 calories and 50 g of protein per full serving, mostly from carbohydrate. Pro Gainer delivers about 650 calories and 60 g of protein, so a much larger share of its calories comes from protein. Serious Mass suits hardgainers; Pro Gainer suits a leaner, controlled bulk."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is Optimum Nutrition Gold Standard 100% Plant a good vegan protein?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It is a reasonable option, with about 24 g of protein from pea, fava bean and brown rice, no sugar and stevia sweetening, per ON. It is less dense than whey because of its creamer. Plant proteins tend to carry more heavy metals, so ask for testing data if that concerns you."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is Optimum Nutrition protein safe?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "ON is a long-established brand, and its core whey is widely promoted as Informed Choice certified for banned substances. As with any supplement, choose authentic stock from reputable sellers. Pregnant people, those with kidney disease and anyone on medication should check with a doctor or registered dietitian before using protein supplements."
+          }
+        }
+      ],
+    },
+    {
+      "@type": "Article",
+      headline: title,
+      author: authorSchema(),
+      datePublished: dates.published,
+      dateModified: dates.modified,
+      publisher: { "@type": "Organization", name: SITE_NAME, url: SITE_URL },
+    },
+    {
+      "@type": "ItemList",
+      name: title,
+      numberOfItems: PRODUCTS.length,
+      itemListElement: PRODUCTS.map((product, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name: product.name,
+        url: new URL(`#${product.id}`, Astro.url).toString(),
+      })),
+    },
+    ...PRODUCTS.map((product) => ({
+      "@type": "Product",
+      name: product.name,
+      description: product.description,
+      brand: {
+        "@type": "Brand",
+        name: product.brand ?? product.name.split(" ")[0],
+      },
+    })),
+  ],
+};
+---
+
+<Layout
+  title={title}
+  description={description}
+  ogType="article"
+  article={{
+    publishedTime: dates.published,
+    modifiedTime: dates.modified,
+    author: author.name,
+    section: "Protein Powder",
+    tags: [
+      "best protein powder optimum nutrition",
+      "optimum nutrition protein powder",
+      "best optimum nutrition protein",
+      "gold standard whey vs isolate",
+      "optimum nutrition lineup"
+    ],
+  }}
+  jsonLd={schema}
+>
+  <article class="relative overflow-hidden">
+    <!-- Hero Section -->
+    <div class="bg-gray-900 py-16 lg:py-24 relative overflow-hidden">
+      <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(circle at 20% 20%, #38BDF8 0, transparent 45%), radial-gradient(circle at 80% 60%, #FF4500 0, transparent 40%);"></div>
+      <div class="max-w-4xl mx-auto px-4 relative z-10 text-center">
+        <div class="flex justify-center mb-6">
+          <TrustBadge />
+        </div>
+        <div class="flex justify-center gap-3 mb-6">
+          <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#FF4500]/20 text-[#FF4500] text-xs font-black uppercase tracking-widest border border-[#FF4500]/30">
+            Buyer's Guide
+          </span>
+          <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-green-500/10 text-green-400 text-xs font-bold uppercase tracking-widest border border-green-500/20">
+            Brand Lineup
+          </span>
+        </div>
+        <h1 class="text-4xl lg:text-6xl font-black text-white leading-tight mb-8">
+          Best <span class="text-[#38BDF8]">Optimum Nutrition</span> Protein Powder
+        </h1>
+        <p class="text-xl text-gray-300 leading-relaxed mb-8 max-w-3xl mx-auto">
+          Seven ON powders, one goal each. Which Gold Standard to buy, when Hydrowhey or Casein earns its price, and whether either gainer belongs in your cupboard.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a
+            href="#optimum-nutrition-gold-standard-100-whey"
+            class="px-8 py-4 bg-[#FF4500] hover:bg-[#E63E00] text-white font-black rounded-xl shadow-lg transition-all no-underline"
+          >
+            See Our #1 Pick
+          </a>
+          <a
+            href="#lineup"
+            class="px-8 py-4 bg-white/10 hover:bg-white/20 text-white font-bold rounded-xl border border-white/10 no-underline"
+          >
+            Compare the Lineup
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Author & Meta -->
+    <div class="max-w-3xl mx-auto px-4 pt-12">
+      <div class="flex items-center gap-6 border-b border-gray-100 pb-8">
+        <div class="flex items-center gap-3">
+          <AuthorAvatar size={48} />
+          <div>
+            <p class="text-sm font-bold text-gray-900">{author.name}</p>
+            <p class="text-xs text-gray-500 uppercase tracking-widest">{author.role}</p>
+          </div>
+        </div>
+        <div class="h-10 w-px bg-gray-200 hidden sm:block"></div>
+        <div class="hidden sm:block">
+          <p class="text-sm font-bold text-gray-900">Last Updated</p>
+          <p class="text-xs text-gray-500">{dates.display}</p>
+        </div>
+        <div class="hidden sm:block ml-auto">
+          <SocialProof />
+        </div>
+      </div>
+    </div>
+
+    <!-- Table of Contents -->
+    <div class="max-w-3xl mx-auto px-4 py-10">
+      <div class="bg-gray-50 border border-gray-200 rounded-2xl p-6 lg:p-8">
+        <h2 class="text-lg font-black text-gray-900 mb-4 flex items-center gap-2">
+          In This Guide
+        </h2>
+        <nav class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <a href="#why-on" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">1. Why ON Gets Its Own Guide</a>
+          <a href="#how-we-matched" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">2. How We Matched Tubs to Goals</a>
+          <a href="#top-picks" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">3. Our Top Picks</a>
+          <a href="#lineup" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">4. The Lineup at a Glance</a>
+          <a href="#whey-isolate-hydro" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">5. Gold Standard vs Isolate vs Hydrowhey</a>
+          <a href="#casein" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">6. When Casein Earns a Place</a>
+          <a href="#plant" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">7. Gold Standard 100% Plant</a>
+          <a href="#gainers" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">8. Serious Mass vs Pro Gainer</a>
+          <a href="#testing" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">9. Testing and Label Honesty</a>
+          <a href="#buying" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">10. Buying ON Without Overpaying</a>
+          <a href="#mistakes" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">11. Common Mistakes</a>
+          <a href="#faq" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">12. FAQ</a>
+        </nav>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="max-w-3xl mx-auto px-4 pb-16 lg:pb-24">
+      <div class="prose prose-lg prose-blue max-w-none text-gray-700 leading-relaxed">
+        <p class="text-2xl font-medium text-gray-900 mb-8 italic">
+          Optimum Nutrition sells enough protein powders that picking the wrong one is easy. Gold Standard 100% Whey is the default for good reason, but it is not the best ON product for everyone: the isolate suits dieters and the lactose sensitive, casein suits evenings, the plant powder suits vegans, and the two gainers suit very different people. This guide maps each of the main tubs to the goal it actually serves, so you buy the one you need rather than the one with the most famous label.
+        </p>
+
+        <QuickPicks products={PRODUCTS} />
+
+        <div id="why-on" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            1. Why Optimum Nutrition Gets Its Own Guide
+          </h2>
+
+          <p>
+            Optimum Nutrition is one of the oldest and most widely stocked names in sports nutrition. It has been owned by the Irish nutrition group Glanbia since 2008, and its Gold Standard 100% Whey is one of the best-known protein powders in the world, sold in supermarkets, pharmacies, gyms and every major online retailer. When people search for the best protein powder from Optimum Nutrition, they usually already trust the brand and want to know which tub to buy.
+          </p>
+
+          <p>
+            That question is harder than it looks because the lineup has grown well beyond the original whey. There is now a Gold Standard isolate, a hydrolyzed premium whey, a micellar casein, a plant protein, a lean gainer and a heavyweight mass gainer, plus ready-to-drink shakes, bars and pre-workouts we do not cover here. The products overlap in places and diverge sharply in others: a scoop of the isolate and a serving of Serious Mass differ by more than a thousand calories.
+          </p>
+
+          <p>
+            A single-brand guide is also useful because it makes comparison fair. When everything comes from the same manufacturer, differences in protein source, scoop size and calories are design choices rather than brand quirks, which makes it easy to see exactly what each upgrade buys you. Moving from Gold Standard to the isolate, for example, trades a slightly higher price for a few grams less lactose, fat and carbohydrate per scoop.
+          </p>
+
+          <p>
+            None of this means ON is automatically the best choice. Several competitors match or beat it on cost per 25 g of protein, certification or ingredient simplicity, and we cover them in our main <a href="/best-protein-powder/">best protein powder rankings</a> and the <a href="/protein-powder-brands/">protein powder brands guide</a>. If you have already decided on ON, though, this page will tell you which of its products fits your goal.
+          </p>
+        </div>
+
+        <div id="how-we-matched" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            2. How We Matched Each ON Tub to a Goal
+          </h2>
+
+          <p>
+            We did not lab test these products or run our own taste panels. The guide is built on label analysis, ON's published product information, certification claims and the research on protein type, timing and dose, following the method on our <a href="/how-we-test/">how we test page</a>. Where we mention taste, texture or digestion, we are summarizing what buyers widely report rather than claiming hands-on results.
+          </p>
+
+          <p>
+            For each product we recorded the protein source, protein per serving, serving weight, calories, carbohydrate and sweetener from the label at the time of writing, then worked out protein share by weight and by calorie. Those ratios separate the products cleanly. The whey and isolate products are dense and lean; casein is slightly less dense and much slower to digest; the plant protein is less dense because of its creamer and gums; and the gainers are built around carbohydrate, with protein as a minority of their calories.
+          </p>
+
+          <p>
+            We then asked what goal each product design suits. A fast-digesting, low-lactose isolate suits cutting and sensitive stomachs. A slow-digesting casein suits a pre-bed or long-gap shake. A gainer suits someone who cannot eat enough calories, and the protein-to-carbohydrate ratio decides whether that is a lean bulk or an all-out mass phase. Price was considered within the lineup, so we flag when a premium product costs more without delivering a meaningful benefit.
+          </p>
+
+          <p>
+            We also checked that each product is currently sold on major US retail sites, since ON has retired and reformulated products over the years. The older USDA Organic plant protein, for example, has been replaced by the current Gold Standard 100% Plant formula, and we cover only the current version. Formulas and certifications change, so confirm the details on the tub you buy.
+          </p>
+        </div>
+
+        <!-- Picks -->
+        <div id="top-picks" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            3. The Best Optimum Nutrition Protein Powders, by Goal
+          </h2>
+
+          <p>
+            These are the ON protein powders and gainers we found currently sold on major US retail sites at the time of writing. Each is matched to the goal it serves best rather than ranked against the others on a single scale, because a casein and a mass gainer are not competing for the same buyer. Nutrition figures are per the label at the time of writing and vary by flavor and region.
+          </p>
+
+          {PRODUCTS.map((product, index) => (
+            <div id={product.id} class="scroll-mt-24 mt-12 first:mt-8">
+              <div class="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                <div class="bg-gray-900 px-6 py-4 flex items-center justify-between">
+                  <div class="flex items-center gap-3">
+                    <span class="bg-[#FF4500] text-white w-8 h-8 rounded-full flex items-center justify-center text-sm font-black">
+                      {index + 1}
+                    </span>
+                    {productImages[product.id] && (
+                      <img
+                        src={productImages[product.id]}
+                        alt={product.name}
+                        loading="lazy"
+                        width="40"
+                        height="40"
+                        class="w-10 h-10 rounded-lg bg-white object-contain p-1 shrink-0"
+                      />
+                    )}
+                    <div>
+                      <p class="text-white font-black text-lg">{product.name}</p>
+                      <p class="text-gray-400 text-xs">{product.category}</p>
+                    </div>
+                  </div>
+                  <span class="bg-[#38BDF8]/20 text-[#38BDF8] px-3 py-1 rounded-full text-xs font-bold hidden sm:block">
+                    {product.badge}
+                  </span>
+                </div>
+                <div class="p-6">
+                  {product.rating && (
+                  <div class="flex items-center gap-2 mb-4">
+                    <div class="flex text-yellow-400">
+                      {[...Array(5)].map((_, i) => (
+                        <svg
+                          class={`w-4 h-4 ${i < Math.floor(product.rating) ? "fill-current" : "text-gray-200"}`}
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                        >
+                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        </svg>
+                      ))}
+                    </div>
+                    <span class="text-gray-500 text-sm font-bold">{product.rating}</span>
+                    {product.reviewCount && <span class="text-gray-400 text-xs">({product.reviewCount.toLocaleString()} retailer reviews)</span>}
+                  </div>
+                  )}
+
+                  <SpecGrid specs={product.specs} />
+
+                  <p class="text-gray-700 leading-relaxed mb-6">{product.description}</p>
+
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                    <div class="bg-green-50 rounded-xl p-4">
+                      <p class="text-xs font-black uppercase tracking-widest text-green-700 mb-3">Pros</p>
+                      <ul class="space-y-2">
+                        {product.pros.map((pro) => (
+                          <li class="flex items-start gap-2 text-sm text-green-800">
+                            <svg class="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            {pro}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div class="bg-red-50 rounded-xl p-4">
+                      <p class="text-xs font-black uppercase tracking-widest text-red-700 mb-3">Cons</p>
+                      <ul class="space-y-2">
+                        {product.cons.map((con) => (
+                          <li class="flex items-start gap-2 text-sm text-red-800">
+                            <svg class="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                            {con}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+
+                  <div class="bg-gray-50 rounded-xl p-4 border border-gray-100">
+                    <p class="text-xs font-black uppercase tracking-widest text-gray-500 mb-1">The Bottom Line</p>
+                    <p class="text-gray-900 font-bold">{product.bottomLine}</p>
+                  </div>
+
+                  <a
+                    href={amazonLink(product.amazonUrl, product.name, product.id)}
+                    target="_blank"
+                    rel="sponsored nofollow noopener"
+                    class="mt-6 block bg-[#FF4500] hover:bg-[#E63E00] text-white text-center py-4 rounded-xl font-black no-underline transition-colors uppercase tracking-widest text-sm"
+                  >
+                    Check Price &rarr;
+                  </a>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div id="lineup" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            4. The ON Lineup at a Glance
+          </h2>
+
+          <p>
+            The table below summarizes the seven products in this guide. Protein and calorie figures are approximate and per the label at the time of writing; they vary by flavor and region, and the gainer figures assume the full labelled serving mixed with water.
+          </p>
+
+          <div class="overflow-hidden border border-gray-200 rounded-2xl my-8">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Product</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Protein source</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Protein / serving</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Calories</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Best for</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Gold Standard 100% Whey</td>
+                    <td class="px-4 py-4 text-gray-700">Whey isolate, concentrate, peptides</td>
+                    <td class="px-4 py-4 text-gray-700">About 24 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 120</td>
+                    <td class="px-4 py-4 text-gray-700">Everyday all-rounder</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Gold Standard 100% Isolate</td>
+                    <td class="px-4 py-4 text-gray-700">Whey isolate, partly hydrolyzed</td>
+                    <td class="px-4 py-4 text-gray-700">About 25 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 100-110</td>
+                    <td class="px-4 py-4 text-gray-700">Cutting, lactose sensitivity</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Platinum Hydrowhey</td>
+                    <td class="px-4 py-4 text-gray-700">Hydrolyzed whey isolate</td>
+                    <td class="px-4 py-4 text-gray-700">About 30 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 140</td>
+                    <td class="px-4 py-4 text-gray-700">Big single doses</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Gold Standard 100% Casein</td>
+                    <td class="px-4 py-4 text-gray-700">Micellar casein</td>
+                    <td class="px-4 py-4 text-gray-700">About 24 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 120</td>
+                    <td class="px-4 py-4 text-gray-700">Before bed, long gaps</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Gold Standard 100% Plant</td>
+                    <td class="px-4 py-4 text-gray-700">Pea, brown rice, fava bean</td>
+                    <td class="px-4 py-4 text-gray-700">About 24 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 150</td>
+                    <td class="px-4 py-4 text-gray-700">Vegan, dairy-free</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Pro Gainer</td>
+                    <td class="px-4 py-4 text-gray-700">Multi-source blend plus carbohydrate</td>
+                    <td class="px-4 py-4 text-gray-700">About 60 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 650</td>
+                    <td class="px-4 py-4 text-gray-700">Lean bulking</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Serious Mass</td>
+                    <td class="px-4 py-4 text-gray-700">Protein blend plus maltodextrin</td>
+                    <td class="px-4 py-4 text-gray-700">About 50 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 1,250</td>
+                    <td class="px-4 py-4 text-gray-700">Hardgainers</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <p>
+            Read across the calories column and the lineup splits into three groups. The first four are protein powders in the usual sense, delivering 24 to 30 g of protein for 100 to 150 calories. The plant powder sits close to them with a few more calories from its creamer. The two gainers are a different category entirely, built to add calories rather than just protein.
+          </p>
+
+          <p>
+            Within the protein powders, the differences are about digestion speed, lactose, dose and price rather than muscle-building power. Research does not show that one whey form builds more muscle than another when the protein dose is matched, and casein and whey produce similar long-term results in training studies. So start from your constraints, such as lactose, timing, diet or budget, and the right tub usually picks itself.
+          </p>
+        </div>
+
+        <div id="whey-isolate-hydro" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            5. Gold Standard Whey vs Gold Standard Isolate vs Platinum Hydrowhey
+          </h2>
+
+          <p>
+            These three are the core of the lineup and the products people most often confuse. Gold Standard 100% Whey is a blend with whey protein isolate as its primary source, alongside whey concentrate and whey peptides. It lists about 24 g of protein for roughly 120 calories per scoop. It is the cheapest of the three per 25 g of protein in most retail listings, has the widest flavor range, and buyers consistently rate its flavors highly.
+          </p>
+
+          <p>
+            Gold Standard 100% Isolate drops the concentrate. ON describes it as ultra-filtered whey isolate with a portion hydrolyzed, and label listings give about 25 g of protein for roughly 100 to 110 calories, with around 1 g of carbohydrate and half a gram of fat per scoop. The upgrade buys you less lactose and slightly leaner macros. That matters for people who get bloated on concentrate and for dieters tracking every calorie; for everyone else, the original is the better value.
+          </p>
+
+          <p>
+            Platinum Hydrowhey is ON's premium whey, built on hydrolyzed whey protein isolate, with about 30 g of protein for roughly 140 calories per scoop. The hydrolysis pre-digests the protein into shorter peptides, which may help some people who find regular whey hard on the stomach. It does not build more muscle than isolate at the same dose, and its bigger per-scoop number comes partly from a bigger scoop of around 40 g. Our <a href="/best-high-protein-powder/">highest protein powder guide</a> explains why that distinction matters.
+          </p>
+
+          <p>
+            Our verdict is simple. Buy Gold Standard 100% Whey unless you have a reason not to. Move to the isolate if lactose or calories are a real constraint. Buy Hydrowhey only if you want a 30 g dose in a single scoop, or you have tried the isolate and still find ordinary whey hard to digest, and you are comfortable paying a premium. Our <a href="/whey-vs-whey-isolate/">whey vs whey isolate comparison</a> covers the underlying trade-off.
+          </p>
+        </div>
+
+        <div id="casein" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            6. When Gold Standard Casein Earns a Place
+          </h2>
+
+          <p>
+            Casein is the other main protein in milk, and it behaves very differently from whey. In the acidic environment of the stomach it forms a gel that digests slowly, releasing amino acids into the blood over several hours instead of the quick spike you get from whey. Gold Standard 100% Casein is built on micellar casein and lists about 24 g of protein for roughly 120 calories per scoop.
+          </p>
+
+          <p>
+            That slow release makes casein a logical pre-bed shake. In a frequently cited 2012 study, young men who took 40 g of casein before sleep after an evening workout showed higher overnight muscle protein synthesis than those who took a placebo. Later research has broadly supported the idea that pre-sleep protein is used for muscle building, though the long-term advantage over simply hitting your daily protein target is modest.
+          </p>
+
+          <p>
+            Casein is also thick. Buyers consistently describe Gold Standard Casein as heavier in a shaker than whey, and many mix it with less liquid to make a pudding-like snack. That can be a genuine advantage for dieters whose evenings are the hardest part of the day, because a bowl of casein pudding is filling and low in calories. It is a disadvantage if you want a quick, thin shake after training.
+          </p>
+
+          <p>
+            Most people do not need both whey and casein. If you take one shake a day, take whichever fits your routine and preferences. Casein earns a place alongside whey mainly for people who train in the evening, who go long stretches without eating, or who want a filling dessert substitute. Our <a href="/best-casein-protein-powder/">casein protein rankings</a> compare Gold Standard Casein with other brands.
+          </p>
+        </div>
+
+        <div id="plant" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            7. Gold Standard 100% Plant: How It Compares to Whey
+          </h2>
+
+          <p>
+            ON's current plant protein combines pea protein, fava bean protein isolate and brown rice protein. ON lists 24 g of protein per serving with all nine essential amino acids, 0 g of sugar, and no artificial colors, flavors or sweeteners; it is sweetened with stevia. A retailer label we found shows about 150 calories in a serving of roughly 37 g, so it is a little less dense than the whey products because of its creamer and gums.
+          </p>
+
+          <p>
+            Blending pea with rice is a sensible design. Pea protein is relatively low in methionine and rice is relatively low in lysine, so the two complement each other. Even so, plant blends generally carry somewhat less leucine per gram than whey, so a slightly larger serving narrows the gap if muscle building is your priority. Research comparing pea or blended plant protein with whey at adequate doses alongside resistance training has generally found similar results.
+          </p>
+
+          <p>
+            The bigger consideration with any plant protein is contaminants. Plants absorb minerals from soil, and independent testing such as Consumer Reports' October 2025 report has found higher average lead levels in plant-based protein products than in dairy-based ones. We have not seen published heavy metal results for this specific product, so if that matters to you, ask ON for testing information or choose a plant protein that publishes its results. Our <a href="/is-protein-powder-safe/">protein powder safety guide</a> explains how to read those reports.
+          </p>
+
+          <p>
+            Gold Standard 100% Plant is a reasonable choice if you want a vegan powder from a brand you already know and you prefer stevia to sucralose. If you are dairy-free and price-sensitive, a single-ingredient pea isolate will usually cost less per 25 g. Our <a href="/best-plant-based-protein-powder/">plant-based protein rankings</a> and the <a href="/best-dairy-free-protein-powder/">dairy-free protein guide</a> cover alternatives.
+          </p>
+        </div>
+
+        <div id="gainers" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            8. Serious Mass vs Pro Gainer: Which Gainer, If Any
+          </h2>
+
+          <p>
+            ON's two gainers are often lumped together, but they are built for different people. Serious Mass delivers about 1,250 calories and 50 g of protein per full serving mixed with water, per the label, and most of its calories come from maltodextrin. That means only about 16 percent of its energy comes from protein. It is designed for people who genuinely struggle to eat enough food to gain weight, and buyers frequently recommend starting with half a serving.
+          </p>
+
+          <p>
+            Pro Gainer is closer to a high-protein meal. It lists about 60 g of protein in roughly 650 calories per full serving, which means around 37 percent of its calories come from protein, more than double the share in Serious Mass. That makes it easier to fit into a lean bulk, where you want a moderate calorie surplus and a high protein intake without a huge carbohydrate load. Many buyers also find it easier to digest than the 1,250-calorie gainers.
+          </p>
+
+          <p>
+            Before buying either, consider whether you need a gainer at all. A shake of Gold Standard whey blended with whole milk, oats, a banana and peanut butter delivers a large dose of calories and protein from foods you control, often at a lower cost per calorie. Gainers win on convenience and on volume: a liquid serving is easier to finish than the equivalent food when appetite is the problem.
+          </p>
+
+          <p>
+            Our rule of thumb: if you are a naturally lean person who cannot eat enough to grow, Serious Mass is a blunt but effective tool; start with a half serving. If you want a convenient high-calorie shake during a controlled bulk, Pro Gainer is the better design. If you can eat more food, do that first. Our <a href="/best-protein-powder-for-weight-gain/">weight gain guide</a> compares gainers with DIY shakes in detail.
+          </p>
+        </div>
+
+        <div id="testing" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            9. Testing, Certification and Label Honesty at ON
+          </h2>
+
+          <p>
+            One reason ON is often the default recommendation is that its core whey has a long record of independent testing. Gold Standard 100% Whey is widely promoted as Informed Choice certified, a program that screens products for substances banned in sport, and ON describes several other products, including the isolate and the plant protein, as banned-substance tested. Certification is product and flavor specific, so confirm the exact product in the certifier's database before relying on it.
+          </p>
+
+          <p>
+            If you compete in a tested sport, check whether the specific product carries Informed Sport or NSF Certified for Sport, the batch-tested programs most sports bodies recognize. A general banned-substance testing claim on a retailer listing is not the same as batch-level certification, and the safe approach is to verify on the certifier's website rather than trust the packaging alone.
+          </p>
+
+          <p>
+            On label honesty, the ON products in this guide disclose their protein sources and do not list free amino acids among them in a way that suggests amino spiking. Gold Standard lists its whey forms in order of weight, and the isolate and Hydrowhey use whey isolate throughout. The flavored whey products use sucralose and some contain soy lecithin, which matters if you avoid artificial sweeteners or soy; the plant protein uses stevia.
+          </p>
+
+          <p>
+            Heavy metals are a separate question from banned substances. Dairy proteins generally test lower than plant proteins for lead, and no protein powder is completely free of trace metals. If you want published heavy metal results, ask ON directly or consider a brand that posts lab results online. Our <a href="/best-clean-protein-powder/">clean protein powder guide</a> lists products with verifiable testing.
+          </p>
+        </div>
+
+        <div id="buying" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            10. How to Buy Optimum Nutrition Without Overpaying
+          </h2>
+
+          <p>
+            ON products are among the most frequently discounted protein powders on the market, so there is rarely a reason to pay full list price. Larger tubs almost always cost less per 25 g of protein than smaller ones, and Gold Standard whey in the five-pound size is the product most often on sale. Compare cost per 25 g of protein rather than tub price, because scoop sizes and serving counts differ across the lineup.
+          </p>
+
+          <p>
+            Buy from the brand's own storefront or from listings sold directly by a major retailer. Popular supplements are a target for counterfeiting and for third-party sellers offering old stock, and a deal that looks too good from an unknown marketplace seller is not worth the risk. Check the seal, the lot number and the best-by date when the tub arrives.
+          </p>
+
+          <p>
+            Try a small size of any flavor you have not had before. ON's flavor range is wide and buyer opinions differ, and the savings of a five-pound tub disappear if you cannot finish it. Double Rich Chocolate is the Gold Standard flavor most retail listings lead with, but taste is personal.
+          </p>
+
+          <p>
+            Finally, remember that ON is not always the cheapest way to get good protein. If cost per 25 g is your main concern, our <a href="/best-cheap-protein-powder/">best cheap protein powder guide</a> ranks budget options, some of which undercut Gold Standard while keeping a clean label. If you value ON's availability, testing record and flavors, though, Gold Standard 100% Whey remains a sensible place to start.
+          </p>
+        </div>
+
+        <!-- Common Mistakes -->
+        <div id="mistakes" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            11. Common Mistakes to Avoid
+          </h2>
+
+          <div class="space-y-6 my-8">
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Paying for Hydrowhey when Gold Standard would do</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Hydrolyzed whey does not build more muscle than regular whey at the same dose, and its 30 g scoop is partly a bigger scoop. Unless you want that dose in one scoop or struggle to digest ordinary whey, Gold Standard or the isolate delivers nearly the same result for less.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Buying Serious Mass for a lean bulk</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Serious Mass gets only about a sixth of its calories from protein and delivers around 1,250 calories per full serving. For a controlled surplus, Pro Gainer or a homemade shake built on Gold Standard whey gives far more protein per calorie and much better control over your intake.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Assuming every ON product is sport-certified</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Certification is product and flavor specific. Gold Standard whey is widely promoted as Informed Choice certified, but that does not automatically extend to every tub. Tested athletes should look up the exact product in the Informed Sport or NSF Certified for Sport database before using it.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Choosing casein as a post-workout shake by default</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Casein digests slowly and mixes thick, which suits evenings and long gaps between meals. It works after training too, but most people prefer whey there. If you only take one shake a day, pick the protein that fits your schedule rather than buying both.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Buying from unknown marketplace sellers</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Popular brands attract counterfeits and old stock. Buy from the brand's storefront or listings sold by a major retailer, and check the seal, lot number and best-by date on arrival. A small saving is not worth uncertainty about what is actually in the tub.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ -->
+        <div id="faq" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            12. Frequently Asked Questions
+          </h2>
+
+          <div class="space-y-6">
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">What is the best Optimum Nutrition protein powder?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                For most people, Gold Standard 100% Whey. It lists about 24 g of protein for roughly 120 calories per scoop, is widely promoted as Informed Choice certified, comes in many well-rated flavors and is frequently discounted. The isolate is better for lactose sensitivity or strict diets, and the casein for evenings.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is Gold Standard Isolate better than Gold Standard Whey?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                It is leaner, not more effective. The isolate lists about 25 g of protein for roughly 100 to 110 calories with less lactose, fat and carbohydrate. For muscle gain the two perform similarly at matched doses. Choose the isolate if lactose or calories are a real constraint; otherwise the original is better value.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is Platinum Hydrowhey worth the extra cost?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                For most people, no. It delivers about 30 g of protein per scoop and digests quickly, but hydrolyzed whey has not been shown to build more muscle than isolate at the same dose. It makes sense if you want a large single-scoop dose or find regular whey hard on your stomach.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Should I take Gold Standard Casein or whey before bed?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Casein is the more logical choice because it digests slowly, and research suggests protein taken before sleep is used for overnight muscle building. Whey works too if it is what you have. Total daily protein matters more than timing, so take whichever helps you hit your target consistently.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">What is the difference between Serious Mass and Pro Gainer?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Serious Mass delivers about 1,250 calories and 50 g of protein per full serving, mostly from carbohydrate. Pro Gainer delivers about 650 calories and 60 g of protein, so a much larger share of its calories comes from protein. Serious Mass suits hardgainers; Pro Gainer suits a leaner, controlled bulk.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is Optimum Nutrition Gold Standard 100% Plant a good vegan protein?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                It is a reasonable option, with about 24 g of protein from pea, fava bean and brown rice, no sugar and stevia sweetening, per ON. It is less dense than whey because of its creamer. Plant proteins tend to carry more heavy metals, so ask for testing data if that concerns you.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is Optimum Nutrition protein safe?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                ON is a long-established brand, and its core whey is widely promoted as Informed Choice certified for banned substances. As with any supplement, choose authentic stock from reputable sellers. Pregnant people, those with kidney disease and anyone on medication should check with a doctor or registered dietitian before using protein supplements.
+              </p>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Related Guides -->
+        <div class="mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">Related Protein Powder Guides</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <a href="/best-whey-protein-powder/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#FF4500] font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Whey Protein Powder</h3>
+              <p class="text-gray-500 text-sm mt-2">How Gold Standard stacks up against other wheys on real value.</p>
+            </a>
+            <a href="/best-casein-protein-powder/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#1E90FF] font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Casein Protein Powder</h3>
+              <p class="text-gray-500 text-sm mt-2">Slow-digesting casein options for evenings and long gaps.</p>
+            </a>
+            <a href="/protein-powder-brands/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-green-600 font-black text-xs uppercase tracking-widest mb-2">Brands</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Protein Powder Brands</h3>
+              <p class="text-gray-500 text-sm mt-2">Who makes what, and which brands are worth trusting.</p>
+            </a>
+          </div>
+        </div>
+
+        <!-- Closing -->
+        <div class="mt-16 bg-gray-900 text-white rounded-2xl p-8">
+          <h2 class="text-2xl font-black text-white mb-4">The Bottom Line</h2>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            The best Optimum Nutrition protein powder for most people is still Gold Standard 100% Whey: dense, widely tested, well liked and frequently on sale. Move to Gold Standard Isolate if lactose or calories are a real constraint, add Gold Standard Casein if your evenings need a filling protein, and choose Gold Standard 100% Plant if you are vegan and prefer a brand you know.
+          </p>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            Treat Platinum Hydrowhey as a convenience upgrade rather than a performance one, and pick between the gainers by protein share: Pro Gainer for a lean bulk, Serious Mass only if you genuinely cannot eat enough. Whatever you buy, compare cost per 25 g, buy authentic stock, and verify certification for your exact product.
+          </p>
+        </div>
+
+        <MoreInCategory category="Protein Powder" links={moreInCategory} />
+
+        <AuthorBio />
+      </div>
+    </div>
+  </article>
+</Layout>

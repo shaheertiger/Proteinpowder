@@ -1,0 +1,918 @@
+---
+import Layout from "../layouts/Layout.astro";
+import MoreInCategory from "../components/MoreInCategory.astro";
+import { AUTHORS, DEFAULT_AUTHOR, authorSchema } from "../data/authors";
+import { SITE_NAME, SITE_URL } from "../data/site";
+import AuthorAvatar from "../components/AuthorAvatar.astro";
+import QuickPicks from "../components/QuickPicks.astro";
+import AuthorBio from "../components/AuthorBio.astro";
+import { amazonLink } from "../data/affiliate";
+import TrustBadge from "../components/TrustBadge.astro";
+import SocialProof from "../components/SocialProof.astro";
+import SpecGrid from "../components/SpecGrid.astro";
+import productImages from "../data/product-images.json";
+import { pageDates } from "../data/dates";
+
+const moreInCategory = [
+  {
+    "title": "Best Unflavored Protein Powder",
+    "url": "/best-unflavored-protein-powder/"
+  },
+  {
+    "title": "Best Protein Drink",
+    "url": "/best-protein-drink/"
+  },
+  {
+    "title": "Best Clear Protein Powder",
+    "url": "/best-clear-protein-powder/"
+  },
+  {
+    "title": "Best Dairy-Free Protein Powder",
+    "url": "/best-dairy-free-protein-powder/"
+  }
+];
+const author = AUTHORS[DEFAULT_AUTHOR];
+const dates = pageDates(Astro.url.pathname, { published: "2026-10-17", modified: "2026-10-17" });
+const title = "Best Protein Powder for Coffee: What Mixes Hot, Iced and Clump-Free";
+const description =
+  "The best protein powders for coffee, hot or iced, with why whey clumps in a hot mug, when collagen is the better choice and the mixing method that actually works.";
+
+const PRODUCTS: {
+  id: string;
+  name: string;
+  brand?: string;
+  badge: string;
+  category: string;
+  description: string;
+  pros: string[];
+  cons: string[];
+  bottomLine: string;
+  specs?: Record<string, string>;
+  rating?: number;
+  reviewCount?: number;
+  amazonUrl?: string;
+}[] = [
+  {
+    "id": "vital-proteins-collagen-peptides",
+    "name": "Vital Proteins Collagen Peptides",
+    "brand": "Vital Proteins",
+    "badge": "Best for Hot Coffee",
+    "category": "Bovine collagen peptides (unflavored)",
+    "description": "Vital Proteins Collagen Peptides is the powder most people reach for when they want protein in a steaming mug: it dissolves in hot or cold liquids, per the brand, and buyers widely report it is essentially tasteless in coffee. The unflavored version lists about 20 g of collagen, about 18 g of protein and roughly 70 calories per 20 g serving, per the label at the time of writing. Collagen is an incomplete protein, with no tryptophan and little leucine, so it complements rather than replaces complete protein.",
+    "pros": [
+      "Dissolves in hot coffee without clumping, per brand and buyers",
+      "Neutral taste, no sweetener",
+      "Dairy-free bovine collagen"
+    ],
+    "cons": [
+      "Incomplete protein: no tryptophan, low leucine",
+      "Not vegan; less useful for muscle-building targets"
+    ],
+    "bottomLine": "The easiest protein to stir into hot coffee, as long as you get complete protein elsewhere.",
+    "specs": {
+      "Protein / serving": "About 18 g (20 g collagen)",
+      "Hot coffee": "Dissolves easily",
+      "Third-party tested": "Check certifier databases",
+      "Best for": "Hot coffee, no-effort mixing"
+    }
+  },
+  {
+    "id": "now-sports-whey-protein-isolate",
+    "name": "NOW Sports Whey Protein Isolate (Unflavored)",
+    "brand": "NOW Sports",
+    "badge": "Best Unflavored Whey",
+    "category": "Whey protein isolate (unflavored)",
+    "description": "NOW Sports' unflavored whey isolate delivers about 25 g of complete protein per scoop with a near-single-ingredient label and well under a gram of carbohydrate, per listings at the time of writing. Buyers describe it as very neutral and easy to mix into coffee and cold drinks, especially iced coffee or cooled coffee prepared with the paste method. Batches appear in the Informed Sport database, and the cost per 25 g is low for a certified isolate.",
+    "pros": [
+      "About 25 g complete protein per scoop",
+      "Neutral taste and no sweetener, buyers report",
+      "Informed Sport batches listed (match your batch code)"
+    ],
+    "cons": [
+      "Clumps in very hot coffee unless pre-mixed or cooled",
+      "Faint milky note is noticeable in black coffee"
+    ],
+    "bottomLine": "The best-value way to make your coffee count toward a real protein target.",
+    "specs": {
+      "Protein / serving": "About 25 g",
+      "Hot coffee": "Pre-mix or cool first",
+      "Third-party tested": "Informed Sport (confirm batch)",
+      "Best for": "Iced and cooled coffee"
+    }
+  },
+  {
+    "id": "dymatize-iso100-hydrolyzed",
+    "name": "Dymatize ISO100 Hydrolyzed Whey Isolate",
+    "brand": "Dymatize",
+    "badge": "Best Coffee-Flavored Powder",
+    "category": "Hydrolyzed whey isolate + whey isolate",
+    "description": "ISO100 comes in coffee flavors developed with Dunkin', including Mocha Latte and Cappuccino, which list about 25 g of protein and roughly 120 calories per scoop, plus about 95 mg of caffeine from real coffee, per the label at the time of writing. They work as an iced latte shaken with milk and ice, or as a flavor booster in cooled coffee. Dymatize states ISO100 is Informed Choice certified; buyer reports on mixing in milk are mixed, so a frother or blender helps.",
+    "pros": [
+      "Coffee flavors designed to taste like a latte or cappuccino",
+      "About 25 g protein per scoop, per the label",
+      "Informed Choice certified, per the brand (confirm flavor)"
+    ],
+    "cons": [
+      "About 95 mg caffeine per scoop in coffee flavors",
+      "Some buyers report clumping; choose the coffee flavor when ordering"
+    ],
+    "bottomLine": "The pick for a protein iced latte that tastes like a coffee-shop drink.",
+    "specs": {
+      "Protein / serving": "About 25 g",
+      "Caffeine": "About 95 mg (coffee flavors)",
+      "Third-party tested": "Informed Choice (confirm flavor)",
+      "Best for": "Iced lattes, flavored coffee"
+    }
+  },
+  {
+    "id": "chike-high-protein-iced-coffee",
+    "name": "Chike High Protein Iced Coffee",
+    "brand": "Chike Nutrition",
+    "badge": "Best All-in-One Protein Coffee",
+    "category": "Whey protein and espresso powder",
+    "description": "Chike combines whey protein isolate and concentrate with instant espresso in one tub: two scoops list about 20 g of protein, roughly 120 calories, about 1 g of sugar and about 150 mg of caffeine, per listings at the time of writing. You shake it with cold water or milk and ice, so there is no brewing and no clumping. It is sweetened with sucralose and contains milk, including sodium caseinate, so it is not for milk allergy.",
+    "pros": [
+      "Protein and espresso in one scoop; no brewing",
+      "About 20 g protein and about 1 g sugar, per listings",
+      "Designed for cold mixing, so it does not clump"
+    ],
+    "cons": [
+      "About 150 mg caffeine per serving adds up fast",
+      "Less control over coffee strength and sweetness"
+    ],
+    "bottomLine": "The most convenient protein coffee for people who want both in one shaker.",
+    "specs": {
+      "Protein / serving": "About 20 g (2 scoops)",
+      "Caffeine": "About 150 mg",
+      "Third-party tested": "Check certifier databases",
+      "Best for": "On-the-go iced coffee"
+    }
+  },
+  {
+    "id": "klean-athlete-klean-isolate",
+    "name": "Klean Athlete Klean Isolate",
+    "brand": "Klean Athlete",
+    "badge": "Best for Tested Athletes",
+    "category": "Whey protein isolate (unflavored)",
+    "description": "Klean Isolate is whey protein isolate plus a little sunflower lecithin, which helps it disperse, per the label at the time of writing, with no sweetener or flavoring. It provides about 20 g of protein per scoop and is NSF Certified for Sport, per the brand. Buyers describe it as clean and neutral, which suits a daily coffee habit, and it is the safest unflavored pick for athletes subject to drug testing.",
+    "pros": [
+      "NSF Certified for Sport, per the brand (verify)",
+      "Very short label; lecithin helps it mix",
+      "Unflavored and unsweetened"
+    ],
+    "cons": [
+      "About 20 g protein per scoop, a little less than others",
+      "Premium price; still needs pre-mixing for hot coffee"
+    ],
+    "bottomLine": "The coffee-friendly isolate for athletes who need certified products.",
+    "specs": {
+      "Protein / serving": "About 20 g",
+      "Hot coffee": "Pre-mix or cool first",
+      "Third-party tested": "NSF Certified for Sport (verify)",
+      "Best for": "Drug-tested athletes"
+    }
+  },
+  {
+    "id": "premier-protein-shake",
+    "name": "Premier Protein Shake",
+    "brand": "Premier Protein",
+    "badge": "Best for Proffee",
+    "category": "Ready-to-drink milk protein shake",
+    "description": "Premier Protein's ready-to-drink shake lists about 30 g of protein, roughly 160 calories and about 1 g of sugar per 11 fl oz carton, per the label at the time of writing, and it is the shake most often used for proffee: espresso or strong coffee poured over ice and a carton of shake. Because it is already dissolved, nothing clumps. Café Latte and vanilla flavors pair best; the Café Latte flavor contains coffee and caffeine.",
+    "pros": [
+      "About 30 g protein per carton, per the label",
+      "Already dissolved; works hot-poured over ice with no clumps",
+      "Doubles as milk and sweetener in iced coffee"
+    ],
+    "cons": [
+      "Higher cost per 25 g of protein than powder",
+      "Uses artificial sweeteners and thickeners"
+    ],
+    "bottomLine": "The no-mixing route to an iced protein coffee with 30 g of protein.",
+    "specs": {
+      "Protein / serving": "About 30 g (11 fl oz)",
+      "Calories": "About 160",
+      "Third-party tested": "Check certifier databases",
+      "Best for": "Proffee and iced lattes"
+    }
+  }
+];
+
+const schema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Home",
+          item: `${SITE_URL}/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Best Lists",
+          item: `${SITE_URL}/best-of/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 3,
+          name: "Best Protein Powder for Coffee",
+          item: `${SITE_URL}/best-protein-powder-for-coffee/`,
+        },
+      ],
+    },
+    {
+      "@type": "FAQPage",
+      mainEntity: [
+        {
+          "@type": "Question",
+          "name": "What is the best protein powder for coffee?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "For hot coffee, collagen peptides such as Vital Proteins dissolve most easily, though collagen is an incomplete protein. For iced or cooled coffee, an unflavored whey isolate such as NOW Sports gives about 25 g of complete protein with a neutral taste. If you want a coffee flavor built in, Dymatize ISO100's Dunkin' flavors are designed for it."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can you put protein powder in hot coffee?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, but whey tends to clump in very hot coffee because the heat unfolds its proteins before the powder dissolves. Mix the powder into a few tablespoons of cold milk or water first, let the coffee cool slightly, or use a handheld frother. Collagen peptides dissolve in hot coffee without any special method."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does hot coffee destroy the protein in protein powder?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Heat denatures, or unfolds, whey proteins, which changes their texture and causes clumping, but it does not remove the amino acids your body uses. Cooking eggs or meat denatures protein in the same way, and digestion unfolds proteins anyway. The issue with whey in hot coffee is texture, not lost nutrition."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is collagen or whey better in coffee?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Collagen is better for convenience, because it dissolves easily in hot coffee and has almost no taste. Whey isolate is better for nutrition, because it is a complete protein rich in leucine, while collagen lacks tryptophan. Many people use collagen in hot coffee and whey isolate in iced coffee or after workouts."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is proffee?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Proffee is protein coffee, usually made by pouring espresso or strong coffee over ice and a ready-to-drink protein shake such as Premier Protein. Because the shake is already dissolved, it does not clump, and it replaces both milk and sweetener. You can also make it with cold brew shaken with a scoop of vanilla whey isolate."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How much protein should I add to my coffee?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "A full scoop of about 20 to 30 g is enough to make a meaningful contribution to your daily protein, especially at breakfast. Smaller amounts are fine if you only want a creamer-style boost. Count caffeine if you use a coffee-flavored powder, and remember that total daily protein matters more than any single drink."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I use plant protein in coffee?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "You can, but it works best in iced coffee made in a blender. Pea and rice proteins tend to feel gritty and settle in hot coffee. Blend a vanilla plant protein with cold brew, ice and soy or oat milk for a smoother drink. Collagen is the easiest dairy-free option for hot coffee, but it is not vegan."
+          }
+        }
+      ],
+    },
+    {
+      "@type": "Article",
+      headline: title,
+      author: authorSchema(),
+      datePublished: dates.published,
+      dateModified: dates.modified,
+      publisher: { "@type": "Organization", name: SITE_NAME, url: SITE_URL },
+    },
+    {
+      "@type": "ItemList",
+      name: title,
+      numberOfItems: PRODUCTS.length,
+      itemListElement: PRODUCTS.map((product, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name: product.name,
+        url: new URL(`#${product.id}`, Astro.url).toString(),
+      })),
+    },
+    ...PRODUCTS.map((product) => ({
+      "@type": "Product",
+      name: product.name,
+      description: product.description,
+      brand: {
+        "@type": "Brand",
+        name: product.brand ?? product.name.split(" ")[0],
+      },
+    })),
+  ],
+};
+---
+
+<Layout
+  title={title}
+  description={description}
+  ogType="article"
+  article={{
+    publishedTime: dates.published,
+    modifiedTime: dates.modified,
+    author: author.name,
+    section: "Protein Powder",
+    tags: [
+      "best protein powder for coffee",
+      "protein powder in coffee",
+      "protein coffee",
+      "protein powder for coffee",
+      "best protein for coffee"
+    ],
+  }}
+  jsonLd={schema}
+>
+  <article class="relative overflow-hidden">
+    <!-- Hero Section -->
+    <div class="bg-gray-900 py-16 lg:py-24 relative overflow-hidden">
+      <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(circle at 20% 20%, #38BDF8 0, transparent 45%), radial-gradient(circle at 80% 60%, #FF4500 0, transparent 40%);"></div>
+      <div class="max-w-4xl mx-auto px-4 relative z-10 text-center">
+        <div class="flex justify-center mb-6">
+          <TrustBadge />
+        </div>
+        <div class="flex justify-center gap-3 mb-6">
+          <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#FF4500]/20 text-[#FF4500] text-xs font-black uppercase tracking-widest border border-[#FF4500]/30">
+            Buyer's Guide
+          </span>
+          <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-green-500/10 text-green-400 text-xs font-bold uppercase tracking-widest border border-green-500/20">
+            Updated October 2026
+          </span>
+        </div>
+        <h1 class="text-4xl lg:text-6xl font-black text-white leading-tight mb-8">
+          Best Protein Powder for <span class="text-[#38BDF8]">Coffee</span>
+        </h1>
+        <p class="text-xl text-gray-300 leading-relaxed mb-8 max-w-3xl mx-auto">
+          Six ways to get 18 to 30 g of protein into your morning cup, matched to how you drink it: hot, iced, black, sweet or straight from a carton. The right powder depends on the temperature of the coffee more than on the brand.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a
+            href="#vital-proteins-collagen-peptides"
+            class="px-8 py-4 bg-[#FF4500] hover:bg-[#E63E00] text-white font-black rounded-xl shadow-lg transition-all no-underline"
+          >
+            See Our #1 Pick
+          </a>
+          <a
+            href="#collagen-vs-whey"
+            class="px-8 py-4 bg-white/10 hover:bg-white/20 text-white font-bold rounded-xl border border-white/10 no-underline"
+          >
+            Collagen vs Whey
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Author & Meta -->
+    <div class="max-w-3xl mx-auto px-4 pt-12">
+      <div class="flex items-center gap-6 border-b border-gray-100 pb-8">
+        <div class="flex items-center gap-3">
+          <AuthorAvatar size={48} />
+          <div>
+            <p class="text-sm font-bold text-gray-900">{author.name}</p>
+            <p class="text-xs text-gray-500 uppercase tracking-widest">{author.role}</p>
+          </div>
+        </div>
+        <div class="h-10 w-px bg-gray-200 hidden sm:block"></div>
+        <div class="hidden sm:block">
+          <p class="text-sm font-bold text-gray-900">Last Updated</p>
+          <p class="text-xs text-gray-500">{dates.display}</p>
+        </div>
+        <div class="hidden sm:block ml-auto">
+          <SocialProof />
+        </div>
+      </div>
+    </div>
+
+    <!-- Table of Contents -->
+    <div class="max-w-3xl mx-auto px-4 py-10">
+      <div class="bg-gray-50 border border-gray-200 rounded-2xl p-6 lg:p-8">
+        <h2 class="text-lg font-black text-gray-900 mb-4 flex items-center gap-2">
+          In This Guide
+        </h2>
+        <nav class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <a href="#hot-vs-iced" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">1. Why Protein Clumps in Hot Coffee</a>
+          <a href="#how-we-picked" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">2. How We Picked</a>
+          <a href="#top-picks" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">3. Our Top Picks</a>
+          <a href="#collagen-vs-whey" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">4. Collagen vs Whey Isolate</a>
+          <a href="#method" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">5. How to Mix Without Clumps</a>
+          <a href="#flavored-vs-unflavored" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">6. Unflavored vs Flavored</a>
+          <a href="#caffeine" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">7. Watch the Caffeine</a>
+          <a href="#iced-and-proffee" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">8. Iced Coffee and Proffee</a>
+          <a href="#dairy-free" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">9. Dairy-Free Options in Coffee</a>
+          <a href="#mistakes" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">10. Common Mistakes</a>
+          <a href="#faq" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">11. FAQ</a>
+        </nav>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="max-w-3xl mx-auto px-4 pb-16 lg:pb-24">
+      <div class="prose prose-lg prose-blue max-w-none text-gray-700 leading-relaxed">
+        <p class="text-2xl font-medium text-gray-900 mb-8 italic">
+          Protein powder and coffee get along fine once you match the powder to the cup. Collagen dissolves in hot coffee almost like sugar. Whey isolate is excellent in iced or slightly cooled coffee and clumps when dumped into a scalding mug. Most of the complaints about protein coffee come from putting the right powder in the wrong drink, or the right drink in the wrong order.
+        </p>
+
+        <QuickPicks products={PRODUCTS} />
+
+        <div id="hot-vs-iced" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            1. Why Protein Clumps in Hot Coffee (and Not in Iced)
+          </h2>
+
+          <p>
+            Coffee is typically brewed with water at about 90 to 96 degrees Celsius, roughly 195 to 205 degrees Fahrenheit, and a fresh cup is often served well above 70 degrees Celsius. The main whey proteins begin to unfold, or denature, at around that temperature. When you tip a scoop of whey into a hot mug, the outside of each clump of powder heats instantly, its proteins unfold and stick together, and they form a skin that stops liquid reaching the dry powder inside. The result is the floating, rubbery lumps that most protein coffee complaints describe.
+          </p>
+
+          <p>
+            Cold liquid avoids the problem entirely. In iced coffee or cold brew, whey disperses the same way it does in a shaker bottle, and an isolate dissolves particularly cleanly because it has less fat and lactose than concentrate. That is why the simplest fix for protein coffee is often to drink it iced, or to let a hot cup cool for a few minutes before adding powder.
+          </p>
+
+          <p>
+            Collagen behaves differently. Collagen peptides are made by breaking collagen down into short fragments, the same family of protein as gelatin, and they dissolve readily in hot liquid. Hot coffee does not make them clump, which is why collagen has become the default powder for people who want protein in a steaming mug. The catch is nutritional rather than practical, and we cover it in the collagen section below.
+          </p>
+
+          <p>
+            Denaturing sounds alarming, but it does not destroy protein's nutritional value. Cooking an egg or grilling a steak denatures protein too, and your stomach acid unfolds proteins anyway as part of normal digestion. Heat-denatured whey still supplies the same amino acids. The problem with whey in hot coffee is texture, not nutrition, so if you can live with a few specks, or you mix it properly, there is no reason to avoid it.
+          </p>
+
+          <div class="overflow-hidden border border-gray-200 rounded-2xl my-8">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Powder</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Hot coffee</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Iced or cold brew</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Collagen peptides</td>
+                    <td class="px-4 py-4 text-gray-700">Dissolves easily</td>
+                    <td class="px-4 py-4 text-gray-700">Dissolves, a little slower</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Whey isolate</td>
+                    <td class="px-4 py-4 text-gray-700">Clumps unless pre-mixed or cooled</td>
+                    <td class="px-4 py-4 text-gray-700">Excellent</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Whey concentrate or blend</td>
+                    <td class="px-4 py-4 text-gray-700">Clumps more; can look curdled</td>
+                    <td class="px-4 py-4 text-gray-700">Good</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Casein</td>
+                    <td class="px-4 py-4 text-gray-700">Thick, clumps easily</td>
+                    <td class="px-4 py-4 text-gray-700">Thick but workable</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Pea or plant blend</td>
+                    <td class="px-4 py-4 text-gray-700">Gritty, may separate</td>
+                    <td class="px-4 py-4 text-gray-700">Gritty unless blended</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div id="how-we-picked" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            2. How We Picked: Solubility, Flavor and Dose
+          </h2>
+
+          <p>
+            We did not run a lab test or a coffee taste panel for this guide. The picks come from label analysis, published certifications and the very consistent pattern in buyer feedback about which powders mix well in coffee and which do not, the same approach set out on our <a href="/how-we-test/">how we test page</a>. Where we describe taste, clumping or texture, we are reporting what buyers widely say rather than claiming results of our own.
+          </p>
+
+          <p>
+            The first test was how well the powder dissolves in the kind of coffee it is meant for. A collagen had to be marketed and widely reported as dissolving in hot liquids; a whey had to be an isolate, which disperses more cleanly than concentrate, with a short ingredient list. Second, we looked at flavor: an unflavored powder had to be neutral enough to disappear into coffee, and a flavored one had to be designed around coffee rather than a dessert flavor that clashes with it.
+          </p>
+
+          <p>
+            Third was dose. We wanted at least about 18 g of protein per serving, because a teaspoon of protein in a latte does very little. We also checked caffeine in every coffee-flavored product, since some add the equivalent of a cup of coffee per scoop, and noted sweeteners for people who take their coffee black. Finally, each product had to be long established and currently sold on Amazon in the United States.
+          </p>
+
+          <p>
+            If you mainly want an unflavored powder that also works in baking, oats and savory food, our <a href="/best-unflavored-protein-powder/">best unflavored protein powder</a> guide covers that broader use. This guide is narrower: it is about what you put in your cup, hot or cold, and how to get it there without lumps.
+          </p>
+
+          <div class="bg-gray-900 text-white rounded-2xl p-6 lg:p-8 my-8">
+            <p class="text-xs font-black uppercase tracking-widest text-[#38BDF8] mb-4">By the Numbers</p>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+              <div>
+                <p class="text-3xl font-black text-white">90-96 C</p>
+                <p class="text-gray-400 text-xs mt-1">Typical brewing temperature for coffee</p>
+              </div>
+              <div>
+                <p class="text-3xl font-black text-[#38BDF8]">~70 C</p>
+                <p class="text-gray-400 text-xs mt-1">Around where whey proteins start to unfold</p>
+              </div>
+              <div>
+                <p class="text-3xl font-black text-white">400 mg</p>
+                <p class="text-gray-400 text-xs mt-1">FDA guide to daily caffeine for most healthy adults</p>
+              </div>
+              <div>
+                <p class="text-3xl font-black text-[#38BDF8]">0 g</p>
+                <p class="text-gray-400 text-xs mt-1">Tryptophan in collagen peptides</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Picks -->
+        <div id="top-picks" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            3. The Best Protein Powders for Coffee, Ranked
+          </h2>
+
+          <p>
+            We split the list by how people actually drink protein coffee: a collagen that dissolves in hot coffee, an unflavored whey isolate for iced and cooled coffee, a coffee-flavored isolate, an all-in-one protein iced coffee, a certified unflavored isolate for tested athletes, and a ready-to-drink shake for pouring over espresso. Nutrition figures come from the labels at the time of writing and vary by flavor, so check the tub or carton in front of you.
+          </p>
+
+          {PRODUCTS.map((product, index) => (
+            <div id={product.id} class="scroll-mt-24 mt-12 first:mt-8">
+              <div class="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                <div class="bg-gray-900 px-6 py-4 flex items-center justify-between">
+                  <div class="flex items-center gap-3">
+                    <span class="bg-[#FF4500] text-white w-8 h-8 rounded-full flex items-center justify-center text-sm font-black">
+                      {index + 1}
+                    </span>
+                    {productImages[product.id] && (
+                      <img
+                        src={productImages[product.id]}
+                        alt={product.name}
+                        loading="lazy"
+                        width="40"
+                        height="40"
+                        class="w-10 h-10 rounded-lg bg-white object-contain p-1 shrink-0"
+                      />
+                    )}
+                    <div>
+                      <p class="text-white font-black text-lg">{product.name}</p>
+                      <p class="text-gray-400 text-xs">{product.category}</p>
+                    </div>
+                  </div>
+                  <span class="bg-[#38BDF8]/20 text-[#38BDF8] px-3 py-1 rounded-full text-xs font-bold hidden sm:block">
+                    {product.badge}
+                  </span>
+                </div>
+                <div class="p-6">
+                  {product.rating && (
+                  <div class="flex items-center gap-2 mb-4">
+                    <div class="flex text-yellow-400">
+                      {[...Array(5)].map((_, i) => (
+                        <svg
+                          class={`w-4 h-4 ${i < Math.floor(product.rating) ? "fill-current" : "text-gray-200"}`}
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                        >
+                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        </svg>
+                      ))}
+                    </div>
+                    <span class="text-gray-500 text-sm font-bold">{product.rating}</span>
+                    {product.reviewCount && <span class="text-gray-400 text-xs">({product.reviewCount.toLocaleString()} retailer reviews)</span>}
+                  </div>
+                  )}
+
+                  <SpecGrid specs={product.specs} />
+
+                  <p class="text-gray-700 leading-relaxed mb-6">{product.description}</p>
+
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                    <div class="bg-green-50 rounded-xl p-4">
+                      <p class="text-xs font-black uppercase tracking-widest text-green-700 mb-3">Pros</p>
+                      <ul class="space-y-2">
+                        {product.pros.map((pro) => (
+                          <li class="flex items-start gap-2 text-sm text-green-800">
+                            <svg class="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            {pro}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div class="bg-red-50 rounded-xl p-4">
+                      <p class="text-xs font-black uppercase tracking-widest text-red-700 mb-3">Cons</p>
+                      <ul class="space-y-2">
+                        {product.cons.map((con) => (
+                          <li class="flex items-start gap-2 text-sm text-red-800">
+                            <svg class="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                            {con}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+
+                  <div class="bg-gray-50 rounded-xl p-4 border border-gray-100">
+                    <p class="text-xs font-black uppercase tracking-widest text-gray-500 mb-1">The Bottom Line</p>
+                    <p class="text-gray-900 font-bold">{product.bottomLine}</p>
+                  </div>
+
+                  <a
+                    href={amazonLink(product.amazonUrl, product.name, product.id)}
+                    target="_blank"
+                    rel="sponsored nofollow noopener"
+                    class="mt-6 block bg-[#FF4500] hover:bg-[#E63E00] text-white text-center py-4 rounded-xl font-black no-underline transition-colors uppercase tracking-widest text-sm"
+                  >
+                    Check Price &rarr;
+                  </a>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div id="collagen-vs-whey" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            4. Collagen vs Whey Isolate in Coffee
+          </h2>
+
+          <p>
+            Collagen is the easiest protein to drink in hot coffee, and it is also the weakest protein on this list. It contains no tryptophan, one of the nine essential amino acids, so it is classed as an incomplete protein, and it is low in leucine, the amino acid most closely tied to muscle protein synthesis. Its amino acid profile is dominated by glycine, proline and hydroxyproline. That means 20 g of collagen does not do the same job as 20 g of whey or egg protein if your goal is building or keeping muscle.
+          </p>
+
+          <p>
+            That does not make collagen useless. It still provides amino acids and calories, many people use it for reasons related to skin, joints or connective tissue, and research on those uses is ongoing, though brand claims tend to run ahead of the evidence. Our guide to the <a href="/best-collagen-protein-powder/">best collagen protein powder</a> covers that research. The practical point is that collagen in your morning coffee should sit alongside complete protein from meals, not replace it.
+          </p>
+
+          <p>
+            Whey isolate is the opposite trade. It is a complete protein with plenty of leucine, about 25 g of protein per scoop for most brands, and it is the better choice if your coffee is doing real work toward a daily protein target. Its weakness is heat, which you can work around by mixing it first, letting the coffee cool slightly or drinking it iced. Many people end up using collagen in hot coffee for convenience and whey isolate in iced coffee or after training.
+          </p>
+
+          <div class="bg-gray-900 text-white rounded-2xl p-6 lg:p-8 my-8">
+            <p class="text-xs font-black uppercase tracking-widest text-[#38BDF8] mb-3">THE RULE</p>
+            <p class="text-xl font-bold text-white mb-3">Collagen for convenience, whey for muscle.</p>
+            <p class="text-gray-300 leading-relaxed m-0">If you want protein that disappears into a hot mug with no effort, collagen wins. If your coffee is meant to count toward your protein target, use a whey isolate and change the method: pre-mix it, cool the coffee slightly or drink it iced.</p>
+          </div>
+
+          <p>
+            A middle path is to combine them. A scoop of collagen dissolved in hot coffee alongside a protein-rich breakfast, such as eggs or Greek yogurt, covers the amino acids collagen lacks. Or drink hot coffee with collagen in the morning and save your whey shake for later in the day. What matters for most goals is total daily protein, not which mug it arrives in.
+          </p>
+        </div>
+
+        <div id="method" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            5. How to Mix Protein Powder Into Coffee Without Clumps
+          </h2>
+
+          <p>
+            The most reliable method is to make a paste first. Put your scoop of whey isolate in an empty mug, add two or three tablespoons of cold milk, creamer or water, and stir until smooth. Then pour in coffee that has cooled for a minute or two, stirring as you go. The cold liquid hydrates the powder before it meets heat, so the proteins disperse instead of cooking into a skin. Buyers who complain about clumps rarely use this order.
+          </p>
+
+          <p>
+            A handheld milk frother is the next best tool and costs little. Add the powder to warm, not scalding, coffee and froth for 15 to 20 seconds. The frother breaks up clumps before they set and gives the drink a latte-like foam, which many people prefer anyway. A small blender does the same job more thoroughly and works for hot coffee if you leave the lid vented and let the coffee cool slightly first, because blending very hot liquid in a sealed jar can force the lid off.
+          </p>
+
+          <p>
+            Temperature is the variable you control most easily. Letting fresh coffee sit for three to five minutes, or adding a splash of cold milk before the powder, brings it down toward the range where whey isolate mixes cleanly. Pouring hot coffee onto powder, rather than powder onto coffee, is the worst approach: the powder sticks to the bottom of the mug and cooks there.
+          </p>
+
+          <p>
+            For collagen, the method barely matters. Stir it into hot coffee with a spoon and it will dissolve, though adding it gradually avoids a few stubborn grains. For flavored whey or a coffee-flavored powder, a shaker bottle with cold brew or chilled coffee is the fastest route of all, and it is how products such as Chike are designed to be used.
+          </p>
+        </div>
+
+        <div id="flavored-vs-unflavored" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            6. Unflavored vs Flavored: Which Works in Coffee
+          </h2>
+
+          <p>
+            Unflavored powders are the most flexible choice for coffee because they let the coffee taste like coffee. A good unflavored whey isolate has a faint milky note at most, which disappears into a latte or coffee with milk and is more noticeable in black coffee. Unflavored collagen is close to tasteless in hot coffee. Neither adds sweetener, which matters if you take your coffee unsweetened or already use your own syrup or sweetener.
+          </p>
+
+          <p>
+            Flavored powders are a gamble in coffee unless the flavor was designed for it. Vanilla, caramel, mocha and coffee flavors usually work; chocolate is fine in a mocha; fruit, cookie, cereal and peanut butter flavors tend to clash. Dymatize sells ISO100 in coffee flavors developed with Dunkin', including Mocha Latte and Cappuccino, and Premier Protein sells a Café Latte flavor. Those flavors are made to taste like coffee drinks on their own, so adding them to brewed coffee pushes the result toward a sweet, flavored latte.
+          </p>
+
+          <p>
+            Sweetness is the hidden issue. Most flavored powders use sucralose, acesulfame potassium or stevia at a level designed for a shake made with water or milk. In a cup of coffee that already contains creamer and sugar, the total can end up very sweet. If you find your protein coffee cloying, switch to an unflavored powder and sweeten to taste, or use half a scoop of flavored powder and half unflavored.
+          </p>
+
+          <p>
+            If you are watching carbohydrate or sugar, unflavored isolates and collagen add almost none, while some flavored powders and many coffee creamers add more than you expect. Our guide to the <a href="/best-low-carb-protein-powder/">best low carb protein powder</a> covers which isolates list close to zero carbohydrate per scoop, which makes them easy additions to black coffee or cold brew.
+          </p>
+        </div>
+
+        <div id="caffeine" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            7. Watch the Caffeine in Coffee-Flavored Powders
+          </h2>
+
+          <p>
+            Some coffee-flavored protein products contain real coffee, and therefore caffeine. Dymatize's Dunkin' flavors list about 95 mg per scoop, Premier Protein's Café Latte powder lists about 95 mg per serving, and Chike's High Protein Iced Coffee lists about 150 mg per two-scoop serving, per their labels and listings at the time of writing. For context, an 8 oz cup of brewed coffee typically contains roughly 80 to 100 mg, so one serving of these products is about a cup of coffee in itself.
+          </p>
+
+          <p>
+            That is fine on its own, but it adds up quickly if you stir a caffeinated powder into a large brewed coffee, or drink one in the afternoon. The FDA cites 400 mg a day as an amount not generally associated with negative effects in healthy adults, and people who are sensitive to caffeine, have heart rhythm problems or anxiety, or take certain medications may need much less. If you drink a caffeinated protein product late in the day, it can affect sleep in the same way coffee does.
+          </p>
+
+          <p>
+            Pregnancy is a specific case. The American College of Obstetricians and Gynecologists advises keeping caffeine under 200 mg a day during pregnancy, so a caffeinated protein coffee plus another cup of coffee could exceed that. Anyone pregnant or breastfeeding should check with their doctor or midwife about caffeine and supplements generally.
+          </p>
+
+          <p>
+            The simple rule is to read the label for the word coffee or caffeine in the ingredient list and to count those milligrams alongside your regular coffee. If you want the flavor without the extra stimulant, use an unflavored powder in decaf, or a non-caffeinated vanilla or caramel powder in your usual cup.
+          </p>
+        </div>
+
+        <div id="iced-and-proffee" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            8. Iced Coffee, Cold Brew and Proffee
+          </h2>
+
+          <p>
+            Iced coffee is where protein coffee is easiest. Cold brew or chilled coffee shaken with a scoop of whey isolate and ice gives a smooth, frothy drink with no clumping, and almost any good isolate works. This is also where flavored whey shines: a scoop of vanilla or caramel isolate in cold brew tastes much like a sweetened iced latte, with about 25 g of protein and far less sugar than many coffee-shop drinks.
+          </p>
+
+          <p>
+            Proffee, short for protein coffee, became popular on social media as a simple recipe: espresso or strong coffee poured over ice and a ready-to-drink protein shake. It works because the shake is already fully dissolved, so there is nothing to clump, and the shake doubles as milk and sweetener. A carton of Premier Protein, which lists about 30 g of protein and roughly 160 calories per 11 fl oz, is a common choice. It costs more per gram of protein than powder but involves no mixing at all.
+          </p>
+
+          <p>
+            All-in-one protein coffee powders are a third route. Chike's High Protein Iced Coffee combines whey protein, instant espresso and sweetener in one tub, so you shake two scoops with cold water or milk and ice. It is the most convenient option for people who want coffee and protein together on the go, though it gives you less control over coffee strength, sweetness and caffeine than adding powder to coffee you brew yourself.
+          </p>
+
+          <p>
+            If you prefer clear, juice-like drinks to creamy ones, a clear whey isolate can also be mixed into cold brew, although its fruit flavors rarely pair well with coffee. Our <a href="/best-clear-protein-powder/">best clear protein powder</a> guide covers those products. For most coffee drinkers, though, a vanilla or unflavored isolate in cold brew is the simplest and cheapest protein coffee there is.
+          </p>
+        </div>
+
+        <div id="dairy-free" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            9. Dairy-Free and Plant Proteins in Coffee
+          </h2>
+
+          <p>
+            Dairy-free protein coffee is harder than it should be. Pea and rice proteins do not truly dissolve; they suspend, and in hot coffee they tend to feel gritty and settle at the bottom of the cup. Plant proteins can also separate in acidic, hot drinks, much as some plant milks curdle in coffee. Most buyer feedback on plant protein in coffee falls somewhere between workable when blended and not worth it.
+          </p>
+
+          <p>
+            Collagen is the easiest dairy-free option for hot coffee. Bovine collagen peptides contain no milk, so they suit people avoiding dairy for lactose intolerance or a milk allergy, provided you accept collagen's limits as an incomplete protein and check the label for any added milk-based creamer. Collagen is not vegan, so it does not help people avoiding animal products.
+          </p>
+
+          <p>
+            For vegans, the practical approach is to use plant protein in iced coffee made in a blender, with a plant milk such as soy or oat that adds body and masks grit, or to get protein from food alongside black coffee rather than in it. A vanilla plant protein blended with cold brew, ice and soy milk is far more drinkable than the same powder stirred into a hot cup. Our <a href="/best-dairy-free-protein-powder/">best dairy-free protein powder</a> guide ranks the plant, egg and beef options in more detail.
+          </p>
+
+          <p>
+            One labeling trap to watch: some coffee creamers described as non-dairy contain sodium caseinate, which is a milk protein, and several protein coffee products, including Chike, list milk ingredients. If you are avoiding dairy because of a milk allergy rather than lactose, read the ingredient list and allergen statement on everything that goes in the cup, not just the protein powder.
+          </p>
+        </div>
+
+        <!-- Common Mistakes -->
+        <div id="mistakes" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            10. Common Mistakes to Avoid
+          </h2>
+
+          <div class="space-y-6 my-8">
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Dumping whey into a scalding mug</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Whey proteins start to unfold near 70 degrees Celsius, and fresh coffee is hotter than that, so the powder cooks into rubbery lumps. Make a paste with a little cold milk first, let the coffee cool for a few minutes, or use a frother. Or drink it iced, which avoids the problem entirely.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Pouring coffee onto the powder</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Adding hot coffee on top of a scoop sitting in the bottom of the mug is the worst order, because the powder sticks and cooks before it can disperse. Mix the powder with cold liquid first, then add coffee gradually while stirring. The order matters more than the brand of powder.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Counting collagen as complete protein</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Collagen dissolves beautifully in hot coffee but contains no tryptophan and little leucine, so it is an incomplete protein. It does not do the same job as whey for building or keeping muscle. If your coffee is meant to cover a protein target, use whey isolate or pair collagen with protein-rich meals.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Ignoring the caffeine in coffee flavors</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Some coffee-flavored powders and protein coffees contain about 95 to 150 mg of caffeine per serving, roughly one to two cups of coffee. Stirring one into a large brewed coffee can double your intake. Check the label, count the milligrams, and choose an unflavored powder or decaf if you want the protein without more caffeine.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Using a dessert flavor in coffee</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Cookie, cereal, fruit and peanut butter flavors rarely work in coffee, and the sweetener level designed for a shake can make a sweetened latte cloying. Stick to unflavored, vanilla, caramel, mocha or coffee flavors, and if the result is too sweet, mix half flavored and half unflavored powder.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ -->
+        <div id="faq" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            11. Frequently Asked Questions
+          </h2>
+
+          <div class="space-y-6">
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">What is the best protein powder for coffee?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                For hot coffee, collagen peptides such as Vital Proteins dissolve most easily, though collagen is an incomplete protein. For iced or cooled coffee, an unflavored whey isolate such as NOW Sports gives about 25 g of complete protein with a neutral taste. If you want a coffee flavor built in, Dymatize ISO100's Dunkin' flavors are designed for it.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Can you put protein powder in hot coffee?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Yes, but whey tends to clump in very hot coffee because the heat unfolds its proteins before the powder dissolves. Mix the powder into a few tablespoons of cold milk or water first, let the coffee cool slightly, or use a handheld frother. Collagen peptides dissolve in hot coffee without any special method.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Does hot coffee destroy the protein in protein powder?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                No. Heat denatures, or unfolds, whey proteins, which changes their texture and causes clumping, but it does not remove the amino acids your body uses. Cooking eggs or meat denatures protein in the same way, and digestion unfolds proteins anyway. The issue with whey in hot coffee is texture, not lost nutrition.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is collagen or whey better in coffee?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Collagen is better for convenience, because it dissolves easily in hot coffee and has almost no taste. Whey isolate is better for nutrition, because it is a complete protein rich in leucine, while collagen lacks tryptophan. Many people use collagen in hot coffee and whey isolate in iced coffee or after workouts.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">What is proffee?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Proffee is protein coffee, usually made by pouring espresso or strong coffee over ice and a ready-to-drink protein shake such as Premier Protein. Because the shake is already dissolved, it does not clump, and it replaces both milk and sweetener. You can also make it with cold brew shaken with a scoop of vanilla whey isolate.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">How much protein should I add to my coffee?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                A full scoop of about 20 to 30 g is enough to make a meaningful contribution to your daily protein, especially at breakfast. Smaller amounts are fine if you only want a creamer-style boost. Count caffeine if you use a coffee-flavored powder, and remember that total daily protein matters more than any single drink.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Can I use plant protein in coffee?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                You can, but it works best in iced coffee made in a blender. Pea and rice proteins tend to feel gritty and settle in hot coffee. Blend a vanilla plant protein with cold brew, ice and soy or oat milk for a smoother drink. Collagen is the easiest dairy-free option for hot coffee, but it is not vegan.
+              </p>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Related Guides -->
+        <div class="mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">Related Protein Powder Guides</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <a href="/best-unflavored-protein-powder/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#10B981] font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Unflavored Protein Powder</h3>
+              <p class="text-gray-500 text-sm mt-2">Plain powders for baking, oats and savory food as well as drinks.</p>
+            </a>
+            <a href="/best-collagen-protein-powder/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#FF4500] font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Collagen Protein Powder</h3>
+              <p class="text-gray-500 text-sm mt-2">What collagen can and cannot do, and the powders worth buying.</p>
+            </a>
+            <a href="/best-low-carb-protein-powder/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#38BDF8] font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Low Carb Protein Powder</h3>
+              <p class="text-gray-500 text-sm mt-2">Isolates with close to zero carbs per scoop for black coffee and cold brew.</p>
+            </a>
+          </div>
+        </div>
+
+        <!-- Closing -->
+        <div class="mt-16 bg-gray-900 text-white rounded-2xl p-8">
+          <h2 class="text-2xl font-black text-white mb-4">The Bottom Line</h2>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            Match the powder to the cup. For hot coffee with no effort, collagen dissolves like sugar, as long as you remember it is an incomplete protein. For coffee that counts toward a real protein target, use an unflavored whey isolate such as NOW Sports or Klean Isolate, mixed into a cold paste first or added to iced and cooled coffee.
+          </p>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            If you want the flavor built in, ISO100's coffee flavors and Chike's protein iced coffee do the job, with caffeine you should count. And if you would rather not mix anything, a carton of Premier Protein over espresso and ice makes proffee in thirty seconds.
+          </p>
+        </div>
+
+        <MoreInCategory category="Protein Powder" links={moreInCategory} />
+
+        <AuthorBio />
+      </div>
+    </div>
+  </article>
+</Layout>

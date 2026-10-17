@@ -1,0 +1,918 @@
+---
+import Layout from "../layouts/Layout.astro";
+import MoreInCategory from "../components/MoreInCategory.astro";
+import { AUTHORS, DEFAULT_AUTHOR, authorSchema } from "../data/authors";
+import { SITE_NAME, SITE_URL } from "../data/site";
+import AuthorAvatar from "../components/AuthorAvatar.astro";
+import QuickPicks from "../components/QuickPicks.astro";
+import AuthorBio from "../components/AuthorBio.astro";
+import { amazonLink } from "../data/affiliate";
+import TrustBadge from "../components/TrustBadge.astro";
+import SocialProof from "../components/SocialProof.astro";
+import SpecGrid from "../components/SpecGrid.astro";
+import productImages from "../data/product-images.json";
+import { pageDates } from "../data/dates";
+
+const moreInCategory = [
+  {
+    "title": "Best Protein Powder",
+    "url": "/best-protein-powder/"
+  },
+  {
+    "title": "Best Whey Protein Isolate",
+    "url": "/best-whey-protein-isolate/"
+  },
+  {
+    "title": "Best Protein Powder for Coffee",
+    "url": "/best-protein-powder-for-coffee/"
+  },
+  {
+    "title": "Whey vs Whey Isolate",
+    "url": "/whey-vs-whey-isolate/"
+  }
+];
+const author = AUTHORS[DEFAULT_AUTHOR];
+const dates = pageDates(Astro.url.pathname, { published: "2026-10-17", modified: "2026-10-17" });
+const title = "Best Low Carb Protein Powder: Ranked by Net Carbs per Scoop";
+const description =
+  "The best low carb and keto protein powders, ranked by net carbs per scoop, with how isolates, concentrates and sugar alcohols change the numbers on the label.";
+
+const PRODUCTS: {
+  id: string;
+  name: string;
+  brand?: string;
+  badge: string;
+  category: string;
+  description: string;
+  pros: string[];
+  cons: string[];
+  bottomLine: string;
+  specs?: Record<string, string>;
+  rating?: number;
+  reviewCount?: number;
+  amazonUrl?: string;
+}[] = [
+  {
+    "id": "isopure-zero-carb",
+    "name": "Isopure Zero Carb Protein Powder",
+    "brand": "Isopure",
+    "badge": "Best Zero Carb",
+    "category": "Whey protein isolate",
+    "description": "Isopure Zero Carb is the closest thing to pure protein on this list: the unflavored version lists about 25 g of protein for roughly 100 calories with 0 g of carbohydrate, sugar and fat per scoop, per the label at the time of writing, and flavored versions stay at or near zero. It is marketed as lactose-free, which also suits people sensitive to dairy sugar. Flavor opinions among buyers are more mixed than for ISO100.",
+    "pros": [
+      "About 0 g carbohydrate per scoop, per the label",
+      "About 25 g protein for roughly 100 calories",
+      "Marketed as lactose-free"
+    ],
+    "cons": [
+      "Flavor reviews are more mixed than for the runner-up",
+      "No sport certification we could confirm; check certifier databases"
+    ],
+    "bottomLine": "The pick for strict keto and anyone who wants carbohydrate as close to zero as possible.",
+    "specs": {
+      "Protein / serving": "About 25 g",
+      "Carbs / serving": "About 0 g (label)",
+      "Third-party tested": "Check certifier databases",
+      "Best for": "Strict keto, zero carb"
+    }
+  },
+  {
+    "id": "dymatize-iso100-hydrolyzed",
+    "name": "Dymatize ISO100 Hydrolyzed Whey Isolate",
+    "brand": "Dymatize",
+    "badge": "Best Flavor Range",
+    "category": "Hydrolyzed whey isolate + whey isolate",
+    "description": "ISO100 lists about 25 g of protein, roughly 110 calories and about 1 g of carbohydrate per scoop in Gourmet Vanilla, per the label at the time of writing, with richer flavors running slightly higher. Its wide flavor range, which buyers consistently praise, makes it easier to stick with for months. Dymatize states it is Informed Choice certified, and it is very low in lactose.",
+    "pros": [
+      "About 1 g carbohydrate per scoop in vanilla, per the label",
+      "Wide flavor range that buyers rate highly",
+      "Informed Choice certified, per the brand (confirm flavor)"
+    ],
+    "cons": [
+      "Premium cost per 25 g of protein",
+      "Dessert flavors list slightly more carbohydrate"
+    ],
+    "bottomLine": "The best low carb isolate for people who need variety to stay consistent.",
+    "specs": {
+      "Protein / serving": "About 25 g",
+      "Carbs / serving": "About 1 g (flavor-dependent)",
+      "Third-party tested": "Informed Choice (confirm flavor)",
+      "Best for": "Everyday low carb shakes"
+    }
+  },
+  {
+    "id": "now-sports-whey-protein-isolate",
+    "name": "NOW Sports Whey Protein Isolate (Unflavored)",
+    "brand": "NOW Sports",
+    "badge": "Best Unflavored Value",
+    "category": "Whey protein isolate (unflavored)",
+    "description": "NOW Sports offers an unflavored whey isolate with a near-single-ingredient label, about 25 g of protein per scoop and well under a gram of carbohydrate, per retailer listings at the time of writing. Batches appear in the Informed Sport database, and the cost per 25 g of protein is low for a certified isolate. With no sweetener at all, it suits low carb dieters who want to avoid both sugar alcohols and artificial sweeteners.",
+    "pros": [
+      "Well under 1 g carbohydrate per scoop, per listings",
+      "No sweetener, so no net carb guesswork",
+      "Informed Sport batches listed (match your batch code)"
+    ],
+    "cons": [
+      "Plain taste; needs flavoring for most people",
+      "Label figures vary slightly between listings"
+    ],
+    "bottomLine": "The best-value low carb isolate for people who flavor their own shakes or coffee.",
+    "specs": {
+      "Protein / serving": "About 25 g",
+      "Carbs / serving": "Under 1 g (listings)",
+      "Third-party tested": "Informed Sport (confirm batch)",
+      "Best for": "No-sweetener, budget keto"
+    }
+  },
+  {
+    "id": "transparent-labs-grass-fed-whey-protein-isolate",
+    "name": "Transparent Labs 100% Grass-Fed Whey Protein Isolate",
+    "brand": "Transparent Labs",
+    "badge": "Best Stevia-Sweetened",
+    "category": "Grass-fed whey protein isolate",
+    "description": "Transparent Labs delivers about 28 g of protein per scoop with roughly 1 to 3 g of carbohydrate depending on flavor, per label data at the time of writing, which keeps it well inside low carb territory. Flavored versions use stevia rather than sucralose or sugar alcohols, and the brand publishes third-party lab results. It costs more than mainstream isolates but carries one of the highest protein doses per scoop.",
+    "pros": [
+      "About 28 g protein per scoop, per the label",
+      "Stevia-sweetened; no sugar alcohols",
+      "Publishes third-party lab results"
+    ],
+    "cons": [
+      "Premium price per 25 g of protein",
+      "Peanut butter and chocolate flavors list up to about 3 g carbs"
+    ],
+    "bottomLine": "The low carb isolate to buy if you want to avoid artificial sweeteners and erythritol.",
+    "specs": {
+      "Protein / serving": "About 28 g",
+      "Carbs / serving": "About 1-3 g (flavor-dependent)",
+      "Third-party tested": "Published lab results",
+      "Best for": "Avoiding artificial sweeteners"
+    }
+  },
+  {
+    "id": "quest-protein-powder",
+    "name": "Quest Protein Powder",
+    "brand": "Quest Nutrition",
+    "badge": "Best for Baking and Thick Shakes",
+    "category": "Whey isolate and micellar casein blend",
+    "description": "Quest's protein powder blends whey isolate with micellar casein for a thicker shake that also behaves well in low carb baking. Vanilla Milkshake lists about 24 g of protein, roughly 110 calories, 3 g of carbohydrate and 1 g of sugar per scoop, per the label at the time of writing, sweetened with sucralose and stevia. The casein portion digests more slowly, which some people find more filling between meals.",
+    "pros": [
+      "About 24 g protein with about 3 g carbs, per the label",
+      "Casein content gives a thicker, more filling shake",
+      "Works well in low carb baking, buyers report"
+    ],
+    "cons": [
+      "More carbohydrate than the leanest isolates",
+      "Uses sucralose; check flavors for carrageenan if you avoid it"
+    ],
+    "bottomLine": "The pick for low carb dieters who want a creamier shake or a powder for baking.",
+    "specs": {
+      "Protein / serving": "About 24 g (vanilla)",
+      "Carbs / serving": "About 3 g (flavor-dependent)",
+      "Third-party tested": "Check certifier databases",
+      "Best for": "Baking, thicker shakes"
+    }
+  },
+  {
+    "id": "naked-nutrition-naked-pea",
+    "name": "Naked Pea Protein",
+    "brand": "Naked Nutrition",
+    "badge": "Best Dairy-Free Low Carb",
+    "category": "Pea protein isolate (unflavored)",
+    "description": "Naked Pea is single-ingredient yellow pea protein with about 27 g of protein, roughly 120 calories and about 2 g of carbohydrate per two-scoop serving, per the label at the time of writing. With no sweetener, gum or fiber filler, its carb count is real rather than net, which makes it the most predictable dairy-free option for keto. It tastes earthy on its own and works best blended with low carb flavorings.",
+    "pros": [
+      "About 2 g carbohydrate per serving, per the label",
+      "Single ingredient; no sugar alcohols",
+      "Dairy-free and vegan"
+    ],
+    "cons": [
+      "Earthy taste unflavored; flavored versions carry more carbs",
+      "No sport certification we could confirm"
+    ],
+    "bottomLine": "The best low carb choice for dairy-free and vegan keto.",
+    "specs": {
+      "Protein / serving": "About 27 g (2 scoops)",
+      "Carbs / serving": "About 2 g (unflavored)",
+      "Third-party tested": "No sport certification confirmed",
+      "Best for": "Dairy-free keto"
+    }
+  }
+];
+
+const schema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Home",
+          item: `${SITE_URL}/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Best Lists",
+          item: `${SITE_URL}/best-of/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 3,
+          name: "Best Low Carb Protein Powder",
+          item: `${SITE_URL}/best-low-carb-protein-powder/`,
+        },
+      ],
+    },
+    {
+      "@type": "FAQPage",
+      mainEntity: [
+        {
+          "@type": "Question",
+          "name": "What is the best low carb protein powder?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "For the lowest numbers, Isopure Zero Carb, which lists about 0 g of carbohydrate and 25 g of protein per scoop. Dymatize ISO100 lists about 1 g in vanilla with a wider flavor range. If you avoid artificial sweeteners, Transparent Labs uses stevia, and for dairy-free low carb, unflavored Naked Pea lists about 2 g per serving."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the best keto protein powder?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Any protein powder with very little carbohydrate works on keto; it does not need keto branding. A whey isolate in water adds about 0 to 2 g of carbohydrate per shake, which fits easily inside a 20 to 50 g daily budget. Keto-branded collagen and MCT blends are usually lower in protein and higher in price."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is there a truly zero carb protein powder?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Some whey isolates list 0 g of carbohydrate per serving, including unflavored Isopure Zero Carb, per its label. Labels can round values under 0.5 g down to zero, so a zero carb powder may still contain a trace. That trace is irrelevant for nearly everyone, including people on strict ketogenic diets."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Will a protein shake kick me out of ketosis?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Unlikely, if the powder is low in carbohydrate and the serving is moderate. Gluconeogenesis is driven mainly by the body's need for glucose rather than protein supply, and studies suggest only a modest share of dietary protein ends up as blood glucose. Very large protein meals can lower ketone readings somewhat, so spread protein across the day."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is whey isolate lower in carbs than whey concentrate?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Isolate is filtered to at least 90 percent protein, removing most of the lactose that makes up whey's carbohydrate. A typical isolate lists 0 to 2 g of carbohydrate per scoop, while concentrates and blends commonly list about 3 to 5 g. Both fit a moderate low carb diet; isolate is easier on strict keto."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Do sugar alcohols count as carbs on keto?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Erythritol has very little effect on blood glucose and is usually subtracted when counting net carbs. Maltitol and sorbitol are partly digested and can raise blood glucose, so many dietitians suggest counting about half their grams. Large amounts of sugar alcohols can also cause bloating or diarrhea, so check how much a serving contains."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What should I mix low carb protein powder with?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Water, unsweetened almond milk, unsweetened coconut milk beverage or cold coffee keep a shake low in carbohydrate. A splash of heavy cream or a spoon of nut butter adds creaminess. Avoid cow's milk, oat milk and bananas if you are counting strictly, since each can add 12 g or more of carbohydrate."
+          }
+        }
+      ],
+    },
+    {
+      "@type": "Article",
+      headline: title,
+      author: authorSchema(),
+      datePublished: dates.published,
+      dateModified: dates.modified,
+      publisher: { "@type": "Organization", name: SITE_NAME, url: SITE_URL },
+    },
+    {
+      "@type": "ItemList",
+      name: title,
+      numberOfItems: PRODUCTS.length,
+      itemListElement: PRODUCTS.map((product, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name: product.name,
+        url: new URL(`#${product.id}`, Astro.url).toString(),
+      })),
+    },
+    ...PRODUCTS.map((product) => ({
+      "@type": "Product",
+      name: product.name,
+      description: product.description,
+      brand: {
+        "@type": "Brand",
+        name: product.brand ?? product.name.split(" ")[0],
+      },
+    })),
+  ],
+};
+---
+
+<Layout
+  title={title}
+  description={description}
+  ogType="article"
+  article={{
+    publishedTime: dates.published,
+    modifiedTime: dates.modified,
+    author: author.name,
+    section: "Protein Powder",
+    tags: [
+      "best low carb protein powder",
+      "keto protein powder",
+      "zero carb protein powder",
+      "low carb protein powder",
+      "best keto protein powder"
+    ],
+  }}
+  jsonLd={schema}
+>
+  <article class="relative overflow-hidden">
+    <!-- Hero Section -->
+    <div class="bg-gray-900 py-16 lg:py-24 relative overflow-hidden">
+      <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(circle at 20% 20%, #38BDF8 0, transparent 45%), radial-gradient(circle at 80% 60%, #FF4500 0, transparent 40%);"></div>
+      <div class="max-w-4xl mx-auto px-4 relative z-10 text-center">
+        <div class="flex justify-center mb-6">
+          <TrustBadge />
+        </div>
+        <div class="flex justify-center gap-3 mb-6">
+          <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#FF4500]/20 text-[#FF4500] text-xs font-black uppercase tracking-widest border border-[#FF4500]/30">
+            Buyer's Guide
+          </span>
+          <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-green-500/10 text-green-400 text-xs font-bold uppercase tracking-widest border border-green-500/20">
+            Updated October 2026
+          </span>
+        </div>
+        <h1 class="text-4xl lg:text-6xl font-black text-white leading-tight mb-8">
+          Best <span class="text-[#38BDF8]">Low Carb</span> Protein Powder
+        </h1>
+        <p class="text-xl text-gray-300 leading-relaxed mb-8 max-w-3xl mx-auto">
+          Six powders with 3 g of carbohydrate or less per scoop, per the label, and the label-reading skills that tell a genuinely low carb powder from one that only says keto on the front.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a
+            href="#isopure-zero-carb"
+            class="px-8 py-4 bg-[#FF4500] hover:bg-[#E63E00] text-white font-black rounded-xl shadow-lg transition-all no-underline"
+          >
+            See Our #1 Pick
+          </a>
+          <a
+            href="#isolate-vs-concentrate"
+            class="px-8 py-4 bg-white/10 hover:bg-white/20 text-white font-bold rounded-xl border border-white/10 no-underline"
+          >
+            Isolate vs Concentrate
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Author & Meta -->
+    <div class="max-w-3xl mx-auto px-4 pt-12">
+      <div class="flex items-center gap-6 border-b border-gray-100 pb-8">
+        <div class="flex items-center gap-3">
+          <AuthorAvatar size={48} />
+          <div>
+            <p class="text-sm font-bold text-gray-900">{author.name}</p>
+            <p class="text-xs text-gray-500 uppercase tracking-widest">{author.role}</p>
+          </div>
+        </div>
+        <div class="h-10 w-px bg-gray-200 hidden sm:block"></div>
+        <div class="hidden sm:block">
+          <p class="text-sm font-bold text-gray-900">Last Updated</p>
+          <p class="text-xs text-gray-500">{dates.display}</p>
+        </div>
+        <div class="hidden sm:block ml-auto">
+          <SocialProof />
+        </div>
+      </div>
+    </div>
+
+    <!-- Table of Contents -->
+    <div class="max-w-3xl mx-auto px-4 py-10">
+      <div class="bg-gray-50 border border-gray-200 rounded-2xl p-6 lg:p-8">
+        <h2 class="text-lg font-black text-gray-900 mb-4 flex items-center gap-2">
+          In This Guide
+        </h2>
+        <nav class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <a href="#what-counts" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">1. What Counts as Low Carb</a>
+          <a href="#how-we-picked" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">2. How We Picked</a>
+          <a href="#top-picks" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">3. Our Top Picks</a>
+          <a href="#isolate-vs-concentrate" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">4. Isolate vs Concentrate</a>
+          <a href="#sweeteners" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">5. Sweeteners and Sugar Alcohols</a>
+          <a href="#keto" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">6. Is Protein Powder Keto?</a>
+          <a href="#mixers" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">7. What You Mix It With</a>
+          <a href="#who-needs-it" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">8. Who Needs a Low Carb Powder</a>
+          <a href="#keto-branded" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">9. Keto-Branded Powders</a>
+          <a href="#mistakes" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">10. Common Mistakes</a>
+          <a href="#faq" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">11. FAQ</a>
+        </nav>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="max-w-3xl mx-auto px-4 pb-16 lg:pb-24">
+      <div class="prose prose-lg prose-blue max-w-none text-gray-700 leading-relaxed">
+        <p class="text-2xl font-medium text-gray-900 mb-8 italic">
+          Most good protein powders are already low in carbohydrate. The real differences are a few grams per scoop from lactose, flavorings and fillers, plus whatever you mix the powder into, which often matters more than the powder itself. Count carbs per serving, check how the sweetener is counted, and ignore the word keto on the front of the tub.
+        </p>
+
+        <QuickPicks products={PRODUCTS} />
+
+        <div id="what-counts" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            1. What Counts as Low Carb in a Protein Powder
+          </h2>
+
+          <p>
+            There is no legal definition of a low carb protein powder, so we use a practical one: 3 g of total carbohydrate or less per serving that delivers at least 20 g of protein. By that standard most whey isolates and many plant isolates qualify easily, while mass gainers, meal replacements and many blended or superfood-loaded powders do not. A gainer can carry 50 g or more of carbohydrate per serving, which is the opposite of what a low carb dieter wants.
+          </p>
+
+          <p>
+            The cleaner way to compare products is carbohydrate per 25 g of protein, because serving sizes vary widely. A scoop with 25 g of protein and 1 g of carbohydrate is a better low carb tool than one with 20 g of protein and 2 g of carbohydrate, even though both look tiny on paper. Dividing by protein also exposes powders that keep carbs low simply by using a small scoop.
+          </p>
+
+          <p>
+            Then there is the question of net carbs. Many brands advertise net carbs, usually meaning total carbohydrate minus fiber and sugar alcohols. That is a convention, not a regulated number: the FDA does not define net carbs, and brands do not all subtract the same things. A powder with 10 g of total carbohydrate, 5 g of fiber and 4 g of erythritol can advertise 1 g of net carbs. That may be a fair reading for erythritol, but it is not the same thing as a powder with 1 g of total carbohydrate.
+          </p>
+
+          <div class="overflow-hidden border border-gray-200 rounded-2xl my-8">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Powder type</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Typical carbs per serving</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Low carb fit</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Whey isolate</td>
+                    <td class="px-4 py-4 text-gray-700">0-2 g</td>
+                    <td class="px-4 py-4 text-gray-700">Excellent</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Whey concentrate or blend</td>
+                    <td class="px-4 py-4 text-gray-700">About 3-5 g</td>
+                    <td class="px-4 py-4 text-gray-700">Good, if counted</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Single-ingredient pea isolate</td>
+                    <td class="px-4 py-4 text-gray-700">About 1-2 g</td>
+                    <td class="px-4 py-4 text-gray-700">Excellent</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Sweetened plant blend</td>
+                    <td class="px-4 py-4 text-gray-700">5-15 g total, often fiber and erythritol</td>
+                    <td class="px-4 py-4 text-gray-700">Check net carb math</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Mass gainer</td>
+                    <td class="px-4 py-4 text-gray-700">50 g or more</td>
+                    <td class="px-4 py-4 text-gray-700">Poor</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <p>
+            Our advice is to track total carbohydrate unless you understand exactly what has been subtracted. On a strict ketogenic diet, where a whole day's budget may be 20 to 50 g, the difference between 1 g and 5 g per shake adds up if you drink two shakes a day.
+          </p>
+        </div>
+
+        <div id="how-we-picked" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            2. How We Picked: Carbs per 25 g of Protein
+          </h2>
+
+          <p>
+            We did not run lab tests, taste panels or a keto trial for this guide. The picks are based on label analysis, published third-party certifications and the research on carbohydrate restriction and protein, the same method described on our <a href="/how-we-test/">how we test page</a>. Where we mention taste or mixing, we are reporting what buyers widely say rather than claiming results of our own.
+          </p>
+
+          <p>
+            The main metric was total carbohydrate per serving relative to protein. Every pick lists 3 g or less per serving on the label, and the top picks list about 1 g or less for roughly 25 g of protein. We also looked at sugar specifically, because a gram of carbohydrate from lactose or added sugar behaves differently from a gram of fiber, and at how each brand counts its sweetener, since some low carb claims depend on subtracting sugar alcohols.
+          </p>
+
+          <p>
+            Beyond carbs, each product needed a fully disclosed formula without proprietary blends, a meaningful protein dose of 20 g or more, and a long track record with consistent buyer feedback on mixing and taste. We gave credit for independent certification such as Informed Choice, Informed Sport or NSF Certified for Sport, and for brands that publish their own third-party lab results. Every product also had to be currently sold on Amazon in the United States.
+          </p>
+
+          <p>
+            We deliberately did not reward keto-specific add-ins such as MCT oil powder, exogenous ketones or collagen blends marketed for ketosis. Those ingredients change the price more than the outcome, as we explain further down. If you are cutting calories as well as carbs, our <a href="/best-protein-powder-for-weight-loss/">best protein powder for weight loss</a> guide ranks powders by protein per calorie, and several of the same isolates appear on both lists.
+          </p>
+
+          <div class="bg-gray-900 text-white rounded-2xl p-6 lg:p-8 my-8">
+            <p class="text-xs font-black uppercase tracking-widest text-[#38BDF8] mb-4">By the Numbers</p>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+              <div>
+                <p class="text-3xl font-black text-white">0-1 g</p>
+                <p class="text-gray-400 text-xs mt-1">Carbs per scoop in the leanest isolates</p>
+              </div>
+              <div>
+                <p class="text-3xl font-black text-[#38BDF8]">90%+</p>
+                <p class="text-gray-400 text-xs mt-1">Protein content of whey isolate by weight</p>
+              </div>
+              <div>
+                <p class="text-3xl font-black text-white">20-50 g</p>
+                <p class="text-gray-400 text-xs mt-1">Typical daily carb range on a ketogenic diet</p>
+              </div>
+              <div>
+                <p class="text-3xl font-black text-[#38BDF8]">~0.2</p>
+                <p class="text-gray-400 text-xs mt-1">Calories per gram of erythritol</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Picks -->
+        <div id="top-picks" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            3. The Best Low Carb Protein Powders, Ranked
+          </h2>
+
+          <p>
+            Every pick below lists 3 g of total carbohydrate or less per serving on its label, and the top three list about 1 g or less. We covered the situations low carb eaters actually shop for: a true zero carb isolate, an isolate with a broad flavor range, an unflavored budget option, a stevia-sweetened isolate, a whey and casein blend for thicker shakes and baking, and a dairy-free pea protein. Nutrition figures come from the labels at the time of writing and vary by flavor, so check the panel on the tub you buy.
+          </p>
+
+          {PRODUCTS.map((product, index) => (
+            <div id={product.id} class="scroll-mt-24 mt-12 first:mt-8">
+              <div class="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                <div class="bg-gray-900 px-6 py-4 flex items-center justify-between">
+                  <div class="flex items-center gap-3">
+                    <span class="bg-[#FF4500] text-white w-8 h-8 rounded-full flex items-center justify-center text-sm font-black">
+                      {index + 1}
+                    </span>
+                    {productImages[product.id] && (
+                      <img
+                        src={productImages[product.id]}
+                        alt={product.name}
+                        loading="lazy"
+                        width="40"
+                        height="40"
+                        class="w-10 h-10 rounded-lg bg-white object-contain p-1 shrink-0"
+                      />
+                    )}
+                    <div>
+                      <p class="text-white font-black text-lg">{product.name}</p>
+                      <p class="text-gray-400 text-xs">{product.category}</p>
+                    </div>
+                  </div>
+                  <span class="bg-[#38BDF8]/20 text-[#38BDF8] px-3 py-1 rounded-full text-xs font-bold hidden sm:block">
+                    {product.badge}
+                  </span>
+                </div>
+                <div class="p-6">
+                  {product.rating && (
+                  <div class="flex items-center gap-2 mb-4">
+                    <div class="flex text-yellow-400">
+                      {[...Array(5)].map((_, i) => (
+                        <svg
+                          class={`w-4 h-4 ${i < Math.floor(product.rating) ? "fill-current" : "text-gray-200"}`}
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                        >
+                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        </svg>
+                      ))}
+                    </div>
+                    <span class="text-gray-500 text-sm font-bold">{product.rating}</span>
+                    {product.reviewCount && <span class="text-gray-400 text-xs">({product.reviewCount.toLocaleString()} retailer reviews)</span>}
+                  </div>
+                  )}
+
+                  <SpecGrid specs={product.specs} />
+
+                  <p class="text-gray-700 leading-relaxed mb-6">{product.description}</p>
+
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                    <div class="bg-green-50 rounded-xl p-4">
+                      <p class="text-xs font-black uppercase tracking-widest text-green-700 mb-3">Pros</p>
+                      <ul class="space-y-2">
+                        {product.pros.map((pro) => (
+                          <li class="flex items-start gap-2 text-sm text-green-800">
+                            <svg class="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            {pro}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div class="bg-red-50 rounded-xl p-4">
+                      <p class="text-xs font-black uppercase tracking-widest text-red-700 mb-3">Cons</p>
+                      <ul class="space-y-2">
+                        {product.cons.map((con) => (
+                          <li class="flex items-start gap-2 text-sm text-red-800">
+                            <svg class="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                            {con}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+
+                  <div class="bg-gray-50 rounded-xl p-4 border border-gray-100">
+                    <p class="text-xs font-black uppercase tracking-widest text-gray-500 mb-1">The Bottom Line</p>
+                    <p class="text-gray-900 font-bold">{product.bottomLine}</p>
+                  </div>
+
+                  <a
+                    href={amazonLink(product.amazonUrl, product.name, product.id)}
+                    target="_blank"
+                    rel="sponsored nofollow noopener"
+                    class="mt-6 block bg-[#FF4500] hover:bg-[#E63E00] text-white text-center py-4 rounded-xl font-black no-underline transition-colors uppercase tracking-widest text-sm"
+                  >
+                    Check Price &rarr;
+                  </a>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div id="isolate-vs-concentrate" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            4. Isolate vs Concentrate: Where the Carbs Come From
+          </h2>
+
+          <p>
+            In whey products, nearly all the carbohydrate is lactose, the natural sugar in milk. Whey protein concentrate is filtered less, so it keeps more lactose and fat along with the protein; concentrates sold in protein powders are commonly around 80 percent protein. Whey isolate is filtered further to at least 90 percent protein, which removes most of the lactose. That is why a typical concentrate or blended whey lists around 3 to 5 g of carbohydrate per scoop, while a good isolate lists 0 to 2 g.
+          </p>
+
+          <p>
+            For most people on a moderate low carb diet, the concentrate numbers are perfectly workable. A popular blend such as Optimum Nutrition Gold Standard lists about 3 to 4 g of carbohydrate per scoop, and if your daily budget is 100 g, that is a rounding error. The case for isolate becomes stronger on strict keto, if you drink more than one shake a day, or if lactose bothers you anyway. Our <a href="/whey-vs-whey-isolate/">whey vs whey isolate</a> explainer covers the full trade-off.
+          </p>
+
+          <p>
+            Flavoring adds a little more. Cocoa, peanut flour, cookie pieces and natural flavors all contribute carbohydrate, so the same brand can list 0 g in unflavored, 1 g in vanilla and 3 g or more in chocolate or dessert flavors. Isopure Zero Carb's unflavored version, for example, lists 0 g, while flavored versions of other isolates commonly list 1 to 3 g. If you are counting precisely, read the panel for your specific flavor rather than the brand's headline claim.
+          </p>
+
+          <p>
+            Plant proteins follow the same pattern. A single-ingredient pea isolate such as Naked Pea lists about 2 g of carbohydrate per serving, while sweetened plant blends that add fiber, chia, superfood powders or erythritol can list 10 to 20 g of total carbohydrate, with much of it subtracted in the net carb figure. If you need a dairy-free low carb powder, an unflavored pea isolate is the most predictable choice, and our <a href="/best-dairy-free-protein-powder/">best dairy-free protein powder</a> guide covers the alternatives.
+          </p>
+        </div>
+
+        <div id="sweeteners" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            5. Sweeteners and Sugar Alcohols: Reading Past the Front Label
+          </h2>
+
+          <p>
+            Nearly every flavored low carb powder uses a non-nutritive sweetener rather than sugar. The most common are sucralose and acesulfame potassium, found in many mainstream whey brands, and stevia or monk fruit extract, used by brands positioned as natural. All of these are used in tiny amounts and add essentially no carbohydrate, so from a carb-counting point of view they are equivalent. The choice comes down to taste, aftertaste and personal preference.
+          </p>
+
+          <p>
+            Sugar alcohols are where label math gets slippery. Erythritol is the most common in protein powder; it provides roughly 0.2 calories per gram and is mostly absorbed and excreted unchanged, so it has very little effect on blood glucose, which is why brands subtract it from net carbs. Other sugar alcohols such as maltitol and sorbitol are partly digested and can raise blood glucose, and many diabetes educators suggest counting about half their grams. Large amounts of most sugar alcohols can cause bloating or diarrhea.
+          </p>
+
+          <p>
+            Erythritol has also drawn research attention for a different reason. A 2023 study in Nature Medicine by Witkowski and colleagues found that higher blood erythritol levels were associated with a greater risk of heart attack and stroke in people already at elevated cardiovascular risk, and a small experiment found that a large dose of erythritol raised blood levels and increased platelet reactivity. The association study cannot prove cause, and more research is needed, but people with heart disease may reasonably prefer powders without it.
+          </p>
+
+          <div class="bg-gray-900 text-white rounded-2xl p-6 lg:p-8 my-8">
+            <p class="text-xs font-black uppercase tracking-widest text-[#38BDF8] mb-3">THE RULE</p>
+            <p class="text-xl font-bold text-white mb-3">Check total carbs before net carbs.</p>
+            <p class="text-gray-300 leading-relaxed m-0">If total carbohydrate is already 3 g or less, how the brand counts its sweetener barely matters. If total carbohydrate is high and net carbs are low, find out what was subtracted, and count maltitol or sorbitol as at least half.</p>
+          </div>
+
+          <p>
+            A final detail: added sugar should be at or near zero in any low carb powder. A gram of sugar from residual lactose is normal; several grams of added cane sugar, honey or maltodextrin in a product marketed as low carb is a red flag. Some flavor systems list maltodextrin as a carrier in small amounts, and it counts fully toward carbohydrate.
+          </p>
+        </div>
+
+        <div id="keto" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            6. Is Protein Powder Keto? Protein, Ketosis and Gluconeogenesis
+          </h2>
+
+          <p>
+            A low carb powder fits a ketogenic diet easily as long as total carbohydrate stays inside your daily budget. The more common worry is protein itself: some keto guides warn that too much protein will be converted to glucose through gluconeogenesis and knock you out of ketosis. The evidence suggests this fear is overstated for most people. Gluconeogenesis is driven mainly by the body's need for glucose rather than by how much protein is available, and studies tracing labeled dietary protein in healthy adults have found that only a modest share appears as blood glucose.
+          </p>
+
+          <p>
+            That does not mean protein has no effect. Protein, and whey in particular, stimulates some insulin release, and a very large protein intake can reduce ketone levels somewhat. In practice, a classic therapeutic ketogenic diet used for epilepsy keeps protein deliberately low, while the looser low carb diets most adults follow for weight management allow moderate to generous protein without trouble. A 25 g shake is unlikely to change your ketone readings meaningfully.
+          </p>
+
+          <p>
+            If you are eating keto for fat loss or muscle retention, protein is your ally. Higher protein intakes help preserve lean mass in a calorie deficit and improve satiety, which are two of the main reasons low carb diets work for many people. Our <a href="/how-much-protein-do-i-need/">guide to daily protein needs</a> covers targets by goal; many active adults do well at roughly 1.4 to 2.0 g per kilogram of body weight per day.
+          </p>
+
+          <p>
+            If you track ketones with a blood or breath meter and notice that large protein-heavy meals lower your readings, the simplest response is to split protein across more meals rather than to cut it. One shake of 25 to 30 g between meals is a very different load from 80 g of protein at a single dinner.
+          </p>
+        </div>
+
+        <div id="mixers" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            7. What You Mix It With Matters More Than the Powder
+          </h2>
+
+          <p>
+            The carbohydrate difference between two good isolates is a gram or two. The difference between mixing either one with water and mixing it with a cup of milk is about 12 g, because a cup of cow's milk carries roughly that much lactose. Add a banana and you add roughly 25 to 30 g more. Many low carb dieters choose a zero carb powder and then quietly undo the effort in the shaker or blender.
+          </p>
+
+          <p>
+            The lowest carb liquids are water, unsweetened almond milk, unsweetened coconut milk beverage and unsweetened cashew milk, which typically carry only about 1 to 2 g of carbohydrate per cup, depending on the brand. Unsweetened soy milk usually lands a little higher but adds protein. Oat milk and rice milk are among the highest carb plant milks, often 15 g or more per cup, so they do not belong in a keto shake. Ultra-filtered dairy milks, which remove much of the lactose, are a middle ground for people who want dairy.
+          </p>
+
+          <p>
+            For a creamier shake without carbs, a spoon of heavy cream, full-fat coconut milk or nut butter adds fat and body, along with calories that matter if you are also cutting. For flavor, cocoa powder, cinnamon, vanilla extract, instant coffee and a pinch of salt add very little carbohydrate. Berries are the lowest carb fruit option, with a small handful of raspberries or blackberries adding only a few grams net.
+          </p>
+
+          <p>
+            Coffee is another easy carrier, provided the powder is mixed in properly, and our guide to the <a href="/best-protein-powder-for-coffee/">best protein powder for coffee</a> covers which powders dissolve without clumping. Several of the isolates on this list double as coffee boosters, which makes them useful for low carb dieters who skip breakfast but still want protein in the morning.
+          </p>
+        </div>
+
+        <div id="who-needs-it" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            8. Who Actually Needs a Low Carb Powder
+          </h2>
+
+          <p>
+            If you follow a strict ketogenic diet, count carbohydrates for blood glucose management, or simply prefer the lowest numbers possible, a powder that lists 0 to 1 g per scoop is the obvious choice. On a moderate low carb diet of 75 to 150 g a day, almost any whey or plant isolate works, and you can choose on taste, price and certification rather than shaving the last gram.
+          </p>
+
+          <p>
+            People managing diabetes often look for low carb protein to help steady blood glucose, and a lean isolate in water is one of the most predictable foods you can add. Protein does raise insulin to a degree, and responses vary, so it is worth checking your own glucose readings after a shake. Our guide to the <a href="/best-protein-powder-for-diabetics/">best protein powder for diabetics</a> covers this in more depth.
+          </p>
+
+          <p>
+            Some situations need medical input before you change your diet. People taking insulin or sulfonylureas can experience low blood sugar if they cut carbohydrates sharply without adjusting their medication, and SGLT2 inhibitor drugs carry a warning about ketoacidosis that a very low carb diet can make more likely. People with kidney disease may need to limit protein. If any of these apply, or you are pregnant, talk to your doctor or a registered dietitian before starting a ketogenic diet or adding regular shakes. This guide is not medical advice.
+          </p>
+
+          <p>
+            Athletes doing a lot of high-intensity training are a different case again. Carbohydrate fuels hard efforts, and many endurance and team-sport athletes perform better with more of it, not less. For them, a low carb protein powder is still useful as a way to add protein without displacing carbohydrate they would rather get from food, but a strict keto approach deserves careful thought.
+          </p>
+        </div>
+
+        <div id="keto-branded" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            9. Keto-Branded Powders: MCT, Collagen and What You Pay For
+          </h2>
+
+          <p>
+            A separate category of powders is marketed specifically for keto, often built on collagen peptides with MCT oil powder, sometimes with added exogenous ketones. They are usually low in carbohydrate, but they are rarely the best value or the best protein. Many deliver only 10 to 15 g of protein per serving, and a large share of their calories comes from added fat rather than protein.
+          </p>
+
+          <p>
+            Collagen is the main issue. It contains no tryptophan, an essential amino acid, and relatively little leucine, so it is an incomplete protein and does not support muscle protein synthesis the way whey, egg or a well-dosed plant blend does. Collagen has its uses, which we cover in our guide to the <a href="/best-collagen-protein-powder/">best collagen protein powder</a>, but it should not be your main protein supplement on a diet where protein is doing heavy lifting.
+          </p>
+
+          <p>
+            MCT oil powder adds fat that the body converts to ketones relatively readily, and some people like it for energy on a ketogenic diet. You can buy it separately for far less than the premium charged for blending it into protein, and add exactly as much as you want. Many MCT powders also use a starch-based carrier, which adds a small amount of carbohydrate. Exogenous ketone salts raise blood ketone readings temporarily, but raising a number on a meter is not the same as burning more body fat.
+          </p>
+
+          <p>
+            Our advice is simple: buy a high-quality, low carb protein powder for protein, and add fat from food if your diet calls for it. A plain isolate plus a spoon of cream or nut butter usually beats a keto-branded blend on protein quality, price and flexibility. If none of our picks suits you, the same test works on any tub: total carbohydrate per 25 g of protein, sugar near zero, and a sweetener you are comfortable with.
+          </p>
+        </div>
+
+        <!-- Common Mistakes -->
+        <div id="mistakes" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            10. Common Mistakes to Avoid
+          </h2>
+
+          <div class="space-y-6 my-8">
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Trusting net carbs without checking total</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Net carbs is a marketing convention, not a regulated figure. A powder can list 15 g of total carbohydrate and still advertise 2 g net after subtracting fiber and sugar alcohols. Read the total carbohydrate line first, find out what was subtracted, and count maltitol or sorbitol as at least half.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Adding the carbs back in the shaker</h3>
+              <p class="text-gray-700 text-sm m-0">
+                A zero carb isolate mixed with a cup of milk and a banana becomes a shake with about 40 g of carbohydrate. Use water, unsweetened almond or coconut milk, or a splash of cream, and choose berries or cocoa for flavor if you want to keep the whole drink low carb.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Paying extra for keto branding</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Keto-labeled powders built on collagen and MCT oil often deliver less protein, of lower quality, for more money. Collagen is an incomplete protein. A plain whey or pea isolate plus fat from food is usually the better and cheaper way to fit protein into a ketogenic diet.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Cutting protein out of fear of ketosis</h3>
+              <p class="text-gray-700 text-sm m-0">
+                The idea that a protein shake will knock you out of ketosis is overstated for most people, because gluconeogenesis is driven mainly by demand. Adequate protein protects muscle and helps control hunger on a low carb diet. Spread it across meals instead of slashing it.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Starting keto on diabetes medication without advice</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Cutting carbohydrates sharply while taking insulin, sulfonylureas or SGLT2 inhibitors can cause low blood sugar or raise the risk of ketoacidosis. Medication often needs adjusting. Talk to your doctor or a registered dietitian before starting a very low carb diet if you take any glucose-lowering drug.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ -->
+        <div id="faq" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            11. Frequently Asked Questions
+          </h2>
+
+          <div class="space-y-6">
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">What is the best low carb protein powder?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                For the lowest numbers, Isopure Zero Carb, which lists about 0 g of carbohydrate and 25 g of protein per scoop. Dymatize ISO100 lists about 1 g in vanilla with a wider flavor range. If you avoid artificial sweeteners, Transparent Labs uses stevia, and for dairy-free low carb, unflavored Naked Pea lists about 2 g per serving.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">What is the best keto protein powder?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Any protein powder with very little carbohydrate works on keto; it does not need keto branding. A whey isolate in water adds about 0 to 2 g of carbohydrate per shake, which fits easily inside a 20 to 50 g daily budget. Keto-branded collagen and MCT blends are usually lower in protein and higher in price.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is there a truly zero carb protein powder?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Some whey isolates list 0 g of carbohydrate per serving, including unflavored Isopure Zero Carb, per its label. Labels can round values under 0.5 g down to zero, so a zero carb powder may still contain a trace. That trace is irrelevant for nearly everyone, including people on strict ketogenic diets.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Will a protein shake kick me out of ketosis?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Unlikely, if the powder is low in carbohydrate and the serving is moderate. Gluconeogenesis is driven mainly by the body's need for glucose rather than protein supply, and studies suggest only a modest share of dietary protein ends up as blood glucose. Very large protein meals can lower ketone readings somewhat, so spread protein across the day.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is whey isolate lower in carbs than whey concentrate?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Yes. Isolate is filtered to at least 90 percent protein, removing most of the lactose that makes up whey's carbohydrate. A typical isolate lists 0 to 2 g of carbohydrate per scoop, while concentrates and blends commonly list about 3 to 5 g. Both fit a moderate low carb diet; isolate is easier on strict keto.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Do sugar alcohols count as carbs on keto?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Erythritol has very little effect on blood glucose and is usually subtracted when counting net carbs. Maltitol and sorbitol are partly digested and can raise blood glucose, so many dietitians suggest counting about half their grams. Large amounts of sugar alcohols can also cause bloating or diarrhea, so check how much a serving contains.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">What should I mix low carb protein powder with?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Water, unsweetened almond milk, unsweetened coconut milk beverage or cold coffee keep a shake low in carbohydrate. A splash of heavy cream or a spoon of nut butter adds creaminess. Avoid cow's milk, oat milk and bananas if you are counting strictly, since each can add 12 g or more of carbohydrate.
+              </p>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Related Guides -->
+        <div class="mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">Related Protein Powder Guides</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <a href="/best-whey-protein-isolate/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#FF4500] font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Whey Protein Isolate</h3>
+              <p class="text-gray-500 text-sm mt-2">The isolates that earn their premium, ranked on value and testing.</p>
+            </a>
+            <a href="/best-protein-powder-for-diabetics/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#10B981] font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Protein Powder for Diabetics</h3>
+              <p class="text-gray-500 text-sm mt-2">Low-sugar picks and what to watch when managing blood glucose.</p>
+            </a>
+            <a href="/best-protein-powder-for-weight-loss/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#38BDF8] font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Protein Powder for Weight Loss</h3>
+              <p class="text-gray-500 text-sm mt-2">Powders ranked by the most protein per calorie.</p>
+            </a>
+          </div>
+        </div>
+
+        <!-- Closing -->
+        <div class="mt-16 bg-gray-900 text-white rounded-2xl p-8">
+          <h2 class="text-2xl font-black text-white mb-4">The Bottom Line</h2>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            Most good protein powders are already low in carbohydrate, so the job is mostly avoiding the ones that are not and reading the label honestly. Isopure Zero Carb is the pick when you want carbohydrate as close to zero as possible, ISO100 when you want flavor variety at about 1 g a scoop, NOW Sports when you want no sweetener at all, and Naked Pea when you need a dairy-free option.
+          </p>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            Count total carbohydrate before net carbs, watch what goes in the shaker, and skip keto branding that charges more for less protein. If you take medication for diabetes or have kidney disease, check with your doctor or a registered dietitian before you change your diet.
+          </p>
+        </div>
+
+        <MoreInCategory category="Protein Powder" links={moreInCategory} />
+
+        <AuthorBio />
+      </div>
+    </div>
+  </article>
+</Layout>
