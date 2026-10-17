@@ -12,10 +12,13 @@ const byFile = {};
 for (const file of files) {
   if (SKIP_FILES.has(file)) continue;
   const src = readFileSync(join(PAGES_DIR, file), "utf-8");
-  if (!src.includes("const PRODUCTS = [")) continue;
+  // Matches both `const PRODUCTS = [` and the typed `const PRODUCTS: {...}[] = [`
+  // that scaffold-roundup.mjs emits.
+  const decl = src.match(/const PRODUCTS(?::[\s\S]*?\}\[\])? = \[/);
+  if (!decl) continue;
 
   // Only look inside the PRODUCTS array block, not later id="..." usages elsewhere in the page
-  const arrStart = src.indexOf("const PRODUCTS = [");
+  const arrStart = decl.index;
   const arrEnd = src.indexOf("\n];", arrStart);
   const block = src.slice(arrStart, arrEnd === -1 ? undefined : arrEnd);
 
