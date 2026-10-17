@@ -34,9 +34,15 @@ const KEEP = new Set([
   'rust-oleum-triple-thick',     // Varathane is a Rust-Oleum brand
   'gutter-brush-basic',
   'levoit-core-300s',
+  'ritual-essential-protein-18',     // Ritual's own listing; the 18+ is its only non-postpartum shake
+  'plant-momentous-essential',       // Amazon lists Essential Plant-Based as "Vegan Protein Powder"
 ]);
 
-const quarantine = {};
+// Entries added by hand (reason "manual") are a person's call, not the report's,
+// so a rebuild keeps them.
+const quarantinePath = join(root, 'src', 'data', 'asin-quarantine.json');
+const existing = JSON.parse(readFileSync(quarantinePath, 'utf8'));
+const quarantine = Object.fromEntries(Object.entries(existing).filter(([, q]) => q.reason === 'manual'));
 for (const r of report) {
   if (KEEP.has(r.id)) continue;
   if (r.status === 'unresolved') {
@@ -52,7 +58,7 @@ for (const r of report) {
   }
 }
 
-writeFileSync(join(root, 'src', 'data', 'asin-quarantine.json'), JSON.stringify(quarantine, null, 2) + '\n');
+writeFileSync(quarantinePath, JSON.stringify(quarantine, null, 2) + '\n');
 const dead = Object.values(quarantine).filter((q) => q.reason === 'dead').length;
 const mismatch = Object.values(quarantine).filter((q) => q.reason === 'mismatch').length;
 console.log(`Quarantined ${Object.keys(quarantine).length} ASINs (${dead} dead, ${mismatch} mismatched).`);

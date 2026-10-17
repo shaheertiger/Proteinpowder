@@ -26,13 +26,17 @@ const missing = ids.filter((id) => !(asins[id] && images[id]));
 const envFile = existsSync(join(root, '.env')) ? readFileSync(join(root, '.env'), 'utf8') : '';
 const has = (name) => Boolean(process.env[name]) || new RegExp(`^${name}=.+`, 'm').test(envFile);
 const canFetch = has('AMAZON_CREATORS_CLIENT_ID') && has('AMAZON_CREATORS_CLIENT_SECRET');
+// A value pasted with its template brackets (<amzn1...>) is "present" but Amazon rejects it.
+const value = (name) => (process.env[name] || envFile.match(new RegExp(`^${name}=(.*)$`, 'm'))?.[1] || '').trim();
+const bracketed = ['AMAZON_CREATORS_CLIENT_ID', 'AMAZON_CREATORS_CLIENT_SECRET'].filter((n) => /^<.*>$/.test(value(n)));
 
 const status = {
   products: ids.length,
   linked: linked.length,
   missing: missing.length,
   coverage: Number(((linked.length / Math.max(ids.length, 1)) * 100).toFixed(1)),
-  canFetch,
+  canFetch: canFetch && bracketed.length === 0,
+  credentialProblem: bracketed.length ? `wrapped in <angle brackets>: ${bracketed.join(', ')}` : null,
   missingIds: missing.slice(0, 50),
 };
 
@@ -41,7 +45,10 @@ if (process.argv.includes('--json')) {
 } else {
   console.log(`Affiliate links: ${status.linked}/${status.products} direct product links (${status.coverage}%)`);
   console.log(`Missing: ${status.missing} products fall back to a tagged Amazon search`);
-  console.log(canFetch
+  if (bracketed.length) {
+    console.log(`\n${bracketed.join(' and ')} ${bracketed.length > 1 ? 'are' : 'is'} wrapped in <angle brackets>.`
+      + `\nAmazon rejects the value as written (HTTP 401). Remove the brackets, then fetch.`);
+  } else console.log(canFetch
     ? `\nCredentials present — run "npm run images:fetch:all" to fetch the missing ones.`
     : `\nNo Amazon Creators credentials in this environment, so the fetch cannot run.`
       + `\nSet AMAZON_CREATORS_CLIENT_ID and AMAZON_CREATORS_CLIENT_SECRET as environment`

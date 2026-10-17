@@ -35,7 +35,9 @@ function coverage(name, title) {
   return hit / a.size;
 }
 
-const accepted = report.filter((r) => r.status === 'accepted');
+// A product listed on several pages appears once per page; review it once.
+const seen = new Set();
+const accepted = report.filter((r) => r.status === 'accepted' && !seen.has(r.id) && seen.add(r.id));
 const scored = accepted
   .map((r) => ({ ...r, score: coverage(r.name, r.matchedTitle) }))
   .sort((x, y) => x.score - y.score);
@@ -56,8 +58,9 @@ for (const r of suspect) {
 }
 
 if (suspect.length) {
-  console.log('To drop a bad one, delete its id from src/data/product-asins.json');
-  console.log('and src/data/product-images.json, then re-run this check.\n');
+  console.log('To reject a bad one, add its id to src/data/asin-quarantine.json with');
+  console.log('reason "manual" and remove it from src/data/product-images.json. Deleting');
+  console.log('its ASIN instead would let the next fetch match it again.\n');
 } else {
   console.log('Nothing below the threshold. Run with a higher one to widen the net,');
   console.log('e.g. `node scripts/review-matches.mjs 0.7`\n');
