@@ -1,0 +1,955 @@
+---
+import Layout from "../layouts/Layout.astro";
+import MoreInCategory from "../components/MoreInCategory.astro";
+import { AUTHORS, DEFAULT_AUTHOR, authorSchema } from "../data/authors";
+import { SITE_NAME, SITE_URL } from "../data/site";
+import AuthorAvatar from "../components/AuthorAvatar.astro";
+import QuickPicks from "../components/QuickPicks.astro";
+import AuthorBio from "../components/AuthorBio.astro";
+import { amazonLink } from "../data/affiliate";
+import TrustBadge from "../components/TrustBadge.astro";
+import SocialProof from "../components/SocialProof.astro";
+import SpecGrid from "../components/SpecGrid.astro";
+import productImages from "../data/product-images.json";
+import { pageDates } from "../data/dates";
+
+const moreInCategory = [
+  {
+    "title": "Best Protein Powder for Smoothies",
+    "url": "/best-protein-powder-for-smoothies/"
+  },
+  {
+    "title": "Protein Calculator",
+    "url": "/protein-calculator/"
+  },
+  {
+    "title": "How Much Protein Do I Need?",
+    "url": "/how-much-protein-do-i-need/"
+  }
+];
+const author = AUTHORS[DEFAULT_AUTHOR];
+const dates = pageDates(Astro.url.pathname, { published: "2026-10-17", modified: "2026-10-17" });
+const title = "Best Protein Powder for Weight Gain: Mass Gainers vs DIY Shakes";
+const description =
+  "The best protein powders for weight gain, from mass gainers to plain whey for homemade shakes, compared on calories, sugar load, digestion and cost per 1,000 kcal.";
+
+const PRODUCTS: {
+  id: string;
+  name: string;
+  brand?: string;
+  badge: string;
+  category: string;
+  description: string;
+  pros: string[];
+  cons: string[];
+  bottomLine: string;
+  specs?: Record<string, string>;
+  rating?: number;
+  reviewCount?: number;
+  amazonUrl?: string;
+}[] = [
+  {
+    "id": "optimum-nutrition-gold-standard-100-whey",
+    "name": "Optimum Nutrition Gold Standard 100% Whey",
+    "brand": "Optimum Nutrition",
+    "badge": "Best Base for DIY Gainer Shakes",
+    "category": "Whey blend (isolate + concentrate)",
+    "description": "For most people, the best weight gain protein powder is a good regular whey blended with cheap, calorie-dense food. Gold Standard gives about 24 g of protein per scoop for roughly 120 calories, comes in flavors buyers widely rate as pairing well with milk, oats and peanut butter, and costs far less per 25 g of protein than most premium powders. It is promoted as Informed Choice certified; confirm your flavor in the certifier's database.",
+    "pros": [
+      "About 24 g protein per scoop, per the label",
+      "Flavors widely reported to blend well into milk-based shakes",
+      "Promoted as Informed Choice certified"
+    ],
+    "cons": [
+      "Only about 120 calories per scoop on its own",
+      "Requires food and a blender to work as a gainer"
+    ],
+    "bottomLine": "The cheapest, most flexible route to a high-calorie shake if you have a blender.",
+    "specs": {
+      "Protein / serving": "About 24 g",
+      "Calories / serving": "About 120 (before add-ins)",
+      "Main carb source": "Minimal; add oats, fruit, milk",
+      "Best for": "Homemade gainer shakes"
+    }
+  },
+  {
+    "id": "optimum-nutrition-serious-mass",
+    "name": "Optimum Nutrition Serious Mass",
+    "brand": "Optimum Nutrition",
+    "badge": "Best Mass Gainer",
+    "category": "High-calorie mass gainer",
+    "description": "Serious Mass is one of the longest-selling mass gainers on the market, delivering about 1,250 calories and 50 g of protein in a full serving when mixed with water, per the label. Most of those calories come from maltodextrin, so it is a blunt tool, but for people who need a lot of calories with no cooking, it does exactly what it promises. Buyers frequently recommend starting with a half serving.",
+    "pros": [
+      "About 1,250 calories and 50 g protein per full serving, per the label",
+      "Long track record and wide flavor availability",
+      "Low cost per 1,000 calories among supplements"
+    ],
+    "cons": [
+      "Very high in fast-digesting carbohydrate",
+      "Full servings are large and hard on many stomachs"
+    ],
+    "bottomLine": "The classic gainer for people who need maximum calories with minimum effort.",
+    "specs": {
+      "Protein / serving": "About 50 g",
+      "Calories / serving": "About 1,250 (mixed with water)",
+      "Main carb source": "Maltodextrin",
+      "Best for": "Maximum calories, no cooking"
+    }
+  },
+  {
+    "id": "dymatize-super-mass-gainer",
+    "name": "Dymatize Super Mass Gainer",
+    "brand": "Dymatize",
+    "badge": "Best Alternative Gainer",
+    "category": "High-calorie mass gainer",
+    "description": "Super Mass Gainer sits in the same class as Serious Mass, with roughly 1,200 to 1,300 calories and about 50 g of protein per full serving, per the label. Buyers often describe its flavors as dessert-like and its texture as smoother than many rivals. It is a good choice if you have tried another big gainer and want a different taste or mixability.",
+    "pros": [
+      "Roughly 1,200-1,300 calories and about 50 g protein per serving, per the label",
+      "Flavors buyers often rate highly",
+      "Widely available from a long-established brand"
+    ],
+    "cons": [
+      "Heavy carbohydrate load, mostly maltodextrin",
+      "Flavored versions add sweeteners; check the sugar line"
+    ],
+    "bottomLine": "A strong full-calorie gainer for anyone who prefers its taste.",
+    "specs": {
+      "Protein / serving": "About 50 g",
+      "Calories / serving": "About 1,200-1,300",
+      "Main carb source": "Maltodextrin",
+      "Best for": "Flavor variety in a big gainer"
+    }
+  },
+  {
+    "id": "naked-nutrition-naked-mass",
+    "name": "Naked Mass Weight Gainer",
+    "brand": "Naked Nutrition",
+    "badge": "Best Simple-Ingredient Gainer",
+    "category": "High-calorie mass gainer",
+    "description": "Naked Mass strips the gainer formula down to a few ingredients, pairing dairy protein with tapioca maltodextrin, and the unflavored version has no added sweeteners or flavors. A full serving delivers about 1,250 calories and 50 g of protein, per the label. It suits people who want gainer calories but dislike long ingredient lists, and the unflavored version blends easily with fruit or peanut butter.",
+    "pros": [
+      "About 1,250 calories and 50 g protein per serving, per the label",
+      "Short ingredient list; unflavored version has no sweeteners",
+      "Mixes into homemade shakes for flavor control"
+    ],
+    "cons": [
+      "Unflavored version tastes plain on its own",
+      "Large servings still challenge sensitive stomachs"
+    ],
+    "bottomLine": "The gainer for label readers who want calories without additives.",
+    "specs": {
+      "Protein / serving": "About 50 g",
+      "Calories / serving": "About 1,250",
+      "Main carb source": "Tapioca maltodextrin",
+      "Best for": "Minimal-ingredient gaining"
+    }
+  },
+  {
+    "id": "optimum-nutrition-pro-gainer",
+    "name": "Optimum Nutrition Pro Gainer",
+    "brand": "Optimum Nutrition",
+    "badge": "Best Moderate-Calorie Gainer",
+    "category": "Moderate-calorie, high-protein gainer",
+    "description": "Pro Gainer sits between a protein powder and a full mass gainer, with roughly 650 calories and about 60 g of protein per serving, per the label. That higher protein share and lower carbohydrate load make it easier to fit into a lean bulk, and many buyers find it easier to digest than the 1,250-calorie gainers.",
+    "pros": [
+      "About 60 g protein and roughly 650 calories per serving, per the label",
+      "Higher protein share than big gainers",
+      "Smaller serving size is easier on the stomach"
+    ],
+    "cons": [
+      "Higher cost per 1,000 calories than big gainers",
+      "May not add enough calories for very hard gainers"
+    ],
+    "bottomLine": "The right choice if you want a modest surplus and more protein per calorie.",
+    "specs": {
+      "Protein / serving": "About 60 g",
+      "Calories / serving": "About 650",
+      "Main carb source": "Maltodextrin and other carbs",
+      "Best for": "Lean bulking"
+    }
+  },
+  {
+    "id": "naked-nutrition-naked-whey",
+    "name": "Naked Nutrition Naked Whey (Unflavored)",
+    "brand": "Naked Nutrition",
+    "badge": "Best Unflavored DIY Base",
+    "category": "Grass-fed whey concentrate",
+    "description": "Naked Whey is a single-ingredient whey concentrate that provides about 25 g of protein per serving, per the label. Because it is unflavored and unsweetened, it disappears into milk, oats, peanut butter and fruit, letting you control the taste and sugar content of homemade gainer shakes. It suits people who want real-food calories with a clean protein base.",
+    "pros": [
+      "About 25 g protein per serving, per the label",
+      "Single ingredient, no sweeteners or flavors",
+      "Blends easily into calorie-dense smoothies"
+    ],
+    "cons": [
+      "Plain taste on its own",
+      "Concentrate contains more lactose than an isolate"
+    ],
+    "bottomLine": "The best blank-canvas protein for building your own gainer.",
+    "specs": {
+      "Protein / serving": "About 25 g",
+      "Calories / serving": "About 120 (before add-ins)",
+      "Main carb source": "Minimal; add your own",
+      "Best for": "Unflavored homemade shakes"
+    }
+  }
+];
+
+const schema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Home",
+          item: `${SITE_URL}/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Best Lists",
+          item: `${SITE_URL}/best-of/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 3,
+          name: "Best Protein Powder for Weight Gain",
+          item: `${SITE_URL}/best-protein-powder-for-weight-gain/`,
+        },
+      ],
+    },
+    {
+      "@type": "FAQPage",
+      mainEntity: [
+        {
+          "@type": "Question",
+          "name": "What is the best protein powder for weight gain?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "For most people with a blender, a regular whey such as Optimum Nutrition Gold Standard mixed with milk, oats and peanut butter. For maximum calories with no cooking, a mass gainer such as Optimum Nutrition Serious Mass or Dymatize Super Mass Gainer. For a leaner approach, Optimum Nutrition Pro Gainer offers more protein and fewer carbohydrate calories."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is a mass gainer better than whey protein for gaining weight?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "A mass gainer adds far more calories per serving, often 1,000 or more versus about 120 for whey. Whey plus whole food can match those calories more cheaply and with better nutrition. Gainers win on convenience; homemade shakes usually win on cost, digestion and nutrient quality. Both work if you stay in a calorie surplus."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How many calories do I need to gain weight?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It depends on your size and activity. A practical approach is to track your current intake for a week, then add roughly 250 to 500 calories a day and watch your weekly average weight. If it does not rise after two weeks, add another 200 to 300 calories. Adjust as you gain, because maintenance needs increase."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can protein powder alone make you gain weight?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Rarely. A scoop of whey is about 120 calories, so it adds weight only if it puts you into a sustained calorie surplus. Most people need several hundred extra calories a day, which usually means combining protein powder with calorie-dense foods or using a mass gainer that includes substantial carbohydrate and fat."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Are mass gainers bad for you?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Not for healthy, active people using them as part of a balanced diet. The concerns are the large dose of fast-digesting carbohydrate, digestive discomfort at full serving, and displacing nutritious food. People with diabetes, prediabetes, kidney disease or other conditions should talk to a doctor or registered dietitian before using one."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "When should I drink a weight gain shake?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Whenever it fits your day and does not ruin your appetite for meals. Many people drink one between meals or after training, and some split a large serving into morning and afternoon portions. Timing matters far less than total daily calories and protein. Avoid drinking a full gainer right before a meal you need to eat."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Do mass gainers cause acne or bloating?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Bloating is common at full serving, especially in the first week, and usually eases by starting small and splitting servings. Evidence linking dairy and high-glycemic diets to acne is mixed but suggests some people are sensitive. If either problem persists, try a homemade shake with slower carbohydrates or a whey isolate base."
+          }
+        }
+      ],
+    },
+    {
+      "@type": "Article",
+      headline: title,
+      author: authorSchema(),
+      datePublished: dates.published,
+      dateModified: dates.modified,
+      publisher: { "@type": "Organization", name: SITE_NAME, url: SITE_URL },
+    },
+    {
+      "@type": "ItemList",
+      name: title,
+      numberOfItems: PRODUCTS.length,
+      itemListElement: PRODUCTS.map((product, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name: product.name,
+        url: new URL(`#${product.id}`, Astro.url).toString(),
+      })),
+    },
+    ...PRODUCTS.map((product) => ({
+      "@type": "Product",
+      name: product.name,
+      description: product.description,
+      brand: {
+        "@type": "Brand",
+        name: product.brand ?? product.name.split(" ")[0],
+      },
+    })),
+  ],
+};
+---
+
+<Layout
+  title={title}
+  description={description}
+  ogType="article"
+  article={{
+    publishedTime: dates.published,
+    modifiedTime: dates.modified,
+    author: author.name,
+    section: "Protein Powder",
+    tags: [
+      "best protein powder for weight gain",
+      "weight gain protein powder",
+      "protein powders to gain weight",
+      "mass gainer"
+    ],
+  }}
+  jsonLd={schema}
+>
+  <article class="relative overflow-hidden">
+    <!-- Hero Section -->
+    <div class="bg-gray-900 py-16 lg:py-24 relative overflow-hidden">
+      <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(circle at 20% 20%, #38BDF8 0, transparent 45%), radial-gradient(circle at 80% 60%, #FF4500 0, transparent 40%);"></div>
+      <div class="max-w-4xl mx-auto px-4 relative z-10 text-center">
+        <div class="flex justify-center mb-6">
+          <TrustBadge />
+        </div>
+        <div class="flex justify-center gap-3 mb-6">
+          <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#FF4500]/20 text-[#FF4500] text-xs font-black uppercase tracking-widest border border-[#FF4500]/30">
+            Buyer's Guide
+          </span>
+          <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-green-500/10 text-green-400 text-xs font-bold uppercase tracking-widest border border-green-500/20">
+            Updated October 2026
+          </span>
+        </div>
+        <h1 class="text-4xl lg:text-6xl font-black text-white leading-tight mb-8">
+          Best Protein Powder for <span class="text-[#38BDF8]">Weight Gain</span>
+        </h1>
+        <p class="text-xl text-gray-300 leading-relaxed mb-8 max-w-3xl mx-auto">
+          Six mass gainers and whey powders that make a calorie surplus easier, and an honest look at when a homemade shake beats the tub.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a
+            href="#optimum-nutrition-gold-standard-100-whey"
+            class="px-8 py-4 bg-[#FF4500] hover:bg-[#E63E00] text-white font-black rounded-xl shadow-lg transition-all no-underline"
+          >
+            See Our #1 Pick
+          </a>
+          <a
+            href="#gainer-vs-diy"
+            class="px-8 py-4 bg-white/10 hover:bg-white/20 text-white font-bold rounded-xl border border-white/10 no-underline"
+          >
+            How We Picked
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Author & Meta -->
+    <div class="max-w-3xl mx-auto px-4 pt-12">
+      <div class="flex items-center gap-6 border-b border-gray-100 pb-8">
+        <div class="flex items-center gap-3">
+          <AuthorAvatar size={48} />
+          <div>
+            <p class="text-sm font-bold text-gray-900">{author.name}</p>
+            <p class="text-xs text-gray-500 uppercase tracking-widest">{author.role}</p>
+          </div>
+        </div>
+        <div class="h-10 w-px bg-gray-200 hidden sm:block"></div>
+        <div class="hidden sm:block">
+          <p class="text-sm font-bold text-gray-900">Last Updated</p>
+          <p class="text-xs text-gray-500">{dates.display}</p>
+        </div>
+        <div class="hidden sm:block ml-auto">
+          <SocialProof />
+        </div>
+      </div>
+    </div>
+
+    <!-- Table of Contents -->
+    <div class="max-w-3xl mx-auto px-4 py-10">
+      <div class="bg-gray-50 border border-gray-200 rounded-2xl p-6 lg:p-8">
+        <h2 class="text-lg font-black text-gray-900 mb-4 flex items-center gap-2">
+          In This Guide
+        </h2>
+        <nav class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <a href="#calories-not-protein" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">1. Calories, Not Protein</a>
+          <a href="#how-we-picked" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">2. How We Picked</a>
+          <a href="#top-picks" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">3. Our Top Picks</a>
+          <a href="#gainer-vs-diy" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">4. Mass Gainer vs DIY</a>
+          <a href="#homemade-shake" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">5. Homemade Gainer Shakes</a>
+          <a href="#sugar-load" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">6. Sugar and Maltodextrin</a>
+          <a href="#cost" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">7. Cost per 1,000 Calories</a>
+          <a href="#digestion" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">8. Digestion</a>
+          <a href="#how-fast" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">9. How Fast to Gain</a>
+          <a href="#training" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">10. Making It Muscle</a>
+          <a href="#see-a-doctor" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">11. When to See a Doctor</a>
+          <a href="#mistakes" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">12. Common Mistakes</a>
+          <a href="#faq" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">13. FAQ</a>
+        </nav>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="max-w-3xl mx-auto px-4 pb-16 lg:pb-24">
+      <div class="prose prose-lg prose-blue max-w-none text-gray-700 leading-relaxed">
+        <p class="text-2xl font-medium text-gray-900 mb-8 italic">
+          If you struggle to gain weight, protein is rarely the thing you are missing. Calories are. A scoop of whey adds about 120 calories, which is nowhere near enough to move the scale. The best protein powder for weight gain is either a mass gainer that packs hundreds of extra calories into a drink, or a regular whey blended with cheap, calorie-dense foods such as oats, peanut butter and whole milk. Here is how to choose between them, which products are worth buying, and how to keep a 1,000-calorie shake from wrecking your stomach.
+        </p>
+
+        <QuickPicks products={PRODUCTS} />
+
+        <div id="calories-not-protein" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            1. Weight Gain Is About Calories, Not Protein
+          </h2>
+
+          <p>
+            Body weight changes when energy intake and energy expenditure fall out of balance for long enough. To gain, you need to eat more calories than you burn, consistently, for weeks. Protein is essential for making some of that gain muscle rather than fat, but it is not what makes the scale move. You can eat 200 g of protein a day and still lose weight if your total calories are too low, which is exactly what happens to many people who call themselves hardgainers.
+          </p>
+
+          <p>
+            That is why searching for a weight gain protein powder is slightly misleading. A standard whey powder gives you about 24 to 25 g of protein for roughly 120 calories. Drink two scoops a day and you have added 240 calories, which is a useful start but often not enough on its own, especially for people with fast metabolisms, active jobs or a lot of daily movement they do not notice. A mass gainer, by contrast, may deliver 1,000 to 1,250 calories in one serving, and most of those calories come from carbohydrate, not protein.
+          </p>
+
+          <p>
+            Protein needs during a gaining phase are actually modest. The International Society of Sports Nutrition position stand recommends 1.4 to 2.0 g per kilogram of body weight per day for exercising people, and the 2018 meta-analysis by Morton and colleagues found that the benefit for muscle gains plateaued around 1.6 g/kg, with an upper confidence limit near 2.2 g/kg. In a calorie surplus, there is little reason to go above that range. Once your protein target is met, every extra calorie can come from carbohydrate and fat, which are cheaper and easier to eat in volume.
+          </p>
+
+          <p>
+            Liquid calories are the key tool here. Drinks are less filling than the same calories in solid food, which is a problem when dieting and an advantage when gaining. A shake lets you add 500 to 1,000 calories without the fullness of a second dinner, which is often the only realistic way for people with small appetites to stay in a surplus every day.
+          </p>
+
+          <div class="bg-gray-900 text-white rounded-2xl p-6 lg:p-8 my-8">
+            <p class="text-xs font-black uppercase tracking-widest text-[#38BDF8] mb-3">THE SHORT VERSION</p>
+            <p class="text-xl font-bold text-white mb-3">Hit your protein target, then add calories from carbohydrate and fat.</p>
+            <p class="text-gray-300 leading-relaxed m-0">About 1.6 to 2.2 g of protein per kilogram covers muscle growth for nearly everyone. Beyond that, gaining weight is a calorie problem, and liquid calories are the easiest way to solve it.</p>
+          </div>
+        </div>
+
+        <div id="how-we-picked" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            2. How We Picked
+          </h2>
+
+          <p>
+            We did not run lab tests, taste panels or a feeding trial for this guide. The picks come from label analysis, the brands' published formulas and the research on energy balance and protein, the same approach described on our <a href="/how-we-test/">how we test page</a>. Where we mention taste, mixability or stomach comfort, we are summarizing what buyers widely report, not results of our own.
+          </p>
+
+          <p>
+            For the mass gainers, we looked at four things. Calories and protein per serving had to be clearly stated and substantial, with at least around 50 g of protein so the shake also supports muscle growth. The carbohydrate source had to be disclosed rather than hidden in a proprietary blend. The added sugar load had to be reasonable for the calories delivered. And the product had to be long established, widely available and consistently rated by buyers as drinkable at full serving size, because a gainer you cannot finish is a waste of money.
+          </p>
+
+          <p>
+            For the regular whey picks, the question was simpler: does it make a good base for a homemade shake? That means solid protein per scoop, a cost per 25 g of protein that leaves room in the budget for food, and either a flavor that pairs well with milk, oats and peanut butter or an unflavored version that disappears into whatever you blend. Our <a href="/best-whey-protein-powder/">best whey protein powder</a> rankings cover more options if you want a different base.
+          </p>
+
+          <div class="bg-gray-900 text-white rounded-2xl p-6 lg:p-8 my-8">
+            <p class="text-xs font-black uppercase tracking-widest text-[#38BDF8] mb-4">By the Numbers</p>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+              <div>
+                <p class="text-3xl font-black text-white">1,250</p>
+                <p class="text-gray-400 text-xs mt-1">Calories in a full serving of a big mass gainer</p>
+              </div>
+              <div>
+                <p class="text-3xl font-black text-[#38BDF8]">120</p>
+                <p class="text-gray-400 text-xs mt-1">Calories in a typical scoop of whey</p>
+              </div>
+              <div>
+                <p class="text-3xl font-black text-white">250-500</p>
+                <p class="text-gray-400 text-xs mt-1">Daily surplus often suggested for lean gains</p>
+              </div>
+              <div>
+                <p class="text-3xl font-black text-[#38BDF8]">1.6-2.2</p>
+                <p class="text-gray-400 text-xs mt-1">Grams of protein per kg that covers most needs</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Picks -->
+        <div id="top-picks" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            3. The Best Protein Powders for Weight Gain, Ranked
+          </h2>
+
+          <p>
+            The list mixes two kinds of product on purpose. Three are classic mass gainers, built to deliver well over 1,000 calories in a single serving. One is a moderate gainer for people who want more protein and fewer carbohydrate calories. Two are plain whey powders that work as the protein base for homemade gainer shakes, which for many people are the cheaper and easier-to-digest route. Calorie and protein figures come from the labels at the time of writing and vary by flavor and serving size, so check the tub before you plan around them.
+          </p>
+
+          {PRODUCTS.map((product, index) => (
+            <div id={product.id} class="scroll-mt-24 mt-12 first:mt-8">
+              <div class="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                <div class="bg-gray-900 px-6 py-4 flex items-center justify-between">
+                  <div class="flex items-center gap-3">
+                    <span class="bg-[#FF4500] text-white w-8 h-8 rounded-full flex items-center justify-center text-sm font-black">
+                      {index + 1}
+                    </span>
+                    {productImages[product.id] && (
+                      <img
+                        src={productImages[product.id]}
+                        alt={product.name}
+                        loading="lazy"
+                        width="40"
+                        height="40"
+                        class="w-10 h-10 rounded-lg bg-white object-contain p-1 shrink-0"
+                      />
+                    )}
+                    <div>
+                      <p class="text-white font-black text-lg">{product.name}</p>
+                      <p class="text-gray-400 text-xs">{product.category}</p>
+                    </div>
+                  </div>
+                  <span class="bg-[#38BDF8]/20 text-[#38BDF8] px-3 py-1 rounded-full text-xs font-bold hidden sm:block">
+                    {product.badge}
+                  </span>
+                </div>
+                <div class="p-6">
+                  {product.rating && (
+                  <div class="flex items-center gap-2 mb-4">
+                    <div class="flex text-yellow-400">
+                      {[...Array(5)].map((_, i) => (
+                        <svg
+                          class={`w-4 h-4 ${i < Math.floor(product.rating) ? "fill-current" : "text-gray-200"}`}
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                        >
+                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        </svg>
+                      ))}
+                    </div>
+                    <span class="text-gray-500 text-sm font-bold">{product.rating}</span>
+                    {product.reviewCount && <span class="text-gray-400 text-xs">({product.reviewCount.toLocaleString()} retailer reviews)</span>}
+                  </div>
+                  )}
+
+                  <SpecGrid specs={product.specs} />
+
+                  <p class="text-gray-700 leading-relaxed mb-6">{product.description}</p>
+
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                    <div class="bg-green-50 rounded-xl p-4">
+                      <p class="text-xs font-black uppercase tracking-widest text-green-700 mb-3">Pros</p>
+                      <ul class="space-y-2">
+                        {product.pros.map((pro) => (
+                          <li class="flex items-start gap-2 text-sm text-green-800">
+                            <svg class="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            {pro}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div class="bg-red-50 rounded-xl p-4">
+                      <p class="text-xs font-black uppercase tracking-widest text-red-700 mb-3">Cons</p>
+                      <ul class="space-y-2">
+                        {product.cons.map((con) => (
+                          <li class="flex items-start gap-2 text-sm text-red-800">
+                            <svg class="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                            {con}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+
+                  <div class="bg-gray-50 rounded-xl p-4 border border-gray-100">
+                    <p class="text-xs font-black uppercase tracking-widest text-gray-500 mb-1">The Bottom Line</p>
+                    <p class="text-gray-900 font-bold">{product.bottomLine}</p>
+                  </div>
+
+                  <a
+                    href={amazonLink(product.amazonUrl, product.name, product.id)}
+                    target="_blank"
+                    rel="sponsored nofollow noopener"
+                    class="mt-6 block bg-[#FF4500] hover:bg-[#E63E00] text-white text-center py-4 rounded-xl font-black no-underline transition-colors uppercase tracking-widest text-sm"
+                  >
+                    Check Price &rarr;
+                  </a>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div id="gainer-vs-diy" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            4. Mass Gainer vs Whey Plus Real Food
+          </h2>
+
+          <p>
+            A mass gainer is essentially a protein powder with a large dose of carbohydrate, usually maltodextrin, plus some fat, flavoring and often small amounts of creatine, vitamins or digestive enzymes. Its advantage is convenience: one tub, one shaker, a known number of calories. You can drink it at work, at the gym or at 10 pm without cooking or owning a blender, and you know exactly what you got.
+          </p>
+
+          <p>
+            The homemade alternative is a regular whey powder blended with whole foods. Two cups of whole milk, a scoop of whey, half a cup of oats, two tablespoons of peanut butter and a banana add up to roughly 850 to 900 calories and around 50 g of protein, using typical nutrition figures for those foods. That is close to a full gainer serving, and it comes with fiber, potassium, healthy fats and far less refined carbohydrate. Our <a href="/best-protein-powder-for-smoothies/">best protein powder for smoothies</a> guide covers powders that blend especially well with fruit and oats.
+          </p>
+
+          <p>
+            The trade-offs are real on both sides. The homemade shake is usually cheaper per calorie, easier to digest and more nutritious, but it takes a blender, a few minutes and a kitchen. The gainer is more expensive per calorie than plain groceries, heavier on refined carbohydrate, and harder on many stomachs at full serving, but it is portable and requires no thought. Plenty of people use both: a homemade shake at breakfast and a half serving of gainer in the afternoon.
+          </p>
+
+          <p>
+            A simple rule of thumb: if you have a blender and a fridge where you eat, start with whey and real food. If your days are spent on the move, at school or on job sites, or you have tried homemade shakes and simply do not make them, a mass gainer is the more realistic tool. The best plan is the one you will repeat every day for months.
+          </p>
+        </div>
+
+        <div id="homemade-shake" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            5. How to Build a Homemade Weight Gain Shake
+          </h2>
+
+          <p>
+            Think of a homemade gainer as a protein base plus calorie boosters. The protein base is a scoop or two of whey, or a plant protein if you avoid dairy. The boosters are cheap, dense foods that blend smoothly. The table below gives approximate figures from standard nutrition databases; brands vary, so check your own labels if you track closely.
+          </p>
+
+          <div class="overflow-hidden border border-gray-200 rounded-2xl my-8">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Ingredient</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Amount</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Approx. calories</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Approx. protein</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Whey protein</td>
+                    <td class="px-4 py-4 text-gray-700">1 scoop</td>
+                    <td class="px-4 py-4 text-gray-700">120</td>
+                    <td class="px-4 py-4 text-gray-700">24 g</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Whole milk</td>
+                    <td class="px-4 py-4 text-gray-700">2 cups</td>
+                    <td class="px-4 py-4 text-gray-700">300</td>
+                    <td class="px-4 py-4 text-gray-700">16 g</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Rolled oats</td>
+                    <td class="px-4 py-4 text-gray-700">1/2 cup dry</td>
+                    <td class="px-4 py-4 text-gray-700">150</td>
+                    <td class="px-4 py-4 text-gray-700">5 g</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Peanut butter</td>
+                    <td class="px-4 py-4 text-gray-700">2 tbsp</td>
+                    <td class="px-4 py-4 text-gray-700">190</td>
+                    <td class="px-4 py-4 text-gray-700">7 g</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Banana</td>
+                    <td class="px-4 py-4 text-gray-700">1 medium</td>
+                    <td class="px-4 py-4 text-gray-700">105</td>
+                    <td class="px-4 py-4 text-gray-700">1 g</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Total</td>
+                    <td class="px-4 py-4 text-gray-700">One shake</td>
+                    <td class="px-4 py-4 text-gray-700">About 865</td>
+                    <td class="px-4 py-4 text-gray-700">About 53 g</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <p>
+            From that base, you can scale up or down. Add another tablespoon of peanut butter or a tablespoon of olive oil for roughly 100 to 120 more calories with almost no extra volume. Swap the banana for a cup of frozen mango or berries for a different flavor. Use Greek yogurt in place of some of the milk for extra protein and a thicker texture. Honey, dates or a spoonful of chocolate syrup add easy calories if you need them and do not mind the sugar.
+          </p>
+
+          <p>
+            Grind the oats first, or soak them in the milk for ten minutes, to avoid a gritty texture. Blend for longer than you think, and add ice only if you like it cold, because it dilutes the shake and takes up stomach space. If 865 calories is too much at once, drink half in the morning and the other half a few hours later; the result for weight gain is the same.
+          </p>
+
+          <p>
+            If you are lactose intolerant, swap whole milk for lactose-free whole milk, which has similar calories and protein, or use a calorie-dense plant milk such as soy, which has more protein than most nut milks. A whey isolate is a better base than a concentrate for people who react to lactose.
+          </p>
+        </div>
+
+        <div id="sugar-load" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            6. The Sugar and Maltodextrin Question
+          </h2>
+
+          <p>
+            Most of the calories in a mass gainer come from maltodextrin, a carbohydrate made by breaking down starch from corn, rice, tapioca or potato. It is not listed as sugar on many labels, because chemically it is a chain of glucose molecules rather than a simple sugar, but it digests quickly and raises blood glucose about as fast as table sugar. A gainer serving can therefore deliver well over 200 g of fast-digesting carbohydrate in one drink, on top of whatever sugar the label does list.
+          </p>
+
+          <p>
+            For a healthy, active young person in a surplus, that is not dangerous. Glucose from a gainer is used to refill muscle glycogen and fuel training, and studies of high-carbohydrate diets in athletes do not show harm from maltodextrin specifically. The concerns are practical: large, fast carbohydrate loads can cause energy crashes, bloating and diarrhea, and they displace foods with fiber and micronutrients. If a gainer becomes your main source of calories, you are trading a lot of nutrition for convenience.
+          </p>
+
+          <p>
+            People with diabetes, prediabetes or insulin resistance should be much more careful. A full-serving mass gainer is effectively a very large sugary drink, and it can push blood glucose far higher than a mixed meal. Anyone in that group who needs to gain weight should talk to their doctor or a registered dietitian about a plan built on slower-digesting foods, healthy fats and smaller servings.
+          </p>
+
+          <p>
+            When comparing gainers, read the carbohydrate source and the added sugar line together. Products built on maltodextrin from oats or whole grains, or that use fewer and simpler ingredients, are not dramatically different metabolically, but they tend to be easier on the stomach and less sweet. Products that add cane sugar or dextrose on top of maltodextrin are the ones to approach with the most caution.
+          </p>
+        </div>
+
+        <div id="cost" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            7. Cost per 1,000 Calories: Gainers vs Groceries
+          </h2>
+
+          <p>
+            Mass gainers look expensive because tubs are large, but they are actually one of the cheaper ways to buy calories from a supplement. Divide the price of a tub by the number of servings, then by the calories per serving and multiply by 1,000, and you get cost per 1,000 calories. At typical retail prices, big mass gainers usually land in a lower tier than protein powders do, because most of the tub is inexpensive carbohydrate rather than costly protein.
+          </p>
+
+          <p>
+            Groceries are cheaper still. Rolled oats, peanut butter, whole milk, rice, bananas and cooking oil are among the least expensive calories you can buy, typically a fraction of the cost per 1,000 calories of any gainer at typical supermarket prices. A homemade shake built on those foods, with one scoop of whey for protein, almost always costs less than the same calories from a mass gainer. The more of your surplus you get from food, the cheaper your gaining phase becomes.
+          </p>
+
+          <p>
+            Moderate-calorie gainers, those with around 600 to 700 calories and more protein per serving, cost more per 1,000 calories than the big gainers because protein is the expensive ingredient. They make sense if you want a higher protein share and fewer carbohydrate calories, but they are not a budget play. Ready-to-drink shakes are the most expensive calories of all and are rarely the right tool for weight gain.
+          </p>
+
+          <p>
+            Do not ignore what you actually drink. A cheap tub that you cannot finish or that upsets your stomach has an infinite cost per calorie consumed. Buy a small tub or single-serve packets first if you are unsure, and only commit to a 12-pound bag once you know it works for you.
+          </p>
+        </div>
+
+        <div id="digestion" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            8. Digestion: When a Serving Is Too Big
+          </h2>
+
+          <p>
+            The most common complaint about mass gainers is not taste but stomach trouble. A full serving can mean 300 g or more of powder mixed into 16 to 24 ounces of liquid, delivering over 200 g of carbohydrate and 50 g of protein in a few minutes. Buyers widely report bloating, gas, cramping and loose stools, particularly in the first week and especially when mixing with milk.
+          </p>
+
+          <p>
+            The fixes are simple. Start with a half or even a third of a serving and build up over one to two weeks as your body adapts. Split the full serving into two or three shakes spread across the day rather than drinking it all at once. Mix with water or lactose-free milk if regular milk adds to the problem, since many gainers already contain whey concentrate and its lactose. And sip it over 20 to 30 minutes rather than chugging it.
+          </p>
+
+          <p>
+            Pay attention to sugar alcohols and fiber additives in some formulas, which can add to gas in sensitive people, and to whether the protein source suits you. Gainers built on whey concentrate and milk protein carry more lactose than those built on whey isolate. If you have a diagnosed milk allergy, no dairy-based gainer is suitable, and you will need a plant protein base plus whole-food calories instead.
+          </p>
+
+          <p>
+            If stomach issues persist even at small servings, the homemade route is usually better tolerated, because oats, bananas and nut butter digest more slowly and gently than large doses of maltodextrin. Persistent digestive symptoms with any food deserve a conversation with a doctor rather than another tub.
+          </p>
+        </div>
+
+        <div id="how-fast" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            9. How Fast to Gain, and How Much Protein You Need
+          </h2>
+
+          <p>
+            Gaining weight quickly is easy once you are in a big surplus; gaining mostly muscle is slower. Coaches and researchers commonly suggest a surplus of roughly 250 to 500 calories a day for people who want to keep fat gain modest, which works out to something like 0.25 to 0.5 percent of body weight per week. Beginners and very underweight people can often gain faster, and much of that early gain is muscle and glycogen, while experienced lifters usually need to move more slowly to avoid mostly adding fat.
+          </p>
+
+          <p>
+            Use the scale as your guide rather than any calculation. Weigh yourself a few mornings a week under the same conditions and look at the weekly average. If it is not rising after two weeks, add 200 to 300 calories a day, which is half a homemade shake or a third of a gainer serving. If it is rising much faster than you want and your waist is growing quickly, trim back. Your maintenance calories change as you gain, so expect to adjust several times.
+          </p>
+
+          <p>
+            Protein stays roughly constant through all of this. About 1.6 to 2.2 g per kilogram of body weight per day covers muscle growth for nearly everyone, ideally spread across three to five meals of roughly 0.4 g/kg, or 20 to 40 g each. Our <a href="/protein-calculator/">protein calculator</a> gives you a daily target based on your weight and goal, and our guide to <a href="/how-much-protein-do-i-need/">how much protein you need</a> explains the research behind it. Most people gaining weight will hit their target easily once they are eating enough food.
+          </p>
+        </div>
+
+        <div id="training" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            10. Making the Weight Muscle, Not Just Mass
+          </h2>
+
+          <p>
+            Extra calories without training mostly become fat. With progressive resistance training, a meaningful share of the surplus can become muscle instead. That means lifting three to four times a week, focusing on compound movements such as squats, deadlifts, presses, rows and pull-ups, and adding weight or repetitions over time. The training is what tells your body to build muscle; the food is what lets it.
+          </p>
+
+          <p>
+            Recovery matters as much as the workouts. Sleep seven to nine hours a night where possible, because short sleep blunts muscle growth and increases appetite for the wrong foods. Keep cardio moderate if you are struggling to gain, since a long daily run can burn several hundred of the calories you worked so hard to drink.
+          </p>
+
+          <p>
+            If your main goal is muscle rather than weight in general, you may not need a gainer at all. Many lifters do better with a standard whey powder, normal meals and a smaller surplus, and our <a href="/best-protein-powder-for-muscle-gain/">best protein powder for muscle gain</a> guide focuses on that approach. For an overview of every category, including isolates and plant proteins, see our main <a href="/best-protein-powder/">best protein powder rankings</a>.
+          </p>
+        </div>
+
+        <div id="see-a-doctor" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            11. Who Needs Protein Powders to Gain Weight, and When to See a Doctor
+          </h2>
+
+          <p>
+            Protein powders to gain weight make the most sense for a few groups: naturally lean people with small appetites, athletes in sports where size matters, people with physically demanding jobs who burn more than they can comfortably eat, and lifters who have stalled because they cannot fit more food in. For all of them, a shake is just a convenient way to eat more. It is not a requirement, and food can do the same job.
+          </p>
+
+          <p>
+            Some people should get medical advice first. Unexplained weight loss, or an inability to gain despite eating plenty, can be a sign of conditions such as an overactive thyroid, celiac disease, diabetes, inflammatory bowel disease or an eating disorder. Older adults losing weight without trying, people recovering from illness or surgery, and anyone with kidney or liver disease should talk to a doctor or registered dietitian before adding large amounts of protein or calories.
+          </p>
+
+          <p>
+            Teenagers can use protein powder and gainers safely in general, but most growing athletes get further with regular meals, snacks and milk, and parents should check with a pediatrician before buying high-calorie supplements. Whatever your age, choose products with transparent labels, and if you compete in a drug-tested sport, look for third-party certification; our article on <a href="/is-protein-powder-safe/">whether protein powder is safe</a> explains what those seals check.
+          </p>
+        </div>
+
+        <!-- Common Mistakes -->
+        <div id="mistakes" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            12. Common Mistakes to Avoid
+          </h2>
+
+          <div class="space-y-6 my-8">
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Chasing Protein Instead of Calories</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Doubling your protein shakes while eating the same amount of food rarely moves the scale. Once you reach roughly 1.6 to 2.2 g of protein per kilogram, extra protein adds little. Track total calories for a week, find your real intake, and add 250 to 500 calories a day from any source you can eat consistently.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Drinking a Full Gainer Serving on Day One</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Jumping straight to a 1,250-calorie shake is the fastest route to bloating and an abandoned tub. Start with a half or a third of a serving, build up over one to two weeks, and split the full dose into two or three drinks across the day if your stomach still protests.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Skipping the Training</h3>
+              <p class="text-gray-700 text-sm m-0">
+                A calorie surplus without resistance training mostly becomes fat. Lift three to four times a week with progressive overload so a meaningful share of the extra calories becomes muscle. Without the training, a mass gainer is just a very expensive way to gain body fat.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Ignoring the Sugar Load</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Maltodextrin is often not listed as sugar, but it digests just as fast. A full gainer serving can deliver over 200 g of fast carbohydrate. Healthy, active people usually handle it, but anyone with diabetes or prediabetes should get medical advice before using one, and everyone should balance gainers with fiber-rich food.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Buying the Biggest Bag First</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Large bags lower the cost per serving, but only if you finish them. Taste, texture and stomach tolerance vary widely between gainers. Try a small tub or sample packets first, and only commit to a large bag once you know you can drink it daily without problems.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ -->
+        <div id="faq" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            13. Frequently Asked Questions
+          </h2>
+
+          <div class="space-y-6">
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">What is the best protein powder for weight gain?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                For most people with a blender, a regular whey such as Optimum Nutrition Gold Standard mixed with milk, oats and peanut butter. For maximum calories with no cooking, a mass gainer such as Optimum Nutrition Serious Mass or Dymatize Super Mass Gainer. For a leaner approach, Optimum Nutrition Pro Gainer offers more protein and fewer carbohydrate calories.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is a mass gainer better than whey protein for gaining weight?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                A mass gainer adds far more calories per serving, often 1,000 or more versus about 120 for whey. Whey plus whole food can match those calories more cheaply and with better nutrition. Gainers win on convenience; homemade shakes usually win on cost, digestion and nutrient quality. Both work if you stay in a calorie surplus.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">How many calories do I need to gain weight?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                It depends on your size and activity. A practical approach is to track your current intake for a week, then add roughly 250 to 500 calories a day and watch your weekly average weight. If it does not rise after two weeks, add another 200 to 300 calories. Adjust as you gain, because maintenance needs increase.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Can protein powder alone make you gain weight?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Rarely. A scoop of whey is about 120 calories, so it adds weight only if it puts you into a sustained calorie surplus. Most people need several hundred extra calories a day, which usually means combining protein powder with calorie-dense foods or using a mass gainer that includes substantial carbohydrate and fat.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Are mass gainers bad for you?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Not for healthy, active people using them as part of a balanced diet. The concerns are the large dose of fast-digesting carbohydrate, digestive discomfort at full serving, and displacing nutritious food. People with diabetes, prediabetes, kidney disease or other conditions should talk to a doctor or registered dietitian before using one.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">When should I drink a weight gain shake?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Whenever it fits your day and does not ruin your appetite for meals. Many people drink one between meals or after training, and some split a large serving into morning and afternoon portions. Timing matters far less than total daily calories and protein. Avoid drinking a full gainer right before a meal you need to eat.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Do mass gainers cause acne or bloating?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Bloating is common at full serving, especially in the first week, and usually eases by starting small and splitting servings. Evidence linking dairy and high-glycemic diets to acne is mixed but suggests some people are sensitive. If either problem persists, try a homemade shake with slower carbohydrates or a whey isolate base.
+              </p>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Related Guides -->
+        <div class="mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">Related Protein Powder Guides</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <a href="/best-protein-powder-for-muscle-gain/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#FF4500] font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Protein Powder for Muscle Gain</h3>
+              <p class="text-gray-500 text-sm mt-2">Powders for building muscle with a smaller surplus and real meals.</p>
+            </a>
+            <a href="/best-whey-protein-powder/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#1E90FF] font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Whey Protein Powder</h3>
+              <p class="text-gray-500 text-sm mt-2">The best whey bases for homemade high-calorie shakes.</p>
+            </a>
+            <a href="/best-protein-powder/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#10B981] font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Protein Powder</h3>
+              <p class="text-gray-500 text-sm mt-2">Our overall rankings across whey, blends and plant proteins.</p>
+            </a>
+          </div>
+        </div>
+
+        <!-- Closing -->
+        <div class="mt-16 bg-gray-900 text-white rounded-2xl p-8">
+          <h2 class="text-2xl font-black text-white mb-4">The Bottom Line</h2>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            Gaining weight is a calorie problem first and a protein problem second. Hit roughly 1.6 to 2.2 g of protein per kilogram, then add 250 to 500 calories a day and adjust based on your weekly average weight. For most people with a kitchen, a regular whey such as Optimum Nutrition Gold Standard blended with whole milk, oats and peanut butter is the cheapest and most digestible way to get there.
+          </p>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            If you need maximum calories with no cooking, Optimum Nutrition Serious Mass, Dymatize Super Mass Gainer and Naked Mass all deliver well over 1,000 calories per serving; start with a half dose and build up. Pair any of them with consistent resistance training and plenty of sleep, and if you are losing weight without trying or have a medical condition, see your doctor before you start.
+          </p>
+        </div>
+
+        <MoreInCategory category="Protein Powder" links={moreInCategory} />
+
+        <AuthorBio />
+      </div>
+    </div>
+  </article>
+</Layout>

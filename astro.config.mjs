@@ -10,6 +10,11 @@ const pillarGuides = new Set([
   'best-protein-powder',
   'best-whey-protein-isolate',
   'best-plant-based-protein-powder',
+  'best-protein-powder-for-muscle-gain',
+  'best-protein-powder-for-weight-loss',
+  'best-protein-powder-for-women',
+  'best-tasting-protein-powder',
+  'best-whey-protein-powder',
 ]);
 
 // Supporting guides that target high-volume search terms. They get a higher
@@ -22,6 +27,18 @@ const priorityGuides = new Set([
   'whey-vs-plant-protein',
   'is-protein-powder-safe',
   'when-to-take-protein-powder',
+  // October 2026: keyword-research batch — goal, flavor, format and brand pages.
+  'protein-powder-comparison',
+  'protein-powder-brands',
+  'do-protein-supplements-build-muscle',
+  'best-protein-powder-for-men',
+  'best-protein-powder-for-weight-gain',
+  'best-protein-powder-for-smoothies',
+  'best-unflavored-protein-powder',
+  'best-protein-drink',
+  'best-clear-protein-powder',
+  'best-pea-protein-powder',
+  'best-clean-protein-powder',
 ]);
 
 export default defineConfig({

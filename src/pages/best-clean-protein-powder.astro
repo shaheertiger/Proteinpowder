@@ -1,0 +1,941 @@
+---
+import Layout from "../layouts/Layout.astro";
+import MoreInCategory from "../components/MoreInCategory.astro";
+import { AUTHORS, DEFAULT_AUTHOR, authorSchema } from "../data/authors";
+import { SITE_NAME, SITE_URL } from "../data/site";
+import AuthorAvatar from "../components/AuthorAvatar.astro";
+import QuickPicks from "../components/QuickPicks.astro";
+import AuthorBio from "../components/AuthorBio.astro";
+import { amazonLink } from "../data/affiliate";
+import TrustBadge from "../components/TrustBadge.astro";
+import SocialProof from "../components/SocialProof.astro";
+import SpecGrid from "../components/SpecGrid.astro";
+import productImages from "../data/product-images.json";
+import { pageDates } from "../data/dates";
+
+const moreInCategory = [
+  {
+    "title": "Is Protein Powder Safe?",
+    "url": "/is-protein-powder-safe/"
+  },
+  {
+    "title": "Best Unflavored Protein Powder",
+    "url": "/best-unflavored-protein-powder/"
+  },
+  {
+    "title": "Best Protein Powder",
+    "url": "/best-protein-powder/"
+  }
+];
+const author = AUTHORS[DEFAULT_AUTHOR];
+const dates = pageDates(Astro.url.pathname, { published: "2026-10-17", modified: "2026-10-17" });
+const title = "Best Clean Protein Powder: Picks You Can Actually Verify";
+const description =
+  "Clean is an unregulated word. We replace it with checkable criteria: short labels, no added sugar, NSF or Informed testing, heavy-metal data and USDA Organic.";
+
+const PRODUCTS: {
+  id: string;
+  name: string;
+  brand?: string;
+  badge: string;
+  category: string;
+  description: string;
+  pros: string[];
+  cons: string[];
+  bottomLine: string;
+  specs?: Record<string, string>;
+  rating?: number;
+  reviewCount?: number;
+  amazonUrl?: string;
+}[] = [
+  {
+    "id": "thorne-whey-protein-isolate",
+    "name": "Thorne Whey Protein Isolate",
+    "brand": "Thorne",
+    "badge": "Best Overall",
+    "category": "Whey protein isolate, flavored",
+    "description": "Thorne's whey isolate combines a short ingredient list with NSF Certified for Sport status, per the brand and NSF at the time of writing, which covers label-claim checks and contaminant screening as well as banned substances. It delivers about 21 g of protein per scoop from whey isolate, a dairy source that tends to test lower for heavy metals than plant proteins. It suits anyone who wants one documented, low-fuss protein for daily use.",
+    "pros": [
+      "NSF Certified for Sport, per the brand and NSF (verify the flavor)",
+      "Whey isolate base, typically lower in lactose and heavy metals",
+      "Short ingredient list with no added sugar"
+    ],
+    "cons": [
+      "Premium cost per 25 g of protein",
+      "About 21 g per scoop, slightly under a full 25 g dose"
+    ],
+    "bottomLine": "The easiest way to buy a clean protein powder you can actually verify.",
+    "specs": {
+      "Protein / serving": "About 21 g (label)",
+      "Protein source": "Whey protein isolate",
+      "Third-party tested": "NSF Certified for Sport (verify flavor)",
+      "Best for": "Daily use, tested athletes"
+    }
+  },
+  {
+    "id": "klean-athlete-klean-isolate",
+    "name": "Klean Athlete Klean Isolate",
+    "brand": "Klean Athlete",
+    "badge": "Shortest Certified Label",
+    "category": "Unflavored whey protein isolate",
+    "description": "Klean Isolate is about as minimal as a certified protein gets: whey protein isolate plus a little sunflower lecithin to help it mix, per the label at the time of writing, with no sweetener or flavoring. It is NSF Certified for Sport, per the brand. It delivers about 20 g of protein per scoop, and the unflavored base makes it easy to add to coffee, oats or smoothies.",
+    "pros": [
+      "Two ingredients, unsweetened and unflavored",
+      "NSF Certified for Sport, per the brand (verify in NSF's database)",
+      "Mixes into food without changing the flavor much"
+    ],
+    "cons": [
+      "Premium cost per 25 g of protein",
+      "Bland on its own in water, as buyers note"
+    ],
+    "bottomLine": "The best choice if you want both the shortest label and a sport certification.",
+    "specs": {
+      "Protein / serving": "About 20 g (label)",
+      "Protein source": "Whey protein isolate",
+      "Third-party tested": "NSF Certified for Sport (verify)",
+      "Best for": "Unflavored, sweetener-free users"
+    }
+  },
+  {
+    "id": "garden-of-life-sport-organic-plant-protein",
+    "name": "Garden of Life Sport Organic Plant-Based Protein",
+    "brand": "Garden of Life",
+    "badge": "Best Organic",
+    "category": "Organic multi-source plant blend",
+    "description": "This is the rare protein that combines USDA Organic certification with NSF Certified for Sport status, per the brand and NSF at the time of writing. It delivers about 30 g of protein per serving from an organic legume blend led by pea, a full leucine-matched dose for a plant protein. It is the pick for anyone who wants organic farming and independent testing in the same tub.",
+    "pros": [
+      "USDA Organic and NSF Certified for Sport, per the brand (verify the flavor)",
+      "About 30 g of protein per serving",
+      "Dairy-free and soy-free"
+    ],
+    "cons": [
+      "Mid-to-premium cost per 25 g of protein",
+      "Stevia-sweetened flavors draw aftertaste complaints from some buyers"
+    ],
+    "bottomLine": "The best organic protein powder for people who also want certification they can check.",
+    "specs": {
+      "Protein / serving": "About 30 g (label, varies by flavor)",
+      "Protein source": "Organic pea and legume blend",
+      "Third-party tested": "NSF Certified for Sport (verify flavor)",
+      "Best for": "Organic buyers, plant athletes"
+    }
+  },
+  {
+    "id": "ritual-essential-protein-18",
+    "name": "Ritual Essential Protein Daily Shake 18+",
+    "brand": "Ritual",
+    "badge": "Best Certified Plant Shake",
+    "category": "Pea protein isolate, flavored",
+    "description": "Ritual's daily shake is built on pea protein and is Informed Sport certified, per the brand at the time of writing, which means batches are tested for banned substances before release. It has a fairly short ingredient list for a flavored product and delivers about 20 g of protein per serving. It suits people who want a flavored dairy-free shake with independent testing behind it, though the dose is on the light side.",
+    "pros": [
+      "Informed Sport certified, per the brand (verify the flavor)",
+      "Dairy-free and soy-free pea base",
+      "Short ingredient list for a flavored shake"
+    ],
+    "cons": [
+      "About 20 g of protein per serving, low for a plant protein",
+      "Premium cost per 25 g of protein"
+    ],
+    "bottomLine": "A documented, dairy-free daily shake if you accept a smaller dose.",
+    "specs": {
+      "Protein / serving": "About 20 g (label)",
+      "Protein source": "Pea protein isolate",
+      "Third-party tested": "Informed Sport (verify flavor)",
+      "Best for": "Dairy-free daily users"
+    }
+  },
+  {
+    "id": "naked-nutrition-naked-whey",
+    "name": "Naked Whey",
+    "brand": "Naked Nutrition",
+    "badge": "Best Single-Ingredient Whey",
+    "category": "Unflavored grass-fed whey concentrate",
+    "description": "Naked Whey has one ingredient, whey protein concentrate from grass-fed cows, which the brand says comes from US farms. It delivers about 25 g of protein per serving in roughly 120 calories per the label, at a mid-tier cost per 25 g. It does not carry a sport certification we could confirm, so it scores on simplicity rather than verification; email the brand for its latest test results if heavy metals concern you.",
+    "pros": [
+      "One ingredient, with no sweeteners, gums or flavorings",
+      "About 25 g of protein per serving",
+      "Dairy source, which tends to test lower for heavy metals than plant protein"
+    ],
+    "cons": [
+      "No NSF or Informed Sport certification we could confirm",
+      "Concentrate carries more lactose than an isolate"
+    ],
+    "bottomLine": "The simplest whey you can buy, best for people who prize a one-item label over certification.",
+    "specs": {
+      "Protein / serving": "About 25 g (label)",
+      "Protein source": "Grass-fed whey concentrate",
+      "Third-party tested": "No sport certification confirmed",
+      "Best for": "Minimal-ingredient buyers"
+    }
+  },
+  {
+    "id": "naked-nutrition-naked-pea",
+    "name": "Naked Pea Protein",
+    "brand": "Naked Nutrition",
+    "badge": "Best Single-Ingredient Plant",
+    "category": "Single-source yellow pea protein isolate",
+    "description": "Naked Pea is the plant counterpart to Naked Whey: one ingredient, yellow pea protein, which the brand says is sourced from the United States and Canada. It delivers about 27 g of protein in roughly 120 calories per serving per the label, at a budget-tier cost per 25 g. Like any plant protein it carries a higher average heavy-metal risk than whey, so ask the brand for current batch results.",
+    "pros": [
+      "One ingredient, unsweetened and unflavored",
+      "About 27 g of protein in roughly 120 calories",
+      "Budget-tier cost per 25 g of protein"
+    ],
+    "cons": [
+      "No sport certification we could confirm",
+      "Earthy taste in water alone, as buyers commonly report"
+    ],
+    "bottomLine": "The shortest plant label at a low price, if you are happy to verify its testing yourself.",
+    "specs": {
+      "Protein / serving": "About 27 g (label)",
+      "Protein source": "Yellow pea protein",
+      "Third-party tested": "No sport certification confirmed",
+      "Best for": "Dairy-free minimalists"
+    }
+  }
+];
+
+const schema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Home",
+          item: `${SITE_URL}/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Best Lists",
+          item: `${SITE_URL}/best-of/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 3,
+          name: "Best Clean Protein Powder",
+          item: `${SITE_URL}/best-clean-protein-powder/`,
+        },
+      ],
+    },
+    {
+      "@type": "FAQPage",
+      mainEntity: [
+        {
+          "@type": "Question",
+          "name": "What is the cleanest protein powder?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "There is no official cleanest powder, because clean has no legal definition. The closest practical answer is a whey isolate or single-source protein with a short ingredient list, no added sugar, NSF Certified for Sport or Informed Sport status you can confirm, and published heavy-metal results. Thorne Whey Protein Isolate and Klean Isolate meet most of those criteria."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is organic protein powder better?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Organic is better for some values, such as pesticide use and farming practices, and it is a regulated, enforceable label. It is not a contaminant standard. Organic protein powder is not automatically lower in heavy metals and does not screen for banned substances, so pair organic with a sport certification or published testing if safety is your main concern."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Which protein powder has the least heavy metals?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Independent surveys have found that whey and other dairy proteins tend to test lower than plant proteins, and vanilla or unflavored tends to test lower than chocolate. Individual products vary, so the most reliable choice is one with batch results published by an independent lab. A brand claiming zero heavy metals is overstating what any test can show."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is whey or plant protein cleaner?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "On heavy metals, whey usually has the edge, because cows filter much of what they eat before it reaches the milk, while plants absorb metals directly from soil. On ingredient lists and allergens, a single-source pea protein can be just as simple as an unflavored whey. Pick based on your diet, then apply the same documentation checks to either."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What does NSF Certified for Sport actually test?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "NSF Certified for Sport verifies that the label matches the contents, screens for a long list of substances banned in sport, screens for certain contaminants and audits the manufacturing facility. Certification applies to specific products and flavors, so search NSF's database for the exact item. Informed Sport, a separate program, tests every batch for banned substances before release."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What makes a protein powder high quality?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "A high quality powder delivers 20 to 30 g of protein per serving, enough leucine to reach roughly 2 to 3 g per meal, and a protein figure that is not inflated by free amino acids such as glycine or taurine. Whey, casein, egg and soy score highest on protein quality scales; plant proteins work well at slightly larger servings."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is clean protein powder safe during pregnancy?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Many people use protein powder during pregnancy, but it is worth extra caution. Choose a product with published heavy-metal results or strong certification, lean toward whey or a well-tested blend, avoid chocolate for daily use and skip herbal or stimulant extras. Most importantly, take the specific product to your obstetric provider or a registered dietitian before you start."
+          }
+        }
+      ],
+    },
+    {
+      "@type": "Article",
+      headline: title,
+      author: authorSchema(),
+      datePublished: dates.published,
+      dateModified: dates.modified,
+      publisher: { "@type": "Organization", name: SITE_NAME, url: SITE_URL },
+    },
+    {
+      "@type": "ItemList",
+      name: title,
+      numberOfItems: PRODUCTS.length,
+      itemListElement: PRODUCTS.map((product, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name: product.name,
+        url: new URL(`#${product.id}`, Astro.url).toString(),
+      })),
+    },
+    ...PRODUCTS.map((product) => ({
+      "@type": "Product",
+      name: product.name,
+      description: product.description,
+      brand: {
+        "@type": "Brand",
+        name: product.brand ?? product.name.split(" ")[0],
+      },
+    })),
+  ],
+};
+---
+
+<Layout
+  title={title}
+  description={description}
+  ogType="article"
+  article={{
+    publishedTime: dates.published,
+    modifiedTime: dates.modified,
+    author: author.name,
+    section: "Safety & Labels",
+    tags: [
+      "best clean protein powder",
+      "best organic protein powder",
+      "best protein powder without heavy metals",
+      "healthy protein powder",
+      "high quality protein powder"
+    ],
+  }}
+  jsonLd={schema}
+>
+  <article class="relative overflow-hidden">
+    <!-- Hero Section -->
+    <div class="bg-gray-900 py-16 lg:py-24 relative overflow-hidden">
+      <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(circle at 20% 20%, #38BDF8 0, transparent 45%), radial-gradient(circle at 80% 60%, #FF4500 0, transparent 40%);"></div>
+      <div class="max-w-4xl mx-auto px-4 relative z-10 text-center">
+        <div class="flex justify-center mb-6">
+          <TrustBadge />
+        </div>
+        <div class="flex justify-center gap-3 mb-6">
+          <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#FF4500]/20 text-[#FF4500] text-xs font-black uppercase tracking-widest border border-[#FF4500]/30">
+            Buyer's Guide
+          </span>
+          <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-green-500/10 text-green-400 text-xs font-bold uppercase tracking-widest border border-green-500/20">
+            Updated October 2026
+          </span>
+        </div>
+        <h1 class="text-4xl lg:text-6xl font-black text-white leading-tight mb-8">
+          Best <span class="text-[#38BDF8]">Clean</span> Protein Powder
+        </h1>
+        <p class="text-xl text-gray-300 leading-relaxed mb-8 max-w-3xl mx-auto">
+          Clean has no legal meaning. Here are six protein powders that meet criteria you can actually check: short ingredient lists, no added sugar, third-party certification, heavy-metal documentation and organic status.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a
+            href="#thorne-whey-protein-isolate"
+            class="px-8 py-4 bg-[#FF4500] hover:bg-[#E63E00] text-white font-black rounded-xl shadow-lg transition-all no-underline"
+          >
+            See Our #1 Pick
+          </a>
+          <a
+            href="#how-we-picked"
+            class="px-8 py-4 bg-white/10 hover:bg-white/20 text-white font-bold rounded-xl border border-white/10 no-underline"
+          >
+            How We Picked
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Author & Meta -->
+    <div class="max-w-3xl mx-auto px-4 pt-12">
+      <div class="flex items-center gap-6 border-b border-gray-100 pb-8">
+        <div class="flex items-center gap-3">
+          <AuthorAvatar size={48} />
+          <div>
+            <p class="text-sm font-bold text-gray-900">{author.name}</p>
+            <p class="text-xs text-gray-500 uppercase tracking-widest">{author.role}</p>
+          </div>
+        </div>
+        <div class="h-10 w-px bg-gray-200 hidden sm:block"></div>
+        <div class="hidden sm:block">
+          <p class="text-sm font-bold text-gray-900">Last Updated</p>
+          <p class="text-xs text-gray-500">{dates.display}</p>
+        </div>
+        <div class="hidden sm:block ml-auto">
+          <SocialProof />
+        </div>
+      </div>
+    </div>
+
+    <!-- Table of Contents -->
+    <div class="max-w-3xl mx-auto px-4 py-10">
+      <div class="bg-gray-50 border border-gray-200 rounded-2xl p-6 lg:p-8">
+        <h2 class="text-lg font-black text-gray-900 mb-4 flex items-center gap-2">
+          In This Guide
+        </h2>
+        <nav class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <a href="#what-clean-means" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">1. What Clean Means</a>
+          <a href="#checkable-criteria" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">2. Five Checkable Criteria</a>
+          <a href="#top-picks" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">3. Our Top Picks</a>
+          <a href="#how-we-picked" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">4. How We Picked</a>
+          <a href="#ingredients-sugar" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">5. Ingredients and Sugar</a>
+          <a href="#certification" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">6. NSF and Informed</a>
+          <a href="#heavy-metals" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">7. Heavy Metals</a>
+          <a href="#organic" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">8. USDA Organic</a>
+          <a href="#healthy-high-quality" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">9. Healthy and High Quality</a>
+          <a href="#who-should-be-strict" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">10. Who Should Be Strictest</a>
+          <a href="#mistakes" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">11. Common Mistakes</a>
+          <a href="#faq" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">12. FAQ</a>
+        </nav>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="max-w-3xl mx-auto px-4 pb-16 lg:pb-24">
+      <div class="prose prose-lg prose-blue max-w-none text-gray-700 leading-relaxed">
+        <p class="text-2xl font-medium text-gray-900 mb-8 italic">
+          There is no such thing as a certified clean protein powder, because nobody defines the word. What you can find is a powder with a short ingredient list, little or no added sugar, an independent certification you can look up, and heavy-metal results the brand is willing to share. Those four checks do more than any front-label claim, and organic certification, while meaningful for farming, is not one of them when it comes to contaminants.
+        </p>
+
+        <QuickPicks products={PRODUCTS} />
+
+        <div id="what-clean-means" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            1. Clean Is a Marketing Word, Not a Standard
+          </h2>
+
+          <p>
+            There is no legal definition of clean for protein powder. The FDA does not define it, no certifier owns it, and a brand can print it on any tub it likes. The same goes for pure, real and simple. Natural is barely better: the FDA has long had an informal policy on the word for foods, but it is not a testing standard, and it says nothing about contaminants. When a front label says clean, it is telling you how the company wants you to feel, not anything you can check.
+          </p>
+
+          <p>
+            That does not mean the idea behind it is useless. When people search for the best clean protein powder, they usually want some combination of the same five things: a short ingredient list they can understand, little or no added sugar, low levels of heavy metals and other contaminants, no undeclared drugs or banned substances, and sometimes organic farming. Each of those can be checked, at least partly, against a label, a certification database or a published test result. That is how this guide replaces the word.
+          </p>
+
+          <p>
+            Protein powder is sold as a dietary supplement in the United States, which means no agency approves it before it goes on sale. Manufacturers must follow current Good Manufacturing Practice rules and are responsible for safety and label accuracy, but the FDA does not test each product before it ships. Our full guide to <a href="/is-protein-powder-safe/">whether protein powder is safe</a> explains that system in detail. The short version is that independent documentation does most of the work of separating a careful brand from a careless one.
+          </p>
+
+          <p>
+            So we are going to be blunt about what we can and cannot tell you. We did not run our own lab tests. We ranked the picks below on what the label shows, which certifications the products hold according to the brand and the certifier at the time of writing, and how much each costs per 25 g of protein. Where a certification is listed, confirm the exact product and flavor in the certifier's own database before you buy, because listings change and a certified vanilla does not make the chocolate certified too.
+          </p>
+        </div>
+
+        <div id="checkable-criteria" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            2. Five Checkable Criteria That Replace Clean
+          </h2>
+
+          <p>
+            Here is the framework the rest of this guide uses. None of it requires lab access, and each criterion maps to something you can see on a label or look up in a public database. A product does not need to tick all five to be a good buy, but the more boxes it ticks, the less you are relying on marketing.
+          </p>
+
+          <div class="overflow-hidden border border-gray-200 rounded-2xl my-8">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Criterion</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">How to check it</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">What it tells you</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Short ingredient list</td>
+                    <td class="px-4 py-4 text-gray-700">Count the ingredients; look for no proprietary blends</td>
+                    <td class="px-4 py-4 text-gray-700">Fewer additives, allergens and digestive triggers</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">No added sugar</td>
+                    <td class="px-4 py-4 text-gray-700">Added sugars line on the label, or sugar in the ingredient list</td>
+                    <td class="px-4 py-4 text-gray-700">Calories go to protein, not sweetener</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Third-party certification</td>
+                    <td class="px-4 py-4 text-gray-700">NSF Certified for Sport or Informed Sport database</td>
+                    <td class="px-4 py-4 text-gray-700">Independent screening for banned substances, plus label checks for NSF</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Heavy-metal documentation</td>
+                    <td class="px-4 py-4 text-gray-700">Published batch results, or a certificate of analysis on request</td>
+                    <td class="px-4 py-4 text-gray-700">The only direct evidence of lead, cadmium and arsenic levels</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Organic certification</td>
+                    <td class="px-4 py-4 text-gray-700">USDA Organic seal and certifying agent on the label</td>
+                    <td class="px-4 py-4 text-gray-700">Farming inputs, not contaminant levels</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <p>
+            The order of that table is deliberate. Ingredient lists and added sugar are the easiest to check and matter to everyone. Certification matters most to tested athletes and to anyone who wants a second set of eyes on the product. Heavy-metal documentation matters most for daily users of plant proteins, pregnant people and teenagers. Organic is the criterion people most often overrate, for reasons covered in its own section below.
+          </p>
+
+          <p>
+            Two related searches deserve a straight answer up front. People also look for a healthy protein powder and a high quality protein powder, and those phrases point at the protein itself rather than the extras. A high quality powder gives you enough leucine per serving, does not pad its protein figure with free amino acids, and delivers a full dose at a sensible calorie count. Healthy depends on how it fits your diet. Both are covered later in this guide.
+          </p>
+
+          <p>
+            One last point before the picks: a short ingredient list and a certification can pull in different directions. An unflavored single-ingredient powder is as simple as it gets, but many of them carry no sport certification. A certified flavored product is independently checked, but it may contain sweeteners and gums. Decide which matters more to you, and use the picks below accordingly.
+          </p>
+        </div>
+
+        <!-- Picks -->
+        <div id="top-picks" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            3. The Best Clean Protein Powders, Ranked
+          </h2>
+
+          <p>
+            Each of these six meets at least three of our five checkable criteria. They are ranked on label analysis, certification status and cost per 25 g of protein at typical retail prices, not on our own lab tests or tasting. We only list a certification where we are confident the product held it at the time of writing; confirm the exact product and flavor in the NSF or Informed Sport database before you buy, because listings change.
+          </p>
+
+          {PRODUCTS.map((product, index) => (
+            <div id={product.id} class="scroll-mt-24 mt-12 first:mt-8">
+              <div class="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                <div class="bg-gray-900 px-6 py-4 flex items-center justify-between">
+                  <div class="flex items-center gap-3">
+                    <span class="bg-[#FF4500] text-white w-8 h-8 rounded-full flex items-center justify-center text-sm font-black">
+                      {index + 1}
+                    </span>
+                    {productImages[product.id] && (
+                      <img
+                        src={productImages[product.id]}
+                        alt={product.name}
+                        loading="lazy"
+                        width="40"
+                        height="40"
+                        class="w-10 h-10 rounded-lg bg-white object-contain p-1 shrink-0"
+                      />
+                    )}
+                    <div>
+                      <p class="text-white font-black text-lg">{product.name}</p>
+                      <p class="text-gray-400 text-xs">{product.category}</p>
+                    </div>
+                  </div>
+                  <span class="bg-[#38BDF8]/20 text-[#38BDF8] px-3 py-1 rounded-full text-xs font-bold hidden sm:block">
+                    {product.badge}
+                  </span>
+                </div>
+                <div class="p-6">
+                  {product.rating && (
+                  <div class="flex items-center gap-2 mb-4">
+                    <div class="flex text-yellow-400">
+                      {[...Array(5)].map((_, i) => (
+                        <svg
+                          class={`w-4 h-4 ${i < Math.floor(product.rating) ? "fill-current" : "text-gray-200"}`}
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                        >
+                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        </svg>
+                      ))}
+                    </div>
+                    <span class="text-gray-500 text-sm font-bold">{product.rating}</span>
+                    {product.reviewCount && <span class="text-gray-400 text-xs">({product.reviewCount.toLocaleString()} retailer reviews)</span>}
+                  </div>
+                  )}
+
+                  <SpecGrid specs={product.specs} />
+
+                  <p class="text-gray-700 leading-relaxed mb-6">{product.description}</p>
+
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                    <div class="bg-green-50 rounded-xl p-4">
+                      <p class="text-xs font-black uppercase tracking-widest text-green-700 mb-3">Pros</p>
+                      <ul class="space-y-2">
+                        {product.pros.map((pro) => (
+                          <li class="flex items-start gap-2 text-sm text-green-800">
+                            <svg class="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            {pro}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div class="bg-red-50 rounded-xl p-4">
+                      <p class="text-xs font-black uppercase tracking-widest text-red-700 mb-3">Cons</p>
+                      <ul class="space-y-2">
+                        {product.cons.map((con) => (
+                          <li class="flex items-start gap-2 text-sm text-red-800">
+                            <svg class="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                            {con}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+
+                  <div class="bg-gray-50 rounded-xl p-4 border border-gray-100">
+                    <p class="text-xs font-black uppercase tracking-widest text-gray-500 mb-1">The Bottom Line</p>
+                    <p class="text-gray-900 font-bold">{product.bottomLine}</p>
+                  </div>
+
+                  <a
+                    href={amazonLink(product.amazonUrl, product.name, product.id)}
+                    target="_blank"
+                    rel="sponsored nofollow noopener"
+                    class="mt-6 block bg-[#FF4500] hover:bg-[#E63E00] text-white text-center py-4 rounded-xl font-black no-underline transition-colors uppercase tracking-widest text-sm"
+                  >
+                    Check Price &rarr;
+                  </a>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div id="how-we-picked" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            4. How We Picked
+          </h2>
+
+          <p>
+            Every product on this list had to meet at least three of the five criteria above, and we only listed a certification when we were confident the brand held it at the time of writing. We did not include products whose certification status we could not confirm with reasonable confidence, even when they market themselves as clean. That excluded a lot of popular tubs, which is the point: a clean label you cannot verify is just a label.
+          </p>
+
+          <p>
+            Within that pool, we ranked on protein per serving relative to calories, the length and contents of the ingredient list, the strength of the testing behind the product and the cost per 25 g of protein at typical retail prices. We did not taste-test anything. Where we mention taste or mixability, we are summarizing what buyers widely report in reviews. Label figures vary slightly by flavor and can change when a product is reformulated, so read the tub you actually buy.
+          </p>
+
+          <p>
+            We included both dairy and plant options. Whey isolates start with a natural advantage on heavy metals, because dairy proteins tend to test lower than plant proteins in independent surveys, and they deliver more leucine per gram. Plant options are here for people who avoid dairy, with extra weight given to certification and testing because their contaminant risk is higher on average. If you want a deeper look at plant choices, our <a href="/best-pea-protein-powder/">best pea protein powder</a> guide covers that category on its own.
+          </p>
+
+          <p>
+            Finally, a note on what is missing. We did not list any product as Clean Label Project certified, because that status changes and we could not confirm it for every product with enough confidence. If that seal matters to you, look it up on the Clean Label Project website for the exact product. The same advice applies to every certification on this page: the certifier's database is the final word, not our list and not the tub.
+          </p>
+        </div>
+
+        <div id="ingredients-sugar" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            5. Short Ingredient Lists and No Added Sugar
+          </h2>
+
+          <p>
+            The simplest protein powders have one ingredient: whey protein concentrate, whey isolate or pea protein. A few add sunflower or soy lecithin, a small amount of emulsifier that helps the powder mix. Flavored products add cocoa or natural flavors, a sweetener and often a thickener such as xanthan gum or guar gum. Beyond that, you start to see added fibers, digestive enzymes, probiotics, vitamin blends, creamers and proprietary blends, each of which adds cost and complexity.
+          </p>
+
+          <p>
+            Length alone is not the problem. A flavored whey isolate with six ingredients can be perfectly sensible. What a short list buys you is fewer places for something to go wrong: fewer allergens, fewer digestive triggers and fewer routes for contaminants. The ingredients most worth noticing are proprietary blends, which hide amounts; free amino acids such as glycine or taurine listed separately from the protein, which can signal amino spiking; and herbal or stimulant extras that have no business in a daily protein shake.
+          </p>
+
+          <p>
+            Sugar is easier. Most well-made protein powders contain little or no added sugar, typically sweetened instead with sucralose, stevia, monk fruit or a sugar alcohol. On products with a Nutrition Facts panel, the Added Sugars line tells you directly; on products with a Supplement Facts panel, look for cane sugar, coconut sugar, maltodextrin or dextrose in the ingredient list. A gram or two from cocoa or flavoring is not a problem. Ten grams of sugar in a protein shake is a dessert.
+          </p>
+
+          <p>
+            Sweeteners are a matter of preference rather than safety for most people, but they drive many digestive complaints. Sugar alcohols such as erythritol, xylitol and maltitol can cause gas and loose stools in larger amounts, and added fibers like inulin or chicory root are frequent culprits too. If you want to avoid sweeteners altogether, an unflavored powder is the only reliable way, and our <a href="/best-unflavored-protein-powder/">best unflavored protein powder</a> guide compares the options.
+          </p>
+        </div>
+
+        <div id="certification" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            6. Third-Party Certification: NSF and Informed
+          </h2>
+
+          <p>
+            The two certifications that carry the most weight for protein powder are NSF Certified for Sport and the Informed programs run by LGC. NSF Certified for Sport checks that the label matches what is in the product, screens for a long list of substances banned in sport, screens for certain contaminants and audits the manufacturing facility. It is the certification most US professional and college sports organizations point their athletes toward.
+          </p>
+
+          <p>
+            Informed Sport tests every batch of a certified product for banned substances before it is released, and lets buyers look up individual batch numbers. Informed Choice, its sister program, tests regular samples rather than every batch, which makes it a lighter-touch option aimed at recreational athletes. Both are valuable, but they focus on banned substances; they are not, on their own, a heavy-metal guarantee. NSF's program is broader in what it screens.
+          </p>
+
+          <div class="bg-gray-900 text-white rounded-2xl p-6 lg:p-8 my-8">
+            <p class="text-xs font-black uppercase tracking-widest text-[#38BDF8] mb-3">THE RULE</p>
+            <p class="text-xl font-bold text-white mb-3">A logo on the tub is not proof. The database is.</p>
+            <p class="text-gray-300 leading-relaxed m-0">Logos can be copied, certifications lapse, and brands often certify one flavor or size but not another. Search NSF's Certified for Sport database or the Informed Sport search tool by brand and exact product name, and check that your flavor is listed. Athletes should also check the lot number where the certifier allows it.</p>
+          </div>
+
+          <p>
+            Certification is also why some popular clean brands did not make our list. Many single-ingredient powders, including some we like, carry no sport certification at all. That does not make them unsafe. It means the only person vouching for the product is the company that sells it, which is a weaker form of evidence. If you are a tested athlete, treat a product without NSF Certified for Sport or Informed Sport status as off-limits, no matter how short its ingredient list.
+          </p>
+
+          <p>
+            For everyone else, certification is a strong tiebreaker rather than a requirement. A recreational lifter choosing between two similar whey isolates at similar prices should take the certified one. A home cook who wants a cheap unflavored pea protein for baking may reasonably skip certification and look for published heavy-metal results instead. The point is to know which kind of evidence you are relying on.
+          </p>
+        </div>
+
+        <div id="heavy-metals" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            7. Protein Powder Without Heavy Metals: What Testing Can Prove
+          </h2>
+
+          <p>
+            Search results promise the best protein powder without heavy metals, but no such product exists in a literal sense. Lead, cadmium and arsenic occur naturally in soil and water, so trace amounts turn up in almost every food, from spinach to rice to chocolate. The realistic goal is a powder with low levels that are documented, not a powder with none. Any brand claiming zero heavy metals is either testing below its instruments' detection limits or overstating its case.
+          </p>
+
+          <p>
+            Independent testing has shown consistent patterns. Consumer Reports and the Clean Label Project have both published protein powder surveys finding that plant-based products averaged more lead than dairy-based ones, and that chocolate flavors tended to test higher than vanilla. The reasons are agricultural: plants draw metals from soil, cacao takes up cadmium and can pick up lead while it dries, and cows filter much of what they eat before it reaches the milk. Individual products vary widely within each group.
+          </p>
+
+          <p>
+            There is no specific federal limit for heavy metals in protein powder, so documentation is voluntary. The strongest form is a brand that publishes batch-level heavy-metal results, often called a certificate of analysis, from an independent lab. The next best is a brand that supplies those results when you email and ask. California's Proposition 65 warning is a weak signal in either direction, because its thresholds are extremely conservative and some companies add the warning defensively whether or not their product needs it.
+          </p>
+
+          <p>
+            The Clean Label Project is worth understanding specifically. It is a nonprofit that tests consumer products for contaminants and offers a certification program to brands. Its seal can be useful evidence, but it is a private program with its own methods and thresholds, it is paid for by participating brands, and certification status changes. If a product carries the seal, look it up on the Clean Label Project's site for the exact product before relying on it.
+          </p>
+
+          <p>
+            In practice, the best protein powder for limiting heavy metals is usually a whey isolate in vanilla or unflavored, from a brand with a certification you can confirm or published batch results. If you need a plant protein, choose one with documented testing, avoid chocolate for daily use, and keep to one or two servings a day. Pregnant people and parents buying for teenagers should apply these rules strictly and run the specific product past a doctor or registered dietitian.
+          </p>
+        </div>
+
+        <div id="organic" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            8. Best Organic Protein Powder: What USDA Organic Does and Does Not Mean
+          </h2>
+
+          <p>
+            USDA Organic is the one clean-adjacent claim on a protein tub that is actually regulated. Products carrying the seal must be certified by an accredited agent under the USDA National Organic Program, and the rules prohibit synthetic pesticides and fertilizers in most cases, genetic engineering, irradiation and sewage sludge. For dairy, organic rules also cover how the animals are raised, including access to pasture and limits on antibiotics and hormones.
+          </p>
+
+          <p>
+            The label has tiers. A product labeled 100 percent organic must contain only organic ingredients. One labeled simply organic, with the USDA seal, must contain at least 95 percent organic ingredients by weight, excluding water and salt. A product labeled made with organic ingredients needs at least 70 percent and cannot use the seal. If you are looking for the best organic protein powder, the seal plus the name of the certifying agent on the label is the thing to check.
+          </p>
+
+          <p>
+            What organic does not mean is just as important. It is a standard for farming and handling methods, not a contaminant test. Lead and cadmium already in the soil are taken up by organic crops just as they are by conventional ones, so organic plant protein is not automatically lower in heavy metals, and independent testing has not shown a consistent organic advantage. Organic certification also does not screen for banned substances in sport, does not verify protein content and does not make a product higher quality as a protein source.
+          </p>
+
+          <p>
+            That leaves organic as a values choice rather than a safety one. If you care about pesticide use, farming practices or animal welfare, it is a meaningful and enforceable label, and organic options like Garden of Life Sport combine it with a sport certification. If your main concern is heavy metals or banned substances, organic does not answer it, and you need certification or published testing on top. Our <a href="/best-protein-powder-for-women/">best protein powder for women</a> guide applies the same logic to pregnancy-related choices.
+          </p>
+        </div>
+
+        <div id="healthy-high-quality" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            9. What Makes a Healthy, High Quality Protein Powder
+          </h2>
+
+          <p>
+            A high quality protein powder is first of all a good source of protein. That means enough protein per serving to matter, typically 20 to 30 g, at a calorie count that makes sense for your goal. It means enough leucine to switch on muscle protein synthesis, with research suggesting roughly 2 to 3 g per meal. Whey isolate reaches that in about 25 g of protein; most plant proteins need 30 to 35 g. And it means the protein figure is real, not inflated by cheap free amino acids.
+          </p>
+
+          <p>
+            Protein quality scores give you a shorthand. Whey, casein, egg and soy score at or near the top of both the PDCAAS and DIAAS scales; pea scores a little lower, and rice, hemp and most single seed proteins lower still. Blends can close the gap. These differences shrink when you take a slightly larger serving of a plant protein, which is why dose matters as much as source.
+          </p>
+
+          <div class="bg-gray-900 text-white rounded-2xl p-6 lg:p-8 my-8">
+            <p class="text-xs font-black uppercase tracking-widest text-[#38BDF8] mb-4">Quality by the Numbers</p>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+              <div>
+                <p class="text-3xl font-black text-white">20-30 g</p>
+                <p class="text-gray-400 text-xs mt-1">Protein per serving worth paying for</p>
+              </div>
+              <div>
+                <p class="text-3xl font-black text-[#38BDF8]">2-3 g</p>
+                <p class="text-gray-400 text-xs mt-1">Leucine per meal for a full response</p>
+              </div>
+              <div>
+                <p class="text-3xl font-black text-white">0.8 g/kg</p>
+                <p class="text-gray-400 text-xs mt-1">RDA, a minimum for sedentary adults</p>
+              </div>
+              <div>
+                <p class="text-3xl font-black text-[#38BDF8]">1.4-2.0</p>
+                <p class="text-gray-400 text-xs mt-1">ISSN range in g/kg/day for active people</p>
+              </div>
+            </div>
+          </div>
+
+          <p>
+            Healthy is about fit, not the tub. A protein powder is a convenient way to close a gap between your intake and your target, and it should not replace whole meals. The RDA of 0.8 g per kilogram is a floor for sedentary adults; the International Society of Sports Nutrition recommends 1.4 to 2.0 g per kilogram per day for people who exercise, and a 2018 meta-analysis by Morton and colleagues found muscle gains from training plateaued around 1.6 g per kilogram. Our guide to <a href="/how-much-protein-do-i-need/">how much protein you need</a> works through the math.
+          </p>
+
+          <p>
+            For most people, one or two scoops a day of a well-documented powder is a healthy habit. Beyond about 2.2 g per kilogram there is little evidence of extra benefit, and each extra scoop adds a little more exposure to whatever trace contaminants the product carries. People with kidney disease, liver disease, food allergies, a pregnancy or regular medications should check with a doctor or registered dietitian before adding protein powder, because the right choice depends on individual history.
+          </p>
+        </div>
+
+        <div id="who-should-be-strict" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            10. Who Should Be Strictest About Clean Criteria
+          </h2>
+
+          <p>
+            Not everyone needs to apply every criterion with equal force. A healthy adult using one scoop of whey isolate a day is in a low-risk position whatever the label says, provided the brand is reputable. The criteria above start to matter more as exposure rises or the stakes change, and there are four groups for whom they matter most.
+          </p>
+
+          <p>
+            Tested athletes come first, because a contaminated supplement can end a career. Under the World Anti-Doping Agency code, athletes are strictly liable for what is in their system, and contamination is generally not a defense. For this group, NSF Certified for Sport or Informed Sport status, confirmed for the exact product, flavor and ideally lot, is not optional. Whey isolates such as Thorne and Klean Isolate are common choices in this group, and our <a href="/best-whey-protein-isolate/">best whey protein isolate</a> guide covers more.
+          </p>
+
+          <p>
+            Pregnant and breastfeeding people come next, because lead exposure carries particular risk to a developing child. Choose a product with published heavy-metal results or strong certification, lean toward whey or a well-tested plant blend, avoid chocolate for daily use and avoid herbal or stimulant extras. Teenagers are in a similar position and usually do not need protein powder at all. In both cases, take the product to a doctor or registered dietitian before starting.
+          </p>
+
+          <p>
+            The last group is heavy daily users of plant protein, especially people taking two or three servings a day. Because plant proteins average higher metal levels, exposure adds up faster. Rotate between documented brands, favor vanilla or unflavored, and get more of your protein from whole foods. If you want to compare clean picks against the broader market, our main <a href="/best-protein-powder/">best protein powder rankings</a> cover every major category.
+          </p>
+        </div>
+
+        <!-- Common Mistakes -->
+        <div id="mistakes" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            11. Common Mistakes to Avoid
+          </h2>
+
+          <div class="space-y-6 my-8">
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Trusting the word clean</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Clean, pure and natural are marketing words with no testing standard behind them. A tub can say all three and contain a proprietary blend, added sugar and untested plant protein. Ignore the front of the tub, read the ingredient list, and look up any certification in the certifier's own database before paying a premium.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Treating organic as a heavy-metal guarantee</h3>
+              <p class="text-gray-700 text-sm m-0">
+                USDA Organic rules cover pesticides, fertilizers, genetic engineering and animal husbandry, not lead or cadmium already in the soil. Organic plant proteins can test as high as conventional ones. If heavy metals are your concern, look for published batch results or a certification that includes contaminant screening, alongside organic if you value it.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Believing a logo without checking</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Certification logos can be copied, certifications lapse, and brands often certify one flavor but not another. Search NSF Certified for Sport or Informed Sport by brand, product and flavor before you buy. Tested athletes should go further and check the lot number, because a lapsed listing offers no protection in a doping case.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Expecting zero heavy metals</h3>
+              <p class="text-gray-700 text-sm m-0">
+                No protein powder is free of heavy metals, because lead, cadmium and arsenic occur naturally in soil and turn up in most foods. A brand promising zero is overstating its case. The useful question is whether levels are low and documented, so ask for a recent certificate of analysis from an independent lab.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Choosing chocolate plant protein for daily use</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Cacao tends to carry extra cadmium and lead, and plant proteins already average more metals than whey. Combining the two every day stacks the risk. If you drink a plant shake daily, choose vanilla or unflavored from a documented brand, and treat chocolate as an occasional option rather than the default.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ -->
+        <div id="faq" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            12. Frequently Asked Questions
+          </h2>
+
+          <div class="space-y-6">
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">What is the cleanest protein powder?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                There is no official cleanest powder, because clean has no legal definition. The closest practical answer is a whey isolate or single-source protein with a short ingredient list, no added sugar, NSF Certified for Sport or Informed Sport status you can confirm, and published heavy-metal results. Thorne Whey Protein Isolate and Klean Isolate meet most of those criteria.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is organic protein powder better?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Organic is better for some values, such as pesticide use and farming practices, and it is a regulated, enforceable label. It is not a contaminant standard. Organic protein powder is not automatically lower in heavy metals and does not screen for banned substances, so pair organic with a sport certification or published testing if safety is your main concern.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Which protein powder has the least heavy metals?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Independent surveys have found that whey and other dairy proteins tend to test lower than plant proteins, and vanilla or unflavored tends to test lower than chocolate. Individual products vary, so the most reliable choice is one with batch results published by an independent lab. A brand claiming zero heavy metals is overstating what any test can show.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is whey or plant protein cleaner?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                On heavy metals, whey usually has the edge, because cows filter much of what they eat before it reaches the milk, while plants absorb metals directly from soil. On ingredient lists and allergens, a single-source pea protein can be just as simple as an unflavored whey. Pick based on your diet, then apply the same documentation checks to either.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">What does NSF Certified for Sport actually test?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                NSF Certified for Sport verifies that the label matches the contents, screens for a long list of substances banned in sport, screens for certain contaminants and audits the manufacturing facility. Certification applies to specific products and flavors, so search NSF's database for the exact item. Informed Sport, a separate program, tests every batch for banned substances before release.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">What makes a protein powder high quality?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                A high quality powder delivers 20 to 30 g of protein per serving, enough leucine to reach roughly 2 to 3 g per meal, and a protein figure that is not inflated by free amino acids such as glycine or taurine. Whey, casein, egg and soy score highest on protein quality scales; plant proteins work well at slightly larger servings.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is clean protein powder safe during pregnancy?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Many people use protein powder during pregnancy, but it is worth extra caution. Choose a product with published heavy-metal results or strong certification, lean toward whey or a well-tested blend, avoid chocolate for daily use and skip herbal or stimulant extras. Most importantly, take the specific product to your obstetric provider or a registered dietitian before you start.
+              </p>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Related Guides -->
+        <div class="mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">Related Safety and Label Guides</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <a href="/is-protein-powder-safe/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#FF4500] font-black text-xs uppercase tracking-widest mb-2">Safety</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Is Protein Powder Safe?</h3>
+              <p class="text-gray-500 text-sm mt-2">Heavy metals, contamination, Prop 65 warnings and who should be careful.</p>
+            </a>
+            <a href="/best-unflavored-protein-powder/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#38BDF8] font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Unflavored Protein Powder</h3>
+              <p class="text-gray-500 text-sm mt-2">Sweetener-free powders for coffee, cooking and smoothies.</p>
+            </a>
+            <a href="/best-pea-protein-powder/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#FF4500] font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Pea Protein Powder</h3>
+              <p class="text-gray-500 text-sm mt-2">Pea isolates and blends ranked on dose, leucine and heavy-metal testing.</p>
+            </a>
+          </div>
+        </div>
+
+        <!-- Closing -->
+        <div class="mt-16 bg-gray-900 text-white rounded-2xl p-8">
+          <h2 class="text-2xl font-black text-white mb-4">The Bottom Line</h2>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            Clean is a feeling a brand wants you to have, not a standard any product meets. Replace it with checks you can perform: count the ingredients, look for added sugar, confirm any certification in the certifier's database, and ask for heavy-metal results. Treat USDA Organic as a farming choice, not a contaminant test.
+          </p>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            For most people, the cleanest practical choice is a whey isolate in vanilla or unflavored with NSF Certified for Sport status. If you avoid dairy, choose a certified or well-documented plant protein, avoid chocolate for daily use, and take a slightly larger serving. Anyone pregnant, managing a health condition or buying for a teenager should run the final choice past a doctor or registered dietitian.
+          </p>
+        </div>
+
+        <MoreInCategory category="Safety & Labels" links={moreInCategory} />
+
+        <AuthorBio />
+      </div>
+    </div>
+  </article>
+</Layout>
