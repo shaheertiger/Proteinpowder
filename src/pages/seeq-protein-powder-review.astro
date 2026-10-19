@@ -1,0 +1,933 @@
+---
+import Layout from "../layouts/Layout.astro";
+import MoreInCategory from "../components/MoreInCategory.astro";
+import { AUTHORS, DEFAULT_AUTHOR, authorSchema } from "../data/authors";
+import { SITE_NAME, SITE_URL } from "../data/site";
+import AuthorAvatar from "../components/AuthorAvatar.astro";
+import QuickPicks from "../components/QuickPicks.astro";
+import AuthorBio from "../components/AuthorBio.astro";
+import { amazonLink } from "../data/affiliate";
+import TrustBadge from "../components/TrustBadge.astro";
+import SocialProof from "../components/SocialProof.astro";
+import SpecGrid from "../components/SpecGrid.astro";
+import productImages from "../data/product-images.json";
+import { pageDates } from "../data/dates";
+
+const moreInCategory = [
+  {
+    "title": "Isopure Protein Powder Review",
+    "url": "/isopure-protein-powder-review/"
+  },
+  {
+    "title": "Myprotein Review",
+    "url": "/myprotein-review/"
+  },
+  {
+    "title": "Is Protein Powder Safe?",
+    "url": "/is-protein-powder-safe/"
+  }
+];
+const author = AUTHORS[DEFAULT_AUTHOR];
+const dates = pageDates(Astro.url.pathname, { published: "2026-10-19", modified: "2026-10-19" });
+const title = "SEEQ Protein Powder Review: Is the TikTok Clear Whey Worth the Price?";
+const description =
+  "SEEQ protein powder review: the clear whey isolate's 22 g label, sweeteners, missing certification and cost per 25 g, plus who should buy a cheaper alternative.";
+
+const PRODUCTS: {
+  id: string;
+  name: string;
+  brand?: string;
+  badge: string;
+  category: string;
+  description: string;
+  pros: string[];
+  cons: string[];
+  bottomLine: string;
+  specs?: Record<string, string>;
+  rating?: number;
+  reviewCount?: number;
+  amazonUrl?: string;
+}[] = [
+  {
+    "id": "seeq-clear-whey-protein-isolate",
+    "name": "SEEQ Clear Whey Protein Isolate",
+    "brand": "SEEQ",
+    "badge": "The Flagship",
+    "category": "Clear whey protein isolate, tub",
+    "description": "SEEQ's tub is the brand's main product: a clear whey isolate that mixes with water into a light, fruit-flavored drink. The Amazon listing states 22 g of protein, 4.5 g of BCAAs, 0 g of sugar and 0 g of lactose per scoop, and nutrition databases put a scoop at about 100 calories. Sweeteners appear to vary by listing, so check your flavor's panel.",
+    "pros": [
+      "22 g of whey isolate protein per scoop, per the label",
+      "Roughly 100 calories and 0 g sugar, per databases and the label",
+      "Juice-style flavors for people who dislike milky shakes",
+      "Sold by the brand's own storefront on Amazon"
+    ],
+    "cons": [
+      "No NSF, Informed Sport or Clean Label Project certification we could find",
+      "Premium cost per 25 g of protein",
+      "Sweetener system appears to differ between listings"
+    ],
+    "bottomLine": "A pleasant, lean clear whey that you pay a clear premium for, with no certificate behind it.",
+    "specs": {
+      "Protein per serving": "22 g (label)",
+      "Calories": "About 100 (databases)",
+      "Third-party testing": "No certification found",
+      "Best for": "People who dislike milky shakes"
+    },
+    "amazonUrl": "https://www.amazon.com/dp/B0FHQTL57R"
+  },
+  {
+    "id": "seeq-clear-protein-packets-sample-pack",
+    "name": "SEEQ Clear Protein Packets Sample Pack (18 Count)",
+    "brand": "SEEQ",
+    "badge": "Best Way to Try It",
+    "category": "Clear whey isolate, single-serve packets",
+    "description": "The 18-packet sample box bundles three of SEEQ's best sellers, Blue Razz Freeze, Strawberry Lemonade and Watermelon Wave, per the listing. Each packet carries the same 22 g of protein as a scoop. The listing's ingredients include whey isolate, natural flavors, sucralose, citric and malic acids, spirulina for color and Reb A stevia. It costs more per gram than a tub but lets you find a flavor first.",
+    "pros": [
+      "Three flavors to test before buying a full tub",
+      "22 g of protein per packet, per the label",
+      "Portable single-serve format for travel and gym bags"
+    ],
+    "cons": [
+      "Highest cost per 25 g of SEEQ's formats",
+      "Contains sucralose and stevia per the listing"
+    ],
+    "bottomLine": "Buy this first, then commit to a tub of the flavor you actually like.",
+    "specs": {
+      "Protein per serving": "22 g per packet (label)",
+      "Calories": "About 100 (databases)",
+      "Third-party testing": "No certification found",
+      "Best for": "Sampling flavors, travel"
+    },
+    "amazonUrl": "https://www.amazon.com/dp/B0F954C9FT"
+  },
+  {
+    "id": "isopure-infusions",
+    "name": "Isopure Infusions",
+    "brand": "Isopure",
+    "badge": "Alternative: Easier to Find",
+    "category": "Clear whey isolate powder",
+    "description": "Isopure Infusions is the clear version of Isopure's long-running whey isolate line and is widely stocked in US stores and online. It mixes into a light, fruit-flavored drink with about 20 g of protein per scoop and close to zero sugar and fat, per the label at the time of writing. It suits buyers who want a clear whey from a brand with a long isolate track record.",
+    "pros": [
+      "About 20 g whey isolate protein per scoop, per the label",
+      "From a brand known for low-carb isolates for decades",
+      "Widely stocked, so easy to compare on price"
+    ],
+    "cons": [
+      "Slightly smaller scoop than SEEQ",
+      "Premium cost per 25 g; check certification for your flavor"
+    ],
+    "bottomLine": "The clear whey to pick if you want a long-established isolate brand you can buy almost anywhere.",
+    "specs": {
+      "Protein per serving": "About 20 g (label)",
+      "Calories": "Low; check label by flavor",
+      "Third-party testing": "Check certifier database",
+      "Best for": "Store availability, low sugar"
+    }
+  },
+  {
+    "id": "thorne-whey-protein-isolate",
+    "name": "Thorne Whey Protein Isolate",
+    "brand": "Thorne",
+    "badge": "Alternative: NSF Certified",
+    "category": "Whey protein isolate, flavored",
+    "description": "Thorne's whey isolate is the pick for anyone who reads SEEQ's missing certification as a dealbreaker. It delivers about 21 g of protein per scoop from whey isolate with NSF Certified for Sport status, per the brand and NSF at the time of writing. It makes a conventional shake rather than a clear drink, so it trades SEEQ's juice-like texture for documented testing.",
+    "pros": [
+      "NSF Certified for Sport, per the brand and NSF (verify the flavor)",
+      "Whey isolate base with a short ingredient list",
+      "No added sugar"
+    ],
+    "cons": [
+      "Not a clear, juice-style drink",
+      "Premium cost per 25 g of protein"
+    ],
+    "bottomLine": "Choose Thorne when verified testing matters more to you than a fruity, transparent drink.",
+    "specs": {
+      "Protein per serving": "About 21 g (label)",
+      "Calories": "Check label by flavor",
+      "Third-party testing": "NSF Certified for Sport (verify flavor)",
+      "Best for": "Tested athletes, cautious buyers"
+    }
+  }
+];
+
+const schema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Home",
+          item: `${SITE_URL}/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Best Lists",
+          item: `${SITE_URL}/best-of/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 3,
+          name: "SEEQ Protein Powder Review",
+          item: `${SITE_URL}/seeq-protein-powder-review/`,
+        },
+      ],
+    },
+    {
+      "@type": "FAQPage",
+      mainEntity: [
+        {
+          "@type": "Question",
+          "name": "Is SEEQ protein powder good?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "As a drink, yes. SEEQ lists 22 g of whey isolate protein, 0 g of sugar and about 100 calories per scoop, and many buyers like its juice-style flavors. Its weaknesses are a premium price, sweeteners that appear to vary between listings and no independent certification we could find. It is a good clear whey, not the best value or the most verified one."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How much protein is in a scoop of SEEQ?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "SEEQ's Amazon listing states 22 g of clear whey protein and 4.5 g of BCAAs per scoop, and a supplement database lists the scoop at 28 g. Figures can vary slightly by flavor, so check your tub. That is a solid dose for most adults, a little under the 25 g figure we use to compare protein powders across the site."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is SEEQ third-party tested?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "We could not find SEEQ in the NSF Certified for Sport, Informed Sport, Informed Choice or Clean Label Project databases at the time of writing, and independent reviewers list it as not third-party tested. That does not mean it is unsafe. It means there is no independent certificate to rely on, which matters most for drug-tested athletes and cautious buyers."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does SEEQ contain sucralose?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Some listings say yes. The Amazon stick pack listing names sucralose and Reb A stevia, while a supplement database entry for a tub lists monk fruit and Reb M instead. The formula appears to vary by flavor, format or production run. If you avoid sucralose, read the ingredient panel on the exact product you buy before drinking it."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Where can I buy SEEQ protein?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "SEEQ sells direct from its own store, through its brand storefront on Amazon, at Target in a smaller tub, and in larger tubs and stick packs at Costco and Sam's Club, per those retailers' listings at the time of writing. On Amazon, check that the seller is SEEQ Supply rather than an unknown reseller, which protects you from old or tampered stock."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is SEEQ good for weight loss?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It can help, because a scoop gives 22 g of protein for roughly 100 calories with no sugar, and protein supports fullness and muscle retention during a diet. But it does not burn fat or replace a calorie deficit. Its GLP-1 wording refers to easy protein intake, not to any effect on medication. Ask your prescriber or dietitian for personal advice."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I mix SEEQ with milk?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It is not designed for milk. Clear whey contains acids that can curdle dairy, and the whole point of the format is a transparent, juice-like drink. Mix one scoop with 14 to 16 oz of cold water, shake or froth it, and let it settle for about 30 seconds. If you want a creamy shake, a regular whey is the better buy."
+          }
+        }
+      ],
+    },
+    {
+      "@type": "Article",
+      headline: title,
+      author: authorSchema(),
+      datePublished: dates.published,
+      dateModified: dates.modified,
+      publisher: { "@type": "Organization", name: SITE_NAME, url: SITE_URL },
+    },
+    {
+      "@type": "ItemList",
+      name: title,
+      numberOfItems: PRODUCTS.length,
+      itemListElement: PRODUCTS.map((product, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name: product.name,
+        url: new URL(`#${product.id}`, Astro.url).toString(),
+      })),
+    },
+    ...PRODUCTS.map((product) => ({
+      "@type": "Product",
+      name: product.name,
+      description: product.description,
+      brand: {
+        "@type": "Brand",
+        name: product.brand ?? product.name.split(" ")[0],
+      },
+    })),
+  ],
+};
+---
+
+<Layout
+  title={title}
+  description={description}
+  ogType="article"
+  article={{
+    publishedTime: dates.published,
+    modifiedTime: dates.modified,
+    author: author.name,
+    section: "Brand Reviews",
+    tags: [
+      "seeq protein powder",
+      "seeq protein",
+      "seeq whey protein",
+      "seeq protein review"
+    ],
+  }}
+  jsonLd={schema}
+  stickyCta={{
+    text: "See Our Top Clean Protein Picks",
+    link: "/best-clean-protein-powder/",
+  }}
+>
+  <article class="relative overflow-hidden">
+    <!-- Hero Section -->
+    <div class="bg-gray-900 py-16 lg:py-24 relative overflow-hidden">
+      <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(circle at 20% 20%, #38BDF8 0, transparent 45%), radial-gradient(circle at 80% 60%, #FF4500 0, transparent 40%);"></div>
+      <div class="max-w-4xl mx-auto px-4 relative z-10 text-center">
+        <div class="flex justify-center mb-6">
+          <TrustBadge />
+        </div>
+        <div class="flex justify-center gap-3 mb-6">
+          <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#FF4500]/20 text-[#FF4500] text-xs font-black uppercase tracking-widest border border-[#FF4500]/30">
+            Brand Review
+          </span>
+          <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-green-500/10 text-green-400 text-xs font-bold uppercase tracking-widest border border-green-500/20">
+            Label-Checked
+          </span>
+        </div>
+        <h1 class="text-4xl lg:text-6xl font-black text-white leading-tight mb-8">
+          SEEQ Protein Powder <span class="text-[#38BDF8]">Review</span>
+        </h1>
+        <p class="text-xl text-gray-300 leading-relaxed mb-8 max-w-3xl mx-auto">
+          SEEQ sells one thing: a juice-style clear whey isolate with 22 g of protein a scoop. We checked the label, the sweeteners, the testing and the real cost per 25 g so you know whether it earns a place in your cupboard.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a
+            href="#seeq-clear-whey-protein-isolate"
+            class="px-8 py-4 bg-[#FF4500] hover:bg-[#E63E00] text-white font-black rounded-xl shadow-lg transition-all no-underline"
+          >
+            See Our #1 Pick
+          </a>
+          <a
+            href="#label"
+            class="px-8 py-4 bg-white/10 hover:bg-white/20 text-white font-bold rounded-xl border border-white/10 no-underline"
+          >
+            Read the Label Breakdown
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Author & Meta -->
+    <div class="max-w-3xl mx-auto px-4 pt-12">
+      <div class="flex items-center gap-6 border-b border-gray-100 pb-8">
+        <div class="flex items-center gap-3">
+          <AuthorAvatar size={48} />
+          <div>
+            <p class="text-sm font-bold text-gray-900">{author.name}</p>
+            <p class="text-xs text-gray-500 uppercase tracking-widest">{author.role}</p>
+          </div>
+        </div>
+        <div class="h-10 w-px bg-gray-200 hidden sm:block"></div>
+        <div class="hidden sm:block">
+          <p class="text-sm font-bold text-gray-900">Last Updated</p>
+          <p class="text-xs text-gray-500">{dates.display}</p>
+        </div>
+        <div class="hidden sm:block ml-auto">
+          <SocialProof />
+        </div>
+      </div>
+    </div>
+
+    <!-- Table of Contents -->
+    <div class="max-w-3xl mx-auto px-4 py-10">
+      <div class="bg-gray-50 border border-gray-200 rounded-2xl p-6 lg:p-8">
+        <h2 class="text-lg font-black text-gray-900 mb-4 flex items-center gap-2">
+          In This Guide
+        </h2>
+        <nav class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <a href="#verdict" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">1. The Short Verdict</a>
+          <a href="#what-is-seeq" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">2. What SEEQ Actually Sells</a>
+          <a href="#top-picks" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">3. Our Top Picks</a>
+          <a href="#label" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">4. The Label, Line by Line</a>
+          <a href="#sweeteners" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">5. Sweeteners and the Formula Question</a>
+          <a href="#cost" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">6. Cost per 25 g of Protein</a>
+          <a href="#testing" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">7. Testing and Certification</a>
+          <a href="#taste" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">8. Taste, Mixing and Foam</a>
+          <a href="#who" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">9. Who Should Buy It, and Who Should Skip</a>
+          <a href="#compare" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">10. SEEQ vs Other Clear Wheys</a>
+          <a href="#mistakes" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">11. Common Mistakes</a>
+          <a href="#faq" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">12. FAQ</a>
+        </nav>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="max-w-3xl mx-auto px-4 pb-16 lg:pb-24">
+      <div class="prose prose-lg prose-blue max-w-none text-gray-700 leading-relaxed">
+        <p class="text-2xl font-medium text-gray-900 mb-8 italic">
+          SEEQ is a good clear whey with a confusing sweetener story, no independent certification and a price that sits at the top of the category. Buy it if you want protein that drinks like a sports drink and you value the flavors. Skip it if you need a tested product or the cheapest gram of whey.
+        </p>
+
+        <QuickPicks products={PRODUCTS} />
+
+        <div id="verdict" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            1. The Short Verdict
+          </h2>
+
+          <p>
+            SEEQ Clear Whey Isolate is a well-made clear protein. Each scoop lists 22 g of protein from whey protein isolate, 0 g of sugar and 0 g of lactose, per the Amazon listing at the time of writing, and nutrition databases put a scoop at roughly 100 calories. That is a genuinely lean way to get protein, and the flavor range is built around fruit and candy profiles that suit people who have given up on milky shakes.
+          </p>
+
+          <p>
+            The catch is everything around the powder. SEEQ does not carry NSF Certified for Sport, Informed Sport or Clean Label Project certification that we could find, and independent reviewers who have covered it list it as not third-party tested. The sweetener system also appears to differ between listings, which matters if you are avoiding sucralose. And the price per gram of protein is high even by clear whey standards.
+          </p>
+
+          <p>
+            So the honest answer to whether SEEQ is any good is yes, as a drink. As a value buy or a documented clean protein, it is beaten by products that cost less per gram or carry a certificate. If clean labels are your priority, our <a href="/best-clean-protein-powder/">best clean protein powder</a> guide ranks the products that can prove their testing, and that is where we would send a cautious buyer first.
+          </p>
+
+          <div class="bg-gray-900 text-white rounded-2xl p-6 lg:p-8 my-8">
+            <p class="text-xs font-black uppercase tracking-widest text-[#38BDF8] mb-3">THE VERDICT</p>
+            <p class="text-xl font-bold text-white mb-3">Good clear whey, premium price, no certificate.</p>
+            <p class="text-gray-300 leading-relaxed m-0">Buy SEEQ for the flavor and the light texture. Do not buy it expecting independent testing, a stevia-only label or a budget price per gram of protein.</p>
+          </div>
+
+          <p>
+            One more framing point before the details. A 22 g scoop is a reasonable dose for most adults, but it is a little under the 25 g figure we use to compare products across the site. That small gap pushes SEEQ's cost per 25 g up further, and it is why the comparison tables later on use cost per 25 g rather than cost per scoop.
+          </p>
+        </div>
+
+        <div id="what-is-seeq" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            2. What SEEQ Actually Sells
+          </h2>
+
+          <p>
+            SEEQ is a Minneapolis-based brand that launched in October 2021, founded by Hannah Perez and Ben Zaver, per the founders' own podcast interviews and business-database records. It grew on TikTok through founder-led videos and street sampling clips before moving into retail. SEEQ launched nationally at Target at the end of December 2024, and it has since appeared at Costco and Sam's Club in larger tubs and stick packs.
+          </p>
+
+          <p>
+            The product line is narrow. Everything SEEQ sells is a version of its clear whey isolate: full tubs sold direct and on Amazon, a smaller tub made for Target shelves, and single-serve stick packs sold in variety boxes. The flavors rotate, but the core list has included Blue Razz Freeze, Strawberry Lemonade, Watermelon Wave, Mango Pineapple, Fruit Punch and Sour Green Apple, with limited runs such as Juicy Peach and cocktail-inspired flavors.
+          </p>
+
+          <p>
+            That narrow range is not a flaw in itself. It means the brand has put its effort into one drink rather than a catalog of mediocre tubs. But it also means there is no SEEQ option for people who want a creamy shake, a casein for night-time, a plant protein or an unflavored powder for baking. If you need any of those, you are shopping elsewhere regardless of how much you like the brand.
+          </p>
+
+          <p>
+            On Amazon, the listings are sold by SEEQ Supply, the brand's own storefront, at the time of writing. That matters for counterfeits and freshness. When you buy a smaller brand's protein on Amazon, check the seller line under the price and avoid third-party resellers with no history, because expired or tampered stock is a real risk with fast-moving viral products.
+          </p>
+
+          <div class="overflow-hidden border border-gray-200 rounded-2xl my-8">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Format</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Where</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Servings</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Full tub</td>
+                    <td class="px-4 py-4 text-gray-700">SEEQ direct, Amazon</td>
+                    <td class="px-4 py-4 text-gray-700">About 22-25 per tub, by listing</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Retail tub</td>
+                    <td class="px-4 py-4 text-gray-700">Target</td>
+                    <td class="px-4 py-4 text-gray-700">About 15 per tub</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Large tub</td>
+                    <td class="px-4 py-4 text-gray-700">Costco</td>
+                    <td class="px-4 py-4 text-gray-700">2.16 lb tub, per the listing</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Stick packs</td>
+                    <td class="px-4 py-4 text-gray-700">Amazon, Sam's Club</td>
+                    <td class="px-4 py-4 text-gray-700">18-count variety boxes</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Picks -->
+        <div id="top-picks" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            3. The SEEQ Range and Two Alternatives
+          </h2>
+
+          <p>
+            SEEQ is effectively a one-product brand, so the cards below cover its two main formats on Amazon, the tub and the single-serve sample pack, plus two clearly labelled alternatives from other brands. Label figures are per the listing at the time of writing and can vary by flavor, so check the tub you actually buy.
+          </p>
+
+          {PRODUCTS.map((product, index) => (
+            <div id={product.id} class="scroll-mt-24 mt-12 first:mt-8">
+              <div class="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                <div class="bg-gray-900 px-6 py-4 flex items-center justify-between">
+                  <div class="flex items-center gap-3">
+                    <span class="bg-[#FF4500] text-white w-8 h-8 rounded-full flex items-center justify-center text-sm font-black">
+                      {index + 1}
+                    </span>
+                    {productImages[product.id] && (
+                      <img
+                        src={productImages[product.id]}
+                        alt={product.name}
+                        loading="lazy"
+                        width="40"
+                        height="40"
+                        class="w-10 h-10 rounded-lg bg-white object-contain p-1 shrink-0"
+                      />
+                    )}
+                    <div>
+                      <p class="text-white font-black text-lg">{product.name}</p>
+                      <p class="text-gray-400 text-xs">{product.category}</p>
+                    </div>
+                  </div>
+                  <span class="bg-[#38BDF8]/20 text-[#38BDF8] px-3 py-1 rounded-full text-xs font-bold hidden sm:block">
+                    {product.badge}
+                  </span>
+                </div>
+                <div class="p-6">
+                  {product.rating && (
+                  <div class="flex items-center gap-2 mb-4">
+                    <div class="flex text-yellow-400">
+                      {[...Array(5)].map((_, i) => (
+                        <svg
+                          class={`w-4 h-4 ${i < Math.floor(product.rating) ? "fill-current" : "text-gray-200"}`}
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                        >
+                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        </svg>
+                      ))}
+                    </div>
+                    <span class="text-gray-500 text-sm font-bold">{product.rating}</span>
+                    {product.reviewCount && <span class="text-gray-400 text-xs">({product.reviewCount.toLocaleString()} retailer reviews)</span>}
+                  </div>
+                  )}
+
+                  <SpecGrid specs={product.specs} />
+
+                  <p class="text-gray-700 leading-relaxed mb-6">{product.description}</p>
+
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                    <div class="bg-green-50 rounded-xl p-4">
+                      <p class="text-xs font-black uppercase tracking-widest text-green-700 mb-3">Pros</p>
+                      <ul class="space-y-2">
+                        {product.pros.map((pro) => (
+                          <li class="flex items-start gap-2 text-sm text-green-800">
+                            <svg class="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            {pro}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div class="bg-red-50 rounded-xl p-4">
+                      <p class="text-xs font-black uppercase tracking-widest text-red-700 mb-3">Cons</p>
+                      <ul class="space-y-2">
+                        {product.cons.map((con) => (
+                          <li class="flex items-start gap-2 text-sm text-red-800">
+                            <svg class="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                            {con}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+
+                  <div class="bg-gray-50 rounded-xl p-4 border border-gray-100">
+                    <p class="text-xs font-black uppercase tracking-widest text-gray-500 mb-1">The Bottom Line</p>
+                    <p class="text-gray-900 font-bold">{product.bottomLine}</p>
+                  </div>
+
+                  <a
+                    href={amazonLink(product.amazonUrl, product.name, product.id)}
+                    target="_blank"
+                    rel="sponsored nofollow noopener"
+                    class="mt-6 block bg-[#FF4500] hover:bg-[#E63E00] text-white text-center py-4 rounded-xl font-black no-underline transition-colors uppercase tracking-widest text-sm"
+                  >
+                    Check Price &rarr;
+                  </a>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div id="label" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            4. The Label, Line by Line
+          </h2>
+
+          <p>
+            Start with protein. The Amazon listing states 22 g of clear whey protein and 4.5 g of BCAAs per scoop, and a supplement database entry for the tub lists a 28 g scoop with 22 g of protein and 10 mg of sodium. That is a protein density of close to 80 percent by weight, which is what you would expect from a well-filtered isolate with very little filler.
+          </p>
+
+          <p>
+            Calories are less clearly published. Nutrition databases list a SEEQ scoop at about 100 calories, and independent reviews repeat the same number. With 22 g of protein contributing roughly 88 of those calories, the rest is a trace of carbohydrate from flavoring and acids. Either way, this is one of the leanest ways to buy protein, and it suits people counting calories closely.
+          </p>
+
+          <p>
+            The ingredient list on the stick pack listing reads: whey protein isolate, natural flavors, sucralose, citric acid, malic acid, polysorbate 80 and/or sunflower lecithin, spirulina powder for color, Reb A stevia and silicone as an anti-foaming agent. The acids give the drink its tart, juice-like edge, and the anti-foaming agent is there because clear whey is notorious for foaming when shaken.
+          </p>
+
+          <p>
+            Allergen notes are reasonable. SEEQ says its tubs are made in a facility free of nuts and soy, and the products are gluten-free. It is still a dairy product, so anyone with a true milk allergy should not drink it, even though the lactose figure is listed as 0 g. People with lactose intolerance often tolerate isolate well, but tolerance varies, and a doctor or dietitian is the right person to ask if you have reacted badly to dairy before.
+          </p>
+
+          <div class="bg-gray-900 text-white rounded-2xl p-6 lg:p-8 my-8">
+            <p class="text-xs font-black uppercase tracking-widest text-[#38BDF8] mb-4">Per Scoop, per the Label</p>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+              <div>
+                <p class="text-3xl font-black text-white">22 g</p>
+                <p class="text-gray-400 text-xs mt-1">Protein</p>
+              </div>
+              <div>
+                <p class="text-3xl font-black text-[#38BDF8]">4.5 g</p>
+                <p class="text-gray-400 text-xs mt-1">BCAAs</p>
+              </div>
+              <div>
+                <p class="text-3xl font-black text-white">0 g</p>
+                <p class="text-gray-400 text-xs mt-1">Sugar</p>
+              </div>
+              <div>
+                <p class="text-3xl font-black text-[#38BDF8]">About 100</p>
+                <p class="text-gray-400 text-xs mt-1">Calories (databases)</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="sweeteners" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            5. Sweeteners and the Formula Question
+          </h2>
+
+          <p>
+            This is the part of SEEQ that deserves the most care. The stick pack listing on Amazon names sucralose and Reb A stevia as sweeteners. A supplement database entry for a SEEQ tub instead lists monk fruit and Reb M, a stevia-derived sweetener, with no sucralose. Earlier independent reviews of SEEQ also flagged sucralose as a con. And at least one warehouse club listing describes the product as having no artificial sweeteners.
+          </p>
+
+          <p>
+            The most likely explanation is that the formula has changed over time or differs by flavor and format. That is common with fast-growing brands, which tweak recipes as they move between co-manufacturers and retail partners. It is not a scandal, but it does mean you cannot assume the tub on your doorstep matches a review you read last year, or even the listing you clicked on.
+          </p>
+
+          <p>
+            If you avoid sucralose, read the ingredient panel on the physical product before you drink it, and check the specific flavor. If you are fine with sucralose, the issue mostly disappears, since sucralose and stevia are both widely used and approved sweeteners at the amounts found in protein powder. Some people do report stomach upset from stevia or sugar alcohols, so if you have had trouble before, start with a single stick pack.
+          </p>
+
+          <p>
+            The color question is simpler. SEEQ uses spirulina powder for color on the listing we checked, rather than synthetic dyes, which will appeal to buyers who read labels for artificial colors. Polysorbate 80 and silicone are processing aids that improve clarity and reduce foam. They are permitted food additives, and the amounts are small, but they do mean SEEQ is not a short, kitchen-ingredient label.
+          </p>
+
+          <div class="bg-gray-900 text-white rounded-2xl p-6 lg:p-8 my-8">
+            <p class="text-xs font-black uppercase tracking-widest text-[#38BDF8] mb-3">WHAT TO DO</p>
+            <p class="text-xl font-bold text-white mb-3">Read your tub, not the review.</p>
+            <p class="text-gray-300 leading-relaxed m-0">Sweeteners appear to vary between SEEQ listings. If sucralose or stevia is a dealbreaker, check the ingredient panel of the exact flavor you buy before you open it.</p>
+          </div>
+        </div>
+
+        <div id="cost" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            6. Cost per 25 g of Protein
+          </h2>
+
+          <p>
+            Clear whey is expensive across the board because isolate costs more to produce than concentrate and the scoops are smaller. SEEQ sits at the upper end even within that group. At the prices we saw on Amazon and Target at the time of writing, a SEEQ tub works out at very roughly 2.20 to 2.80 dollars per 25 g of protein, depending on size, retailer and whether a sale is running.
+          </p>
+
+          <p>
+            The direct 25-serving tub has historically been the best value of SEEQ's formats, while the smaller Target tub costs more per serving because you are paying for a shelf-friendly size. Stick packs cost the most per gram, as single-serve packaging always does. They make sense as a sampler or for travel, not as your everyday supply.
+          </p>
+
+          <p>
+            For comparison, large tubs of mainstream whey concentrate usually land around 1 to 1.50 dollars per 25 g at typical prices, and drop below that on a good sale. So you are paying roughly double for the clear format. That premium buys a different drinking experience, not more or better protein. Our <a href="/best-cheap-protein-powder/">best cheap protein powder</a> guide runs the cost maths if price is your main concern.
+          </p>
+
+          <div class="overflow-hidden border border-gray-200 rounded-2xl my-8">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Product</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Protein per serving</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Approx. cost per 25 g</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">SEEQ Clear Whey Isolate (tub)</td>
+                    <td class="px-4 py-4 text-gray-700">22 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 2.20-2.80 dollars</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">SEEQ stick packs</td>
+                    <td class="px-4 py-4 text-gray-700">22 g</td>
+                    <td class="px-4 py-4 text-gray-700">Higher than the tub</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Isopure Infusions</td>
+                    <td class="px-4 py-4 text-gray-700">About 20 g</td>
+                    <td class="px-4 py-4 text-gray-700">Premium tier</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Thorne Whey Protein Isolate</td>
+                    <td class="px-4 py-4 text-gray-700">About 21 g</td>
+                    <td class="px-4 py-4 text-gray-700">Premium tier</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <p>
+            Prices change constantly, especially on Amazon, so treat these as rough ranges. The quick way to check any tub yourself is to divide the price by the number of servings, divide that by the grams of protein per serving, and multiply by 25. If the answer is far above 2 dollars, you are paying for format, flavor or branding rather than protein.
+          </p>
+        </div>
+
+        <div id="testing" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            7. Testing and Certification
+          </h2>
+
+          <p>
+            SEEQ does not display NSF Certified for Sport, Informed Sport, Informed Choice or Clean Label Project certification on the listings we checked, and we could not find it in those programs' public databases at the time of writing. Independent reviewers who have covered SEEQ list it as not third-party tested. A supplement database page described it as backed by third-party testing but noted that it could not verify product-specific results.
+          </p>
+
+          <p>
+            That gap matters for two groups. Drug-tested athletes need a sport certification, because only those programs screen batches for banned substances and stand behind the result. And buyers who are worried about contaminants, such as pregnant women or parents buying for teenagers, usually want either a certificate or published test results they can read. SEEQ currently offers neither in a form we could confirm.
+          </p>
+
+          <p>
+            It is worth keeping the risk in perspective. Whey isolate generally tests lower for heavy metals than many plant proteins, and nothing we found suggests a problem with SEEQ specifically. The point is not that SEEQ is unsafe. It is that you are taking the brand's word for its quality, rather than an independent lab's, and that is a reasonable thing to weigh when the price is this high.
+          </p>
+
+          <p>
+            If certification is non-negotiable for you, Thorne's whey isolate carries NSF Certified for Sport status per the brand and NSF, and Isopure is a long-established isolate brand that is easy to find in stores. Our <a href="/is-protein-powder-safe/">is protein powder safe</a> explainer covers what each certification checks and what it does not, so you can decide how much the badge is worth to you.
+          </p>
+        </div>
+
+        <div id="taste" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            8. Taste, Mixing and Foam
+          </h2>
+
+          <p>
+            We have not tasted SEEQ, so everything here is buyer feedback. Flavor is the main reason people buy it, and many reviews describe the fruit flavors as tasting closer to a sports drink or juice than a protein shake. The Amazon ratings are more mixed than the social media buzz suggests, though: the tub listing we checked sat at about 3.6 out of 5 stars and the stick pack listing at about 3.9.
+          </p>
+
+          <p>
+            The complaints follow the usual clear whey pattern. Some buyers find the flavors too sweet or too sour, some notice a faint dairy note behind the fruit, and some dislike foam. SEEQ's own directions tell you to mix one scoop with 14 to 16 oz of water, shake or froth, then let it settle for about 30 seconds before adding ice. That settling step is not optional if you hate foam.
+          </p>
+
+          <p>
+            Water volume makes a big difference. Clear whey tastes harsher and more sour when concentrated, so if a flavor seems aggressive, add more water before you give up on the tub. Very cold water helps too. Mixing with milk defeats the purpose, since the acids in clear whey can curdle dairy and the whole point of the format is a light, transparent drink.
+          </p>
+
+          <p>
+            Because flavor is subjective and the tubs are not cheap, the stick pack variety box is the sensible way to start. It includes three of the best-selling flavors, so you can find the one you like before committing to a full tub. If none of them work for you, our <a href="/best-clear-protein-powder/">best clear protein powder</a> guide covers other clear wheys with different flavor ranges.
+          </p>
+        </div>
+
+        <div id="who" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            9. Who Should Buy It, and Who Should Skip
+          </h2>
+
+          <p>
+            Buy SEEQ if you struggle to drink milky shakes, especially in hot weather or after cardio, and a juice-like drink would get you to your protein target more reliably. A product you actually finish beats a cheaper one you leave in the cupboard. It also suits people who want a very lean protein, with about 100 calories and no sugar per scoop, for a calorie-controlled diet.
+          </p>
+
+          <p>
+            SEEQ's listings also mention GLP-1 support. To be clear, the powder has no effect on GLP-1 medication itself. What it offers is an easy, low-volume way to get protein when appetite is low, which is a common challenge for people on those drugs. Anyone taking a GLP-1 medication should follow their prescriber's or dietitian's guidance on protein intake, since this is not medical advice.
+          </p>
+
+          <p>
+            Skip SEEQ if you are a drug-tested athlete, because there is no sport certification to rely on. Skip it if you are on a tight budget, because standard whey delivers the same protein for roughly half the cost. Skip it if you avoid sucralose and cannot check the exact flavor's label. And skip it if you want a creamy shake, a baking powder or a plant protein, since SEEQ does not make any of those.
+          </p>
+
+          <p>
+            Pregnant or breastfeeding readers, people with kidney disease and anyone on medication should check with a doctor or registered dietitian before adding any protein supplement, SEEQ included. That is standard advice rather than a concern about this product, but it carries extra weight when a brand has no independent testing you can point to.
+          </p>
+        </div>
+
+        <div id="compare" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            10. SEEQ vs Other Clear Wheys
+          </h2>
+
+          <p>
+            Against Isopure Infusions, SEEQ offers a slightly bigger scoop, 22 g against about 20 g, and a more candy-like flavor list. Isopure has a much longer track record as an isolate brand and is easier to find in pharmacies and big-box stores. Neither is the cheapest protein you can buy. If you want more on Isopure's range, our <a href="/isopure-protein-powder-review/">Isopure protein powder review</a> covers the full lineup.
+          </p>
+
+          <p>
+            Against Myprotein Clear Whey Isolate, SEEQ usually costs more, while Myprotein runs frequent sales that can pull its price well below SEEQ's. Myprotein's serving is about 20 g of protein per the label. Our <a href="/myprotein-review/">Myprotein review</a> explains how its pricing and discount codes work, which is the main reason it wins on value for many buyers.
+          </p>
+
+          <p>
+            Against a regular whey isolate such as Thorne's, the comparison is about format. Thorne gives you about 21 g of protein with NSF Certified for Sport status, but it mixes into a conventional shake rather than a clear drink. If you mainly care about verified quality, Thorne wins. If you mainly care about drinking something that tastes like juice, SEEQ or another clear whey is the better fit.
+          </p>
+
+          <p>
+            The other clear wheys reviewed on the site follow the same trade-off. Oath, Bloom, Ryse and Ghost all sell clear proteins at premium prices, and the differences come down to flavor list, scoop size and certification. Our <a href="/oath-protein-powder-review/">Oath protein powder review</a> covers another clear whey that grew through social media, which makes it the most direct comparison to SEEQ.
+          </p>
+        </div>
+
+        <!-- Common Mistakes -->
+        <div id="mistakes" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            11. Common Mistakes to Avoid
+          </h2>
+
+          <div class="space-y-6 my-8">
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Trusting an old review on sweeteners</h3>
+              <p class="text-gray-700 text-sm m-0">
+                SEEQ's listings disagree on whether a given product uses sucralose, stevia, monk fruit or a mix. If you avoid any of them, a review from last year or a different flavor's listing is not good enough. Read the ingredient panel of the exact tub or packet you buy before you drink it.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Assuming viral means tested</h3>
+              <p class="text-gray-700 text-sm m-0">
+                A brand can sell millions of scoops through TikTok without ever submitting a batch to NSF, Informed Sport or Clean Label Project. SEEQ shows no such certification that we could find. If you are drug-tested or buying for pregnancy, choose a product whose certificate you can look up.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Comparing cost per scoop instead of per gram</h3>
+              <p class="text-gray-700 text-sm m-0">
+                A 22 g scoop and a 25 g scoop are not the same dose, and clear whey scoops are often smaller still. Divide price by servings, then by grams of protein, then multiply by 25. That number shows how much of SEEQ's price is protein and how much is format.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Mixing it like a regular shake</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Clear whey needs plenty of cold water, 14 to 16 oz per scoop per SEEQ's directions, and a short rest to let the foam settle. Shaking it in a small amount of water, or adding milk, makes it taste harsh and foamy and wastes the reason you paid extra for it.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Buying from unknown Amazon resellers</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Viral protein brands attract third-party sellers with old or questionable stock. On Amazon, check that the seller line shows the brand's own storefront, SEEQ Supply at the time of writing, and look at the best-by date when the tub arrives. If it looks tampered with, return it.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ -->
+        <div id="faq" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            12. Frequently Asked Questions
+          </h2>
+
+          <div class="space-y-6">
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is SEEQ protein powder good?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                As a drink, yes. SEEQ lists 22 g of whey isolate protein, 0 g of sugar and about 100 calories per scoop, and many buyers like its juice-style flavors. Its weaknesses are a premium price, sweeteners that appear to vary between listings and no independent certification we could find. It is a good clear whey, not the best value or the most verified one.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">How much protein is in a scoop of SEEQ?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                SEEQ's Amazon listing states 22 g of clear whey protein and 4.5 g of BCAAs per scoop, and a supplement database lists the scoop at 28 g. Figures can vary slightly by flavor, so check your tub. That is a solid dose for most adults, a little under the 25 g figure we use to compare protein powders across the site.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is SEEQ third-party tested?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                We could not find SEEQ in the NSF Certified for Sport, Informed Sport, Informed Choice or Clean Label Project databases at the time of writing, and independent reviewers list it as not third-party tested. That does not mean it is unsafe. It means there is no independent certificate to rely on, which matters most for drug-tested athletes and cautious buyers.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Does SEEQ contain sucralose?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Some listings say yes. The Amazon stick pack listing names sucralose and Reb A stevia, while a supplement database entry for a tub lists monk fruit and Reb M instead. The formula appears to vary by flavor, format or production run. If you avoid sucralose, read the ingredient panel on the exact product you buy before drinking it.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Where can I buy SEEQ protein?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                SEEQ sells direct from its own store, through its brand storefront on Amazon, at Target in a smaller tub, and in larger tubs and stick packs at Costco and Sam's Club, per those retailers' listings at the time of writing. On Amazon, check that the seller is SEEQ Supply rather than an unknown reseller, which protects you from old or tampered stock.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is SEEQ good for weight loss?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                It can help, because a scoop gives 22 g of protein for roughly 100 calories with no sugar, and protein supports fullness and muscle retention during a diet. But it does not burn fat or replace a calorie deficit. Its GLP-1 wording refers to easy protein intake, not to any effect on medication. Ask your prescriber or dietitian for personal advice.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Can I mix SEEQ with milk?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                It is not designed for milk. Clear whey contains acids that can curdle dairy, and the whole point of the format is a transparent, juice-like drink. Mix one scoop with 14 to 16 oz of cold water, shake or froth it, and let it settle for about 30 seconds. If you want a creamy shake, a regular whey is the better buy.
+              </p>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Related Guides -->
+        <div class="mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">Related Clean Protein Guides</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <a href="/best-clean-protein-powder/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#FF4500] font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Clean Protein Powder</h3>
+              <p class="text-gray-500 text-sm mt-2">The certified and short-label powders that can prove what SEEQ cannot.</p>
+            </a>
+            <a href="/best-clear-protein-powder/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#38BDF8] font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Clear Protein Powder</h3>
+              <p class="text-gray-500 text-sm mt-2">Every major clear whey compared on scoop size, flavor and cost per 25 g.</p>
+            </a>
+            <a href="/oath-protein-powder-review/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-green-600 font-black text-xs uppercase tracking-widest mb-2">Brand Review</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Oath Protein Powder Review</h3>
+              <p class="text-gray-500 text-sm mt-2">Another social-media clear whey, checked against its label and price.</p>
+            </a>
+          </div>
+        </div>
+
+        <!-- Closing -->
+        <div class="mt-16 bg-gray-900 text-white rounded-2xl p-8">
+          <h2 class="text-2xl font-black text-white mb-4">The Bottom Line</h2>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            SEEQ makes one product and makes it reasonably well: a clear whey isolate with 22 g of protein, no sugar and about 100 calories a scoop, in flavors that plenty of buyers enjoy. If a juice-style drink is what gets you to your daily protein, it is a legitimate choice, and the stick pack sampler is the low-risk way to start.
+          </p>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            What it is not is a value buy or a verified clean protein. You pay roughly double the cost per gram of standard whey, the sweeteners vary between listings and there is no certificate to look up. If testing matters to you, start with our <a href="/best-clean-protein-powder/">best clean protein powder</a> picks instead.
+          </p>
+        </div>
+
+        <MoreInCategory category="Brand Reviews" links={moreInCategory} />
+
+        <AuthorBio />
+      </div>
+    </div>
+  </article>
+</Layout>

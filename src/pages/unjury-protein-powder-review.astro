@@ -1,0 +1,988 @@
+---
+import Layout from "../layouts/Layout.astro";
+import MoreInCategory from "../components/MoreInCategory.astro";
+import { AUTHORS, DEFAULT_AUTHOR, authorSchema } from "../data/authors";
+import { SITE_NAME, SITE_URL } from "../data/site";
+import AuthorAvatar from "../components/AuthorAvatar.astro";
+import QuickPicks from "../components/QuickPicks.astro";
+import AuthorBio from "../components/AuthorBio.astro";
+import { amazonLink } from "../data/affiliate";
+import TrustBadge from "../components/TrustBadge.astro";
+import SocialProof from "../components/SocialProof.astro";
+import SpecGrid from "../components/SpecGrid.astro";
+import productImages from "../data/product-images.json";
+import { pageDates } from "../data/dates";
+
+const moreInCategory = [
+  {
+    "title": "Quest Protein Powder Review",
+    "url": "/quest-protein-powder-review/"
+  },
+  {
+    "title": "Isopure Protein Powder Review",
+    "url": "/isopure-protein-powder-review/"
+  },
+  {
+    "title": "Premier Protein Powder Review",
+    "url": "/premier-protein-powder-review/"
+  }
+];
+const author = AUTHORS[DEFAULT_AUTHOR];
+const dates = pageDates(Astro.url.pathname, { published: "2026-10-19", modified: "2026-10-19" });
+const title = "Unjury Protein Powder Review: Is the Bariatric Favorite Worth the Price?";
+const description =
+  "Our Unjury review reads each whey label, from Chocolate to Chicken Soup, compares cost per 25 g, and explains what bariatric patients should check first.";
+
+const PRODUCTS: {
+  id: string;
+  name: string;
+  brand?: string;
+  badge: string;
+  category: string;
+  description: string;
+  pros: string[];
+  cons: string[];
+  bottomLine: string;
+  specs?: Record<string, string>;
+  rating?: number;
+  reviewCount?: number;
+  amazonUrl?: string;
+}[] = [
+  {
+    "id": "unjury-unflavored-high-whey-protein",
+    "name": "Unjury Unflavored High Whey Protein Powder",
+    "brand": "Unjury",
+    "badge": "Best Overall Unjury",
+    "category": "Unflavored whey protein isolate",
+    "description": "Unflavored is the leanest and most versatile Unjury. The label lists a 24 g scoop with about 90 calories, 21 g of protein, zero carbohydrate, zero fat and about 35 mg of sodium, from whey protein isolate and soy lecithin only. It is meant to be stirred into foods and flavored drinks rather than plain water, and like every Unjury powder it should not go into liquid hotter than about 140 degrees Fahrenheit.",
+    "pros": [
+      "About 21 g protein for about 90 calories, per the label",
+      "No sugar, sweeteners or flavors",
+      "Lowest sodium in the range",
+      "Mixes into foods such as yogurt or lukewarm soup"
+    ],
+    "cons": [
+      "Roughly $2.40 per 25 g of protein at list price",
+      "Not pleasant in plain water, per the brand's own guidance",
+      "No third-party certification listed"
+    ],
+    "bottomLine": "The Unjury to buy if you want to add protein to food without sweeteners or extra volume.",
+    "specs": {
+      "Protein / serving": "21 g (label)",
+      "Calories": "About 90",
+      "Third-party testing": "None listed",
+      "Best for": "Mixing into food"
+    }
+  },
+  {
+    "id": "unjury-chocolate-high-whey-protein",
+    "name": "Unjury Chocolate High Whey Protein Powder",
+    "brand": "Unjury",
+    "badge": "Best Sweet Shake",
+    "category": "Whey protein isolate, flavored",
+    "description": "Unjury's Chocolate lists a 31 g scoop with about 110 calories, 21 g of protein, 4 g of carbohydrate including 1 g of fiber, about 2 g of added sugar and 0.5 g of fat. It is sweetened with fructose, acesulfame potassium and sucralose, and the label claims zero lactose and kosher status. It is the flavor customers mention most often in reviews on Unjury's site.",
+    "pros": [
+      "About 21 g protein for about 110 calories",
+      "About 2 g sugar; label claims 0 g lactose",
+      "Popular with buyers, per reviews on the brand site"
+    ],
+    "cons": [
+      "Contains sucralose and acesulfame potassium",
+      "Premium cost per 25 g",
+      "Contains milk and soy"
+    ],
+    "bottomLine": "The classic Unjury shake for anyone who wants chocolate in a small, low-sugar serving.",
+    "specs": {
+      "Protein / serving": "21 g (label)",
+      "Calories": "About 110",
+      "Third-party testing": "None listed",
+      "Best for": "Daily sweet shake"
+    }
+  },
+  {
+    "id": "unjury-chicken-soup-high-whey-protein",
+    "name": "Unjury Chicken Soup High Whey Protein Powder",
+    "brand": "Unjury",
+    "badge": "Best Savory",
+    "category": "Savory whey protein isolate",
+    "description": "Chicken Soup is the flavor that sets Unjury apart. The label lists a 27 g scoop with about 90 calories, 21 g of protein, 1 g of carbohydrate and no sugar or fat, seasoned with salt, yeast extract, onion and garlic powder and turmeric. It is mixed into about 8 fl oz of warm water, no hotter than about 140 degrees Fahrenheit. The trade-off is sodium: about 770 mg per scoop.",
+    "pros": [
+      "A warm, savory protein drink for people tired of sweet shakes",
+      "About 21 g protein for about 90 calories",
+      "No sugar or artificial sweeteners"
+    ],
+    "cons": [
+      "About 770 mg sodium per scoop",
+      "Must be warm rather than hot to avoid clumping",
+      "Premium cost per 25 g"
+    ],
+    "bottomLine": "Worth having in the cupboard if sweet shakes get hard to face, as long as sodium fits your plan.",
+    "specs": {
+      "Protein / serving": "21 g (label)",
+      "Calories": "About 90",
+      "Third-party testing": "None listed",
+      "Best for": "Savory option"
+    }
+  },
+  {
+    "id": "unjury-vanilla-high-whey-protein",
+    "name": "Unjury Vanilla High Whey Protein Powder",
+    "brand": "Unjury",
+    "badge": "Best for Smoothies",
+    "category": "Whey protein isolate, flavored",
+    "description": "Vanilla lists a 28 g scoop with about 100 calories, 21 g of protein, 3 g of carbohydrate, about 2 g of sugar and no fat, sweetened with fructose, acesulfame potassium and sucralose. It is a neutral base for fruit smoothies or milk-based shakes where allowed, and slightly lighter than chocolate on calories and sodium.",
+    "pros": [
+      "About 21 g protein for about 100 calories",
+      "About 2 g sugar, 0 g fat",
+      "Neutral base for smoothies"
+    ],
+    "cons": [
+      "Sucralose and acesulfame potassium",
+      "Premium cost per 25 g",
+      "Contains milk and soy"
+    ],
+    "bottomLine": "The flexible sweet flavor if you like to blend fruit into your shake.",
+    "specs": {
+      "Protein / serving": "21 g (label)",
+      "Calories": "About 100",
+      "Third-party testing": "None listed",
+      "Best for": "Smoothies"
+    }
+  },
+  {
+    "id": "isopure-zero-carb",
+    "name": "Isopure Zero Carb Protein Powder",
+    "brand": "Isopure",
+    "badge": "Alternative: Lower Cost Isolate",
+    "category": "Whey protein isolate",
+    "description": "Isopure Zero Carb is the closest powdered alternative on the label: about 25 g of protein for roughly 100 to 110 calories with essentially no carbohydrate, from pure whey isolate. It comes in larger tubs and typically costs less per 25 g than Unjury, but it lacks the savory flavors and small-tub format.",
+    "pros": [
+      "About 25 g protein for roughly 100-110 calories",
+      "Zero or near-zero carbohydrate and sugar",
+      "Pure isolate, low in lactose"
+    ],
+    "cons": [
+      "No savory flavors",
+      "No sport certification we could confirm"
+    ],
+    "bottomLine": "The lower-cost isolate for long-term daily use once small-volume products are no longer essential.",
+    "specs": {
+      "Protein / serving": "About 25 g",
+      "Calories": "About 100-110 (flavor-dependent)",
+      "Third-party testing": "Check certifier databases",
+      "Best for": "Long-term daily use"
+    }
+  },
+  {
+    "id": "premier-protein-shake",
+    "name": "Premier Protein 30g Protein Shake",
+    "brand": "Premier Protein",
+    "badge": "Alternative: Ready to Drink",
+    "category": "Milk protein concentrate shake",
+    "description": "Premier Protein is the ready-to-drink alternative most people meet first. The label lists about 30 g of protein from milk protein concentrate and calcium caseinate, about 160 calories and about 1 g of sugar per 11 fl oz carton. It needs no mixing and costs little per gram by the case, but the carton is a far larger volume than a small Unjury drink.",
+    "pros": [
+      "About 30 g protein for about 160 calories",
+      "About 1 g sugar; no mixing needed",
+      "Low cost per 25 g by the case"
+    ],
+    "cons": [
+      "11 fl oz carton is a large volume for limited capacity",
+      "Sucralose and acesulfame potassium"
+    ],
+    "bottomLine": "The convenient grocery pick once your plan allows larger drinks.",
+    "specs": {
+      "Protein / bottle": "About 30 g (label)",
+      "Calories": "About 160 (11 fl oz)",
+      "Third-party testing": "Check certifier databases",
+      "Best for": "Grab-and-go protein"
+    }
+  }
+];
+
+const schema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Home",
+          item: `${SITE_URL}/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Best Lists",
+          item: `${SITE_URL}/best-of/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 3,
+          name: "Unjury Protein Powder Review",
+          item: `${SITE_URL}/unjury-protein-powder-review/`,
+        },
+      ],
+    },
+    {
+      "@type": "FAQPage",
+      mainEntity: [
+        {
+          "@type": "Question",
+          "name": "Is Unjury protein powder good?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "For its purpose, yes. Every Unjury whey powder lists 21 g of protein from whey isolate in a small scoop, with about 90 to 110 calories and 2 g of sugar or less, and the range includes savory and unflavored options. It costs more per gram than mainstream isolates and carries no third-party certification, so it suits specific needs better than general use."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How much protein is in Unjury?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Each Unjury whey powder flavor we checked lists 21 g of protein per scoop, with scoop sizes from about 24 g for Unflavored to about 31 g for Chocolate. The pea-protein Chocolate plant powder lists about 20 g per serving. Figures are per Unjury's labels at the time of writing and may change, so check the tub you buy."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is Unjury good after bariatric surgery?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Unjury is designed with surgical patients in mind, and its small scoop, low sugar, isolate base and savory flavors suit many post-surgery plans. But programs differ in protein targets, sugar limits and when each product is allowed. This is not medical advice: ask your bariatric surgeon or registered dietitian before using Unjury or any protein supplement."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does Unjury contain lactose?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Unjury uses whey protein isolate, which is filtered to remove most lactose, and its Chocolate label claims zero grams of lactose. That makes it usually better tolerated than whey concentrate by lactose-sensitive people. If you are highly sensitive or have a milk allergy, check with your doctor; all Unjury whey powders contain milk and soy lecithin."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can you mix Unjury into hot food or drinks?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Only warm, not hot. Unjury's labels say not to use the powders in liquids hotter than about 140 degrees Fahrenheit, because the protein clumps. For soups or coffee, let the liquid cool to warm before stirring in the powder. Unflavored is the best version for mixing into foods such as yogurt, pudding or lukewarm soup."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What sweeteners does Unjury use?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The sweet flavors, such as Chocolate and Vanilla, contain fructose, acesulfame potassium and sucralose, which keeps sugar at about 2 g per scoop. Unflavored has no sweeteners at all, and the Chicken Soup label lists none. The pea-protein plant Chocolate uses organic cane sugar and stevia. Check each label if you avoid a specific sweetener."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is Unjury sold on Amazon?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Unjury sells primarily through its own site, with subscription pricing and stick packets. We could not confirm a current brand-run Amazon US listing for every flavor, so check the seller if you buy on Amazon. The brand site lists 15-serving tubs at about $30, which is a useful reference point when comparing prices."
+          }
+        }
+      ],
+    },
+    {
+      "@type": "Article",
+      headline: title,
+      author: authorSchema(),
+      datePublished: dates.published,
+      dateModified: dates.modified,
+      publisher: { "@type": "Organization", name: SITE_NAME, url: SITE_URL },
+    },
+    {
+      "@type": "ItemList",
+      name: title,
+      numberOfItems: PRODUCTS.length,
+      itemListElement: PRODUCTS.map((product, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name: product.name,
+        url: new URL(`#${product.id}`, Astro.url).toString(),
+      })),
+    },
+    ...PRODUCTS.map((product) => ({
+      "@type": "Product",
+      name: product.name,
+      description: product.description,
+      brand: {
+        "@type": "Brand",
+        name: product.brand ?? product.name.split(" ")[0],
+      },
+    })),
+  ],
+};
+---
+
+<Layout
+  title={title}
+  description={description}
+  ogType="article"
+  article={{
+    publishedTime: dates.published,
+    modifiedTime: dates.modified,
+    author: author.name,
+    section: "Brand Reviews",
+    tags: [
+      "unjury protein powder",
+      "unjury bariatric protein",
+      "unjury review",
+      "protein powder after bariatric surgery"
+    ],
+  }}
+  jsonLd={schema}
+  stickyCta={{
+    text: "See Our Top Weight Loss Picks",
+    link: "/best-protein-powder-for-weight-loss/",
+  }}
+>
+  <article class="relative overflow-hidden">
+    <!-- Hero Section -->
+    <div class="bg-gray-900 py-16 lg:py-24 relative overflow-hidden">
+      <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(circle at 20% 20%, #38BDF8 0, transparent 45%), radial-gradient(circle at 80% 60%, #FF4500 0, transparent 40%);"></div>
+      <div class="max-w-4xl mx-auto px-4 relative z-10 text-center">
+        <div class="flex justify-center mb-6">
+          <TrustBadge />
+        </div>
+        <div class="flex justify-center gap-3 mb-6">
+          <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#FF4500]/20 text-[#FF4500] text-xs font-black uppercase tracking-widest border border-[#FF4500]/30">
+            Brand Review
+          </span>
+          <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-green-500/10 text-green-400 text-xs font-bold uppercase tracking-widest border border-green-500/20">
+            Label-Checked
+          </span>
+        </div>
+        <h1 class="text-4xl lg:text-6xl font-black text-white leading-tight mb-8">
+          Unjury Protein Powder <span class="text-[#38BDF8]">Review</span>
+        </h1>
+        <p class="text-xl text-gray-300 leading-relaxed mb-8 max-w-3xl mx-auto">
+          Unjury is a whey isolate powder designed with surgical and medical patients in mind: 21 g of protein in a small scoop, savory flavors and an unflavored version that disappears into food. Here is what the label delivers, and what it costs.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a
+            href="#unjury-unflavored-high-whey-protein"
+            class="px-8 py-4 bg-[#FF4500] hover:bg-[#E63E00] text-white font-black rounded-xl shadow-lg transition-all no-underline"
+          >
+            See Our #1 Pick
+          </a>
+          <a
+            href="#bariatric"
+            class="px-8 py-4 bg-white/10 hover:bg-white/20 text-white font-bold rounded-xl border border-white/10 no-underline"
+          >
+            Read the Label Breakdown
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Author & Meta -->
+    <div class="max-w-3xl mx-auto px-4 pt-12">
+      <div class="flex items-center gap-6 border-b border-gray-100 pb-8">
+        <div class="flex items-center gap-3">
+          <AuthorAvatar size={48} />
+          <div>
+            <p class="text-sm font-bold text-gray-900">{author.name}</p>
+            <p class="text-xs text-gray-500 uppercase tracking-widest">{author.role}</p>
+          </div>
+        </div>
+        <div class="h-10 w-px bg-gray-200 hidden sm:block"></div>
+        <div class="hidden sm:block">
+          <p class="text-sm font-bold text-gray-900">Last Updated</p>
+          <p class="text-xs text-gray-500">{dates.display}</p>
+        </div>
+        <div class="hidden sm:block ml-auto">
+          <SocialProof />
+        </div>
+      </div>
+    </div>
+
+    <!-- Table of Contents -->
+    <div class="max-w-3xl mx-auto px-4 py-10">
+      <div class="bg-gray-50 border border-gray-200 rounded-2xl p-6 lg:p-8">
+        <h2 class="text-lg font-black text-gray-900 mb-4 flex items-center gap-2">
+          In This Guide
+        </h2>
+        <nav class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <a href="#verdict" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">1. The Short Verdict</a>
+          <a href="#who-is-unjury" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">2. Who Unjury Is</a>
+          <a href="#label" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">3. The Label</a>
+          <a href="#top-picks" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">4. The Range, Ranked</a>
+          <a href="#bariatric" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">5. Unjury After Bariatric Surgery</a>
+          <a href="#flavors" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">6. Choosing a Flavor</a>
+          <a href="#mixing" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">7. How to Mix It</a>
+          <a href="#cost" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">8. Cost per 25 g</a>
+          <a href="#vs" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">9. Unjury vs Alternatives</a>
+          <a href="#skip" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">10. Who Should Skip It</a>
+          <a href="#mistakes" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">11. Common Mistakes</a>
+          <a href="#faq" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">12. FAQ</a>
+        </nav>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="max-w-3xl mx-auto px-4 pb-16 lg:pb-24">
+      <div class="prose prose-lg prose-blue max-w-none text-gray-700 leading-relaxed">
+        <p class="text-2xl font-medium text-gray-900 mb-8 italic">
+          Unjury is a well-made, narrowly focused protein powder. Every whey flavor lists 21 g of protein from whey isolate in a scoop of about 24 to 31 g, with 90 to 110 calories and 2 g of sugar or less, and the range includes savory soups and an unflavored version you can stir into food. That makes it unusually practical for people who can only manage small volumes, including many bariatric patients. It is not cheap per gram, it carries no sport certification, and none of this replaces the plan your surgical team or dietitian gives you.
+        </p>
+
+        <QuickPicks products={PRODUCTS} />
+
+        <div id="verdict" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            1. The Short Verdict: Small Scoop, Clean Numbers, Premium Price
+          </h2>
+
+          <p>
+            Unjury's appeal is the label. The Unflavored powder lists a 24 g scoop with about 90 calories, 21 g of protein, zero carbohydrate, zero fat and about 35 mg of sodium, made from whey protein isolate and soy lecithin. The flavored shakes stay close to that, with Vanilla at about 100 calories and Chocolate at about 110, each with about 2 g of sugar. Almost all of what you swallow is protein, which matters most when you can only swallow a little.
+          </p>
+
+          <p>
+            The second strength is range. Alongside the sweet flavors, Unjury sells savory Chicken Soup, French Onion and Beef and Herb powders, plus Lemon Lime and Strawberry. For anyone who is tired of sweet shakes, or who finds them hard to tolerate, a warm savory protein drink is a genuinely useful option, and few mainstream brands offer one.
+          </p>
+
+          <p>
+            The drawbacks are price and certification. A 15-serving tub lists at about $30 on Unjury's site, which works out to roughly $2.40 per 25 g of protein, approximately, before subscription discounts. That is well above mainstream isolates. And Unjury lists no third-party certification such as NSF or Informed Sport; it relies on its own quality claims and on a statement that it is recommended at top-rated hospitals, none of which it names.
+          </p>
+
+          <p>
+            Our label-based verdict: Unjury is a good choice when small serving size, low sugar, savory options or easy mixing into food are what you need, and an expensive one when they are not. We built this review from Unjury's labels and published claims; we did not taste or test the products, and nothing here is medical advice. If you have had or are preparing for bariatric surgery, your surgical team or registered dietitian should approve the product and the amount.
+          </p>
+
+          <div class="bg-gray-900 text-white rounded-2xl p-6 lg:p-8 my-8">
+            <p class="text-xs font-black uppercase tracking-widest text-[#38BDF8] mb-3">THE ONE-LINE ANSWER</p>
+            <p class="text-xl font-bold text-white mb-3">A practical, low-sugar whey isolate with a niche price.</p>
+            <p class="text-gray-300 leading-relaxed m-0">Unjury earns its reputation with 21 g of isolate protein in a small scoop and savory flavors. It costs more per gram than mainstream isolates, so buy it for its format, not its value.</p>
+          </div>
+        </div>
+
+        <div id="who-is-unjury" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            2. Who Unjury Is
+          </h2>
+
+          <p>
+            Unjury describes itself as medical-quality protein founded more than 20 years ago by a clinical dietitian. It is based in Middletown, Connecticut, and its site also carries a second brand, Bariatric Fusion, plus vitamins such as bariatric calcium citrate soft chews and multivitamins. The pairing tells you who the company is designing for.
+          </p>
+
+          <p>
+            The protein range is wider than most bariatric brands. Unjury lists eight whey isolate powders in 15-serving tubs: Chocolate, Vanilla, Unflavored, Lemon Lime, Strawberry, Chicken Soup, French Onion and Beef and Herb. Most of those also come as single-serve stick packets in boxes of 20. There are two pea-protein plant powders in Chocolate and Unflavored, plus ready-to-drink shakes and clinical nutrition drinks that we do not cover here.
+          </p>
+
+          <p>
+            Unjury's marketing leans on clinical credibility: it says the products are recommended at America's top-rated hospitals and at leading cancer centers. Unjury does not name the hospitals on the pages we read, so treat that as a brand claim. Its site also carries the standard statement that its claims have not been evaluated by the FDA.
+          </p>
+
+          <p>
+            Unjury sells primarily direct from its own site, with subscriptions and a practitioner program. We could not confirm a current brand-run Amazon US listing for each flavor, so the buttons on this page run an Amazon search for the product name. If you buy on Amazon, check that the seller is Unjury or a retailer you trust, and compare the price with the brand site, which is often competitive.
+          </p>
+        </div>
+
+        <div id="label" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            3. The Label: 21 g of Whey Isolate, Not Much Else
+          </h2>
+
+          <p>
+            Every Unjury whey powder we checked uses whey protein isolate as its only protein source and lists 21 g of protein per scoop. Isolate is filtered to remove most of the lactose and fat found in milk, and Unjury's Chocolate label states zero grams of lactose. That is relevant because some people become more sensitive to lactose after certain surgeries, and an isolate is usually the better-tolerated whey.
+          </p>
+
+          <p>
+            The Unflavored label is about as short as a protein powder gets: whey protein isolate and soy lecithin, which helps the powder disperse. The sweet flavors add fructose, natural and artificial flavors, xanthan gum, sea salt and two non-nutritive sweeteners, acesulfame potassium and sucralose. That combination keeps sugar at about 2 g per scoop. If you avoid artificial sweeteners, Unflavored and the savory flavors are the ones to look at.
+          </p>
+
+          <div class="overflow-hidden border border-gray-200 rounded-2xl my-8">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Flavor</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Scoop</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Calories</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Protein</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Sugar</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Sodium</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Unflavored</td>
+                    <td class="px-4 py-4 text-gray-700">24 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 90</td>
+                    <td class="px-4 py-4 text-gray-700">21 g</td>
+                    <td class="px-4 py-4 text-gray-700">0 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 35 mg</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Vanilla</td>
+                    <td class="px-4 py-4 text-gray-700">28 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 100</td>
+                    <td class="px-4 py-4 text-gray-700">21 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 2 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 65 mg</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Chocolate</td>
+                    <td class="px-4 py-4 text-gray-700">31 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 110</td>
+                    <td class="px-4 py-4 text-gray-700">21 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 2 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 100 mg</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Chicken Soup</td>
+                    <td class="px-4 py-4 text-gray-700">27 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 90</td>
+                    <td class="px-4 py-4 text-gray-700">21 g</td>
+                    <td class="px-4 py-4 text-gray-700">0 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 770 mg</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <p>
+            The savory flavors are where you need to watch sodium. Chicken Soup lists about 770 mg per scoop, roughly a third of the daily value, because it is seasoned like a broth with salt, yeast extract, onion and garlic powder. That is normal for a soup, but it is a lot for a supplement, especially if you drink it more than once a day or are on a sodium-restricted diet.
+          </p>
+
+          <p>
+            Twenty-one grams is slightly below the 25 g serving many sports powders use. For most people that difference is minor, but if you are aiming for a specific daily target, count it as 21 g rather than rounding up. Our <a href="/how-much-protein-do-i-need/">protein needs guide</a> explains how targets are usually set, and our <a href="/whey-vs-whey-isolate/">whey vs whey isolate explainer</a> covers why isolate is easier on lactose-sensitive stomachs.
+          </p>
+        </div>
+
+        <!-- Picks -->
+        <div id="top-picks" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            4. The Unjury Range, Ranked
+          </h2>
+
+          <p>
+            Unjury's whey powders share one base, whey protein isolate, and differ mainly in flavor, sweeteners and sodium. We rank four of them by versatility and label, then add two labelled alternatives from other brands. Figures are per Unjury's published labels at the time of writing and can change.
+          </p>
+
+          {PRODUCTS.map((product, index) => (
+            <div id={product.id} class="scroll-mt-24 mt-12 first:mt-8">
+              <div class="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                <div class="bg-gray-900 px-6 py-4 flex items-center justify-between">
+                  <div class="flex items-center gap-3">
+                    <span class="bg-[#FF4500] text-white w-8 h-8 rounded-full flex items-center justify-center text-sm font-black">
+                      {index + 1}
+                    </span>
+                    {productImages[product.id] && (
+                      <img
+                        src={productImages[product.id]}
+                        alt={product.name}
+                        loading="lazy"
+                        width="40"
+                        height="40"
+                        class="w-10 h-10 rounded-lg bg-white object-contain p-1 shrink-0"
+                      />
+                    )}
+                    <div>
+                      <p class="text-white font-black text-lg">{product.name}</p>
+                      <p class="text-gray-400 text-xs">{product.category}</p>
+                    </div>
+                  </div>
+                  <span class="bg-[#38BDF8]/20 text-[#38BDF8] px-3 py-1 rounded-full text-xs font-bold hidden sm:block">
+                    {product.badge}
+                  </span>
+                </div>
+                <div class="p-6">
+                  {product.rating && (
+                  <div class="flex items-center gap-2 mb-4">
+                    <div class="flex text-yellow-400">
+                      {[...Array(5)].map((_, i) => (
+                        <svg
+                          class={`w-4 h-4 ${i < Math.floor(product.rating) ? "fill-current" : "text-gray-200"}`}
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                        >
+                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        </svg>
+                      ))}
+                    </div>
+                    <span class="text-gray-500 text-sm font-bold">{product.rating}</span>
+                    {product.reviewCount && <span class="text-gray-400 text-xs">({product.reviewCount.toLocaleString()} retailer reviews)</span>}
+                  </div>
+                  )}
+
+                  <SpecGrid specs={product.specs} />
+
+                  <p class="text-gray-700 leading-relaxed mb-6">{product.description}</p>
+
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                    <div class="bg-green-50 rounded-xl p-4">
+                      <p class="text-xs font-black uppercase tracking-widest text-green-700 mb-3">Pros</p>
+                      <ul class="space-y-2">
+                        {product.pros.map((pro) => (
+                          <li class="flex items-start gap-2 text-sm text-green-800">
+                            <svg class="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            {pro}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div class="bg-red-50 rounded-xl p-4">
+                      <p class="text-xs font-black uppercase tracking-widest text-red-700 mb-3">Cons</p>
+                      <ul class="space-y-2">
+                        {product.cons.map((con) => (
+                          <li class="flex items-start gap-2 text-sm text-red-800">
+                            <svg class="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                            {con}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+
+                  <div class="bg-gray-50 rounded-xl p-4 border border-gray-100">
+                    <p class="text-xs font-black uppercase tracking-widest text-gray-500 mb-1">The Bottom Line</p>
+                    <p class="text-gray-900 font-bold">{product.bottomLine}</p>
+                  </div>
+
+                  <a
+                    href={amazonLink(product.amazonUrl, product.name, product.id)}
+                    target="_blank"
+                    rel="sponsored nofollow noopener"
+                    class="mt-6 block bg-[#FF4500] hover:bg-[#E63E00] text-white text-center py-4 rounded-xl font-black no-underline transition-colors uppercase tracking-widest text-sm"
+                  >
+                    Check Price &rarr;
+                  </a>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div id="bariatric" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            5. Using Unjury After Bariatric Surgery
+          </h2>
+
+          <div class="bg-gray-900 text-white rounded-2xl p-6 lg:p-8 my-8">
+            <p class="text-xs font-black uppercase tracking-widest text-[#38BDF8] mb-3">NOT MEDICAL ADVICE</p>
+            <p class="text-xl font-bold text-white mb-3">Your surgical team sets the plan.</p>
+            <p class="text-gray-300 leading-relaxed m-0">Protein targets, the timing of each diet stage, which products are allowed and how much fluid to take all vary by procedure and by program. Use this section as background and follow your bariatric surgeon and registered dietitian.</p>
+          </div>
+
+          <p>
+            Protein matters a great deal after weight-loss surgery. Food intake falls sharply, and preserving lean tissue while weight comes off depends on getting enough protein in a very small volume. Published bariatric nutrition guidelines commonly cite a minimum of around 60 g of protein a day, with some programs setting higher targets based on body size, but your team will set your number. In the early stages, many patients rely on protein drinks to reach it.
+          </p>
+
+          <p>
+            That is the niche Unjury was built for. A scoop of about 24 to 31 g of powder delivers 21 g of protein, so even a small drink covers a meaningful share of the day. The unflavored version can be stirred into foods your program allows at each stage, such as broth, yogurt or puree, which can be easier than forcing down another sweet shake. And the savory soups give a warm option when sweet drinks become hard to face.
+          </p>
+
+          <p>
+            Some programs also ask patients to keep sugar per serving low, partly to reduce the risk of dumping syndrome after certain procedures. Unjury's flavored powders list about 2 g of sugar per scoop and the unflavored and soup versions list zero, which is why they often fit those limits. Check the label against the specific number your team gives you, because rules differ.
+          </p>
+
+          <p>
+            Two cautions. First, the savory flavors are high in sodium, so ask your team whether they fit your plan. Second, Unjury does not carry an independent certification such as NSF Certified for Sport, so you are relying on the brand's own quality controls. If your program recommends a specific product, follow that recommendation. For a broader overview of supplement safety, see our guide to <a href="/is-protein-powder-safe/">whether protein powder is safe</a>.
+          </p>
+        </div>
+
+        <div id="flavors" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            6. Sweet, Savory or Unflavored: Choosing a Flavor
+          </h2>
+
+          <p>
+            <strong>Unflavored</strong> is the most versatile and the leanest. It has no sweeteners, no sugar and the lowest sodium in the range at about 35 mg per scoop. Unjury itself says it does not recommend mixing Unflavored into plain water, and suggests a strongly flavored drink instead, which tells you it tastes of something. It is best stirred into foods and drinks you already like. Our <a href="/best-unflavored-protein-powder/">unflavored protein powder guide</a> compares it with other plain powders.
+          </p>
+
+          <p>
+            <strong>Chocolate</strong> and <strong>Vanilla</strong> are the classic shake flavors, at about 110 and 100 calories respectively, each with about 2 g of sugar from fructose and sweetened further with sucralose and acesulfame potassium. Customer reviews on Unjury's site mention the chocolate often, and vanilla works as a base for fruit smoothies. Both mix with milk or a milk alternative if your plan allows it.
+          </p>
+
+          <p>
+            <strong>Chicken Soup, French Onion and Beef and Herb</strong> are the range's real differentiator. At about 90 calories and 21 g of protein per scoop for Chicken Soup, they turn a warm drink into a protein serving. They are high in sodium and, like every Unjury whey, must not be mixed with liquid hotter than about 140 degrees Fahrenheit, so they are warm drinks rather than piping-hot soups.
+          </p>
+
+          <p>
+            <strong>Lemon Lime and Strawberry</strong> are fruit-style flavors for people who find milky shakes heavy. We could not confirm their full panels in time for this review, so check the label before you buy. If you prefer a fully juice-like drink, a clear whey isolate may suit you better; our <a href="/best-clear-protein-powder/">clear protein powder guide</a> covers those.
+          </p>
+
+          <p>
+            Because flavor tolerance can change, especially after surgery, starting with stick packets or a single tub before committing to a subscription is sensible.
+          </p>
+        </div>
+
+        <div id="mixing" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            7. How to Mix Unjury Without Clumps
+          </h2>
+
+          <p>
+            The most important instruction on Unjury's labels is temperature. The brand says not to use its powders in liquids hotter than 140 degrees Fahrenheit, because the proteins clump. That applies to the savory soups too: heat the water, let it cool to warm, then stir in the powder. Adding powder to boiling broth or fresh coffee will give you lumps and an unpleasant texture.
+          </p>
+
+          <p>
+            For cold drinks, add the liquid first and the powder second, then shake or whisk. Unjury's labels suggest mixing a scoop into about 8 fl oz of liquid for the soups. If you can only manage small sips, you can make a thicker drink with less liquid and sip it over a longer period, as long as your team is comfortable with that approach.
+          </p>
+
+          <p>
+            For food, Unflavored works best stirred into something that is already cool or warm rather than hot: yogurt, cottage cheese, pudding, mashed potato or lukewarm soup. Stir it in a little at a time so it does not clump, and taste as you go. A scoop adds 21 g of protein and very little volume, which is the whole point.
+          </p>
+
+          <p>
+            A small electric frother or shaker bottle with a mixing ball handles most of the work. Blenders work too, but make more foam, which can feel filling before you have finished the serving.
+          </p>
+        </div>
+
+        <div id="cost" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            8. Cost per 25 g of Protein
+          </h2>
+
+          <p>
+            Unjury's whey tubs list at about $30 for 15 servings on the brand site, with a subscription price of about $27. At 21 g of protein per serving, that works out to roughly $2.40 per 25 g of protein at list and roughly $2.15 on subscription, approximately. The stick packets cost more per serving, at about $40 for a box of 20, which is the price of convenience.
+          </p>
+
+          <p>
+            The pea-protein plant powders come out cheaper per gram. Unjury lists 20 servings for about $30, and the Chocolate plant version shows about 20 g of protein per serving, which works out to roughly $1.90 per 25 g. It carries more calories, about 130, and more carbohydrate and sugar than the whey versions, with organic cane sugar and stevia on the label.
+          </p>
+
+          <div class="overflow-hidden border border-gray-200 rounded-2xl my-8">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Product</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Protein / serving</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Approx. cost per 25 g</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Notes</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Unjury whey tub, list</td>
+                    <td class="px-4 py-4 text-gray-700">21 g</td>
+                    <td class="px-4 py-4 text-gray-700">About $2.40</td>
+                    <td class="px-4 py-4 text-gray-700">15 servings</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Unjury whey tub, subscription</td>
+                    <td class="px-4 py-4 text-gray-700">21 g</td>
+                    <td class="px-4 py-4 text-gray-700">About $2.15</td>
+                    <td class="px-4 py-4 text-gray-700">Subscription pricing</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Unjury plant chocolate</td>
+                    <td class="px-4 py-4 text-gray-700">About 20 g</td>
+                    <td class="px-4 py-4 text-gray-700">About $1.90</td>
+                    <td class="px-4 py-4 text-gray-700">Pea protein, 130 kcal</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Isopure Zero Carb</td>
+                    <td class="px-4 py-4 text-gray-700">About 25 g</td>
+                    <td class="px-4 py-4 text-gray-700">Typically lower</td>
+                    <td class="px-4 py-4 text-gray-700">Pure isolate, larger tubs</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <p>
+            Mainstream whey isolates in large tubs typically cost noticeably less per 25 g than Unjury. You are paying for the small-tub format, the savory flavors and the medical positioning. Whether that is worth it depends on your situation: in the months after surgery, when you need a product that works for you and quantities are small, the extra cost may be minor. For long-term daily use, comparing it with larger-tub isolates is worthwhile.
+          </p>
+
+          <p>
+            Our <a href="/best-protein-powder-for-weight-loss/">weight loss protein powder guide</a> ranks lower-cost low-calorie options if price becomes the deciding factor.
+          </p>
+        </div>
+
+        <div id="vs" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            9. Unjury vs Premier, Isopure and Plant Options
+          </h2>
+
+          <p>
+            <strong>Premier Protein shakes</strong> are the most common grocery-store alternative. They list about 30 g of protein, about 160 calories and about 1 g of sugar per 11 fl oz carton, and they cost little per gram when bought by the case. They need no mixing, but the carton volume is much larger than a small Unjury drink, which matters if your capacity is limited. Our <a href="/premier-protein-powder-review/">Premier Protein review</a> covers the range.
+          </p>
+
+          <p>
+            <strong>Isopure Zero Carb</strong> is the closest powdered alternative on the label: about 25 g of protein for roughly 100 to 110 calories with essentially no carbohydrate, from pure whey isolate. It is sold in larger tubs and typically costs less per 25 g. It lacks Unjury's savory flavors. See our <a href="/isopure-protein-powder-review/">Isopure review</a>.
+          </p>
+
+          <p>
+            <strong>Quest Protein Powder</strong> is another low-sugar grocery option, but it blends whey isolate with casein, which gives a thicker shake and a little more lactose. It suits general dieters better than people who need the smallest, smoothest drink possible. Our <a href="/quest-protein-powder-review/">Quest review</a> compares every flavor.
+          </p>
+
+          <p>
+            <strong>Plant proteins</strong> make sense if you cannot have dairy. Unjury's own pea powders are an option, and our <a href="/best-plant-based-protein-powder/">plant-based protein guide</a> covers others. Expect more calories and carbohydrate per gram of protein than with whey isolate.
+          </p>
+        </div>
+
+        <div id="skip" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            10. Who Should Skip Unjury
+          </h2>
+
+          <p>
+            <strong>Budget-first, long-term users.</strong> If you are past the stage where small-volume, specialised products matter, a large tub of a mainstream whey isolate will usually deliver the same protein for less.
+          </p>
+
+          <p>
+            <strong>Drug-tested athletes.</strong> Unjury lists no NSF Certified for Sport or Informed Sport certification. Choose a certified product for your exact flavor instead.
+          </p>
+
+          <p>
+            <strong>People avoiding sucralose or acesulfame potassium.</strong> The sweet flavors contain both. Stick to Unflavored or the soups, or choose another brand.
+          </p>
+
+          <p>
+            <strong>Anyone on a sodium-restricted diet</strong> should be careful with the savory flavors, which list several hundred milligrams of sodium per scoop. Unflavored is the low-sodium option.
+          </p>
+
+          <p>
+            <strong>Anyone with soy or milk allergy.</strong> Every Unjury whey powder contains milk and soy lecithin. And anyone with kidney disease, who is pregnant, or who has had surgery should agree any protein supplement with their doctor or dietitian first.
+          </p>
+        </div>
+
+        <!-- Common Mistakes -->
+        <div id="mistakes" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            11. Common Mistakes to Avoid
+          </h2>
+
+          <div class="space-y-6 my-8">
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Mixing Unjury into hot liquid</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Unjury says its powders clump in liquid hotter than about 140 degrees Fahrenheit. That includes the savory soups. Heat water, let it cool to warm, then stir the powder in. Adding a scoop to boiling broth or fresh coffee wastes the serving and leaves an unpleasant texture.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Overlooking sodium in the savory flavors</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Chicken Soup lists about 770 mg of sodium per scoop, roughly a third of the daily value. Two servings a day adds up quickly. If you are on a sodium-restricted plan, check with your doctor or dietitian, and use Unflavored, at about 35 mg, as your everyday option.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Counting a scoop as 25 g of protein</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Every Unjury whey scoop lists 21 g of protein, not 25 g. If you round up, you will fall short of a daily target, which matters most when targets are tight and volumes small. Track the real figure, or use a slightly larger scoop if your team agrees.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Choosing a product without your surgical team</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Bariatric programs differ in their protein targets, sugar limits and timing of each diet stage. A product that suits one program may not suit another. Ask your surgeon or registered dietitian which powders they approve before you buy, rather than relying on brand claims or reviews.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Buying a subscription before testing flavors</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Taste tolerance can change, particularly after surgery, and a flavor you liked before may become hard to drink. Try stick packets or a single tub first, then subscribe once you know what works. A full tub you cannot finish is the most expensive protein there is.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ -->
+        <div id="faq" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            12. Frequently Asked Questions
+          </h2>
+
+          <div class="space-y-6">
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is Unjury protein powder good?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                For its purpose, yes. Every Unjury whey powder lists 21 g of protein from whey isolate in a small scoop, with about 90 to 110 calories and 2 g of sugar or less, and the range includes savory and unflavored options. It costs more per gram than mainstream isolates and carries no third-party certification, so it suits specific needs better than general use.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">How much protein is in Unjury?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Each Unjury whey powder flavor we checked lists 21 g of protein per scoop, with scoop sizes from about 24 g for Unflavored to about 31 g for Chocolate. The pea-protein Chocolate plant powder lists about 20 g per serving. Figures are per Unjury's labels at the time of writing and may change, so check the tub you buy.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is Unjury good after bariatric surgery?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Unjury is designed with surgical patients in mind, and its small scoop, low sugar, isolate base and savory flavors suit many post-surgery plans. But programs differ in protein targets, sugar limits and when each product is allowed. This is not medical advice: ask your bariatric surgeon or registered dietitian before using Unjury or any protein supplement.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Does Unjury contain lactose?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Unjury uses whey protein isolate, which is filtered to remove most lactose, and its Chocolate label claims zero grams of lactose. That makes it usually better tolerated than whey concentrate by lactose-sensitive people. If you are highly sensitive or have a milk allergy, check with your doctor; all Unjury whey powders contain milk and soy lecithin.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Can you mix Unjury into hot food or drinks?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Only warm, not hot. Unjury's labels say not to use the powders in liquids hotter than about 140 degrees Fahrenheit, because the protein clumps. For soups or coffee, let the liquid cool to warm before stirring in the powder. Unflavored is the best version for mixing into foods such as yogurt, pudding or lukewarm soup.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">What sweeteners does Unjury use?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                The sweet flavors, such as Chocolate and Vanilla, contain fructose, acesulfame potassium and sucralose, which keeps sugar at about 2 g per scoop. Unflavored has no sweeteners at all, and the Chicken Soup label lists none. The pea-protein plant Chocolate uses organic cane sugar and stevia. Check each label if you avoid a specific sweetener.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is Unjury sold on Amazon?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Unjury sells primarily through its own site, with subscription pricing and stick packets. We could not confirm a current brand-run Amazon US listing for every flavor, so check the seller if you buy on Amazon. The brand site lists 15-serving tubs at about $30, which is a useful reference point when comparing prices.
+              </p>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Related Guides -->
+        <div class="mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">Related Weight Loss Protein Guides</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <a href="/best-protein-powder-for-weight-loss/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#FF4500] font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Protein Powder for Weight Loss</h3>
+              <p class="text-gray-500 text-sm mt-2">Our ranked shortlist by protein per calorie and cost per 25 g.</p>
+            </a>
+            <a href="/premier-protein-powder-review/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#38BDF8] font-black text-xs uppercase tracking-widest mb-2">Brand Review</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Premier Protein Powder Review</h3>
+              <p class="text-gray-500 text-sm mt-2">The grocery-store shake brand, label-checked.</p>
+            </a>
+            <a href="/best-unflavored-protein-powder/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-green-600 font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Unflavored Protein Powder</h3>
+              <p class="text-gray-500 text-sm mt-2">Plain powders that disappear into food.</p>
+            </a>
+          </div>
+        </div>
+
+        <!-- Closing -->
+        <div class="mt-16 bg-gray-900 text-white rounded-2xl p-8">
+          <h2 class="text-2xl font-black text-white mb-4">The Bottom Line</h2>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            Unjury is a sensible, focused product: whey isolate, 21 g of protein in a small scoop, minimal sugar and fat, and a range that includes savory soups and an unflavored powder you can stir into food. For people who need a lot of protein in a little volume, including many bariatric patients, that format is the real value, and Unflavored and Chocolate are the best places to start.
+          </p>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            It is expensive per gram, it carries no independent certification, and it is never a substitute for your surgical team's plan. Ask your surgeon or dietitian before you buy. If price becomes the deciding factor later on, our <a href="/best-protein-powder-for-weight-loss/">weight loss protein powder guide</a> lists lower-cost low-calorie options.
+          </p>
+        </div>
+
+        <MoreInCategory category="Brand Reviews" links={moreInCategory} />
+
+        <AuthorBio />
+      </div>
+    </div>
+  </article>
+</Layout>

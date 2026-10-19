@@ -1,0 +1,952 @@
+---
+import Layout from "../layouts/Layout.astro";
+import MoreInCategory from "../components/MoreInCategory.astro";
+import { AUTHORS, DEFAULT_AUTHOR, authorSchema } from "../data/authors";
+import { SITE_NAME, SITE_URL } from "../data/site";
+import AuthorAvatar from "../components/AuthorAvatar.astro";
+import QuickPicks from "../components/QuickPicks.astro";
+import AuthorBio from "../components/AuthorBio.astro";
+import { amazonLink } from "../data/affiliate";
+import TrustBadge from "../components/TrustBadge.astro";
+import SocialProof from "../components/SocialProof.astro";
+import SpecGrid from "../components/SpecGrid.astro";
+import productImages from "../data/product-images.json";
+import { pageDates } from "../data/dates";
+
+const moreInCategory = [
+  {
+    "title": "Best Organic Protein Powder",
+    "url": "/best-organic-protein-powder/"
+  },
+  {
+    "title": "Best Pea Protein Powder",
+    "url": "/best-pea-protein-powder/"
+  },
+  {
+    "title": "Best Clean Protein Powder",
+    "url": "/best-clean-protein-powder/"
+  }
+];
+const author = AUTHORS[DEFAULT_AUTHOR];
+const dates = pageDates(Astro.url.pathname, { published: "2026-10-19", modified: "2026-10-19" });
+const title = "Truvani Protein Powder Review: Organic Plant vs Whey, and What You Pay";
+const description =
+  "Truvani protein powder reviewed on the label: the organic pea-based flagship, the new organic whey, monk fruit, heavy-metal reports and the cost per 25 g.";
+
+const PRODUCTS: {
+  id: string;
+  name: string;
+  brand?: string;
+  badge: string;
+  category: string;
+  description: string;
+  pros: string[];
+  cons: string[];
+  bottomLine: string;
+  specs?: Record<string, string>;
+  rating?: number;
+  reviewCount?: number;
+  amazonUrl?: string;
+}[] = [
+  {
+    "id": "truvani-organic-plant-based-protein",
+    "name": "Truvani Organic Plant Based Protein Powder, Vanilla",
+    "brand": "Truvani",
+    "badge": "Best Overall",
+    "category": "USDA Organic pea, pumpkin seed and chia blend",
+    "description": "The flagship: about 20 g of protein per scoop from organic pea, pumpkin seed and chia seed protein, sweetened only with organic monk fruit, in about 130 calories, per the label at the time of writing. Five ingredients, USDA Organic, and free of dairy, soy, gluten, stevia and gums. Vanilla is the most versatile flavor.",
+    "pros": [
+      "Five-ingredient, USDA Organic label",
+      "Monk fruit only, no stevia or added sugar",
+      "Dairy-, soy- and gluten-free"
+    ],
+    "cons": [
+      "About 20 g of protein per scoop",
+      "High cost per 25 g of protein",
+      "Independent tests detected lead, cadmium and arsenic"
+    ],
+    "bottomLine": "The cleanest organic plant label around, at a modest dose and premium price.",
+    "specs": {
+      "Protein per serving": "About 20 g (label)",
+      "Calories": "About 130 (varies by flavor)",
+      "Third-party testing": "No sport certification confirmed",
+      "Best for": "Clean-label, stevia-free vegans"
+    },
+    "amazonUrl": "https://www.amazon.com/dp/B07JG7VS62"
+  },
+  {
+    "id": "truvani-organic-whey-protein",
+    "name": "Truvani Organic Whey Protein Powder, Vanilla",
+    "brand": "Truvani",
+    "badge": "Best for Dairy Eaters",
+    "category": "USDA Organic grass-fed whey concentrate",
+    "description": "Three ingredients: organic whey protein concentrate, organic vanilla powder and organic monk fruit extract, with about 20 g of protein and roughly 100 calories per scoop, per retailer listings at the time of writing. Truvani says the milk comes from grass-fed, pasture-raised cows on USDA Organic farms. More complete protein per gram than the plant line.",
+    "pros": [
+      "Three-ingredient organic whey",
+      "Complete protein with more leucine than pea",
+      "About 100 calories per scoop"
+    ],
+    "cons": [
+      "About 20 g per scoop, below many wheys",
+      "Concentrate carries some lactose"
+    ],
+    "bottomLine": "The best Truvani product for most dairy eaters.",
+    "specs": {
+      "Protein per serving": "About 20 g (label)",
+      "Calories": "About 100",
+      "Third-party testing": "No sport certification confirmed",
+      "Best for": "Organic dairy buyers"
+    },
+    "amazonUrl": "https://www.amazon.com/dp/B0F8PF5KJ9"
+  },
+  {
+    "id": "truvani-organic-plant-based-protein-chocolate",
+    "name": "Truvani Organic Plant Based Protein Powder, Chocolate",
+    "brand": "Truvani",
+    "badge": "Best Chocolate",
+    "category": "USDA Organic pea-based blend with cocoa",
+    "description": "The chocolate version of the flagship adds organic alkalized cocoa to the same short, monk fruit-sweetened organic pea blend, with about 20 g of protein per scoop per the listing. It is the more satisfying flavor for drinking straight, but cacao adds heavy metals, and independent testing found lead, cadmium and arsenic in a sample.",
+    "pros": [
+      "Richer flavor for drinking on its own",
+      "Same short, organic, stevia-free label",
+      "Dairy-free"
+    ],
+    "cons": [
+      "Chocolate raises heavy-metal exposure",
+      "Sold with a Prop 65 warning in California, per an independent report"
+    ],
+    "bottomLine": "A good chocolate plant shake for occasional use; choose vanilla for every day.",
+    "specs": {
+      "Protein per serving": "About 20 g (label)",
+      "Protein source": "Organic pea, pumpkin seed, chia, cocoa",
+      "Third-party testing": "No sport certification confirmed",
+      "Best for": "Occasional chocolate shakes"
+    },
+    "amazonUrl": "https://www.amazon.com/dp/B07M95N225"
+  },
+  {
+    "id": "garden-of-life-sport-organic-plant-based-protein",
+    "name": "Garden of Life Sport Organic Plant-Based Protein",
+    "brand": "Garden of Life",
+    "badge": "Alternative: Certified Organic",
+    "category": "USDA Organic pea-led plant blend",
+    "description": "The organic plant protein for athletes: about 30 g of protein per serving from an organic legume blend led by pea, with USDA Organic certification and NSF Certified for Sport status, per the brand and NSF at the time of writing. Its label is longer than Truvani's, but it delivers far more protein per serving.",
+    "pros": [
+      "About 30 g of protein per serving",
+      "NSF Certified for Sport (verify flavor)",
+      "USDA Organic"
+    ],
+    "cons": [
+      "Longer ingredient list",
+      "More calories per serving"
+    ],
+    "bottomLine": "The organic pick for lifters and tested athletes.",
+    "specs": {
+      "Protein per serving": "About 30 g (label)",
+      "Protein source": "Organic pea and legume blend",
+      "Third-party testing": "NSF Certified for Sport (verify flavor)",
+      "Best for": "Organic athletes"
+    }
+  },
+  {
+    "id": "orgain-organic-protein-plant-based",
+    "name": "Orgain Organic Protein Plant-Based Powder",
+    "brand": "Orgain",
+    "badge": "Alternative: Budget Organic",
+    "category": "USDA Organic multi-source plant blend",
+    "description": "The affordable organic alternative: about 21 g of protein per two-scoop serving from a plant blend, with creamy flavors buyers widely describe as easy to drink, per the label at the time of writing. It uses stevia and erythritol, so it is not for stevia-averse buyers, but it costs much less per 25 g than Truvani.",
+    "pros": [
+      "Lower cost per 25 g of protein",
+      "Widely available, with popular flavors",
+      "USDA Organic"
+    ],
+    "cons": [
+      "Stevia and erythritol",
+      "Longer ingredient list"
+    ],
+    "bottomLine": "The value organic plant protein if you can live with stevia.",
+    "specs": {
+      "Protein per serving": "About 21 g (2 scoops)",
+      "Sweetener": "Stevia and erythritol",
+      "Third-party testing": "No sport certification confirmed",
+      "Best for": "Budget organic, smoothies"
+    }
+  }
+];
+
+const schema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Home",
+          item: `${SITE_URL}/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Best Lists",
+          item: `${SITE_URL}/best-of/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 3,
+          name: "Truvani Protein Review",
+          item: `${SITE_URL}/truvani-protein-powder-review/`,
+        },
+      ],
+    },
+    {
+      "@type": "FAQPage",
+      mainEntity: [
+        {
+          "@type": "Question",
+          "name": "Is Truvani protein powder good?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It is a good clean-label organic protein. The vanilla plant protein gives about 20 g from organic pea, pumpkin seed and chia, sweetened only with monk fruit, in roughly 130 calories, per the label. Its weaknesses are the modest dose, a high cost per 25 g and independent reports of detectable heavy metals in its plant protein."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How much protein is in Truvani protein powder?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "About 20 g per scoop in both the organic plant protein and the organic whey, per labels at the time of writing. The plant protein runs about 130 calories in vanilla, and the whey about 100. To reach a 25 g serving, use about 1.25 scoops or blend with soy or dairy milk."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does Truvani make a whey protein?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Truvani Organic Whey lists three ingredients in vanilla: organic whey protein concentrate, organic vanilla powder and organic monk fruit extract, with about 20 g of protein per scoop. The brand says the milk comes from grass-fed, pasture-raised cows on USDA Organic farms. Vanilla, chocolate and unflavored versions appear on retailer listings."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What sweetener does Truvani use?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Organic monk fruit extract, with no stevia, no added sugar and no artificial sweeteners, per the labels at the time of writing. That sets Truvani apart from many clean-label proteins, which rely on stevia. Some buyers find monk fruit less bitter than stevia, though plant proteins can still taste earthy, so blending helps."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does Truvani protein have heavy metals?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Independent tests published by a lead-safety advocate found lead, cadmium and arsenic in samples of Truvani's chocolate and vanilla plant proteins. Detection is not the same as an unsafe level, and most plant proteins contain some metals. Choose vanilla or the whey, rotate sources, and check with a doctor if you are pregnant."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is Truvani protein powder USDA Organic?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. The plant protein is certified USDA Organic, and the brand says its whey comes from certified USDA Organic farms. Organic certification covers farming and processing practices, such as synthetic pesticides. It does not test for heavy metals, so treat it as a sourcing choice rather than a contaminant guarantee."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is Truvani worth the price?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "If a five-ingredient organic label and monk fruit sweetening matter to you, yes. On pure value, no: at roughly $2.80 per 25 g of protein for the plant tub, it is one of the pricier plant proteins. Orgain costs less, and Garden of Life Sport Organic delivers more protein per serving with an NSF certification."
+          }
+        }
+      ],
+    },
+    {
+      "@type": "Article",
+      headline: title,
+      author: authorSchema(),
+      datePublished: dates.published,
+      dateModified: dates.modified,
+      publisher: { "@type": "Organization", name: SITE_NAME, url: SITE_URL },
+    },
+    {
+      "@type": "ItemList",
+      name: title,
+      numberOfItems: PRODUCTS.length,
+      itemListElement: PRODUCTS.map((product, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name: product.name,
+        url: new URL(`#${product.id}`, Astro.url).toString(),
+      })),
+    },
+    ...PRODUCTS.map((product) => ({
+      "@type": "Product",
+      name: product.name,
+      description: product.description,
+      brand: {
+        "@type": "Brand",
+        name: product.brand ?? product.name.split(" ")[0],
+      },
+    })),
+  ],
+};
+---
+
+<Layout
+  title={title}
+  description={description}
+  ogType="article"
+  article={{
+    publishedTime: dates.published,
+    modifiedTime: dates.modified,
+    author: author.name,
+    section: "Brand Reviews",
+    tags: [
+      "truvani protein powder",
+      "truvani plant protein",
+      "truvani protein review",
+      "truvani whey"
+    ],
+  }}
+  jsonLd={schema}
+  stickyCta={{
+    text: "See Our Top Organic Picks",
+    link: "/best-organic-protein-powder/",
+  }}
+>
+  <article class="relative overflow-hidden">
+    <!-- Hero Section -->
+    <div class="bg-gray-900 py-16 lg:py-24 relative overflow-hidden">
+      <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(circle at 20% 20%, #38BDF8 0, transparent 45%), radial-gradient(circle at 80% 60%, #FF4500 0, transparent 40%);"></div>
+      <div class="max-w-4xl mx-auto px-4 relative z-10 text-center">
+        <div class="flex justify-center mb-6">
+          <TrustBadge />
+        </div>
+        <div class="flex justify-center gap-3 mb-6">
+          <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#FF4500]/20 text-[#FF4500] text-xs font-black uppercase tracking-widest border border-[#FF4500]/30">
+            Brand Review
+          </span>
+          <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-green-500/10 text-green-400 text-xs font-bold uppercase tracking-widest border border-green-500/20">
+            Label-Checked
+          </span>
+        </div>
+        <h1 class="text-4xl lg:text-6xl font-black text-white leading-tight mb-8">
+          Truvani Protein Powder: <span class="text-[#38BDF8]">Organic and Simple, but Is It Enough?</span>
+        </h1>
+        <p class="text-xl text-gray-300 leading-relaxed mb-8 max-w-3xl mx-auto">
+          A USDA Organic, monk fruit-sweetened pea protein with five ingredients, plus a newer three-ingredient organic whey. Here is what each delivers, which to buy, and what the heavy-metal reports mean.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a
+            href="#truvani-organic-plant-based-protein"
+            class="px-8 py-4 bg-[#FF4500] hover:bg-[#E63E00] text-white font-black rounded-xl shadow-lg transition-all no-underline"
+          >
+            See Our #1 Pick
+          </a>
+          <a
+            href="#whey"
+            class="px-8 py-4 bg-white/10 hover:bg-white/20 text-white font-bold rounded-xl border border-white/10 no-underline"
+          >
+            Read the Label Breakdown
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Author & Meta -->
+    <div class="max-w-3xl mx-auto px-4 pt-12">
+      <div class="flex items-center gap-6 border-b border-gray-100 pb-8">
+        <div class="flex items-center gap-3">
+          <AuthorAvatar size={48} />
+          <div>
+            <p class="text-sm font-bold text-gray-900">{author.name}</p>
+            <p class="text-xs text-gray-500 uppercase tracking-widest">{author.role}</p>
+          </div>
+        </div>
+        <div class="h-10 w-px bg-gray-200 hidden sm:block"></div>
+        <div class="hidden sm:block">
+          <p class="text-sm font-bold text-gray-900">Last Updated</p>
+          <p class="text-xs text-gray-500">{dates.display}</p>
+        </div>
+        <div class="hidden sm:block ml-auto">
+          <SocialProof />
+        </div>
+      </div>
+    </div>
+
+    <!-- Table of Contents -->
+    <div class="max-w-3xl mx-auto px-4 py-10">
+      <div class="bg-gray-50 border border-gray-200 rounded-2xl p-6 lg:p-8">
+        <h2 class="text-lg font-black text-gray-900 mb-4 flex items-center gap-2">
+          In This Guide
+        </h2>
+        <nav class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <a href="#verdict" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">1. The Short Verdict</a>
+          <a href="#plant-label" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">2. The Plant Protein Label</a>
+          <a href="#top-picks" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">3. The Lineup</a>
+          <a href="#whey" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">4. The Organic Whey</a>
+          <a href="#which-one" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">5. Which Truvani to Buy</a>
+          <a href="#cost" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">6. Cost per 25 g of Protein</a>
+          <a href="#metals" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">7. Heavy Metals and Prop 65</a>
+          <a href="#who-skip" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">8. Who Should Skip Truvani</a>
+          <a href="#compare" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">9. How Truvani Compares</a>
+          <a href="#use" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">10. Using Truvani Well</a>
+          <a href="#mistakes" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">11. Common Mistakes</a>
+          <a href="#faq" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">12. FAQ</a>
+        </nav>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="max-w-3xl mx-auto px-4 pb-16 lg:pb-24">
+      <div class="prose prose-lg prose-blue max-w-none text-gray-700 leading-relaxed">
+        <p class="text-2xl font-medium text-gray-900 mb-8 italic">
+          Truvani makes one of the shortest, cleanest organic protein labels you can buy, but its flagship plant protein gives only about 20 g per scoop at a premium price, and independent testing has found heavy metals in it. Buy it for the ingredient list and the organic seal, and go in knowing those two trade-offs.
+        </p>
+
+        <QuickPicks products={PRODUCTS} />
+
+        <div id="verdict" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            1. The Short Verdict
+          </h2>
+
+          <p>
+            Truvani is a clean-label wellness brand co-founded by Vani Hari, the food activist known online as the Food Babe. Its pitch is simple: products made with a handful of organic ingredients and nothing its founders consider unnecessary, which in practice means no stevia, no gums, no artificial sweeteners and no added sugar. Protein is its best-known product, alongside collagen and other supplements.
+          </p>
+
+          <p>
+            The flagship is Truvani Organic Plant Based Protein. The vanilla flavor lists about 20 g of protein per scoop in roughly 130 calories, from organic pea protein with organic pumpkin seed and chia seed protein, sweetened with organic monk fruit, per the HEB and Amazon listings at the time of writing. It is certified USDA Organic and free of dairy, soy and gluten. The brand has more recently added an organic whey protein with about 20 g of protein from three ingredients.
+          </p>
+
+          <p>
+            Those are genuinely short labels, and for buyers who read every ingredient they are a big draw. The trade-offs are dose, price and testing. Twenty grams is below the 25 g many people aim for per shake, the cost per 25 g of protein is high, and a lead-safety advocate's lab tests have found lead, cadmium and arsenic in Truvani plant protein samples. Those findings are not unusual for plant proteins, but they are worth knowing.
+          </p>
+
+          <p>
+            Our verdict: Truvani is a good choice for organic, minimal-ingredient buyers who want a plant protein without stevia, and the organic whey is a smart addition for anyone who eats dairy. If you want the most protein per dollar, or a sport certification, the options in our <a href="/best-organic-protein-powder/">best organic protein powder</a> guide offer more.
+          </p>
+
+          <div class="bg-gray-900 text-white rounded-2xl p-6 lg:p-8 my-8">
+            <p class="text-xs font-black uppercase tracking-widest text-[#38BDF8] mb-3">THE VERDICT</p>
+            <p class="text-xl font-bold text-white mb-3">A beautifully short organic label at a modest dose and a premium price</p>
+            <p class="text-gray-300 leading-relaxed m-0">About 20 g of organic pea-based protein with monk fruit and five ingredients, around 130 calories. Worth buying for clean-label and stevia-free shoppers. Skip it if cost per gram or heavy-metal exposure is your priority.</p>
+          </div>
+        </div>
+
+        <div id="plant-label" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            2. What Is in the Plant Protein
+          </h2>
+
+          <p>
+            The vanilla plant protein's ingredient list is five items long: organic pea protein, organic vanilla powder, organic pumpkin seed protein, organic monk fruit extract and organic chia seed protein, per retailer listings at the time of writing. The chocolate version adds organic alkalized cocoa, and other flavors swap in ingredients such as organic banana powder and Ceylon cinnamon. It is hard to find a flavored protein with a shorter list.
+          </p>
+
+          <p>
+            Per the HEB label for the vanilla tub, one scoop gives about 20 g of protein, 130 calories, 3 g of fat, 5 g of carbohydrate including 2 g of fiber, and 2 g of sugar, with about 20 servings per container. Whole Foods marketing copy gives a range of 120 to 140 calories across flavors. Sodium on the vanilla label is about 280 mg per scoop, relatively high for a plant protein, so check it if you are tracking salt.
+          </p>
+
+          <p>
+            Pea is the main protein, and pea is one of the better plant sources: it is rich in lysine and reasonably high in leucine, though lower in methionine than animal proteins. Pumpkin seed and chia add a little protein of their own and help round out the amino acid profile. A 20 g scoop of a pea-led blend delivers less leucine than 20 g of whey, which is one reason plant-protein buyers often benefit from a slightly larger dose.
+          </p>
+
+          <p>
+            Monk fruit is the only sweetener. That is the brand's clear differentiator: many clean-label plant proteins use stevia, which some people find bitter, and Truvani avoids it entirely. Buyer feedback on taste is mostly positive for a plant protein, though some buyers note the earthy, slightly gritty texture that pea proteins commonly have when mixed with water alone. Our <a href="/best-pea-protein-powder/">best pea protein powder</a> guide explains how pea compares with other plant sources.
+          </p>
+
+          <div class="overflow-hidden border border-gray-200 rounded-2xl my-8">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Label figure</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Vanilla plant (per scoop)</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">What it means</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Protein</td>
+                    <td class="px-4 py-4 text-gray-700">About 20 g</td>
+                    <td class="px-4 py-4 text-gray-700">Below the 25 g many people target</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Calories</td>
+                    <td class="px-4 py-4 text-gray-700">About 130</td>
+                    <td class="px-4 py-4 text-gray-700">Typical for a plant blend</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Protein source</td>
+                    <td class="px-4 py-4 text-gray-700">Organic pea, pumpkin seed, chia</td>
+                    <td class="px-4 py-4 text-gray-700">Pea-led plant blend</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Sweetener</td>
+                    <td class="px-4 py-4 text-gray-700">Organic monk fruit</td>
+                    <td class="px-4 py-4 text-gray-700">No stevia, no added sugar</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Picks -->
+        <div id="top-picks" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            3. The Truvani Protein Lineup, Ranked
+          </h2>
+
+          <p>
+            These are the Truvani protein powders we could confirm on Amazon at the time of writing, flagship first, followed by two organic alternatives from other brands for buyers who want more protein per scoop or a lower cost. Figures are per the label at the time of writing and vary by flavor.
+          </p>
+
+          {PRODUCTS.map((product, index) => (
+            <div id={product.id} class="scroll-mt-24 mt-12 first:mt-8">
+              <div class="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                <div class="bg-gray-900 px-6 py-4 flex items-center justify-between">
+                  <div class="flex items-center gap-3">
+                    <span class="bg-[#FF4500] text-white w-8 h-8 rounded-full flex items-center justify-center text-sm font-black">
+                      {index + 1}
+                    </span>
+                    {productImages[product.id] && (
+                      <img
+                        src={productImages[product.id]}
+                        alt={product.name}
+                        loading="lazy"
+                        width="40"
+                        height="40"
+                        class="w-10 h-10 rounded-lg bg-white object-contain p-1 shrink-0"
+                      />
+                    )}
+                    <div>
+                      <p class="text-white font-black text-lg">{product.name}</p>
+                      <p class="text-gray-400 text-xs">{product.category}</p>
+                    </div>
+                  </div>
+                  <span class="bg-[#38BDF8]/20 text-[#38BDF8] px-3 py-1 rounded-full text-xs font-bold hidden sm:block">
+                    {product.badge}
+                  </span>
+                </div>
+                <div class="p-6">
+                  {product.rating && (
+                  <div class="flex items-center gap-2 mb-4">
+                    <div class="flex text-yellow-400">
+                      {[...Array(5)].map((_, i) => (
+                        <svg
+                          class={`w-4 h-4 ${i < Math.floor(product.rating) ? "fill-current" : "text-gray-200"}`}
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                        >
+                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        </svg>
+                      ))}
+                    </div>
+                    <span class="text-gray-500 text-sm font-bold">{product.rating}</span>
+                    {product.reviewCount && <span class="text-gray-400 text-xs">({product.reviewCount.toLocaleString()} retailer reviews)</span>}
+                  </div>
+                  )}
+
+                  <SpecGrid specs={product.specs} />
+
+                  <p class="text-gray-700 leading-relaxed mb-6">{product.description}</p>
+
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                    <div class="bg-green-50 rounded-xl p-4">
+                      <p class="text-xs font-black uppercase tracking-widest text-green-700 mb-3">Pros</p>
+                      <ul class="space-y-2">
+                        {product.pros.map((pro) => (
+                          <li class="flex items-start gap-2 text-sm text-green-800">
+                            <svg class="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            {pro}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div class="bg-red-50 rounded-xl p-4">
+                      <p class="text-xs font-black uppercase tracking-widest text-red-700 mb-3">Cons</p>
+                      <ul class="space-y-2">
+                        {product.cons.map((con) => (
+                          <li class="flex items-start gap-2 text-sm text-red-800">
+                            <svg class="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                            {con}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+
+                  <div class="bg-gray-50 rounded-xl p-4 border border-gray-100">
+                    <p class="text-xs font-black uppercase tracking-widest text-gray-500 mb-1">The Bottom Line</p>
+                    <p class="text-gray-900 font-bold">{product.bottomLine}</p>
+                  </div>
+
+                  <a
+                    href={amazonLink(product.amazonUrl, product.name, product.id)}
+                    target="_blank"
+                    rel="sponsored nofollow noopener"
+                    class="mt-6 block bg-[#FF4500] hover:bg-[#E63E00] text-white text-center py-4 rounded-xl font-black no-underline transition-colors uppercase tracking-widest text-sm"
+                  >
+                    Check Price &rarr;
+                  </a>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div id="whey" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            4. The Organic Whey Protein
+          </h2>
+
+          <p>
+            Truvani Organic Whey is the brand's newer product and the main reason people search for Truvani whey. The vanilla version lists just three ingredients: organic whey protein concentrate, organic vanilla powder and organic monk fruit extract, per retailer listings at the time of writing. Each flavor delivers about 20 g of protein per scoop, according to the brand, and HEB's vanilla label shows about 100 calories and 0.5 g of fat.
+          </p>
+
+          <p>
+            Truvani says the whey comes from grass-fed, pasture-raised cows on certified USDA Organic farms that are never treated with hormones or antibiotics. Like the plant line, it is free of gums, soy, stevia and added sugar. Vanilla, chocolate and unflavored versions appear on retailer listings, and the unflavored one is a useful base for cooking and for mixing with other powders.
+          </p>
+
+          <p>
+            From a muscle-building standpoint, the whey is the stronger product. Whey is a complete protein with more leucine per gram than pea, it digests quickly, and dairy proteins generally test lower for heavy metals than plant proteins. If you eat dairy and like Truvani's ingredient philosophy, the whey is the more efficient choice of the two.
+          </p>
+
+          <p>
+            The caveat is the same 20 g dose. Many grass-fed wheys deliver 24 to 25 g per scoop, so you may want a slightly larger scoop or a cup of milk alongside to reach a 25 g serving. Being a concentrate, it also carries a little more lactose than an isolate, which matters for people with lactose sensitivity; our <a href="/whey-vs-whey-isolate/">whey vs whey isolate</a> guide explains the difference.
+          </p>
+        </div>
+
+        <div id="which-one" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            5. Which Truvani Protein to Buy
+          </h2>
+
+          <p>
+            If you are vegan, dairy-free or simply prefer plant protein, buy the Organic Plant Based Protein in vanilla. It is the flagship, the most versatile flavor for smoothies and oats, and the one with the most buyer feedback. The 20-serving tub is the standard size, and Truvani also sells single-serve packets that are useful for trying a flavor before committing.
+          </p>
+
+          <p>
+            If you drink shakes on their own, the chocolate plant protein is the more satisfying flavor for many buyers. The trade-off is that chocolate flavors of any plant protein tend to carry more heavy metals than vanilla, because cacao adds its own lead and cadmium on top of what the pea brings. Independent testing of Truvani's chocolate has found these metals, as we cover below, so vanilla is the lower-exposure choice for daily use.
+          </p>
+
+          <p>
+            If you eat dairy, the Organic Whey is the best Truvani product for most goals. It offers more complete protein per gram, fewer calories per scoop and a shorter label than the plant version. Choose vanilla for shakes or unflavored for cooking. It costs a premium for an organic whey, but organic whey is rare enough that the premium is not surprising.
+          </p>
+
+          <p>
+            Whichever you pick, check the label on the specific flavor and size you buy. Truvani's formulas are short, but nutrition figures shift a little between flavors, and retailers sometimes show older packaging in their photos.
+          </p>
+        </div>
+
+        <div id="cost" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            6. Cost per 25 g of Protein
+          </h2>
+
+          <p>
+            HEB listed the 20.95 oz vanilla plant protein tub at about $2.15 per ounce when we checked, which puts the tub around $45 for 20 servings. That is about $2.25 per scoop and, because each scoop holds about 20 g of protein, roughly $2.80 per 25 g of protein. Amazon and other retailers may be higher or lower on any given day, so treat this as an approximate figure and check the current listing.
+          </p>
+
+          <p>
+            That makes Truvani one of the more expensive plant proteins per gram. Orgain Organic Protein, for example, usually costs considerably less per 25 g, and Garden of Life Sport Organic Plant-Based Protein, with about 30 g per serving and NSF Certified for Sport status per the brand, often comes in at a similar or lower cost per 25 g despite its higher sticker price.
+          </p>
+
+          <p>
+            The organic whey is priced as a premium product too. We could not confirm a stable price across retailers at the time of writing, so compare its cost per 25 g against other grass-fed wheys before buying. Remember that 20 g per scoop means 1.25 scoops per 25 g serving.
+          </p>
+
+          <p>
+            The practical ways to save are retailer promotions, buying the flavor you will actually finish, and using the plant protein alongside cheaper whole-food protein rather than for every serving. If cost per 25 g is your main concern, our <a href="/best-cheap-protein-powder/">best cheap protein powder</a> guide covers lower-cost options, organic and otherwise.
+          </p>
+
+          <div class="bg-gray-900 text-white rounded-2xl p-6 lg:p-8 my-8">
+            <p class="text-xs font-black uppercase tracking-widest text-[#38BDF8] mb-4">By the Numbers (approximate)</p>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+              <div>
+                <p class="text-3xl font-black text-white">20 g</p>
+                <p class="text-gray-400 text-xs mt-1">Protein per scoop</p>
+              </div>
+              <div>
+                <p class="text-3xl font-black text-[#38BDF8]">130</p>
+                <p class="text-gray-400 text-xs mt-1">Calories, vanilla plant</p>
+              </div>
+              <div>
+                <p class="text-3xl font-black text-white">$2.80</p>
+                <p class="text-gray-400 text-xs mt-1">Per 25 g, plant (HEB price)</p>
+              </div>
+              <div>
+                <p class="text-3xl font-black text-[#38BDF8]">5</p>
+                <p class="text-gray-400 text-xs mt-1">Ingredients, vanilla plant</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="metals" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            7. Heavy Metals and Prop 65
+          </h2>
+
+          <p>
+            Truvani's marketing says its ingredients pass the California Proposition 65 heavy metal standard. Independent testing tells a more complicated story. Tamara Rubin, a lead-poisoning prevention advocate who commissions her own lab tests, has published reports saying samples of Truvani's chocolate plant protein and, in June 2026, its vanilla plant protein tested positive for lead, cadmium and arsenic. She also noted that the chocolate product is sold with a Prop 65 warning in California.
+          </p>
+
+          <p>
+            How worried should you be? Rubin is an advocate rather than a neutral certifier, and her reports focus on whether metals are detected rather than whether they exceed a specific safety limit. Detecting a metal is not the same as finding a harmful dose. Scientists quoted in news coverage of protein powder testing have pointed out that Prop 65 thresholds are far stricter than federal limits, so a warning label means disclosure, not necessarily danger.
+          </p>
+
+          <p>
+            The bigger context is that plant proteins in general, and chocolate flavors in particular, tend to carry more heavy metals than whey, because peas, seeds and cacao absorb them from soil. Organic certification does not change that, since it governs farming practices, not soil minerals. Truvani is not an outlier here; it is a plant protein behaving like a plant protein.
+          </p>
+
+          <p>
+            If heavy metals are your main concern, choose the organic whey or vanilla over chocolate, rotate between protein sources rather than drinking one plant powder every day, and ask the brand for recent test results. Pregnant buyers and parents buying for children should talk to a doctor first. Our <a href="/is-protein-powder-safe/">is protein powder safe</a> guide covers what certifications and testing actually tell you.
+          </p>
+        </div>
+
+        <div id="who-skip" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            8. Who Should Skip Truvani
+          </h2>
+
+          <p>
+            Skip Truvani if you want maximum protein per dollar. At about 20 g per scoop and roughly $2.80 per 25 g for the plant protein, you are paying for organic sourcing and a short label rather than efficiency. Lifters with high protein targets will find better value in a larger-dose organic blend or a conventional whey.
+          </p>
+
+          <p>
+            Skip it if you compete in a drug-tested sport. We could not confirm NSF Certified for Sport or Informed Choice certification for Truvani protein at the time of writing. Garden of Life Sport Organic is the organic option to consider instead, because it carries NSF Certified for Sport status per the brand.
+          </p>
+
+          <p>
+            Skip the plant protein, or limit it, if heavy metals are a priority for you, especially during pregnancy. And skip the whey if you have a milk allergy or are vegan; the plant protein is the dairy-free choice. Anyone with a seed allergy should check the plant label for pumpkin seed and chia.
+          </p>
+
+          <p>
+            If you have kidney disease, take medication or have a medical condition, speak with a doctor or registered dietitian before adding any protein powder. This review is a label analysis, not medical advice.
+          </p>
+        </div>
+
+        <div id="compare" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            9. How Truvani Compares With Other Organic Proteins
+          </h2>
+
+          <p>
+            Against Orgain Organic Protein, Truvani has the shorter label and avoids stevia and erythritol, while Orgain gives about 21 g of protein per two-scoop serving at a lower price and has more mainstream flavors. If you want the cleanest list, Truvani wins. If you want an affordable organic plant protein that tastes good to most people, Orgain wins. Our sibling <a href="/orgain-protein-powder-review/">Orgain protein powder review</a> covers that range.
+          </p>
+
+          <p>
+            Against Garden of Life Sport Organic Plant-Based Protein, Truvani loses on dose and verification. Garden of Life delivers about 30 g of organic plant protein per serving and carries NSF Certified for Sport status, per the brand and NSF at the time of writing, though its label is longer. For athletes, Garden of Life is the stronger organic pick; see our <a href="/garden-of-life-protein-powder-review/">Garden of Life protein powder review</a>.
+          </p>
+
+          <p>
+            Against Just Ingredients, another clean-label brand, the difference is the protein base. Just Ingredients is whey-led with collagen and coconut milk, creamy but higher in saturated fat. Truvani's plant protein is lighter and dairy-free, and its whey is simpler still. Our <a href="/just-ingredients-protein-powder-review/">Just Ingredients protein review</a> goes through that brand's label.
+          </p>
+
+          <div class="overflow-hidden border border-gray-200 rounded-2xl my-8">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Product</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Protein per serving</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Sweetener</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Certification</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Truvani Plant Protein</td>
+                    <td class="px-4 py-4 text-gray-700">About 20 g</td>
+                    <td class="px-4 py-4 text-gray-700">Monk fruit</td>
+                    <td class="px-4 py-4 text-gray-700">USDA Organic</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Truvani Organic Whey</td>
+                    <td class="px-4 py-4 text-gray-700">About 20 g</td>
+                    <td class="px-4 py-4 text-gray-700">Monk fruit</td>
+                    <td class="px-4 py-4 text-gray-700">Organic dairy, per the brand</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Orgain Organic Protein</td>
+                    <td class="px-4 py-4 text-gray-700">About 21 g (2 scoops)</td>
+                    <td class="px-4 py-4 text-gray-700">Stevia and erythritol</td>
+                    <td class="px-4 py-4 text-gray-700">USDA Organic</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Garden of Life Sport Organic</td>
+                    <td class="px-4 py-4 text-gray-700">About 30 g</td>
+                    <td class="px-4 py-4 text-gray-700">Check flavor</td>
+                    <td class="px-4 py-4 text-gray-700">USDA Organic, NSF Certified for Sport</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div id="use" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            10. Using Truvani Well
+          </h2>
+
+          <p>
+            Plant proteins taste and mix best when blended, and Truvani is no exception. A scoop of vanilla blended with frozen banana, a handful of spinach and oat or almond milk makes a smooth shake that hides the earthy notes buyers sometimes mention. Mixed with water in a shaker bottle, expect a thinner, grainier drink.
+          </p>
+
+          <p>
+            Because the dose is 20 g, plan for it. If you want 25 g or more after training, use a slightly larger scoop, blend it with soy milk, which adds roughly 7 g of protein per cup, or pair the shake with a high-protein food. Plant-protein users generally do well aiming slightly higher per meal than whey users to make up for the lower leucine content.
+          </p>
+
+          <p>
+            Both the plant protein and the unflavored whey work in oats, pancakes and energy balls. Without gums, the plant powder can thicken as it sits, so mix and drink rather than leaving it in the fridge for hours. Our <a href="/best-protein-powder-for-smoothies/">best protein powder for smoothies</a> guide has more ideas.
+          </p>
+
+          <p>
+            Finally, rotate sources if you use protein powder daily. Alternating Truvani's plant protein with its whey, or with whole-food protein such as eggs, yogurt, tofu or beans, is the easiest way to keep any single source's heavy-metal exposure low while still hitting your target. Our <a href="/how-much-protein-do-i-need/">how much protein do I need</a> guide helps you set that target.
+          </p>
+        </div>
+
+        <!-- Common Mistakes -->
+        <div id="mistakes" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            11. Common Mistakes to Avoid
+          </h2>
+
+          <div class="space-y-6 my-8">
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Assuming organic means free of heavy metals</h3>
+              <p class="text-gray-700 text-sm m-0">
+                USDA Organic rules govern pesticides and farming practices, not the lead or cadmium plants absorb from soil. Organic pea and cacao can still carry metals, and independent tests found them in Truvani samples. Use organic as a farming choice, and look at testing separately.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Treating one scoop as a full serving</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Truvani's plant protein and whey both give about 20 g per scoop. If your target is 25 g after training, use 1.25 scoops, blend with soy or dairy milk, or pair the shake with a protein-rich food. Otherwise every shake falls a little short.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Drinking chocolate plant protein every day</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Chocolate adds cacao's own heavy metals on top of the pea base, and Truvani's chocolate is sold with a Prop 65 warning in California, per an independent report. If you drink a shake daily, vanilla or the organic whey is the lower-exposure choice.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Buying it for drug-tested sport</h3>
+              <p class="text-gray-700 text-sm m-0">
+                We could not confirm NSF Certified for Sport or Informed Choice certification for Truvani protein. A clean label is not banned-substance screening. Tested athletes who want organic should choose Garden of Life Sport Organic and confirm the flavor in the NSF database.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Comparing tubs instead of cost per 25 g</h3>
+              <p class="text-gray-700 text-sm m-0">
+                A 20-serving Truvani tub can look similar in price to larger tubs from other brands. At about 20 g per scoop it works out to roughly $2.80 per 25 g for the plant protein. Always divide by servings and protein grams before deciding which is cheaper.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ -->
+        <div id="faq" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            12. Frequently Asked Questions
+          </h2>
+
+          <div class="space-y-6">
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is Truvani protein powder good?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                It is a good clean-label organic protein. The vanilla plant protein gives about 20 g from organic pea, pumpkin seed and chia, sweetened only with monk fruit, in roughly 130 calories, per the label. Its weaknesses are the modest dose, a high cost per 25 g and independent reports of detectable heavy metals in its plant protein.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">How much protein is in Truvani protein powder?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                About 20 g per scoop in both the organic plant protein and the organic whey, per labels at the time of writing. The plant protein runs about 130 calories in vanilla, and the whey about 100. To reach a 25 g serving, use about 1.25 scoops or blend with soy or dairy milk.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Does Truvani make a whey protein?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Yes. Truvani Organic Whey lists three ingredients in vanilla: organic whey protein concentrate, organic vanilla powder and organic monk fruit extract, with about 20 g of protein per scoop. The brand says the milk comes from grass-fed, pasture-raised cows on USDA Organic farms. Vanilla, chocolate and unflavored versions appear on retailer listings.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">What sweetener does Truvani use?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Organic monk fruit extract, with no stevia, no added sugar and no artificial sweeteners, per the labels at the time of writing. That sets Truvani apart from many clean-label proteins, which rely on stevia. Some buyers find monk fruit less bitter than stevia, though plant proteins can still taste earthy, so blending helps.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Does Truvani protein have heavy metals?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Independent tests published by a lead-safety advocate found lead, cadmium and arsenic in samples of Truvani's chocolate and vanilla plant proteins. Detection is not the same as an unsafe level, and most plant proteins contain some metals. Choose vanilla or the whey, rotate sources, and check with a doctor if you are pregnant.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is Truvani protein powder USDA Organic?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Yes. The plant protein is certified USDA Organic, and the brand says its whey comes from certified USDA Organic farms. Organic certification covers farming and processing practices, such as synthetic pesticides. It does not test for heavy metals, so treat it as a sourcing choice rather than a contaminant guarantee.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is Truvani worth the price?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                If a five-ingredient organic label and monk fruit sweetening matter to you, yes. On pure value, no: at roughly $2.80 per 25 g of protein for the plant tub, it is one of the pricier plant proteins. Orgain costs less, and Garden of Life Sport Organic delivers more protein per serving with an NSF certification.
+              </p>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Related Guides -->
+        <div class="mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">Related Organic Protein Guides</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <a href="/best-organic-protein-powder/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#FF4500] font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Organic Protein Powder</h3>
+              <p class="text-gray-500 text-sm mt-2">Organic whey and plant proteins ranked on dose, testing and cost.</p>
+            </a>
+            <a href="/orgain-protein-powder-review/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#38BDF8] font-black text-xs uppercase tracking-widest mb-2">Brand Review</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Orgain Protein Powder Review</h3>
+              <p class="text-gray-500 text-sm mt-2">The budget organic plant protein most people find first.</p>
+            </a>
+            <a href="/best-plant-based-protein-powder/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#22C55E] font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Plant-Based Protein Powder</h3>
+              <p class="text-gray-500 text-sm mt-2">Six plant proteins worth buying, organic and otherwise.</p>
+            </a>
+          </div>
+        </div>
+
+        <!-- Closing -->
+        <div class="mt-16 bg-gray-900 text-white rounded-2xl p-8">
+          <h2 class="text-2xl font-black text-white mb-4">The Bottom Line</h2>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            Truvani delivers on its core promise: a genuinely short, organic, monk fruit-sweetened protein, in a plant version and now a three-ingredient whey. For buyers who read labels closely and avoid stevia, few brands match it. The costs are a modest 20 g dose, a premium price of roughly $2.80 per 25 g for the plant protein, and independent reports of detectable heavy metals that are common to plant proteins but still worth weighing.
+          </p>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            Buy the vanilla plant protein if you are dairy-free, the organic whey if you are not, and keep chocolate for occasional use. If you want more protein per scoop or a sport certification, start with the picks in our <a href="/best-organic-protein-powder/">best organic protein powder</a> guide.
+          </p>
+        </div>
+
+        <MoreInCategory category="Brand Reviews" links={moreInCategory} />
+
+        <AuthorBio />
+      </div>
+    </div>
+  </article>
+</Layout>

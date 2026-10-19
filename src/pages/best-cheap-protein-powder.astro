@@ -1,0 +1,940 @@
+---
+import Layout from "../layouts/Layout.astro";
+import MoreInCategory from "../components/MoreInCategory.astro";
+import { AUTHORS, DEFAULT_AUTHOR, authorSchema } from "../data/authors";
+import { SITE_NAME, SITE_URL } from "../data/site";
+import AuthorAvatar from "../components/AuthorAvatar.astro";
+import QuickPicks from "../components/QuickPicks.astro";
+import AuthorBio from "../components/AuthorBio.astro";
+import { amazonLink } from "../data/affiliate";
+import TrustBadge from "../components/TrustBadge.astro";
+import SocialProof from "../components/SocialProof.astro";
+import SpecGrid from "../components/SpecGrid.astro";
+import productImages from "../data/product-images.json";
+import { pageDates } from "../data/dates";
+
+const moreInCategory = [
+  {
+    "title": "Best Protein Powder",
+    "url": "/best-protein-powder/"
+  },
+  {
+    "title": "Best Whey Protein Powder",
+    "url": "/best-whey-protein-powder/"
+  },
+  {
+    "title": "Amazon Protein Powder Guide",
+    "url": "/amazon-protein-powder/"
+  }
+];
+const author = AUTHORS[DEFAULT_AUTHOR];
+const dates = pageDates(Astro.url.pathname, { published: "2026-10-19", modified: "2026-10-19" });
+const title = "Best Cheap Protein Powder: Ranked by Real Cost per 25 g of Protein";
+const description =
+  "The best cheap protein powder, ranked by real cost per 25 g of protein, plus how to buy in bulk, time Subscribe and Save and sales, and spot amino-spiked tubs.";
+
+const PRODUCTS: {
+  id: string;
+  name: string;
+  brand?: string;
+  badge: string;
+  category: string;
+  description: string;
+  pros: string[];
+  cons: string[];
+  bottomLine: string;
+  specs?: Record<string, string>;
+  rating?: number;
+  reviewCount?: number;
+  amazonUrl?: string;
+}[] = [
+  {
+    "id": "bulksupplements-soy-protein-isolate",
+    "name": "BulkSupplements Soy Protein Isolate Powder",
+    "brand": "BulkSupplements",
+    "badge": "Cheapest per Gram",
+    "category": "Unflavored soy protein isolate",
+    "description": "Plain soy protein isolate in a 1 kg pouch, with roughly 25 to 27 g of protein in a 30 g serving at about 110 to 120 calories, per listings, which vary slightly. Soy is a complete protein, and at typical Amazon prices this is one of the cheapest sources of protein in any powder, cheaper still on Subscribe and Save, which showed about 16 percent off when we checked. It is unflavored and best blended into smoothies or oats.",
+    "pros": [
+      "Roughly $0.75-0.90 per 25 g of protein at typical prices",
+      "Single ingredient, complete plant protein",
+      "Extra Subscribe and Save discount at the time of writing"
+    ],
+    "cons": [
+      "Unflavored and thick; buyers blend it rather than shake it",
+      "No sport certification",
+      "Take 30 to 35 g to match a whey scoop's leucine"
+    ],
+    "bottomLine": "The cheapest honest gram of protein here, if you are happy blending.",
+    "specs": {
+      "Protein per serving": "About 25-27 g per 30 g (listings)",
+      "Approx. cost per 25 g": "About $0.75-0.90",
+      "Third-party testing": "No sport certification",
+      "Best for": "Lowest cost, smoothies"
+    },
+    "amazonUrl": "https://www.amazon.com/dp/B01K2UDXBK"
+  },
+  {
+    "id": "myprotein-impact-whey-protein",
+    "name": "Myprotein Impact Whey Protein",
+    "brand": "Myprotein",
+    "badge": "Cheapest Whey on Sale",
+    "category": "Whey protein concentrate",
+    "description": "Myprotein's US listing gives about 19 to 22 g of protein per 25 g scoop depending on flavor, at around 100 calories, in 0.55, 2.2 and 5.5 lb sizes of about 25, 65 and 130 servings. At full list price it works out around $1.35 per 25 g, but the brand's frequent sales of up to 50 percent off can cut that to roughly $0.70 to $0.80. The brand promotes Informed Choice and Informed Protein certification.",
+    "pros": [
+      "Among the cheapest mainstream wheys per gram on sale",
+      "Large 5.5 lb size",
+      "Informed Protein checks protein content, per the brand"
+    ],
+    "cons": [
+      "Expensive at full list price",
+      "Smaller scoop than most, so you need more powder per 25 g",
+      "Concentrate, with more lactose than an isolate"
+    ],
+    "bottomLine": "A bargain only when bought on sale, so stock up when the discount is deep.",
+    "specs": {
+      "Protein per serving": "About 19-22 g per 25 g scoop",
+      "Approx. cost per 25 g": "About $0.70-0.80 on sale",
+      "Third-party testing": "Informed Choice (brand)",
+      "Best for": "Sale stock-ups"
+    }
+  },
+  {
+    "id": "now-sports-pea-protein",
+    "name": "NOW Sports Pea Protein (Unflavored)",
+    "brand": "NOW",
+    "badge": "Best Cheap Pea",
+    "category": "Unflavored pea protein isolate",
+    "description": "NOW's unflavored pea protein gives about 24 g of protein per serving with nothing added, per the label at the time of writing, and sits in the budget tier for cost per 25 g, especially in larger sizes. NOW runs its own in-house testing lab. It suits dairy-free buyers who find soy too beany, though pea isolate is earthy too and works best blended into smoothies, oats or baking.",
+    "pros": [
+      "About 24 g of protein per serving, per the label",
+      "No sweeteners, gums or flavorings",
+      "Roughly $1 per 25 g at typical prices"
+    ],
+    "cons": [
+      "Earthy and thick in water alone, per buyer reports",
+      "Needs a larger serving to match whey's leucine"
+    ],
+    "bottomLine": "The cheap pick for dairy-free buyers who prefer pea to soy.",
+    "specs": {
+      "Protein per serving": "About 24 g (label)",
+      "Approx. cost per 25 g": "About $1, varies by size",
+      "Third-party testing": "Brand in-house lab",
+      "Best for": "Dairy-free budgets"
+    }
+  },
+  {
+    "id": "optimum-nutrition-gold-standard-100-whey",
+    "name": "Optimum Nutrition Gold Standard 100% Whey",
+    "brand": "Optimum Nutrition",
+    "badge": "Best Whey Value",
+    "category": "Whey blend led by whey isolate",
+    "description": "Gold Standard gives about 24 g of protein per scoop at roughly 120 calories, per the label, with whey isolate listed as the primary source, and Optimum Nutrition describes it as banned-substance tested. It comes in sizes from about 10 to about 149 servings, and the 5 lb tub of about 74 servings is where it gets cheap, typically around $1.10 to $1.40 per 25 g and less on sale. Buyers widely report it mixes with a spoon.",
+    "pros": [
+      "Banned-substance tested, per the brand",
+      "Lean label: about 24 g of protein in roughly 120 calories",
+      "Large sizes and frequent sales bring the cost down",
+      "Huge flavor range"
+    ],
+    "cons": [
+      "Not the cheapest per gram at full price",
+      "Small tubs are poor value"
+    ],
+    "bottomLine": "The best balance of price, testing and taste for most whey buyers.",
+    "specs": {
+      "Protein per serving": "About 24 g (label)",
+      "Approx. cost per 25 g": "About $1.10-1.40 in 5 lb",
+      "Third-party testing": "Banned-substance tested (brand)",
+      "Best for": "Everyday whey"
+    }
+  },
+  {
+    "id": "pure-protein-100-whey",
+    "name": "Pure Protein 100% Whey Protein Powder",
+    "brand": "Pure Protein",
+    "badge": "Best Supermarket Whey",
+    "category": "Whey concentrate and isolate blend",
+    "description": "Pure Protein's powder lists 25 g of protein per scoop, from whey concentrate and isolate, so the price per scoop is your cost per 25 g. The scoop is large, about 40 g, at roughly 160 to 170 calories, sweetened with sucralose and acesulfame potassium, per the label. It comes in a 1.75 lb canister, which the brand site listed at around $32; Amazon is often cheaper. Cost per 25 g typically lands around $1.10 to $1.40.",
+    "pros": [
+      "A clean 25 g of protein per scoop, so the maths is easy",
+      "Easy to find in stores and on Amazon",
+      "Buyers widely report it as easy to drink"
+    ],
+    "cons": [
+      "More calories and carbohydrate per scoop than Gold Standard",
+      "Only sold in a small canister, so no bulk discount",
+      "No third-party certification found"
+    ],
+    "bottomLine": "Convenient and fairly priced, but bulk Gold Standard often beats it per gram.",
+    "specs": {
+      "Protein per serving": "25 g per scoop (label)",
+      "Approx. cost per 25 g": "About $1.10-1.40",
+      "Third-party testing": "None found",
+      "Best for": "Grab-off-the-shelf buyers"
+    }
+  }
+];
+
+const schema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Home",
+          item: `${SITE_URL}/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Best Lists",
+          item: `${SITE_URL}/best-of/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 3,
+          name: "Best Cheap Protein Powder",
+          item: `${SITE_URL}/best-cheap-protein-powder/`,
+        },
+      ],
+    },
+    {
+      "@type": "FAQPage",
+      mainEntity: [
+        {
+          "@type": "Question",
+          "name": "What is the cheapest protein powder per gram?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Unflavored soy protein isolate is usually the cheapest. At typical prices, BulkSupplements' soy isolate works out to roughly $0.75 to $0.90 per 25 g of protein. Among wheys, Myprotein Impact Whey on a deep sale and 5 lb tubs of mainstream whey come closest. Prices move constantly, so check the cost per 25 g on the day you buy."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I calculate cost per 25 g of protein?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Multiply the protein per serving by the number of servings to get the total protein in the container. Divide the price by that total, then multiply by 25. For example, a tub with 74 servings of 24 g holds 1,776 g of protein; at $85, that is about $1.20 per 25 g of protein."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is cheap protein powder safe?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Mainstream budget powders from established brands are generally fine. The risks are amino spiking, counterfeit or expired product from unknown sellers, and heavy metals, which affect plant powders more on average. Choose brands that publish testing or carry certification, buy from reputable sellers, and see a doctor first if you have kidney disease or are pregnant."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is amino spiking?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Labs usually estimate protein by measuring nitrogen. Amino spiking means adding cheap nitrogen-containing ingredients such as glycine or taurine, which push up the measured protein without adding much muscle-building value. Watch for amino acid blends or proprietary matrices on the label, and for protein per gram that is higher than the protein source could contain."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is Subscribe and Save worth it for protein powder?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Usually, yes. Amazon's Subscribe and Save typically takes about 5 percent off, up to 15 percent with five or more subscriptions in one delivery, and some products offer more. The price charged is the price when the order ships, so check the reminder email and skip a month if the price has jumped."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is it cheaper to buy protein powder in bulk?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Almost always per gram. A 5 lb tub usually costs noticeably less per 25 g of protein than a 2 lb tub of the same product, because packaging and shipping are spread over more powder. Only buy big once you know you like the flavor, and store it sealed somewhere cool and dry."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "When is protein powder cheapest?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Big sale events bring the deepest discounts: Prime Day in July, Amazon's October deal event, Black Friday and Cyber Monday, and January. Brand sites such as Myprotein run frequent sales too. Price-history tools such as camelcamelcamel and Keepa show whether a sale price is genuinely low or just a reset list price."
+          }
+        }
+      ],
+    },
+    {
+      "@type": "Article",
+      headline: title,
+      author: authorSchema(),
+      datePublished: dates.published,
+      dateModified: dates.modified,
+      publisher: { "@type": "Organization", name: SITE_NAME, url: SITE_URL },
+    },
+    {
+      "@type": "ItemList",
+      name: title,
+      numberOfItems: PRODUCTS.length,
+      itemListElement: PRODUCTS.map((product, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name: product.name,
+        url: new URL(`#${product.id}`, Astro.url).toString(),
+      })),
+    },
+    ...PRODUCTS.map((product) => ({
+      "@type": "Product",
+      name: product.name,
+      description: product.description,
+      brand: {
+        "@type": "Brand",
+        name: product.brand ?? product.name.split(" ")[0],
+      },
+    })),
+  ],
+};
+---
+
+<Layout
+  title={title}
+  description={description}
+  ogType="article"
+  article={{
+    publishedTime: dates.published,
+    modifiedTime: dates.modified,
+    author: author.name,
+    section: "Protein Powder",
+    tags: [
+      "best cheap protein powder",
+      "cheap protein powder",
+      "bulk protein powder",
+      "discounted protein powder",
+      "protein powder sale",
+      "budget protein powder"
+    ],
+  }}
+  jsonLd={schema}
+>
+  <article class="relative overflow-hidden">
+    <!-- Hero Section -->
+    <div class="bg-gray-900 py-16 lg:py-24 relative overflow-hidden">
+      <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(circle at 20% 20%, #38BDF8 0, transparent 45%), radial-gradient(circle at 80% 60%, #FF4500 0, transparent 40%);"></div>
+      <div class="max-w-4xl mx-auto px-4 relative z-10 text-center">
+        <div class="flex justify-center mb-6">
+          <TrustBadge />
+        </div>
+        <div class="flex justify-center gap-3 mb-6">
+          <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#FF4500]/20 text-[#FF4500] text-xs font-black uppercase tracking-widest border border-[#FF4500]/30">
+            Buyer's Guide
+          </span>
+          <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-green-500/10 text-green-400 text-xs font-bold uppercase tracking-widest border border-green-500/20">
+            Cost-per-Gram Ranked
+          </span>
+        </div>
+        <h1 class="text-4xl lg:text-6xl font-black text-white leading-tight mb-8">
+          Best Cheap <span class="text-[#38BDF8]">Protein Powder</span>
+        </h1>
+        <p class="text-xl text-gray-300 leading-relaxed mb-8 max-w-3xl mx-auto">
+          The cheapest tub is rarely the cheapest protein. We ranked budget powders on what actually matters, cost per 25 g of protein, and show you the maths so you can check any deal yourself.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a
+            href="#bulksupplements-soy-protein-isolate"
+            class="px-8 py-4 bg-[#FF4500] hover:bg-[#E63E00] text-white font-black rounded-xl shadow-lg transition-all no-underline"
+          >
+            See Our #1 Pick
+          </a>
+          <a
+            href="#bulk"
+            class="px-8 py-4 bg-white/10 hover:bg-white/20 text-white font-bold rounded-xl border border-white/10 no-underline"
+          >
+            See the Cost Method
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Author & Meta -->
+    <div class="max-w-3xl mx-auto px-4 pt-12">
+      <div class="flex items-center gap-6 border-b border-gray-100 pb-8">
+        <div class="flex items-center gap-3">
+          <AuthorAvatar size={48} />
+          <div>
+            <p class="text-sm font-bold text-gray-900">{author.name}</p>
+            <p class="text-xs text-gray-500 uppercase tracking-widest">{author.role}</p>
+          </div>
+        </div>
+        <div class="h-10 w-px bg-gray-200 hidden sm:block"></div>
+        <div class="hidden sm:block">
+          <p class="text-sm font-bold text-gray-900">Last Updated</p>
+          <p class="text-xs text-gray-500">{dates.display}</p>
+        </div>
+        <div class="hidden sm:block ml-auto">
+          <SocialProof />
+        </div>
+      </div>
+    </div>
+
+    <!-- Table of Contents -->
+    <div class="max-w-3xl mx-auto px-4 py-10">
+      <div class="bg-gray-50 border border-gray-200 rounded-2xl p-6 lg:p-8">
+        <h2 class="text-lg font-black text-gray-900 mb-4 flex items-center gap-2">
+          In This Guide
+        </h2>
+        <nav class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <a href="#cost-method" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">1. The Cost per 25 g Method</a>
+          <a href="#what-cheap-means" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">2. What Counts as Cheap</a>
+          <a href="#top-picks" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">3. Our Top Picks</a>
+          <a href="#bulk" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">4. Buying in Bulk</a>
+          <a href="#sales" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">5. Subscribe and Save, Sales</a>
+          <a href="#too-cheap" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">6. Too Cheap: Red Flags</a>
+          <a href="#amazon-sellers" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">7. Buying Cheap on Amazon</a>
+          <a href="#whey-vs-plant" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">8. Cheap Whey vs Cheap Plant</a>
+          <a href="#trade-offs" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">9. What You Give Up</a>
+          <a href="#food" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">10. When Food Is Cheaper</a>
+          <a href="#mistakes" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">11. Common Mistakes</a>
+          <a href="#faq" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">12. FAQ</a>
+        </nav>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="max-w-3xl mx-auto px-4 pb-16 lg:pb-24">
+      <div class="prose prose-lg prose-blue max-w-none text-gray-700 leading-relaxed">
+        <p class="text-2xl font-medium text-gray-900 mb-8 italic">
+          Price per tub tells you almost nothing. A cheap 1.75 lb canister can cost more per gram of protein than a 5 lb tub that looks expensive, and a powder priced far below everyone else may not contain the protein it claims. The only number that settles it is cost per 25 g of protein, and once you know how to work it out, the real bargains are easy to spot.
+        </p>
+
+        <QuickPicks products={PRODUCTS} />
+
+        <div id="cost-method" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            1. How We Rank: Cost per 25 g of Protein
+          </h2>
+
+          <p>
+            Every powder on this page is ranked on one number: what you pay for 25 g of protein. We use 25 g because it is a sensible single serving for most adults and a common label dose, so the figure is easy to picture. Price per tub ignores size, and price per serving ignores the fact that one brand's serving is 10 g of protein and another's is 30 g.
+          </p>
+
+          <p>
+            The method takes thirty seconds. Find the protein per serving and the number of servings on the label, and multiply them to get the total grams of protein in the container. Divide the price by that total, then multiply by 25. That is your cost per 25 g of protein, and it lets you compare a 1 kg pouch of soy isolate with a 5 lb tub of whey on equal terms.
+          </p>
+
+          <div class="overflow-hidden border border-gray-200 rounded-2xl my-8">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Step</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Example: 5 lb whey tub</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Result</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">1. Protein per serving</td>
+                    <td class="px-4 py-4 text-gray-700">24 g, per the label</td>
+                    <td class="px-4 py-4 text-gray-700">24 g</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">2. Servings per container</td>
+                    <td class="px-4 py-4 text-gray-700">74, per the label</td>
+                    <td class="px-4 py-4 text-gray-700">74</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">3. Total protein</td>
+                    <td class="px-4 py-4 text-gray-700">24 g times 74</td>
+                    <td class="px-4 py-4 text-gray-700">1,776 g</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">4. Price (example only)</td>
+                    <td class="px-4 py-4 text-gray-700">Say the tub costs $85</td>
+                    <td class="px-4 py-4 text-gray-700">$85</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">5. Cost per 25 g</td>
+                    <td class="px-4 py-4 text-gray-700">$85 divided by 1,776, times 25</td>
+                    <td class="px-4 py-4 text-gray-700">About $1.20</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <p>
+            The $85 in that table is an example to show the arithmetic, not a quote; real prices change weekly, sometimes daily. That is why we give approximate ranges throughout this guide instead of exact prices. Run the same five steps on the listing in front of you and you will know within a minute whether a deal is as good as it looks.
+          </p>
+
+          <p>
+            There is one trap. Some brands list a serving as two scoops, and some list protein per scoop when the label serving is larger. Always use the protein and serving count from the same nutrition panel, not the big number on the front of the tub. And if the protein per serving looks implausibly high for the scoop weight, read the section on amino spiking below before you buy.
+          </p>
+        </div>
+
+        <div id="what-cheap-means" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            2. What Counts as Cheap Protein Powder Right Now
+          </h2>
+
+          <p>
+            Whey has become noticeably more expensive over the past couple of years as demand for high-protein foods has surged, and the bargain-bin prices people remember from a decade ago are gone. At typical prices at the time of writing, we think of roughly $1 per 25 g of protein or less as genuinely cheap, $1 to $1.50 as good value, and anything above $2 as premium, whatever the marketing says.
+          </p>
+
+          <p>
+            Unflavored plant isolates, soy above all, tend to sit at the bottom of the range. Large tubs of mainstream whey concentrate and whey blends usually land between $1 and $1.50 per 25 g, dropping below $1 on a good sale. Whey isolates, clear whey, grass-fed and certified brands generally cost more, and ready-to-drink shakes cost the most per gram of all.
+          </p>
+
+          <div class="bg-gray-900 text-white rounded-2xl p-6 lg:p-8 my-8">
+            <p class="text-xs font-black uppercase tracking-widest text-[#38BDF8] mb-4">Rough Price Tiers per 25 g of Protein</p>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+              <div>
+                <p class="text-3xl font-black text-white">Under $1</p>
+                <p class="text-gray-400 text-xs mt-1">Genuinely cheap</p>
+              </div>
+              <div>
+                <p class="text-3xl font-black text-[#38BDF8]">$1-1.50</p>
+                <p class="text-gray-400 text-xs mt-1">Good value</p>
+              </div>
+              <div>
+                <p class="text-3xl font-black text-white">$1.50-2</p>
+                <p class="text-gray-400 text-xs mt-1">Mid-range</p>
+              </div>
+              <div>
+                <p class="text-3xl font-black text-[#38BDF8]">Over $2</p>
+                <p class="text-gray-400 text-xs mt-1">Premium</p>
+              </div>
+            </div>
+          </div>
+
+          <p>
+            Those tiers are a guide, not a rule, and they will drift as prices move. What does not change is the relationship between them. Bigger containers almost always cost less per gram than smaller ones, unflavored usually costs less than flavored, and whey concentrate costs less than isolate. If a powder breaks all three of those patterns and still undercuts everyone, ask why.
+          </p>
+
+          <p>
+            If you are buying for the first time, the cheapest powder you will actually finish is worth more than the cheapest powder per gram. A tub you abandon after three shakes costs more than anything on this list. For a broader set of picks across every budget, our <a href="/best-protein-powder/">best protein powder</a> guide and <a href="/best-whey-protein-powder/">best whey protein powder</a> rankings cover the mid-range and premium options too.
+          </p>
+        </div>
+
+        <!-- Picks -->
+        <div id="top-picks" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            3. The Best Cheap Protein Powders, Ranked by Cost per 25 g
+          </h2>
+
+          <p>
+            Five powders from five brands, ordered from the lowest typical cost per 25 g of protein to the highest. The cost figures are approximate, based on typical prices at the time of writing, and they move constantly, so use the method above to check today's price before you buy. Label figures are per the brand or retailer listing and vary by flavor. We have not tasted these ourselves; anything on taste or mixing is buyer feedback.
+          </p>
+
+          {PRODUCTS.map((product, index) => (
+            <div id={product.id} class="scroll-mt-24 mt-12 first:mt-8">
+              <div class="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                <div class="bg-gray-900 px-6 py-4 flex items-center justify-between">
+                  <div class="flex items-center gap-3">
+                    <span class="bg-[#FF4500] text-white w-8 h-8 rounded-full flex items-center justify-center text-sm font-black">
+                      {index + 1}
+                    </span>
+                    {productImages[product.id] && (
+                      <img
+                        src={productImages[product.id]}
+                        alt={product.name}
+                        loading="lazy"
+                        width="40"
+                        height="40"
+                        class="w-10 h-10 rounded-lg bg-white object-contain p-1 shrink-0"
+                      />
+                    )}
+                    <div>
+                      <p class="text-white font-black text-lg">{product.name}</p>
+                      <p class="text-gray-400 text-xs">{product.category}</p>
+                    </div>
+                  </div>
+                  <span class="bg-[#38BDF8]/20 text-[#38BDF8] px-3 py-1 rounded-full text-xs font-bold hidden sm:block">
+                    {product.badge}
+                  </span>
+                </div>
+                <div class="p-6">
+                  {product.rating && (
+                  <div class="flex items-center gap-2 mb-4">
+                    <div class="flex text-yellow-400">
+                      {[...Array(5)].map((_, i) => (
+                        <svg
+                          class={`w-4 h-4 ${i < Math.floor(product.rating) ? "fill-current" : "text-gray-200"}`}
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                        >
+                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        </svg>
+                      ))}
+                    </div>
+                    <span class="text-gray-500 text-sm font-bold">{product.rating}</span>
+                    {product.reviewCount && <span class="text-gray-400 text-xs">({product.reviewCount.toLocaleString()} retailer reviews)</span>}
+                  </div>
+                  )}
+
+                  <SpecGrid specs={product.specs} />
+
+                  <p class="text-gray-700 leading-relaxed mb-6">{product.description}</p>
+
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                    <div class="bg-green-50 rounded-xl p-4">
+                      <p class="text-xs font-black uppercase tracking-widest text-green-700 mb-3">Pros</p>
+                      <ul class="space-y-2">
+                        {product.pros.map((pro) => (
+                          <li class="flex items-start gap-2 text-sm text-green-800">
+                            <svg class="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            {pro}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div class="bg-red-50 rounded-xl p-4">
+                      <p class="text-xs font-black uppercase tracking-widest text-red-700 mb-3">Cons</p>
+                      <ul class="space-y-2">
+                        {product.cons.map((con) => (
+                          <li class="flex items-start gap-2 text-sm text-red-800">
+                            <svg class="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                            {con}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+
+                  <div class="bg-gray-50 rounded-xl p-4 border border-gray-100">
+                    <p class="text-xs font-black uppercase tracking-widest text-gray-500 mb-1">The Bottom Line</p>
+                    <p class="text-gray-900 font-bold">{product.bottomLine}</p>
+                  </div>
+
+                  <a
+                    href={amazonLink(product.amazonUrl, product.name, product.id)}
+                    target="_blank"
+                    rel="sponsored nofollow noopener"
+                    class="mt-6 block bg-[#FF4500] hover:bg-[#E63E00] text-white text-center py-4 rounded-xl font-black no-underline transition-colors uppercase tracking-widest text-sm"
+                  >
+                    Check Price &rarr;
+                  </a>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div id="bulk" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            4. Buying in Bulk: 5 lb Tubs and Bigger
+          </h2>
+
+          <p>
+            The single biggest saving most people can make is moving from a 2 lb tub to a 5 lb tub. The protein inside is identical, but packaging, shipping and margin are spread over two and a half times as much powder, so the cost per 25 g usually drops noticeably. Optimum Nutrition, for example, sells Gold Standard in sizes from about 10 servings up to about 149 servings, and the per-serving price falls as you move up.
+          </p>
+
+          <p>
+            The cheapest way to do it is to buy big only once you know you like the product. Buy a small tub or a sample of a new flavor first, and commit to 5 lb when you know you will finish it. An unflavored powder is the safest bulk buy of all, because you can change the flavor every day with cocoa, coffee, fruit or a spoon of peanut butter, and you will not get bored halfway through.
+          </p>
+
+          <p>
+            Shelf life is rarely the problem people think. Most protein powders carry a best-by date one to two years out, and a sealed tub stored somewhere cool and dry keeps well. Once open, keep the lid tight and the scoop dry. A 5 lb tub at one shake a day lasts about two and a half months, well inside any best-by date. Over time, flavor and mixability fade before anything unsafe happens.
+          </p>
+
+          <p>
+            Very large bags, 10 lb and up, make sense only for heavy users or households sharing one product. Check that the per-gram saving over the 5 lb size is real, because sometimes it is small, and that you have somewhere to store the bag that is not a hot garage. Bulk plant isolates, such as a 1 kg pouch of soy, are another way to stock up cheaply if you are happy blending.
+          </p>
+
+          <p>
+            One more bulk lever: if you use two shakes a day, the size of the saving roughly doubles, so it is worth taking the five minutes to compare cost per 25 g across sizes. If you only use a shake a few times a week, buy the size you will finish within a few months and do not chase the last few cents.
+          </p>
+        </div>
+
+        <div id="sales" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            5. Subscribe and Save, Sales and When to Buy
+          </h2>
+
+          <p>
+            Amazon's Subscribe and Save usually takes about 5 percent off eligible items, rising to as much as 15 percent when five or more subscriptions arrive in the same monthly delivery, and some products carry their own higher discount. BulkSupplements' soy isolate, for example, showed a Subscribe and Save price around 16 percent below its regular price when we checked. You can skip or cancel a delivery at any time.
+          </p>
+
+          <p>
+            The catch is that the subscription price is the price on the day the order ships, not the day you signed up. Amazon emails a reminder before each delivery, so glance at it and skip the month if the price has jumped. Used that way, Subscribe and Save is one of the easiest ways to keep a staple powder in the cheap tier without having to remember to reorder.
+          </p>
+
+          <p>
+            Big sales events are the other lever. Prime Day in July, the October Prime Big Deal Days event, Black Friday and Cyber Monday, and the January resolution season reliably bring discounts on mainstream brands. Free price-history tools such as camelcamelcamel and Keepa show how a listing's price has moved over months, so you can tell a real deal from a list price that was inflated just before the sale.
+          </p>
+
+          <p>
+            Brand sites run their own promotions, and some are aggressive. Myprotein's site regularly advertises discounts of up to 50 percent, and at those prices Impact Whey becomes one of the cheapest mainstream wheys per gram. At full list price it is not cheap at all, so it is a product to buy on sale and stock up on. Our <a href="/myprotein-review/">Myprotein review</a> covers which of its powders are worth it and where US buyers can get them.
+          </p>
+
+          <p>
+            Stacking works too. A 5 lb tub, bought on Subscribe and Save, during a sale event, can land well below the typical price for the same product in a 2 lb size. Just do not let a sale talk you into a flavor or a product you have never tried; a cheap tub you will not drink is still a waste.
+          </p>
+        </div>
+
+        <div id="too-cheap" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            6. Too Cheap to Be True: Amino Spiking and Other Red Flags
+          </h2>
+
+          <p>
+            The protein number on a label is usually not measured directly. Labs typically measure the total nitrogen in a sample and multiply it by a conversion factor to estimate protein. That works for real protein, but it means anything containing nitrogen counts. Cheap free amino acids such as glycine and taurine contain nitrogen, so adding them to a tub can push up the measured protein without adding much muscle-building value.
+          </p>
+
+          <p>
+            That practice is called amino spiking or protein spiking. It was the subject of a wave of class-action lawsuits against supplement companies in the mid-2010s, and the industry has cleaned up a lot since then, but budget products are where the incentive is strongest. Taurine is not even one of the amino acids your body uses to build protein, and glycine is far less useful for muscle than leucine.
+          </p>
+
+          <div class="bg-gray-900 text-white rounded-2xl p-6 lg:p-8 my-8">
+            <p class="text-xs font-black uppercase tracking-widest text-[#38BDF8] mb-3">THE RED FLAGS</p>
+            <p class="text-xl font-bold text-white mb-3">Check the ingredient list before the price.</p>
+            <p class="text-gray-300 leading-relaxed m-0">Be wary of a protein powder that lists glycine, taurine, an amino acid blend or a proprietary protein matrix among its ingredients, claims more protein per gram than its protein source can physically contain, has no published amino acid profile, or undercuts every known brand by a wide margin while being sold only by unfamiliar third-party sellers.</p>
+          </div>
+
+          <p>
+            The quickest check is protein density. Divide protein per serving by the serving weight. A flavored whey concentrate usually lands somewhere around 70 to 80 percent protein, a flavored isolate a bit higher, and an unflavored isolate close to 90 percent. A flavored product claiming 30 g of protein in a 32 g scoop does not add up, because the flavor and sweetener alone take up more than 2 g of weight.
+          </p>
+
+          <p>
+            The good signals are the opposite: a short ingredient list with a named protein first, a published amino acid profile, and independent certification. Informed Choice, Informed Sport and NSF Certified for Sport screen for banned substances, and Informed Protein, a newer program Myprotein promotes, checks that the protein content and amino acid profile match the label. For more on certifications, see our <a href="/is-protein-powder-safe/">is protein powder safe</a> guide.
+          </p>
+        </div>
+
+        <div id="amazon-sellers" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            7. Buying Cheap on Amazon Without Getting Burned
+          </h2>
+
+          <p>
+            Amazon is often the cheapest place to buy mainstream protein powder, but its marketplace lets third-party sellers list the same product, sometimes at a price that looks too good. The safest listings say ships from and sold by Amazon, or name the brand's own storefront as the seller. Check that field under the buy button, not just the brand name in the title.
+          </p>
+
+          <p>
+            When the tub arrives, check that the seal under the lid is intact, the lot number and best-by date are printed clearly, and the label matches the brand's current packaging. Clumping, an odd smell, a scoop missing from a brand that always includes one, or a label with spelling errors are all reasons to return it. Most brands will confirm a lot number if you email them.
+          </p>
+
+          <p>
+            Be careful with price-per-ounce comparisons on search results, too. Amazon calculates them from the container weight, not the protein, so a powder that is half carbohydrate looks just as cheap per ounce as a pure isolate. Use the cost per 25 g method instead. Our <a href="/amazon-protein-powder/">Amazon protein powder guide</a> covers the best sellers, Amazon's own brands, and how to spot counterfeits in more detail.
+          </p>
+
+          <p>
+            Finally, check the flavor and size you are buying are the ones in the price you saw. Amazon groups many variations on one listing, and the cheapest price shown is often for one specific flavor or a small size. Select the size and flavor first, then do the maths.
+          </p>
+        </div>
+
+        <div id="whey-vs-plant" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            8. Cheap Whey vs Cheap Plant Protein
+          </h2>
+
+          <p>
+            On raw cost per gram, unflavored soy isolate is usually the cheapest protein powder you can buy, and unflavored pea is often competitive with budget whey. But a fair comparison has to account for leucine, the amino acid that does the most to trigger muscle protein synthesis. Whey is roughly 10 to 11 percent leucine; soy and pea are closer to 8 percent.
+          </p>
+
+          <p>
+            In practice, you need about 30 to 35 g of soy or pea protein to match the leucine in 25 g of whey. That means a plant powder needs to be roughly 20 to 30 percent cheaper per gram than whey to be truly cheaper per muscle-building dose. Bulk soy isolate usually clears that bar easily; pea sometimes does and sometimes does not, depending on the deal.
+          </p>
+
+          <p>
+            If you are only using powder to top up your daily total, rather than as a post-workout feed, the leucine adjustment matters much less, and the cheapest gram wins. Our <a href="/best-soy-protein-powder/">best soy protein powder</a> and <a href="/best-pea-protein-powder/">best pea protein powder</a> guides cover the plant options in more depth, including the soy and testosterone question, which the research does not support at normal intakes.
+          </p>
+
+          <p>
+            Plant proteins also tend to carry more heavy metals than whey on average, because crops take up lead and cadmium from soil, and several budget plant products carry California Proposition 65 lead warnings. That does not make them dangerous at normal use, but it is a reason to favor brands that publish testing, and to avoid stacking several plant powders a day.
+          </p>
+        </div>
+
+        <div id="trade-offs" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            9. What You Give Up at the Low End
+          </h2>
+
+          <p>
+            Cheap powders usually save money in four places. The first is certification: few budget powders carry NSF Certified for Sport or Informed Sport, which matters if you are a tested athlete. NOW Sports is a notable exception in the plant category, and Optimum Nutrition describes Gold Standard as banned-substance tested. If you are drug tested, pay for a certified powder; the saving is not worth the risk.
+          </p>
+
+          <p>
+            The second is the protein source. Budget whey is usually concentrate or a blend of concentrate and isolate, which carries more lactose than a pure isolate. Most people tolerate that fine, but if whey upsets your stomach, an isolate may be worth the extra cost. Our <a href="/whey-vs-whey-isolate/">whey vs whey isolate</a> guide explains when the upgrade pays off.
+          </p>
+
+          <p>
+            The third is calories and additives. Some budget powders add carbohydrate and sweeteners to improve taste. Pure Protein's 100% Whey, for example, lists 25 g of protein in a scoop of about 160 to 170 calories, against about 120 calories for 24 g of protein in Gold Standard, per their labels. Neither is bad, but if you are cutting, the extra 40 to 50 calories a shake adds up; our <a href="/pure-protein-powder-review/">Pure Protein review</a> runs the full comparison.
+          </p>
+
+          <p>
+            The fourth is taste and mixability, which is where buyer reviews of cheap powders are most divided. Mainstream brands like Optimum Nutrition and Pure Protein are widely reported as easy to drink, while unflavored bulk isolates are not meant to be drunk in water at all. Decide which compromise you can live with before you buy, and spend the saving on something else.
+          </p>
+        </div>
+
+        <div id="food" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            10. When Food Beats Powder on Price
+          </h2>
+
+          <p>
+            Powder is convenient, but it is not automatically the cheapest protein. Depending on local prices, dried lentils and beans, eggs on sale, large tubs of cottage cheese and canned tuna can match or beat the cheapest powders per 25 g of protein, and they bring fiber, vitamins and minerals that a shake does not. Chicken thighs and breasts, bought in family packs, often land in a similar range to mid-priced whey.
+          </p>
+
+          <p>
+            Rough protein amounts make the comparison easy. Four large eggs give about 25 g of protein. A cup of low-fat cottage cheese gives roughly 25 g. A 170 g pot of nonfat Greek yogurt gives roughly 15 to 20 g. Plug your local prices into the same cost per 25 g method and you will see where powder actually saves you money.
+          </p>
+
+          <p>
+            Where powder wins is time and convenience: a shake takes thirty seconds, keeps for months, and travels in a bag. For most people the cheapest overall approach is food for most meals and one shake a day where a meal would otherwise be short on protein. Our <a href="/how-much-protein-do-i-need/">how much protein do I need</a> guide helps you work out whether you need a shake at all.
+          </p>
+
+          <p>
+            If you have kidney disease, are pregnant, or have been told to limit protein, agree your daily target with a doctor or registered dietitian before adding protein powder, cheap or otherwise. For everyone else, the best cheap powder is the one that fills a real gap in your diet at the lowest honest cost per gram.
+          </p>
+        </div>
+
+        <!-- Common Mistakes -->
+        <div id="mistakes" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            11. Common Mistakes to Avoid
+          </h2>
+
+          <div class="space-y-6 my-8">
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Comparing tub prices</h3>
+              <p class="text-gray-700 text-sm m-0">
+                A $25 tub and a $70 tub tell you nothing until you know how much protein is in each. Multiply protein per serving by servings, divide the price by that total and multiply by 25. That cost per 25 g of protein is the only fair comparison between sizes and brands.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Trusting price per ounce</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Amazon's price per ounce counts the whole powder, including carbohydrate, flavor and sweetener. A mass gainer or meal shake can look as cheap per ounce as a pure isolate while delivering half the protein. Use cost per 25 g of protein, not cost per ounce, when you compare.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Bulk-buying an untried flavor</h3>
+              <p class="text-gray-700 text-sm m-0">
+                A 5 lb tub is only a bargain if you finish it. Buy a small size or a sample of a new flavor first, then commit to the big tub once you know you like it. Unflavored powders are the safest bulk buy, because you can flavor them differently every day.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Buying the lowest price from an unknown seller</h3>
+              <p class="text-gray-700 text-sm m-0">
+                A price far below every other listing, sold by an unfamiliar third-party seller, is a counterfeit and expiry risk. Buy from listings shipped and sold by Amazon or the brand's own storefront, and check the seal, lot number and best-by date when it arrives.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Ignoring the ingredient list</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Glycine, taurine, an amino acid blend or a proprietary protein matrix on a protein powder label can mean the protein number is inflated by cheap amino acids. Check that a named protein comes first and that the protein per gram is physically plausible before you buy.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ -->
+        <div id="faq" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            12. Frequently Asked Questions
+          </h2>
+
+          <div class="space-y-6">
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">What is the cheapest protein powder per gram?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Unflavored soy protein isolate is usually the cheapest. At typical prices, BulkSupplements' soy isolate works out to roughly $0.75 to $0.90 per 25 g of protein. Among wheys, Myprotein Impact Whey on a deep sale and 5 lb tubs of mainstream whey come closest. Prices move constantly, so check the cost per 25 g on the day you buy.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">How do I calculate cost per 25 g of protein?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Multiply the protein per serving by the number of servings to get the total protein in the container. Divide the price by that total, then multiply by 25. For example, a tub with 74 servings of 24 g holds 1,776 g of protein; at $85, that is about $1.20 per 25 g of protein.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is cheap protein powder safe?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Mainstream budget powders from established brands are generally fine. The risks are amino spiking, counterfeit or expired product from unknown sellers, and heavy metals, which affect plant powders more on average. Choose brands that publish testing or carry certification, buy from reputable sellers, and see a doctor first if you have kidney disease or are pregnant.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">What is amino spiking?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Labs usually estimate protein by measuring nitrogen. Amino spiking means adding cheap nitrogen-containing ingredients such as glycine or taurine, which push up the measured protein without adding much muscle-building value. Watch for amino acid blends or proprietary matrices on the label, and for protein per gram that is higher than the protein source could contain.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is Subscribe and Save worth it for protein powder?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Usually, yes. Amazon's Subscribe and Save typically takes about 5 percent off, up to 15 percent with five or more subscriptions in one delivery, and some products offer more. The price charged is the price when the order ships, so check the reminder email and skip a month if the price has jumped.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is it cheaper to buy protein powder in bulk?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Almost always per gram. A 5 lb tub usually costs noticeably less per 25 g of protein than a 2 lb tub of the same product, because packaging and shipping are spread over more powder. Only buy big once you know you like the flavor, and store it sealed somewhere cool and dry.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">When is protein powder cheapest?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Big sale events bring the deepest discounts: Prime Day in July, Amazon's October deal event, Black Friday and Cyber Monday, and January. Brand sites such as Myprotein run frequent sales too. Price-history tools such as camelcamelcamel and Keepa show whether a sale price is genuinely low or just a reset list price.
+              </p>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Cluster: affiliate batch -->
+        <div class="mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">Everything Else About Cheap Protein Powder</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <a href="/pure-protein-powder-review/" class="bg-white border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#FF4500] font-black text-xs uppercase tracking-widest mb-2">Brand Review</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Pure Protein Powder Review</h3>
+              <p class="text-gray-500 text-sm mt-2">Pure Protein 100% Whey reviewed from the label: protein per scoop, calories, sweeteners and cost per 25 g, plus how its shakes, bars and cheaper…</p>
+            </a>
+          </div>
+        </div>
+        <!-- /Cluster: affiliate batch -->
+
+        <!-- Related Guides -->
+        <div class="mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">Related Protein Powder Guides</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <a href="/pure-protein-powder-review/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#FF4500] font-black text-xs uppercase tracking-widest mb-2">Brand Review</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Pure Protein Powder Review</h3>
+              <p class="text-gray-500 text-sm mt-2">Is the grocery-aisle whey actually cheap per gram?</p>
+            </a>
+            <a href="/myprotein-review/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#38BDF8] font-black text-xs uppercase tracking-widest mb-2">Brand Review</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Myprotein Review</h3>
+              <p class="text-gray-500 text-sm mt-2">Which Myprotein powders are worth buying, and where.</p>
+            </a>
+            <a href="/amazon-protein-powder/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#FF4500] font-black text-xs uppercase tracking-widest mb-2">Shopping Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Amazon Protein Powder</h3>
+              <p class="text-gray-500 text-sm mt-2">Best sellers, Amazon's own brands and avoiding fakes.</p>
+            </a>
+          </div>
+        </div>
+
+        <!-- Closing -->
+        <div class="mt-16 bg-gray-900 text-white rounded-2xl p-8">
+          <h2 class="text-2xl font-black text-white mb-4">The Bottom Line</h2>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            Cheap protein powder is about cost per 25 g of protein, not the price on the tub. Work it out once and the pattern is clear: unflavored soy isolate is usually the cheapest gram, Myprotein is a bargain only on sale, and a 5 lb tub of Optimum Nutrition Gold Standard is the best everyday value for most whey buyers.
+          </p>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            Buy big once you know you like it, use Subscribe and Save and sale events, and buy from listings sold by Amazon or the brand itself. If a price undercuts everyone and the label lists amino acid blends or impossible protein numbers, walk away. A powder that is too cheap to be true usually is.
+          </p>
+        </div>
+
+        <MoreInCategory category="Protein Powder" links={moreInCategory} />
+
+        <AuthorBio />
+      </div>
+    </div>
+  </article>
+</Layout>

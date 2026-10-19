@@ -1,0 +1,947 @@
+---
+import Layout from "../layouts/Layout.astro";
+import MoreInCategory from "../components/MoreInCategory.astro";
+import { AUTHORS, DEFAULT_AUTHOR, authorSchema } from "../data/authors";
+import { SITE_NAME, SITE_URL } from "../data/site";
+import AuthorAvatar from "../components/AuthorAvatar.astro";
+import QuickPicks from "../components/QuickPicks.astro";
+import AuthorBio from "../components/AuthorBio.astro";
+import { amazonLink } from "../data/affiliate";
+import TrustBadge from "../components/TrustBadge.astro";
+import SocialProof from "../components/SocialProof.astro";
+import SpecGrid from "../components/SpecGrid.astro";
+import productImages from "../data/product-images.json";
+import { pageDates } from "../data/dates";
+
+const moreInCategory = [
+  {
+    "title": "Best Whey Protein Powder",
+    "url": "/best-whey-protein-powder/"
+  },
+  {
+    "title": "Whey vs Whey Isolate",
+    "url": "/whey-vs-whey-isolate/"
+  },
+  {
+    "title": "Protein Powder Brands",
+    "url": "/protein-powder-brands/"
+  }
+];
+const author = AUTHORS[DEFAULT_AUTHOR];
+const dates = pageDates(Astro.url.pathname, { published: "2026-10-19", modified: "2026-10-19" });
+const title = "Myprotein Protein Powder Review: Impact Whey, Isolate and Clear Whey Compared";
+const description =
+  "Is Myprotein any good? Impact Whey, Impact Whey Isolate and Clear Whey compared on label protein, scoop size, testing, cost per 25 g and US Amazon availability.";
+
+const PRODUCTS: {
+  id: string;
+  name: string;
+  brand?: string;
+  badge: string;
+  category: string;
+  description: string;
+  pros: string[];
+  cons: string[];
+  bottomLine: string;
+  specs?: Record<string, string>;
+  rating?: number;
+  reviewCount?: number;
+  amazonUrl?: string;
+}[] = [
+  {
+    "id": "myprotein-impact-whey-isolate",
+    "name": "Myprotein Impact Whey Isolate",
+    "brand": "Myprotein",
+    "badge": "Best on Amazon US",
+    "category": "Whey isolate",
+    "description": "The Myprotein powder that US buyers can get most easily, sold on Amazon US by Myprotein North America and shipped by Amazon. Nutrition databases list the US version at about 25 g of protein and roughly 110 calories per scoop, while UK tubs list about 20 to 22 g per 25 g scoop. As an isolate it carries less lactose, fat and carbohydrate than Impact Whey, and UK listings show the Informed Choice mark.",
+    "pros": [
+      "About 25 g of protein per US serving, per listings",
+      "Lower lactose than Impact Whey concentrate",
+      "Sold by the brand and shipped by Amazon in the US",
+      "Large 65-serving tubs available"
+    ],
+    "cons": [
+      "Costs more per 25 g than the concentrate",
+      "Scoop size and label differ between the US and UK",
+      "Amazon listing is marked non-returnable"
+    ],
+    "bottomLine": "The Myprotein powder to buy if you are in the US and want to order on Amazon.",
+    "specs": {
+      "Protein per serving": "About 25 g (US listing)",
+      "Calories": "About 110",
+      "Third-party testing": "Informed Choice on UK tubs (check yours)",
+      "Best for": "US buyers, lactose-sensitive"
+    },
+    "amazonUrl": "https://www.amazon.com/dp/B0HHL8HQ4G"
+  },
+  {
+    "id": "myprotein-impact-whey-protein",
+    "name": "Myprotein Impact Whey Protein",
+    "brand": "Myprotein",
+    "badge": "Best Value",
+    "category": "Whey concentrate",
+    "description": "The product that made Myprotein famous, with a 4.6-star average from more than 30,000 reviews on the brand's site. A 25 g scoop delivers roughly 20 to 22 g of protein depending on flavor and market, so plan on about 30 g of powder for 25 g of protein. It comes in dozens of flavors plus unflavored, and on sale it is often among the cheapest mainstream whey powders per gram of protein.",
+    "pros": [
+      "Frequently among the lowest cost per 25 g of protein on sale",
+      "Huge flavor range, plus an unflavored option",
+      "Creamier concentrate texture than an isolate"
+    ],
+    "cons": [
+      "Small scoop, about 20-22 g of protein per serving",
+      "More lactose than an isolate",
+      "Not sold by the brand on Amazon US when we checked"
+    ],
+    "bottomLine": "The value pick if you tolerate lactose and buy direct during a sale.",
+    "specs": {
+      "Protein per serving": "About 20-22 g per 25 g scoop",
+      "Calories": "About 90-105",
+      "Third-party testing": "Check certifier database",
+      "Best for": "Tight budgets"
+    }
+  },
+  {
+    "id": "myprotein-clear-whey-isolate",
+    "name": "Myprotein Clear Whey Isolate",
+    "brand": "Myprotein",
+    "badge": "Best Clear Whey",
+    "category": "Hydrolyzed whey isolate, clear drink",
+    "description": "A juice-style protein drink made from hydrolyzed whey isolate. The US Amazon listing is a 35-serving, roughly 1.9 lb tub with about 20 g of protein per serving, in flavors such as Lemonade. In the UK, the Vimto flavor lists about 20 g of protein and around 89 calories per roughly 26 g serving, sweetened with sucralose. It is a good fit for people who find milky shakes heavy.",
+    "pros": [
+      "About 20 g of protein in a light, juice-like drink",
+      "Very low fat and sugar, per listings",
+      "Vimto and fruit flavors that milkshake powders cannot match"
+    ],
+    "cons": [
+      "Premium cost per 25 g of protein",
+      "Can foam when shaken; acidity is not for everyone",
+      "Vimto flavor is essentially UK-only"
+    ],
+    "bottomLine": "One of the better clear wheys, and the reason people search for Vimto protein powder.",
+    "specs": {
+      "Protein per serving": "About 20 g (listing)",
+      "Calories": "About 85-90",
+      "Third-party testing": "Check certifier database",
+      "Best for": "Summer, post-cardio"
+    }
+  },
+  {
+    "id": "optimum-nutrition-gold-standard-100-whey",
+    "name": "Optimum Nutrition Gold Standard 100% Whey",
+    "brand": "Optimum Nutrition",
+    "badge": "Alternative: Easiest US Buy",
+    "category": "Whey isolate + concentrate blend",
+    "description": "The best-known whey in the US and the simplest alternative to Myprotein for an Amazon buyer. Per the label at the time of writing, a roughly 30 to 31 g scoop provides about 24 g of protein and 120 calories, with about 3 g of carbohydrate and 1 g of sugar. Optimum Nutrition states it carries Informed Choice certification, and it is sold in many sizes with frequent discounts.",
+    "pros": [
+      "About 24 g of protein per scoop, per the label",
+      "Widely available on Amazon in many sizes",
+      "Promoted as Informed Choice certified"
+    ],
+    "cons": [
+      "Usually costs more per 25 g than Myprotein on sale",
+      "Concentrate in the blend means some lactose"
+    ],
+    "bottomLine": "Buy it instead of Myprotein if you want one predictable tub without chasing codes.",
+    "specs": {
+      "Protein per serving": "About 24 g (label)",
+      "Calories": "About 120",
+      "Third-party testing": "Informed Choice (confirm flavor)",
+      "Best for": "US Amazon buyers"
+    }
+  },
+  {
+    "id": "dymatize-iso100-hydrolyzed",
+    "name": "Dymatize ISO100 Hydrolyzed Whey Isolate",
+    "brand": "Dymatize",
+    "badge": "Alternative: Premium Isolate",
+    "category": "Hydrolyzed whey isolate + whey isolate",
+    "description": "The benchmark US isolate and the natural comparison for Impact Whey Isolate. Per the label at the time of writing, a 30 g scoop delivers 25 g of protein in about 110 to 120 calories, with roughly 1 g of sugar and very little lactose. Dymatize describes it as banned-substance tested, and it is sold widely on Amazon and in grocery chains.",
+    "pros": [
+      "25 g of protein per scoop, per the label",
+      "Very low lactose, fat and carbohydrate",
+      "Thin, quick mix in water, per buyer reports"
+    ],
+    "cons": [
+      "Premium cost per 25 g of protein",
+      "Sucralose and stevia in flavored versions"
+    ],
+    "bottomLine": "The isolate to buy if you want the most predictable label and will pay more for it.",
+    "specs": {
+      "Protein per serving": "About 25 g (label)",
+      "Calories": "About 110-120",
+      "Third-party testing": "Banned-substance tested, per brand",
+      "Best for": "Lactose-sensitive, cutting"
+    }
+  }
+];
+
+const schema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Home",
+          item: `${SITE_URL}/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Best Lists",
+          item: `${SITE_URL}/best-of/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 3,
+          name: "Myprotein Review",
+          item: `${SITE_URL}/myprotein-review/`,
+        },
+      ],
+    },
+    {
+      "@type": "FAQPage",
+      mainEntity: [
+        {
+          "@type": "Question",
+          "name": "Is Myprotein a good brand?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes for value-focused buyers. Myprotein makes straightforward whey products with honest labels, a huge flavor range and frequent discounts that often make it among the cheapest mainstream whey per gram of protein. Its weaknesses are a small Impact Whey scoop, prices that depend on discount codes and differences between countries. It is owned by THG PLC, a UK company listed in London."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How much protein is in Myprotein Impact Whey?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "A 25 g scoop of Impact Whey Protein provides roughly 20 to 22 g of protein, depending on flavor and market, per label figures at the time of writing. Unflavored sits at the higher end. To reach 25 g of protein you need about 30 g of powder. The US Impact Whey Isolate lists about 25 g of protein per scoop."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can you buy Myprotein on Amazon US?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, partly. Impact Whey Isolate is listed on Amazon US, sold by Myprotein North America and shipped by Amazon, and Clear Whey Isolate is also listed. The classic Impact Whey Protein concentrate did not appear as a brand-sold Amazon US listing when we checked, so buy that one from Myprotein's US site, ideally during a sale."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is Vimto protein powder?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It is Myprotein Clear Whey Isolate in a licensed Vimto flavor, based on the British fruit cordial. UK listings show about 20 g of protein and around 89 calories per roughly 26 g serving, sweetened with sucralose. It is sold through Myprotein and UK retailers such as Sainsbury's, Boots and Costco UK, and is hard to find from brand-authorized sellers in the US."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is Myprotein Impact Whey good for weight loss?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It can help because it adds protein for relatively few calories, roughly 90 to 105 per 25 g scoop, which supports fullness and muscle retention in a calorie deficit. Impact Whey Isolate is slightly leaner still. Protein powder only supports weight loss as part of an overall deficit, and it should not replace whole meals for long periods."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is Myprotein third-party tested?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Some Myprotein products carry the Informed Choice mark, including UK listings for Impact Whey Isolate. Coverage varies by product, flavor and country, so tested athletes should look up the exact product in the Informed Choice or Informed Sport database. We could not find batch heavy-metal reports published by the brand."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is Myprotein better than Optimum Nutrition?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Neither is better across the board. Myprotein is usually cheaper per 25 g of protein on sale and offers more flavors and formats. Optimum Nutrition Gold Standard gives about 24 g of protein per scoop, is widely available on Amazon and is promoted as Informed Choice certified, which makes it the simpler choice for many US buyers."
+          }
+        }
+      ],
+    },
+    {
+      "@type": "Article",
+      headline: title,
+      author: authorSchema(),
+      datePublished: dates.published,
+      dateModified: dates.modified,
+      publisher: { "@type": "Organization", name: SITE_NAME, url: SITE_URL },
+    },
+    {
+      "@type": "ItemList",
+      name: title,
+      numberOfItems: PRODUCTS.length,
+      itemListElement: PRODUCTS.map((product, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name: product.name,
+        url: new URL(`#${product.id}`, Astro.url).toString(),
+      })),
+    },
+    ...PRODUCTS.map((product) => ({
+      "@type": "Product",
+      name: product.name,
+      description: product.description,
+      brand: {
+        "@type": "Brand",
+        name: product.brand ?? product.name.split(" ")[0],
+      },
+    })),
+  ],
+};
+---
+
+<Layout
+  title={title}
+  description={description}
+  ogType="article"
+  article={{
+    publishedTime: dates.published,
+    modifiedTime: dates.modified,
+    author: author.name,
+    section: "Brand Reviews",
+    tags: [
+      "myprotein",
+      "my protein",
+      "my protein powder",
+      "myprotein impact whey",
+      "myprotein review",
+      "vimto protein powder"
+    ],
+  }}
+  jsonLd={schema}
+  stickyCta={{
+    text: "See Our Top Whey Protein Picks",
+    link: "/best-whey-protein-powder/",
+  }}
+>
+  <article class="relative overflow-hidden">
+    <!-- Hero Section -->
+    <div class="bg-gray-900 py-16 lg:py-24 relative overflow-hidden">
+      <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(circle at 20% 20%, #38BDF8 0, transparent 45%), radial-gradient(circle at 80% 60%, #FF4500 0, transparent 40%);"></div>
+      <div class="max-w-4xl mx-auto px-4 relative z-10 text-center">
+        <div class="flex justify-center mb-6">
+          <TrustBadge />
+        </div>
+        <div class="flex justify-center gap-3 mb-6">
+          <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#FF4500]/20 text-[#FF4500] text-xs font-black uppercase tracking-widest border border-[#FF4500]/30">
+            Brand Review
+          </span>
+          <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-green-500/10 text-green-400 text-xs font-bold uppercase tracking-widest border border-green-500/20">
+            Label-Checked
+          </span>
+        </div>
+        <h1 class="text-4xl lg:text-6xl font-black text-white leading-tight mb-8">
+          Myprotein <span class="text-[#38BDF8]">Review</span>
+        </h1>
+        <p class="text-xl text-gray-300 leading-relaxed mb-8 max-w-3xl mx-auto">
+          Myprotein is the UK's best-known budget whey brand and sells across the US too. Here is which product in the range to buy, why the scoop size matters more than the headline number, and who should buy a different brand.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a
+            href="#myprotein-impact-whey-isolate"
+            class="px-8 py-4 bg-[#FF4500] hover:bg-[#E63E00] text-white font-black rounded-xl shadow-lg transition-all no-underline"
+          >
+            See Our #1 Pick
+          </a>
+          <a
+            href="#impact-whey"
+            class="px-8 py-4 bg-white/10 hover:bg-white/20 text-white font-bold rounded-xl border border-white/10 no-underline"
+          >
+            Which One to Buy
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Author & Meta -->
+    <div class="max-w-3xl mx-auto px-4 pt-12">
+      <div class="flex items-center gap-6 border-b border-gray-100 pb-8">
+        <div class="flex items-center gap-3">
+          <AuthorAvatar size={48} />
+          <div>
+            <p class="text-sm font-bold text-gray-900">{author.name}</p>
+            <p class="text-xs text-gray-500 uppercase tracking-widest">{author.role}</p>
+          </div>
+        </div>
+        <div class="h-10 w-px bg-gray-200 hidden sm:block"></div>
+        <div class="hidden sm:block">
+          <p class="text-sm font-bold text-gray-900">Last Updated</p>
+          <p class="text-xs text-gray-500">{dates.display}</p>
+        </div>
+        <div class="hidden sm:block ml-auto">
+          <SocialProof />
+        </div>
+      </div>
+    </div>
+
+    <!-- Table of Contents -->
+    <div class="max-w-3xl mx-auto px-4 py-10">
+      <div class="bg-gray-50 border border-gray-200 rounded-2xl p-6 lg:p-8">
+        <h2 class="text-lg font-black text-gray-900 mb-4 flex items-center gap-2">
+          In This Guide
+        </h2>
+        <nav class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <a href="#verdict" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">1. The Short Verdict</a>
+          <a href="#who-owns-it" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">2. Who Owns Myprotein</a>
+          <a href="#top-picks" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">3. The Range, Ranked</a>
+          <a href="#impact-whey" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">4. Impact Whey Label</a>
+          <a href="#isolate-vs-concentrate" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">5. Whey vs Isolate</a>
+          <a href="#clear-whey" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">6. Clear Whey and Vimto</a>
+          <a href="#cost" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">7. Cost per 25 g</a>
+          <a href="#testing" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">8. Testing and Trust</a>
+          <a href="#vs-us-brands" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">9. Myprotein vs US Brands</a>
+          <a href="#who-should-skip" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">10. Who Should Skip It</a>
+          <a href="#mistakes" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">11. Common Mistakes</a>
+          <a href="#faq" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">12. FAQ</a>
+        </nav>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="max-w-3xl mx-auto px-4 pb-16 lg:pb-24">
+      <div class="prose prose-lg prose-blue max-w-none text-gray-700 leading-relaxed">
+        <p class="text-2xl font-medium text-gray-900 mb-8 italic">
+          Myprotein is good value, not magic. Its Impact Whey is a perfectly decent whey concentrate that is often among the cheapest mainstream powders per gram of protein when it is on sale, which is most of the time. The catch is the scoop: a 25 g serving delivers roughly 20 to 22 g of protein, so you need a bigger scoop than the label suggests, and the product you can actually buy on Amazon US is the isolate, not the famous concentrate.
+        </p>
+
+        <QuickPicks products={PRODUCTS} />
+
+        <div id="verdict" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            1. Is Myprotein Any Good? The Short Verdict
+          </h2>
+
+          <p>
+            Yes, for the right buyer. Myprotein makes straightforward whey products with reasonable labels, an enormous flavor range and prices that, with the near-permanent discount codes, are often among the lowest per gram of protein of any mainstream brand. Its flagship Impact Whey Protein carries a 4.6-star average from more than 30,000 reviews on the brand's own site, which says something about how many people keep buying it.
+          </p>
+
+          <p>
+            The weaknesses are just as clear. The standard Impact Whey scoop is small, so the protein per serving looks low next to US brands. The product you can find most easily on Amazon US is the isolate, which is a better powder but not the cheap concentrate that made the brand famous. And list prices are deliberately inflated so that discounts look large, which makes price comparisons harder than they should be.
+          </p>
+
+          <p>
+            Our ranking is simple. If you are in the US and want to buy on Amazon, buy <strong>Impact Whey Isolate</strong>. If you are happy to order from Myprotein's own site during a sale, <strong>Impact Whey Protein</strong> is the value pick. If you want a light, juice-style drink instead of a milkshake, <strong>Clear Whey Isolate</strong> is one of the better clear wheys available, and in the UK the Vimto flavor is the one people search for by name.
+          </p>
+
+          <p>
+            Who should skip it? Anyone who is lactose sensitive and considering the concentrate, anyone who needs a named sport certification on the exact tub they buy, and anyone who hates chasing discount codes. For those readers, US brands such as Optimum Nutrition and Dymatize offer a more predictable buying experience, and our <a href="/best-whey-protein-powder/">best whey protein powder</a> roundup ranks the wider field.
+          </p>
+        </div>
+
+        <div id="who-owns-it" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            2. Who Owns Myprotein and Where It Sells
+          </h2>
+
+          <p>
+            Myprotein is owned by <strong>THG PLC</strong>, the Manchester-based group listed on the London Stock Exchange, and it sits inside THG's nutrition division, THG Nutrition. In April 2025 THG's board publicly rejected an unsolicited proposal from Selkirk to buy Myprotein that put a headline value of 400 to 600 million pounds on the brand, so it remains part of THG. In its Q3 trading statement in October 2026, THG raised its earnings forecast, citing stronger performance in THG Nutrition.
+          </p>
+
+          <p>
+            That ownership explains the business model. Myprotein sells mostly direct, through country-specific websites, with retail and marketplace listings layered on top. Direct selling is what allows the constant sales: the brand captures the margin a retailer would otherwise take, then spends part of it on discount codes. It also explains why prices and formulas differ between the UK, US and other markets.
+          </p>
+
+          <p>
+            In the US, Myprotein runs its own site and an Amazon presence. The Impact Whey Isolate listing we checked on Amazon US is sold by Myprotein North America and shipped by Amazon, which is the arrangement you want for authenticity. The Clear Whey Isolate is also listed on Amazon US. The classic Impact Whey Protein concentrate, however, did not appear as a brand-sold listing on Amazon US when we checked, so the buy button on that card runs a search rather than pointing to a single listing.
+          </p>
+
+          <p>
+            In the UK, Myprotein is everywhere: its own site, supermarkets such as Sainsbury's and Morrisons, Boots, Holland and Barrett and Costco. That retail reach is why UK-only flavors such as Vimto Clear Whey are so visible in search. If you are shopping on Amazon in the US and want to compare more options, our <a href="/amazon-protein-powder/">guide to buying protein powder on Amazon</a> explains how to check the seller before you pay.
+          </p>
+        </div>
+
+        <!-- Picks -->
+        <div id="top-picks" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            3. The Myprotein Range, Ranked
+          </h2>
+
+          <p>
+            Three Myprotein powders cover almost everything most buyers need, followed by two US alternatives for readers who would rather buy a brand with a bigger scoop or an easier Amazon listing. Label figures come from Myprotein, Amazon US and retailer listings at the time of writing and vary by flavor and by market, so check the panel on your tub.
+          </p>
+
+          {PRODUCTS.map((product, index) => (
+            <div id={product.id} class="scroll-mt-24 mt-12 first:mt-8">
+              <div class="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                <div class="bg-gray-900 px-6 py-4 flex items-center justify-between">
+                  <div class="flex items-center gap-3">
+                    <span class="bg-[#FF4500] text-white w-8 h-8 rounded-full flex items-center justify-center text-sm font-black">
+                      {index + 1}
+                    </span>
+                    {productImages[product.id] && (
+                      <img
+                        src={productImages[product.id]}
+                        alt={product.name}
+                        loading="lazy"
+                        width="40"
+                        height="40"
+                        class="w-10 h-10 rounded-lg bg-white object-contain p-1 shrink-0"
+                      />
+                    )}
+                    <div>
+                      <p class="text-white font-black text-lg">{product.name}</p>
+                      <p class="text-gray-400 text-xs">{product.category}</p>
+                    </div>
+                  </div>
+                  <span class="bg-[#38BDF8]/20 text-[#38BDF8] px-3 py-1 rounded-full text-xs font-bold hidden sm:block">
+                    {product.badge}
+                  </span>
+                </div>
+                <div class="p-6">
+                  {product.rating && (
+                  <div class="flex items-center gap-2 mb-4">
+                    <div class="flex text-yellow-400">
+                      {[...Array(5)].map((_, i) => (
+                        <svg
+                          class={`w-4 h-4 ${i < Math.floor(product.rating) ? "fill-current" : "text-gray-200"}`}
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                        >
+                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        </svg>
+                      ))}
+                    </div>
+                    <span class="text-gray-500 text-sm font-bold">{product.rating}</span>
+                    {product.reviewCount && <span class="text-gray-400 text-xs">({product.reviewCount.toLocaleString()} retailer reviews)</span>}
+                  </div>
+                  )}
+
+                  <SpecGrid specs={product.specs} />
+
+                  <p class="text-gray-700 leading-relaxed mb-6">{product.description}</p>
+
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                    <div class="bg-green-50 rounded-xl p-4">
+                      <p class="text-xs font-black uppercase tracking-widest text-green-700 mb-3">Pros</p>
+                      <ul class="space-y-2">
+                        {product.pros.map((pro) => (
+                          <li class="flex items-start gap-2 text-sm text-green-800">
+                            <svg class="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            {pro}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div class="bg-red-50 rounded-xl p-4">
+                      <p class="text-xs font-black uppercase tracking-widest text-red-700 mb-3">Cons</p>
+                      <ul class="space-y-2">
+                        {product.cons.map((con) => (
+                          <li class="flex items-start gap-2 text-sm text-red-800">
+                            <svg class="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                            {con}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+
+                  <div class="bg-gray-50 rounded-xl p-4 border border-gray-100">
+                    <p class="text-xs font-black uppercase tracking-widest text-gray-500 mb-1">The Bottom Line</p>
+                    <p class="text-gray-900 font-bold">{product.bottomLine}</p>
+                  </div>
+
+                  <a
+                    href={amazonLink(product.amazonUrl, product.name, product.id)}
+                    target="_blank"
+                    rel="sponsored nofollow noopener"
+                    class="mt-6 block bg-[#FF4500] hover:bg-[#E63E00] text-white text-center py-4 rounded-xl font-black no-underline transition-colors uppercase tracking-widest text-sm"
+                  >
+                    Check Price &rarr;
+                  </a>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div id="impact-whey" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            4. Impact Whey Protein: The Label in Detail
+          </h2>
+
+          <p>
+            Impact Whey Protein is a whey concentrate. Depending on flavor and market, a 25 g scoop delivers roughly <strong>20 to 22 g of protein</strong> and about 90 to 105 calories, per label figures and nutrition databases at the time of writing. Unflavored versions sit at the top of that range because there is no flavoring or cocoa diluting the protein; dessert flavors sit lower. That is a protein content of roughly 80 to 88 percent by weight, which is normal for a concentrate.
+          </p>
+
+          <div class="bg-gray-900 text-white rounded-2xl p-6 lg:p-8 my-8">
+            <p class="text-xs font-black uppercase tracking-widest text-[#38BDF8] mb-4">Impact Whey Protein, typical 25 g scoop</p>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+              <div>
+                <p class="text-3xl font-black text-white">20-22 g</p>
+                <p class="text-gray-400 text-xs mt-1">Protein (varies by flavor)</p>
+              </div>
+              <div>
+                <p class="text-3xl font-black text-[#38BDF8]">90-105</p>
+                <p class="text-gray-400 text-xs mt-1">Calories</p>
+              </div>
+              <div>
+                <p class="text-3xl font-black text-white">30 g</p>
+                <p class="text-gray-400 text-xs mt-1">Powder for about 25 g protein</p>
+              </div>
+              <div>
+                <p class="text-3xl font-black text-[#38BDF8]">30,000+</p>
+                <p class="text-gray-400 text-xs mt-1">Reviews on Myprotein's site</p>
+              </div>
+            </div>
+          </div>
+
+          <p>
+            The number that matters is the scoop math. US brands typically size the serving to hit 24 or 25 g of protein, so their scoops are 30 to 32 g. Myprotein sizes Impact Whey at 25 g of powder. To get 25 g of protein, you need roughly 29 to 31 g of Impact Whey, about one and a fifth of its own scoops. That means a bag that says 40 servings gives you closer to 33 servings at 25 g of protein each.
+          </p>
+
+          <p>
+            None of that is a trick, and the label is clear about it. It simply means you should compare cost per 25 g of protein, not cost per serving. On that basis Impact Whey is still frequently one of the cheaper whey powders you can buy, especially in larger bags during a sale, but the gap with US brands is smaller than the price per bag suggests.
+          </p>
+
+          <p>
+            Flavor range is the brand's other big strength. Myprotein offers dozens of Impact Whey flavors, from basics like chocolate and vanilla to limited-edition dessert and licensed flavors, plus an unflavored version for smoothies and cooking. Buyer feedback on taste varies widely by flavor, so reading recent reviews for the exact flavor you want is more useful than reading reviews of the product as a whole.
+          </p>
+        </div>
+
+        <div id="isolate-vs-concentrate" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            5. Impact Whey vs Impact Whey Isolate
+          </h2>
+
+          <p>
+            Impact Whey Isolate is filtered further to remove more of the lactose, fat and carbohydrate. In the UK, a 25 g scoop lists about 20 to 22 g of protein and roughly 90 calories. The US version is sized differently: nutrition databases list about 25 g of protein and around 110 calories per scoop of roughly 29 to 31 g, and the Amazon US listing we checked carries 25g in its title. Either way, the protein share per gram is higher than the concentrate.
+          </p>
+
+          <p>
+            The practical differences are digestion and texture. Isolate carries much less lactose, so people who get bloated on regular whey often do better with it, although it is not lactose-free and is not suitable for a milk allergy. It also mixes thinner and lighter, which some people prefer in water and others find less satisfying than a creamier concentrate. Our <a href="/whey-vs-whey-isolate/">whey vs whey isolate</a> guide covers the trade-off in detail.
+          </p>
+
+          <p>
+            Cost is the deciding factor for most buyers. Isolate is more expensive to make, so Impact Whey Isolate usually costs more per 25 g of protein than Impact Whey. If you tolerate lactose fine, the concentrate gives you more protein for the money. If you do not, the isolate is worth paying for, and on Amazon US it is the easier product to buy anyway.
+          </p>
+
+          <p>
+            There is a third option in the range, Myprotein's clear whey, which is also an isolate but processed into a thin, juice-like drink rather than a shake. It solves a different problem, the heaviness of milky shakes in summer or after cardio, and is covered in its own section below.
+          </p>
+
+          <div class="overflow-hidden border border-gray-200 rounded-2xl my-8">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Product</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Protein per serving</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Base</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Easiest to buy in the US</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Impact Whey Protein</td>
+                    <td class="px-4 py-4 text-gray-700">About 20-22 g per 25 g scoop</td>
+                    <td class="px-4 py-4 text-gray-700">Whey concentrate</td>
+                    <td class="px-4 py-4 text-gray-700">Myprotein's US site</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Impact Whey Isolate</td>
+                    <td class="px-4 py-4 text-gray-700">About 25 g per US scoop</td>
+                    <td class="px-4 py-4 text-gray-700">Whey isolate</td>
+                    <td class="px-4 py-4 text-gray-700">Amazon US, sold by the brand</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Clear Whey Isolate</td>
+                    <td class="px-4 py-4 text-gray-700">About 20 g per serving</td>
+                    <td class="px-4 py-4 text-gray-700">Hydrolyzed whey isolate</td>
+                    <td class="px-4 py-4 text-gray-700">Amazon US and brand site</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div id="clear-whey" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            6. Clear Whey and the Vimto Protein Powder
+          </h2>
+
+          <p>
+            Clear whey is whey isolate that has been hydrolyzed and acidified so it mixes into a translucent, juice-style drink instead of a milky shake. Myprotein is one of the best-known brands in the format. The US Clear Whey Isolate listing on Amazon is a 35-serving, roughly 1.9 lb tub in flavors such as Lemonade, with about 20 g of protein per serving.
+          </p>
+
+          <p>
+            The <strong>Vimto</strong> version is the one many UK readers are searching for. It is a licensed flavor based on the British fruit cordial, sold through Myprotein and UK retailers including Sainsbury's, Morrisons, Boots and Costco UK. Per UK retailer listings, a roughly 26 g serving provides about 20 g of protein and around 89 calories, with under 2 g of carbohydrate and under 1 g of sugar, sweetened with sucralose.
+          </p>
+
+          <p>
+            Vimto Clear Whey is essentially a UK product. Some specialist import shops sell it to US buyers, but at a mark-up, and we could not find a brand-sold Vimto listing on Amazon US. If you are in the US and want a fruit-flavored clear whey, the US Clear Whey Isolate flavors are the practical choice, and our <a href="/best-clear-protein-powder/">best clear protein powder</a> guide compares them with rivals from other brands.
+          </p>
+
+          <p>
+            Clear whey has trade-offs. It costs more per gram of protein than a standard isolate, it can foam when shaken, and the acidity and sweetness are not to everyone's taste. Letting it settle for a minute after shaking helps with the foam. It is best used as a refreshing post-workout drink rather than a meal replacement, because it has almost no fat or carbohydrate to keep you full.
+          </p>
+        </div>
+
+        <div id="cost" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            7. Cost per 25 g and the Discount-Code Game
+          </h2>
+
+          <p>
+            Myprotein's pricing works differently from most US brands. The listed price on its own site is rarely what anyone pays; site-wide codes of a third off or more appear so often that the full price functions as a reference point rather than a real price. That means the only fair comparison is the sale price you can actually get, converted to cost per 25 g of protein.
+          </p>
+
+          <p>
+            To do that conversion, divide the price you will pay by the number of servings, then multiply by 25 and divide by the protein per serving. For Impact Whey at about 21 g per scoop, the multiplier is roughly 1.2. In other words, a scoop that costs 80 cents is closer to 95 cents per 25 g of protein. Doing this once for each brand you are considering takes two minutes and removes most of the marketing from the decision.
+          </p>
+
+          <div class="overflow-hidden border border-gray-200 rounded-2xl my-8">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Product</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Approx. cost tier per 25 g protein</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Main caveat</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Impact Whey Protein (on sale, large bag)</td>
+                    <td class="px-4 py-4 text-gray-700">Budget</td>
+                    <td class="px-4 py-4 text-gray-700">Small scoop, mostly bought direct</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Impact Whey Isolate (Amazon US)</td>
+                    <td class="px-4 py-4 text-gray-700">Mid-price</td>
+                    <td class="px-4 py-4 text-gray-700">Higher cost than the concentrate</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Clear Whey Isolate</td>
+                    <td class="px-4 py-4 text-gray-700">Premium</td>
+                    <td class="px-4 py-4 text-gray-700">Clear format costs more to make</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Optimum Nutrition Gold Standard (alternative)</td>
+                    <td class="px-4 py-4 text-gray-700">Low to mid-price</td>
+                    <td class="px-4 py-4 text-gray-700">Frequent Amazon discounts</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <p>
+            On Amazon US, the picture is more stable because prices do not depend on codes, although Amazon deals and Subscribe and Save can still knock a few percent off. Impact Whey Isolate there tends to sit in the mid-price tier for isolates, competitive with US brands rather than dramatically cheaper. If the lowest cost per gram is your main goal, our <a href="/best-cheap-protein-powder/">best cheap protein powder</a> guide compares the budget field directly.
+          </p>
+
+          <p>
+            Shipping also matters. Myprotein's free-shipping thresholds and delivery times vary by country and promotion, and international orders can take longer than Amazon. If you need a tub quickly, the Amazon isolate listing often wins on convenience even when the brand's own site is slightly cheaper during a sale.
+          </p>
+        </div>
+
+        <div id="testing" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            8. Testing, Certifications and Label Trust
+          </h2>
+
+          <p>
+            Some Myprotein products carry the Informed Choice mark. UK retail listings for Impact Whey Isolate, for example, show it, and the brand promotes the program on several products. Coverage varies by product, flavor and market, so if you are a drug-tested athlete, search the exact product in the Informed Choice or Informed Sport database rather than assuming a certificate on one tub applies to every other.
+          </p>
+
+          <p>
+            For non-athletes, the more important question is whether the protein figure is honest. Whey concentrate and isolate figures in the 80 to 90 percent range by weight are consistent with real whey rather than amino-spiked blends, and Myprotein's labels list whey as the protein source rather than a blend padded with added glycine or taurine. That is the main thing to check on any budget brand.
+          </p>
+
+          <p>
+            We could not find batch-level heavy-metal reports published by Myprotein, which a handful of premium US brands do provide. Whey generally tests far lower for heavy metals than plant proteins, which is part of why this is less of a concern for a whey brand than for a pea or rice powder. If heavy metals are a priority for you, our <a href="/is-protein-powder-safe/">is protein powder safe</a> guide explains what independent testing has found across the category.
+          </p>
+
+          <p>
+            One more trust point: on Amazon, check the seller. The Impact Whey Isolate listing we checked is sold by Myprotein North America and ships from Amazon. Listings sold by unfamiliar third parties, especially for UK-only flavors, are more likely to carry old stock or imported tubs with a different label, so stick to brand-sold listings where you can.
+          </p>
+        </div>
+
+        <div id="vs-us-brands" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            9. Myprotein vs Optimum Nutrition and Dymatize
+          </h2>
+
+          <p>
+            Against <strong>Optimum Nutrition Gold Standard 100% Whey</strong>, Myprotein Impact Whey is usually cheaper per 25 g on sale, but Gold Standard delivers about 24 g of protein in a roughly 30 to 31 g scoop for about 120 calories per the label, is widely available on Amazon in many sizes, and is promoted as Informed Choice certified. For a US buyer who wants one tub without hunting for codes, Gold Standard is the simpler buy. Our <a href="/optimum-nutrition-protein-powder-review/">Optimum Nutrition review</a> covers it in depth.
+          </p>
+
+          <p>
+            Against <strong>Dymatize ISO100</strong>, Myprotein's isolate is usually the cheaper of the two, while ISO100 offers 25 g of protein per scoop from hydrolyzed and regular isolate, a very thin mix and wide availability. If you are lactose sensitive and want the most predictable isolate, ISO100 is the benchmark; if you want a cheaper isolate and are happy with Myprotein's flavors, Impact Whey Isolate is a reasonable alternative. See our <a href="/dymatize-protein-powder-review/">Dymatize review</a> for the full range.
+          </p>
+
+          <p>
+            Where Myprotein clearly wins is flavor variety and format choice. Few brands offer as many flavors, an unflavored option, clear whey and isolate under one roof, and the frequent sales make it easy to try several. Where it loses is predictability: the scoop size, the code-driven pricing and the differences between markets all make it harder to compare at a glance.
+          </p>
+
+          <p>
+            If you are outside the US and UK, regional differences can be large. In India, for example, Myprotein sells regional flavors and competes with local brands such as MuscleBlaze, which we cover in our <a href="/muscleblaze-protein-review/">MuscleBlaze protein review</a>. Always read the local label, because protein per scoop can differ from what US or UK reviews describe.
+          </p>
+        </div>
+
+        <div id="who-should-skip" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            10. Who Should Skip Myprotein
+          </h2>
+
+          <p>
+            Skip the concentrate if you are <strong>lactose sensitive</strong>. Impact Whey Protein carries more lactose than an isolate, and if regular whey leaves you bloated, a cheaper price will not make up for it. Move up to Impact Whey Isolate or another isolate instead, and talk to a doctor if your symptoms are more than mild.
+          </p>
+
+          <p>
+            Skip it if you want <strong>one simple purchase</strong>. If you dislike waiting for sales, comparing codes and checking whether a flavor is available in your country, a US brand stocked in many sizes on Amazon will save you time. The value advantage of Myprotein shrinks a lot when you pay anything close to list price.
+          </p>
+
+          <p>
+            Skip it if you <strong>need a guaranteed certification</strong> on the exact product and flavor. Some Myprotein products are Informed Choice listed, but coverage varies. Tested athletes should either confirm the specific tub in the database or choose a brand whose whole range is NSF Certified for Sport.
+          </p>
+
+          <p>
+            And as with any protein powder, check with a doctor or registered dietitian before using it if you have kidney disease, are pregnant or breastfeeding, take medication that interacts with diet, or have a milk allergy. Whey isolate is low in lactose but is still milk protein. This review is general information, not medical advice.
+          </p>
+        </div>
+
+        <!-- Common Mistakes -->
+        <div id="mistakes" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            11. Common Mistakes to Avoid
+          </h2>
+
+          <div class="space-y-6 my-8">
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Comparing price per serving</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Myprotein's Impact Whey scoop is 25 g of powder with roughly 20 to 22 g of protein, while most US scoops deliver 24 to 25 g. Comparing price per serving makes Myprotein look cheaper than it is. Convert every option to cost per 25 g of protein, and the real gap becomes clear.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Paying list price</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Myprotein's list prices on its own site are set with discounts in mind, and codes of a third off or more are common. Buying at full price removes most of the value argument for the brand. If there is no sale running, wait a week or compare the Amazon isolate listing instead.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Buying UK flavors from random sellers</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Vimto and other UK-only flavors show up on US marketplaces through import sellers, often at a steep mark-up and sometimes close to their best-before date. If you buy one, check the seller, the date and the label language. For everyday use, the US Clear Whey flavors are the better buy.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Choosing concentrate when lactose bothers you</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Impact Whey Protein is the cheapest product in the range, but it is a concentrate with more lactose than an isolate. If regular whey leaves you bloated, you will not finish the bag. Impact Whey Isolate costs more but is the better choice for sensitive stomachs.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Assuming certification covers everything</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Some Myprotein products carry the Informed Choice mark, but certifiers list specific products and flavors. Tested athletes should search the exact product in the database before relying on it. A logo seen on a UK tub or another flavor is not proof for the tub in your cupboard.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ -->
+        <div id="faq" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            12. Frequently Asked Questions
+          </h2>
+
+          <div class="space-y-6">
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is Myprotein a good brand?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Yes for value-focused buyers. Myprotein makes straightforward whey products with honest labels, a huge flavor range and frequent discounts that often make it among the cheapest mainstream whey per gram of protein. Its weaknesses are a small Impact Whey scoop, prices that depend on discount codes and differences between countries. It is owned by THG PLC, a UK company listed in London.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">How much protein is in Myprotein Impact Whey?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                A 25 g scoop of Impact Whey Protein provides roughly 20 to 22 g of protein, depending on flavor and market, per label figures at the time of writing. Unflavored sits at the higher end. To reach 25 g of protein you need about 30 g of powder. The US Impact Whey Isolate lists about 25 g of protein per scoop.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Can you buy Myprotein on Amazon US?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Yes, partly. Impact Whey Isolate is listed on Amazon US, sold by Myprotein North America and shipped by Amazon, and Clear Whey Isolate is also listed. The classic Impact Whey Protein concentrate did not appear as a brand-sold Amazon US listing when we checked, so buy that one from Myprotein's US site, ideally during a sale.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">What is Vimto protein powder?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                It is Myprotein Clear Whey Isolate in a licensed Vimto flavor, based on the British fruit cordial. UK listings show about 20 g of protein and around 89 calories per roughly 26 g serving, sweetened with sucralose. It is sold through Myprotein and UK retailers such as Sainsbury's, Boots and Costco UK, and is hard to find from brand-authorized sellers in the US.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is Myprotein Impact Whey good for weight loss?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                It can help because it adds protein for relatively few calories, roughly 90 to 105 per 25 g scoop, which supports fullness and muscle retention in a calorie deficit. Impact Whey Isolate is slightly leaner still. Protein powder only supports weight loss as part of an overall deficit, and it should not replace whole meals for long periods.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is Myprotein third-party tested?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Some Myprotein products carry the Informed Choice mark, including UK listings for Impact Whey Isolate. Coverage varies by product, flavor and country, so tested athletes should look up the exact product in the Informed Choice or Informed Sport database. We could not find batch heavy-metal reports published by the brand.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is Myprotein better than Optimum Nutrition?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Neither is better across the board. Myprotein is usually cheaper per 25 g of protein on sale and offers more flavors and formats. Optimum Nutrition Gold Standard gives about 24 g of protein per scoop, is widely available on Amazon and is promoted as Informed Choice certified, which makes it the simpler choice for many US buyers.
+              </p>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Related Guides -->
+        <div class="mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">Related Whey Protein Guides</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <a href="/best-whey-protein-powder/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#FF4500] font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Whey Protein Powder</h3>
+              <p class="text-gray-500 text-sm mt-2">Our ranked whey picks on protein per scoop, testing and cost per 25 g.</p>
+            </a>
+            <a href="/optimum-nutrition-protein-powder-review/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#38BDF8] font-black text-xs uppercase tracking-widest mb-2">Brand Review</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Optimum Nutrition Review</h3>
+              <p class="text-gray-500 text-sm mt-2">Gold Standard and the rest of the ON range, label-checked.</p>
+            </a>
+            <a href="/best-clear-protein-powder/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#22C55E] font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Clear Protein Powder</h3>
+              <p class="text-gray-500 text-sm mt-2">Juice-style clear wheys compared, including Myprotein's.</p>
+            </a>
+          </div>
+        </div>
+
+        <!-- Closing -->
+        <div class="mt-16 bg-gray-900 text-white rounded-2xl p-8">
+          <h2 class="text-2xl font-black text-white mb-4">The Bottom Line</h2>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            Myprotein earns its popularity on value and variety, not on any single standout feature. Impact Whey Protein is a decent concentrate that becomes one of the cheaper wheys around when you buy it on sale and account for the small scoop. Impact Whey Isolate is the better powder and the one US buyers can get on Amazon from the brand itself. Clear Whey, including the UK Vimto flavor, is a strong pick if you want a light drink instead of a shake.
+          </p>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            If you are lactose sensitive, need a certified tub for tested sport or simply want one predictable purchase, a US brand such as Optimum Nutrition or Dymatize will suit you better. Otherwise, buy during a sale, compare cost per 25 g of protein rather than per scoop, and stick to brand-sold listings.
+          </p>
+        </div>
+
+        <MoreInCategory category="Brand Reviews" links={moreInCategory} />
+
+        <AuthorBio />
+      </div>
+    </div>
+  </article>
+</Layout>

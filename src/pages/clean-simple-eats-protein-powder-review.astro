@@ -1,0 +1,952 @@
+---
+import Layout from "../layouts/Layout.astro";
+import MoreInCategory from "../components/MoreInCategory.astro";
+import { AUTHORS, DEFAULT_AUTHOR, authorSchema } from "../data/authors";
+import { SITE_NAME, SITE_URL } from "../data/site";
+import AuthorAvatar from "../components/AuthorAvatar.astro";
+import QuickPicks from "../components/QuickPicks.astro";
+import AuthorBio from "../components/AuthorBio.astro";
+import { amazonLink } from "../data/affiliate";
+import TrustBadge from "../components/TrustBadge.astro";
+import SocialProof from "../components/SocialProof.astro";
+import SpecGrid from "../components/SpecGrid.astro";
+import productImages from "../data/product-images.json";
+import { pageDates } from "../data/dates";
+
+const moreInCategory = [
+  {
+    "title": "Best Tasting Protein Powder",
+    "url": "/best-tasting-protein-powder/"
+  },
+  {
+    "title": "Best Whey Protein Isolate",
+    "url": "/best-whey-protein-isolate/"
+  },
+  {
+    "title": "Best Protein Powder for Women",
+    "url": "/best-protein-powder-for-women/"
+  }
+];
+const author = AUTHORS[DEFAULT_AUTHOR];
+const dates = pageDates(Astro.url.pathname, { published: "2026-10-19", modified: "2026-10-19" });
+const title = "Clean Simple Eats Protein Powder Review: Flavor, Label and Real Cost";
+const description =
+  "Clean Simple Eats protein powder reviewed on the label: 20 g of grass-fed whey isolate, stevia, the new formula, the smaller tubs and the real cost per 25 g.";
+
+const PRODUCTS: {
+  id: string;
+  name: string;
+  brand?: string;
+  badge: string;
+  category: string;
+  description: string;
+  pros: string[];
+  cons: string[];
+  bottomLine: string;
+  specs?: Record<string, string>;
+  rating?: number;
+  reviewCount?: number;
+  amazonUrl?: string;
+}[] = [
+  {
+    "id": "clean-simple-eats-whey-protein-powder",
+    "name": "Clean Simple Eats Whey Isolate Protein Powder, Simply Vanilla",
+    "brand": "Clean Simple Eats",
+    "badge": "Best Overall",
+    "category": "Grass-fed whey isolate, stevia-sweetened",
+    "description": "The flagship: about 20 g of grass-fed whey protein isolate in roughly 110 calories per 33 g scoop, sweetened with stevia, with a small digestive enzyme blend, per the label at the time of writing. Simply Vanilla is the most versatile flavor for shakes, oats and baking, and the tub is far cheaper per serving than stick packs.",
+    "pros": [
+      "Light formula, about 110 calories and 1 g sugar per scoop (varies by flavor)",
+      "No sucralose or acesulfame potassium",
+      "Grass-fed whey isolate, low in lactose and fat",
+      "Mostly positive buyer feedback on taste"
+    ],
+    "cons": [
+      "About 20 g of protein, lower than most isolates",
+      "High cost per 25 g of protein",
+      "Recent reformulation divides long-time buyers"
+    ],
+    "bottomLine": "A pleasant, light, stevia-sweetened whey isolate; buy it for flavor, not value.",
+    "specs": {
+      "Protein per serving": "About 20 g (label, varies by flavor)",
+      "Calories": "About 110",
+      "Third-party testing": "Brand claim; no NSF or Informed Choice confirmed",
+      "Best for": "Stevia fans, baking, light shakes"
+    },
+    "amazonUrl": "https://www.amazon.com/dp/B0BHZTH6W6"
+  },
+  {
+    "id": "clean-simple-eats-whey-protein-stick-packs",
+    "name": "Clean Simple Eats Whey Isolate Protein, Brownie Batter, 10 Stick Packs",
+    "brand": "Clean Simple Eats",
+    "badge": "Best for Trying Flavors",
+    "category": "Single-serve whey isolate packets",
+    "description": "The same grass-fed whey isolate in single-serve sticks, at about 20 g of protein per packet per the label. Chocolate Brownie Batter is the brand's best-known flavor. Sticks are the low-risk way to test a flavor, or the new formula, before buying a full tub, and they suit travel and gym bags.",
+    "pros": [
+      "Low-commitment way to try a flavor",
+      "Portable, pre-measured servings",
+      "Same stevia-sweetened isolate as the tub"
+    ],
+    "cons": [
+      "Costs more per serving than the tub",
+      "Chocolate flavors run higher in sodium than vanilla"
+    ],
+    "bottomLine": "Buy a box before a tub, then switch to the tub for daily use.",
+    "specs": {
+      "Protein per serving": "About 20 g (label)",
+      "Calories": "About 110 (varies by flavor)",
+      "Third-party testing": "Brand claim; no NSF or Informed Choice confirmed",
+      "Best for": "Sampling flavors, travel"
+    },
+    "amazonUrl": "https://www.amazon.com/dp/B0912XJ8H4"
+  },
+  {
+    "id": "clean-simple-eats-clear-protein",
+    "name": "Clean Simple Eats Clear Protein Powder",
+    "brand": "Clean Simple Eats",
+    "badge": "Best Clear Option",
+    "category": "Clear whey isolate drink mix",
+    "description": "A juice-style clear whey isolate with about 20 g of protein per serving, in fruit flavors such as Blue Bahama and Pineapple Passion, sweetened with stevia extracts, per retailer listings at the time of writing. It suits people who find milky shakes heavy after training or in hot weather.",
+    "pros": [
+      "Light, juice-like texture instead of a milky shake",
+      "Stevia-sweetened, no artificial colors per the listing",
+      "Ultra-filtered isolate, described as low-lactose"
+    ],
+    "cons": [
+      "Same modest 20 g dose at a premium price",
+      "Contains coconut milk powder, a labeled tree-nut allergen"
+    ],
+    "bottomLine": "A good clear whey for stevia fans; compare it with the wider clear category first.",
+    "specs": {
+      "Protein per serving": "About 20 g (label)",
+      "Protein source": "Whey protein isolate",
+      "Third-party testing": "Brand claim; no NSF or Informed Choice confirmed",
+      "Best for": "Post-workout, hot weather"
+    }
+  },
+  {
+    "id": "ghost-whey-protein",
+    "name": "Ghost Whey Protein",
+    "brand": "Ghost",
+    "badge": "Alternative: More Protein",
+    "category": "Whey blend with licensed dessert flavors",
+    "description": "If you love dessert flavors but want more protein per scoop, Ghost is the obvious alternative: about 25 g of protein per its label, with licensed flavors such as Chips Ahoy and Nutter Butter that buyers widely praise. It uses non-nutritive sweeteners, including sucralose in many flavors, so it is not for stevia-only buyers.",
+    "pros": [
+      "About 25 g of protein per scoop (varies by flavor)",
+      "Licensed dessert flavors with strong buyer feedback",
+      "Usually better protein per dollar than Clean Simple Eats"
+    ],
+    "cons": [
+      "Sucralose in many flavors",
+      "Very sweet for some daily drinkers"
+    ],
+    "bottomLine": "The better value flavor-first whey if you are fine with sucralose.",
+    "specs": {
+      "Protein per serving": "About 25 g (label, varies by flavor)",
+      "Sweetener": "Non-nutritive, includes sucralose (check flavor)",
+      "Third-party testing": "Check brand and certifier database",
+      "Best for": "Dessert-style shakes"
+    }
+  },
+  {
+    "id": "transparent-labs-grass-fed-whey-protein-isolate",
+    "name": "Transparent Labs 100% Grass-Fed Whey Protein Isolate",
+    "brand": "Transparent Labs",
+    "badge": "Alternative: Stevia Upgrade",
+    "category": "Grass-fed whey isolate, stevia-sweetened",
+    "description": "For buyers who like the stevia-only idea but want a bigger dose, Transparent Labs delivers about 28 g of protein per scoop per its label, depending on flavor, and the brand publishes lab results. It costs more per tub than Clean Simple Eats but often less per 25 g of protein.",
+    "pros": [
+      "About 28 g of protein per scoop (varies by flavor)",
+      "Stevia-sweetened, no artificial sweeteners",
+      "Published lab results"
+    ],
+    "cons": [
+      "Higher sticker price per tub",
+      "Fewer dessert-style flavors"
+    ],
+    "bottomLine": "The upgrade for stevia fans who want efficiency as well as a clean label.",
+    "specs": {
+      "Protein per serving": "About 28 g (label, varies by flavor)",
+      "Sweetener": "Stevia",
+      "Third-party testing": "Published lab results",
+      "Best for": "Avoiding artificial sweeteners"
+    }
+  }
+];
+
+const schema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Home",
+          item: `${SITE_URL}/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Best Lists",
+          item: `${SITE_URL}/best-of/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 3,
+          name: "Clean Simple Eats Protein Review",
+          item: `${SITE_URL}/clean-simple-eats-protein-powder-review/`,
+        },
+      ],
+    },
+    {
+      "@type": "FAQPage",
+      mainEntity: [
+        {
+          "@type": "Question",
+          "name": "Is Clean Simple Eats protein powder good?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It is a good-tasting, light whey isolate. Each scoop gives about 20 g of grass-fed whey protein in roughly 110 calories, sweetened with stevia, per the label at the time of writing. Buyer feedback on flavor is mostly positive. Its weak point is value: the 20 g dose and premium price make it expensive per 25 g of protein."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How much protein is in Clean Simple Eats protein powder?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "About 20 g per scoop in the standard whey isolate, per the label at the time of writing, with the clear protein also listed at about 20 g. Figures vary slightly by flavor. To reach a 25 g serving, use about 1.25 scoops or mix one scoop with milk, which adds roughly 8 g per cup of skim milk."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What sweetener does Clean Simple Eats use?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The protein is sweetened with stevia leaf extract, and some retailer listings mention monk fruit in certain flavors. It contains no sucralose or acesulfame potassium. The newer formula also drops xylitol, a sugar alcohol that bothers some stomachs. Check the label on your flavor, because ingredients can differ across the range."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is Clean Simple Eats protein whey isolate or concentrate?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The standard powder and the clear line are both listed as grass-fed whey protein isolate, the more filtered form of whey. Isolate is lower in lactose and fat than concentrate, which suits light shakes and many people with mild lactose sensitivity. People with a true milk allergy should avoid it entirely."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is Clean Simple Eats protein third-party tested?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The brand says its products are third-party tested for pathogens, heavy metals and gluten. We could not confirm NSF Certified for Sport or Informed Choice certification at the time of writing, and we did not find published lot certificates. Tested athletes should pick a certified product. Most other buyers can treat this as a minor gap."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is Clean Simple Eats good for weight loss?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It can help as part of a calorie deficit, because a scoop delivers about 20 g of protein in roughly 110 calories, and protein helps with fullness. No powder causes weight loss on its own. Use it to replace a higher-calorie snack, and talk to a doctor or dietitian if you have a medical condition or take medication."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is Clean Simple Eats protein sold on Amazon?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Clean Simple Eats whey isolate tubs, stick packs and variety packs are listed on Amazon, and the brand also sells through Target, Walmart, HEB and its own site. Compare the serving count across listings, because package sizes have changed, and recheck the flavor's label on the listing before you order."
+          }
+        }
+      ],
+    },
+    {
+      "@type": "Article",
+      headline: title,
+      author: authorSchema(),
+      datePublished: dates.published,
+      dateModified: dates.modified,
+      publisher: { "@type": "Organization", name: SITE_NAME, url: SITE_URL },
+    },
+    {
+      "@type": "ItemList",
+      name: title,
+      numberOfItems: PRODUCTS.length,
+      itemListElement: PRODUCTS.map((product, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name: product.name,
+        url: new URL(`#${product.id}`, Astro.url).toString(),
+      })),
+    },
+    ...PRODUCTS.map((product) => ({
+      "@type": "Product",
+      name: product.name,
+      description: product.description,
+      brand: {
+        "@type": "Brand",
+        name: product.brand ?? product.name.split(" ")[0],
+      },
+    })),
+  ],
+};
+---
+
+<Layout
+  title={title}
+  description={description}
+  ogType="article"
+  article={{
+    publishedTime: dates.published,
+    modifiedTime: dates.modified,
+    author: author.name,
+    section: "Brand Reviews",
+    tags: [
+      "clean simple eats protein powder",
+      "clean simple eats protein",
+      "cse protein powder",
+      "clean simple eats review"
+    ],
+  }}
+  jsonLd={schema}
+  stickyCta={{
+    text: "See Our Best Tasting Picks",
+    link: "/best-tasting-protein-powder/",
+  }}
+>
+  <article class="relative overflow-hidden">
+    <!-- Hero Section -->
+    <div class="bg-gray-900 py-16 lg:py-24 relative overflow-hidden">
+      <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(circle at 20% 20%, #38BDF8 0, transparent 45%), radial-gradient(circle at 80% 60%, #FF4500 0, transparent 40%);"></div>
+      <div class="max-w-4xl mx-auto px-4 relative z-10 text-center">
+        <div class="flex justify-center mb-6">
+          <TrustBadge />
+        </div>
+        <div class="flex justify-center gap-3 mb-6">
+          <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#FF4500]/20 text-[#FF4500] text-xs font-black uppercase tracking-widest border border-[#FF4500]/30">
+            Brand Review
+          </span>
+          <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-green-500/10 text-green-400 text-xs font-bold uppercase tracking-widest border border-green-500/20">
+            Label-Checked
+          </span>
+        </div>
+        <h1 class="text-4xl lg:text-6xl font-black text-white leading-tight mb-8">
+          Clean Simple Eats Protein Powder: <span class="text-[#38BDF8]">Worth the Hype?</span>
+        </h1>
+        <p class="text-xl text-gray-300 leading-relaxed mb-8 max-w-3xl mx-auto">
+          A dessert-flavored, stevia-sweetened whey isolate with a loyal following. Here is what the label actually gives you, which tub to buy, and when a cheaper whey makes more sense.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a
+            href="#clean-simple-eats-whey-protein-powder"
+            class="px-8 py-4 bg-[#FF4500] hover:bg-[#E63E00] text-white font-black rounded-xl shadow-lg transition-all no-underline"
+          >
+            See Our #1 Pick
+          </a>
+          <a
+            href="#which-one"
+            class="px-8 py-4 bg-white/10 hover:bg-white/20 text-white font-bold rounded-xl border border-white/10 no-underline"
+          >
+            Read the Label Breakdown
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Author & Meta -->
+    <div class="max-w-3xl mx-auto px-4 pt-12">
+      <div class="flex items-center gap-6 border-b border-gray-100 pb-8">
+        <div class="flex items-center gap-3">
+          <AuthorAvatar size={48} />
+          <div>
+            <p class="text-sm font-bold text-gray-900">{author.name}</p>
+            <p class="text-xs text-gray-500 uppercase tracking-widest">{author.role}</p>
+          </div>
+        </div>
+        <div class="h-10 w-px bg-gray-200 hidden sm:block"></div>
+        <div class="hidden sm:block">
+          <p class="text-sm font-bold text-gray-900">Last Updated</p>
+          <p class="text-xs text-gray-500">{dates.display}</p>
+        </div>
+        <div class="hidden sm:block ml-auto">
+          <SocialProof />
+        </div>
+      </div>
+    </div>
+
+    <!-- Table of Contents -->
+    <div class="max-w-3xl mx-auto px-4 py-10">
+      <div class="bg-gray-50 border border-gray-200 rounded-2xl p-6 lg:p-8">
+        <h2 class="text-lg font-black text-gray-900 mb-4 flex items-center gap-2">
+          In This Guide
+        </h2>
+        <nav class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <a href="#verdict" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">1. The Short Verdict</a>
+          <a href="#label" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">2. What Is Actually in the Tub</a>
+          <a href="#top-picks" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">3. The Lineup</a>
+          <a href="#which-one" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">4. Which Product to Buy</a>
+          <a href="#new-formula" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">5. The New Formula and Smaller Tubs</a>
+          <a href="#cost" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">6. Cost per 25 g of Protein</a>
+          <a href="#testing" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">7. Testing and Certifications</a>
+          <a href="#who-skip" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">8. Who Should Skip It</a>
+          <a href="#compare" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">9. How It Compares</a>
+          <a href="#how-to-use" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">10. Getting the Most From It</a>
+          <a href="#mistakes" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">11. Common Mistakes</a>
+          <a href="#faq" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">12. FAQ</a>
+        </nav>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="max-w-3xl mx-auto px-4 pb-16 lg:pb-24">
+      <div class="prose prose-lg prose-blue max-w-none text-gray-700 leading-relaxed">
+        <p class="text-2xl font-medium text-gray-900 mb-8 italic">
+          Clean Simple Eats sells a good-tasting, naturally sweetened whey isolate, but it is a 20 g protein that is priced like a 25 g one. Buy it for the flavors and the short ingredient list, not for value, and check the serving count on the tub before you pay.
+        </p>
+
+        <QuickPicks products={PRODUCTS} />
+
+        <div id="verdict" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            1. The Short Verdict
+          </h2>
+
+          <p>
+            Clean Simple Eats is a Utah company that started as a meal-plan and recipe business and moved into supplements in 2018, according to a profile of co-founders Erika and JJ Peterson in Utah Business. Its protein powder is the product most people find it through, usually by way of a recipe or a social post showing a dessert-style flavor such as Chocolate Brownie Batter, Mint Chocolate Cookie or Cake Batter.
+          </p>
+
+          <p>
+            The core product is simple to describe. Each scoop delivers about 20 g of protein from grass-fed whey protein isolate, in roughly 110 calories, sweetened with stevia rather than sucralose, with a small digestive enzyme blend added, per the label and retailer listings at the time of writing. That is a clean, light formula, and buyer feedback on taste is mostly positive, which is the reason the brand has the following it does.
+          </p>
+
+          <p>
+            The catch is the dose and the price together. Twenty grams is on the low side for a whey isolate, where 25 g per scoop is common, and Clean Simple Eats charges a premium price for it. That pushes the cost per 25 g of protein well above mainstream wheys. You are paying for flavor, a stevia-only sweetener system and a brand you like, and that can be a perfectly good reason to buy, as long as you know it is the reason.
+          </p>
+
+          <p>
+            Our short version: if you have tried artificially sweetened proteins and hated the aftertaste, or you want a light whey for baking and overnight oats, Clean Simple Eats is a reasonable pick. If you are trying to hit a high daily protein target on a budget, it is not the efficient choice, and our <a href="/best-tasting-protein-powder/">best tasting protein powder</a> guide lists options that taste good and give you more protein per dollar.
+          </p>
+
+          <div class="bg-gray-900 text-white rounded-2xl p-6 lg:p-8 my-8">
+            <p class="text-xs font-black uppercase tracking-widest text-[#38BDF8] mb-3">THE VERDICT</p>
+            <p class="text-xl font-bold text-white mb-3">A good-tasting light whey isolate, priced for the brand</p>
+            <p class="text-gray-300 leading-relaxed m-0">About 20 g of grass-fed whey isolate in roughly 110 calories, stevia-sweetened, with a recent reformulation that some buyers dislike. Worth it for flavor-first buyers. Skip it if cost per gram of protein is what you care about.</p>
+          </div>
+        </div>
+
+        <div id="label" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            2. What Is Actually in the Tub
+          </h2>
+
+          <p>
+            The protein source in the standard Clean Simple Eats powder is grass-fed whey protein isolate, which retailer listings describe as non-GMO and soy-free. Isolate is the more filtered form of whey, with less lactose and fat than concentrate, so it is a sensible base for a low-calorie shake. The Simply Vanilla label lists about 20 g of protein in a 33 g scoop, with 0 g of fat, about 9 g of total carbohydrate, 1 g of sugar and 0 g of added sugar, per the HEB and Walmart listings at the time of writing.
+          </p>
+
+          <p>
+            Calories land around 110 per scoop for Simply Vanilla and Chocolate Brownie Batter, and database listings put some flavors slightly higher, at about 120. Sodium varies more than you might expect: retailer labels show roughly 180 mg in Simply Vanilla and about 230 mg in Chocolate Brownie Batter. None of that is a problem in a normal diet, but it is worth knowing if you are tracking sodium closely.
+          </p>
+
+          <p>
+            The sweetener is stevia leaf extract, and some retailer summaries mention monk fruit in certain flavors, so read the panel on the flavor you buy. There is no sucralose or acesulfame potassium, which is the main draw for people who get a lingering aftertaste or stomach upset from artificial sweeteners. Several flavors also contain coconut, which the FDA treats as a tree nut for allergen labeling, so anyone with a coconut allergy should check before buying.
+          </p>
+
+          <p>
+            The added digestive enzyme blend is listed at about 100 mg per serving, made up of amylase, lipase, cellulase and protease, per the SuppCo label summary, with individual amounts not disclosed. That is a modest dose. It will not hurt, but it is not a reason to choose this powder over another isolate, and isolate is already low in lactose for most people. Treat the enzymes as a minor extra rather than a feature.
+          </p>
+
+          <div class="overflow-hidden border border-gray-200 rounded-2xl my-8">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Label figure</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Simply Vanilla (per scoop)</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">What it means</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Protein</td>
+                    <td class="px-4 py-4 text-gray-700">About 20 g</td>
+                    <td class="px-4 py-4 text-gray-700">Lower than the 25 g common in isolates</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Calories</td>
+                    <td class="px-4 py-4 text-gray-700">About 110</td>
+                    <td class="px-4 py-4 text-gray-700">Light; good for cutting and baking</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Sugar</td>
+                    <td class="px-4 py-4 text-gray-700">About 1 g, 0 g added</td>
+                    <td class="px-4 py-4 text-gray-700">Sweetness comes from stevia</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Protein source</td>
+                    <td class="px-4 py-4 text-gray-700">Grass-fed whey isolate</td>
+                    <td class="px-4 py-4 text-gray-700">Low lactose, low fat</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Picks -->
+        <div id="top-picks" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            3. The Clean Simple Eats Lineup, Ranked
+          </h2>
+
+          <p>
+            These are the Clean Simple Eats protein products we could confirm on retailer listings at the time of writing, flagship first, followed by two alternatives from other brands for buyers who want more protein per scoop or a lower cost. Figures are per the label at the time of writing and vary by flavor.
+          </p>
+
+          {PRODUCTS.map((product, index) => (
+            <div id={product.id} class="scroll-mt-24 mt-12 first:mt-8">
+              <div class="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                <div class="bg-gray-900 px-6 py-4 flex items-center justify-between">
+                  <div class="flex items-center gap-3">
+                    <span class="bg-[#FF4500] text-white w-8 h-8 rounded-full flex items-center justify-center text-sm font-black">
+                      {index + 1}
+                    </span>
+                    {productImages[product.id] && (
+                      <img
+                        src={productImages[product.id]}
+                        alt={product.name}
+                        loading="lazy"
+                        width="40"
+                        height="40"
+                        class="w-10 h-10 rounded-lg bg-white object-contain p-1 shrink-0"
+                      />
+                    )}
+                    <div>
+                      <p class="text-white font-black text-lg">{product.name}</p>
+                      <p class="text-gray-400 text-xs">{product.category}</p>
+                    </div>
+                  </div>
+                  <span class="bg-[#38BDF8]/20 text-[#38BDF8] px-3 py-1 rounded-full text-xs font-bold hidden sm:block">
+                    {product.badge}
+                  </span>
+                </div>
+                <div class="p-6">
+                  {product.rating && (
+                  <div class="flex items-center gap-2 mb-4">
+                    <div class="flex text-yellow-400">
+                      {[...Array(5)].map((_, i) => (
+                        <svg
+                          class={`w-4 h-4 ${i < Math.floor(product.rating) ? "fill-current" : "text-gray-200"}`}
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                        >
+                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        </svg>
+                      ))}
+                    </div>
+                    <span class="text-gray-500 text-sm font-bold">{product.rating}</span>
+                    {product.reviewCount && <span class="text-gray-400 text-xs">({product.reviewCount.toLocaleString()} retailer reviews)</span>}
+                  </div>
+                  )}
+
+                  <SpecGrid specs={product.specs} />
+
+                  <p class="text-gray-700 leading-relaxed mb-6">{product.description}</p>
+
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                    <div class="bg-green-50 rounded-xl p-4">
+                      <p class="text-xs font-black uppercase tracking-widest text-green-700 mb-3">Pros</p>
+                      <ul class="space-y-2">
+                        {product.pros.map((pro) => (
+                          <li class="flex items-start gap-2 text-sm text-green-800">
+                            <svg class="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            {pro}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div class="bg-red-50 rounded-xl p-4">
+                      <p class="text-xs font-black uppercase tracking-widest text-red-700 mb-3">Cons</p>
+                      <ul class="space-y-2">
+                        {product.cons.map((con) => (
+                          <li class="flex items-start gap-2 text-sm text-red-800">
+                            <svg class="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                            {con}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+
+                  <div class="bg-gray-50 rounded-xl p-4 border border-gray-100">
+                    <p class="text-xs font-black uppercase tracking-widest text-gray-500 mb-1">The Bottom Line</p>
+                    <p class="text-gray-900 font-bold">{product.bottomLine}</p>
+                  </div>
+
+                  <a
+                    href={amazonLink(product.amazonUrl, product.name, product.id)}
+                    target="_blank"
+                    rel="sponsored nofollow noopener"
+                    class="mt-6 block bg-[#FF4500] hover:bg-[#E63E00] text-white text-center py-4 rounded-xl font-black no-underline transition-colors uppercase tracking-widest text-sm"
+                  >
+                    Check Price &rarr;
+                  </a>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div id="which-one" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            4. Which Clean Simple Eats Product to Buy
+          </h2>
+
+          <p>
+            For most people the answer is the standard whey isolate in a tub, in whichever flavor you are most likely to finish. Simply Vanilla is the safest first buy because it works in shakes, oats, yogurt, pancakes and protein desserts, and it is the flavor that tends to show up on Amazon with the most buyer feedback. Chocolate Brownie Batter is the brand's other signature flavor and the better pick if you mostly drink your protein with milk.
+          </p>
+
+          <p>
+            Single-serve stick packs, sold in 10-count boxes, carry the same 20 g of protein and are useful for travel, the gym bag or trying several flavors before you commit to a tub. They cost more per serving than the tub, so do not make them your everyday supply. The variety pack is the cheapest way to find out whether you like the dessert flavors, which matters because buyer opinion on individual flavors is more divided than on the brand as a whole.
+          </p>
+
+          <p>
+            Clean Simple Eats Clear Protein is the third option. It is also whey isolate at about 20 g per serving, but it mixes into a thin, juice-like drink in fruit flavors such as Blue Bahama and Pineapple Passion, sweetened with stevia extracts and colored with ingredients such as spirulina, per Target's ingredient listing. If you find milky shakes heavy after training or in hot weather, a clear whey is worth a look, and our <a href="/best-clear-protein-powder/">best clear protein powder</a> guide compares it with the wider category.
+          </p>
+
+          <p>
+            We could not confirm a current plant-based or vegan Clean Simple Eats protein on the brand's main retail listings, so vegans should look elsewhere. Some third-party pages describe one, but the details conflict and we would not rely on them. If you need a dairy-free shake with a similar clean-label pitch, start with our <a href="/best-plant-based-protein-powder/">best plant-based protein powder</a> list instead.
+          </p>
+        </div>
+
+        <div id="new-formula" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            5. The New Formula and the Smaller Tubs
+          </h2>
+
+          <p>
+            Clean Simple Eats has reformulated its protein recently. Target listings now describe a new formula without xylitol or xanthan gum, and some flavors are explicitly labeled xylitol-free. On paper that is an improvement: xylitol is a sugar alcohol that causes bloating and loose stools in some people, and it is highly toxic to dogs, which matters if your scoop ever ends up on the kitchen floor.
+          </p>
+
+          <p>
+            Buyer feedback on the change is mixed. Some Target reviewers say the new formula tastes and mixes differently, a few report a stronger aftertaste, and a number of long-time customers say they preferred the old version. Others are happy with it. Because taste was the brand's main selling point, this is worth weighing, and it is one more reason to buy stick packs or a variety pack before a full tub if you are new to the brand or returning after a while.
+          </p>
+
+          <p>
+            The bigger practical change is the package size. Older tubs and the SuppCo listing show 30 servings, while current Target listings show tubs of roughly 17.6 to 21 oz with 20 servings, and several reviewers complain that the bag shrank without a matching price cut. Whether or not the price per serving moved for your retailer, always compare the serving count, not the sticker price, when you buy.
+          </p>
+
+          <p>
+            None of this makes the product bad. It does mean that older reviews, including glowing ones from a few years ago, may describe a powder that is no longer on the shelf. Weight recent buyer reviews more heavily than older ones, and if a retailer is still selling old-formula stock, check the label and expiry date so you know which version you are getting.
+          </p>
+        </div>
+
+        <div id="cost" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            6. Cost per 25 g of Protein
+          </h2>
+
+          <p>
+            Price per tub tells you almost nothing about protein value. The useful number is what you pay for each 25 g of protein, which is a typical serving target. Because a Clean Simple Eats scoop holds about 20 g, you need about 1.25 scoops to reach 25 g, and that is where the brand's premium shows up.
+          </p>
+
+          <p>
+            At the list price we saw on a 30-serving tub, roughly $60, a scoop costs about $2.00, which works out to roughly $2.50 per 25 g of protein. Amazon discounts have brought the same tub closer to $45 at times, or about $1.50 a scoop and roughly $1.90 per 25 g. Those figures are approximate, and prices move often, so recheck the current listing and the servings count before you buy.
+          </p>
+
+          <p>
+            For comparison, large tubs of mainstream whey blends such as Optimum Nutrition Gold Standard often land at well under half that cost per 25 g at regular retail prices, and even premium isolates with 25 g or more per scoop frequently come in lower. Clean Simple Eats is not a budget protein in any sense, and buying stick packs pushes the cost per gram higher still.
+          </p>
+
+          <p>
+            If the budget matters, there are two honest approaches. One is to use Clean Simple Eats as a flavor booster, mixing half a scoop with half a scoop of an unflavored whey. The other is to save it for recipes where its flavors do the most work and drink a cheaper whey day to day. Our <a href="/best-cheap-protein-powder/">best cheap protein powder</a> guide covers the lower-cost end.
+          </p>
+
+          <div class="bg-gray-900 text-white rounded-2xl p-6 lg:p-8 my-8">
+            <p class="text-xs font-black uppercase tracking-widest text-[#38BDF8] mb-4">By the Numbers (approximate)</p>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+              <div>
+                <p class="text-3xl font-black text-white">20 g</p>
+                <p class="text-gray-400 text-xs mt-1">Protein per scoop</p>
+              </div>
+              <div>
+                <p class="text-3xl font-black text-[#38BDF8]">110</p>
+                <p class="text-gray-400 text-xs mt-1">Calories, Simply Vanilla</p>
+              </div>
+              <div>
+                <p class="text-3xl font-black text-white">$1.90-2.50</p>
+                <p class="text-gray-400 text-xs mt-1">Per 25 g protein, tub</p>
+              </div>
+              <div>
+                <p class="text-3xl font-black text-[#38BDF8]">1.25</p>
+                <p class="text-gray-400 text-xs mt-1">Scoops to reach 25 g</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="testing" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            7. Testing and Certifications
+          </h2>
+
+          <p>
+            Clean Simple Eats says its products go through third-party testing, and retailer listings describe multi-stage testing of raw materials and finished product for pathogens, heavy metals and gluten. SuppCo notes ISO 17025-accredited testing behind the product but also says product-specific testing is not verified on its platform. We did not find published certificates of analysis for individual lots.
+          </p>
+
+          <p>
+            We also could not confirm NSF Certified for Sport or Informed Choice certification for Clean Simple Eats protein at the time of writing, and we found no listing in either database. That matters only for a specific group: competitive athletes who are drug tested should use a product carrying one of those certifications, because they screen for banned substances lot by lot. For everyone else, it is a nice-to-have rather than a deal breaker.
+          </p>
+
+          <p>
+            On the heavy-metal question, whey isolate is generally one of the lower-risk protein sources, because dairy proteins tend to test lower for lead and cadmium than plant proteins and cocoa-heavy blends. Chocolate flavors of any brand tend to carry more than vanilla because cacao naturally accumulates these metals from soil. If that is a concern, choose a vanilla or fruit flavor and ask the brand for recent test results.
+          </p>
+
+          <p>
+            Our general rule, explained in more depth in <a href="/is-protein-powder-safe/">is protein powder safe</a>, is that a brand claim of third-party testing is worth less than a named certification or a published lab report you can read. Clean Simple Eats sits in the middle: it makes the claim and describes its process, but you cannot independently check a certificate yet.
+          </p>
+        </div>
+
+        <div id="who-skip" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            8. Who Should Skip Clean Simple Eats
+          </h2>
+
+          <p>
+            Skip it if you are chasing muscle gain on a budget. A lifter aiming for 160 g of protein a day will notice the difference between 20 g scoops at a premium price and 25 g scoops at a mainstream price very quickly, and the extra money buys flavor rather than results. Muscle protein synthesis responds to the total protein and leucine you eat, not the brand on the tub.
+          </p>
+
+          <p>
+            Skip it if you dislike stevia. Stevia has its own aftertaste, which some people describe as bitter or licorice-like, and since it is the main sweetener here, a stevia-averse buyer will not be won over by a different flavor. If you are unsure, buy a stick pack first, or pick a sucralose-sweetened option from our <a href="/best-whey-protein-powder/">best whey protein powder</a> ranking.
+          </p>
+
+          <p>
+            Skip it if you are vegan, have a milk allergy or need a coconut-free product, because the standard line is dairy-based and several flavors contain coconut. Skip it too if you compete in a drug-tested sport, since we could not confirm an NSF or Informed Choice certification.
+          </p>
+
+          <p>
+            Finally, if you have kidney disease, are pregnant, take medication or have a significant food allergy, speak to your doctor or a registered dietitian before adding any protein powder. Nothing on this page is medical advice, and a protein shake is a convenience food, not a treatment.
+          </p>
+        </div>
+
+        <div id="compare" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            9. How It Compares With Other Flavor-First Proteins
+          </h2>
+
+          <p>
+            The closest rival in spirit is Ghost Whey, which also sells on flavor, through licensed dessert and cereal collaborations. Ghost gives you more protein per scoop, about 25 g per its label, but uses non-nutritive sweeteners that include sucralose in many flavors. If you are fine with sucralose, Ghost usually wins on protein per dollar. If you want stevia only, Clean Simple Eats has the cleaner sweetener story. Our sibling <a href="/ghost-protein-powder-review/">Ghost protein powder review</a> goes into that range in detail.
+          </p>
+
+          <p>
+            Transparent Labs Grass-Fed Whey Isolate is the better comparison for stevia fans who want a higher dose. It also uses stevia, carries more protein per scoop, about 28 g per its label depending on flavor, and the brand publishes lab results. It costs more per tub, but often less per 25 g of protein than Clean Simple Eats, which makes it the upgrade pick if you like the clean-label idea but want efficiency.
+          </p>
+
+          <p>
+            Against plant-based flavor favorites such as Orgain, Clean Simple Eats has the edge on protein quality and calories, because whey isolate delivers a complete amino acid profile with plenty of leucine in a small number of calories. Against cheap mainstream wheys, it loses on cost and wins on sweetener choice. Where it sits for you depends on which of those trade-offs you care about most.
+          </p>
+
+          <div class="overflow-hidden border border-gray-200 rounded-2xl my-8">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Product</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Protein per scoop</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Sweetener</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Cost per 25 g</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Clean Simple Eats Whey</td>
+                    <td class="px-4 py-4 text-gray-700">About 20 g</td>
+                    <td class="px-4 py-4 text-gray-700">Stevia</td>
+                    <td class="px-4 py-4 text-gray-700">High</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Ghost Whey</td>
+                    <td class="px-4 py-4 text-gray-700">About 25 g</td>
+                    <td class="px-4 py-4 text-gray-700">Includes sucralose (check flavor)</td>
+                    <td class="px-4 py-4 text-gray-700">Mid</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Transparent Labs Isolate</td>
+                    <td class="px-4 py-4 text-gray-700">About 28 g</td>
+                    <td class="px-4 py-4 text-gray-700">Stevia</td>
+                    <td class="px-4 py-4 text-gray-700">Mid to high</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Optimum Nutrition Gold Standard</td>
+                    <td class="px-4 py-4 text-gray-700">About 24 g</td>
+                    <td class="px-4 py-4 text-gray-700">Includes sucralose (check flavor)</td>
+                    <td class="px-4 py-4 text-gray-700">Low</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div id="how-to-use" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            10. Getting the Most From Clean Simple Eats
+          </h2>
+
+          <p>
+            Because the brand grew out of recipes, its powders are designed to be cooked and blended, and that is where they earn their price. Stir a scoop into Greek yogurt, overnight oats or a mug cake, and you add about 20 g of protein without much extra fat or sugar. Whey isolate can turn rubbery if baked at high heat for long, so mix it into batters with some moisture and pull baked goods a little early.
+          </p>
+
+          <p>
+            For shakes, the flavors taste richer with milk than with water, but milk adds calories and protein of its own. Eight ounces of skim milk adds roughly 8 g of protein, which takes a single scoop to about 28 g. That is a simple way to hit a 25 g serving without paying for a second scoop, and it improves the texture too.
+          </p>
+
+          <p>
+            If you are using protein powder to help with appetite during a cut, the light calorie count is a real advantage. A scoop with water, ice and a little cinnamon is a low-calorie snack that keeps you fuller than most sweets. Pair it with whole-food protein through the day rather than leaning on shakes for everything; our <a href="/how-much-protein-do-i-need/">how much protein do I need</a> guide shows how to set a daily target.
+          </p>
+
+          <p>
+            Finally, rotate flavors with care. The dessert flavors are fun, but buyers who drink protein every day sometimes tire of sweet profiles. Keeping a tub of Simply Vanilla as the daily driver and a second flavor for treats is the setup most likely to keep you from abandoning a half-full tub.
+          </p>
+        </div>
+
+        <!-- Common Mistakes -->
+        <div id="mistakes" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            11. Common Mistakes to Avoid
+          </h2>
+
+          <div class="space-y-6 my-8">
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Comparing tubs by sticker price</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Clean Simple Eats tubs have moved between 30 and 20 servings depending on the version and retailer. A cheaper-looking tub can cost more per serving. Divide the price by servings, then adjust for the 20 g dose, before deciding whether a deal is actually a deal.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Treating one scoop as a full serving</h3>
+              <p class="text-gray-700 text-sm m-0">
+                One scoop gives about 20 g of protein, not the 25 g many people aim for after training. If you want 25 g, use about 1.25 scoops or mix it with milk. Otherwise you are quietly under-dosing every shake while paying a premium for it.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Trusting old reviews of the old formula</h3>
+              <p class="text-gray-700 text-sm m-0">
+                The brand reformulated to remove xylitol and xanthan gum, and buyers report changes in taste and texture. Reviews from a few years ago may describe a different powder. Read recent reviews first, and try stick packs before committing to a full tub.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Ignoring the coconut allergen</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Several Clean Simple Eats flavors, including the clear line, contain coconut, which US labeling treats as a tree nut. People with a coconut allergy should read every flavor's allergen statement, because it varies across the range and between the tub and stick formats.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Buying it for drug-tested sport</h3>
+              <p class="text-gray-700 text-sm m-0">
+                We could not confirm NSF Certified for Sport or Informed Choice certification. A brand testing claim is not the same as lot-by-lot banned-substance screening. Competitive athletes who are tested should choose a certified product and check the certifier database for the exact flavor.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ -->
+        <div id="faq" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            12. Frequently Asked Questions
+          </h2>
+
+          <div class="space-y-6">
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is Clean Simple Eats protein powder good?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                It is a good-tasting, light whey isolate. Each scoop gives about 20 g of grass-fed whey protein in roughly 110 calories, sweetened with stevia, per the label at the time of writing. Buyer feedback on flavor is mostly positive. Its weak point is value: the 20 g dose and premium price make it expensive per 25 g of protein.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">How much protein is in Clean Simple Eats protein powder?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                About 20 g per scoop in the standard whey isolate, per the label at the time of writing, with the clear protein also listed at about 20 g. Figures vary slightly by flavor. To reach a 25 g serving, use about 1.25 scoops or mix one scoop with milk, which adds roughly 8 g per cup of skim milk.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">What sweetener does Clean Simple Eats use?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                The protein is sweetened with stevia leaf extract, and some retailer listings mention monk fruit in certain flavors. It contains no sucralose or acesulfame potassium. The newer formula also drops xylitol, a sugar alcohol that bothers some stomachs. Check the label on your flavor, because ingredients can differ across the range.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is Clean Simple Eats protein whey isolate or concentrate?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                The standard powder and the clear line are both listed as grass-fed whey protein isolate, the more filtered form of whey. Isolate is lower in lactose and fat than concentrate, which suits light shakes and many people with mild lactose sensitivity. People with a true milk allergy should avoid it entirely.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is Clean Simple Eats protein third-party tested?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                The brand says its products are third-party tested for pathogens, heavy metals and gluten. We could not confirm NSF Certified for Sport or Informed Choice certification at the time of writing, and we did not find published lot certificates. Tested athletes should pick a certified product. Most other buyers can treat this as a minor gap.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is Clean Simple Eats good for weight loss?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                It can help as part of a calorie deficit, because a scoop delivers about 20 g of protein in roughly 110 calories, and protein helps with fullness. No powder causes weight loss on its own. Use it to replace a higher-calorie snack, and talk to a doctor or dietitian if you have a medical condition or take medication.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is Clean Simple Eats protein sold on Amazon?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Yes. Clean Simple Eats whey isolate tubs, stick packs and variety packs are listed on Amazon, and the brand also sells through Target, Walmart, HEB and its own site. Compare the serving count across listings, because package sizes have changed, and recheck the flavor's label on the listing before you order.
+              </p>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Related Guides -->
+        <div class="mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">Related Protein Brand Guides</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <a href="/best-tasting-protein-powder/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#FF4500] font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Tasting Protein Powder</h3>
+              <p class="text-gray-500 text-sm mt-2">The flavors buyers actually finish, ranked across whey and plant proteins.</p>
+            </a>
+            <a href="/ghost-protein-powder-review/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#38BDF8] font-black text-xs uppercase tracking-widest mb-2">Brand Review</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Ghost Protein Powder Review</h3>
+              <p class="text-gray-500 text-sm mt-2">The licensed-flavor whey that is Clean Simple Eats' closest rival.</p>
+            </a>
+            <a href="/best-clear-protein-powder/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#22C55E] font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Clear Protein Powder</h3>
+              <p class="text-gray-500 text-sm mt-2">Juice-style whey isolates for people who find shakes too heavy.</p>
+            </a>
+          </div>
+        </div>
+
+        <!-- Closing -->
+        <div class="mt-16 bg-gray-900 text-white rounded-2xl p-8">
+          <h2 class="text-2xl font-black text-white mb-4">The Bottom Line</h2>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            Clean Simple Eats makes a good-tasting, light, stevia-sweetened whey isolate, and for people who cannot stand artificial sweeteners that is a real advantage. The label is short, the calories are low and the flavors are built for recipes as much as shakes. What it does not do is give you efficient protein: about 20 g per scoop at a premium price puts it near the top of the market on cost per 25 g.
+          </p>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            Buy Simply Vanilla in a tub if you want one product, try a stick-pack box first if you are new to the brand or the new formula, and check the serving count every time you reorder. If value or a sport certification matters more than flavor, our <a href="/best-tasting-protein-powder/">best tasting protein powder</a> guide has picks that taste good and work harder for your money.
+          </p>
+        </div>
+
+        <MoreInCategory category="Brand Reviews" links={moreInCategory} />
+
+        <AuthorBio />
+      </div>
+    </div>
+  </article>
+</Layout>

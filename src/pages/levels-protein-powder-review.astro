@@ -1,0 +1,946 @@
+---
+import Layout from "../layouts/Layout.astro";
+import MoreInCategory from "../components/MoreInCategory.astro";
+import { AUTHORS, DEFAULT_AUTHOR, authorSchema } from "../data/authors";
+import { SITE_NAME, SITE_URL } from "../data/site";
+import AuthorAvatar from "../components/AuthorAvatar.astro";
+import QuickPicks from "../components/QuickPicks.astro";
+import AuthorBio from "../components/AuthorBio.astro";
+import { amazonLink } from "../data/affiliate";
+import TrustBadge from "../components/TrustBadge.astro";
+import SocialProof from "../components/SocialProof.astro";
+import SpecGrid from "../components/SpecGrid.astro";
+import productImages from "../data/product-images.json";
+import { pageDates } from "../data/dates";
+
+const moreInCategory = [
+  {
+    "title": "Best Casein Protein Powder",
+    "url": "/best-casein-protein-powder/"
+  },
+  {
+    "title": "Whey vs Whey Isolate",
+    "url": "/whey-vs-whey-isolate/"
+  },
+  {
+    "title": "Best Whey Protein Isolate",
+    "url": "/best-whey-protein-isolate/"
+  }
+];
+const author = AUTHORS[DEFAULT_AUTHOR];
+const dates = pageDates(Astro.url.pathname, { published: "2026-10-19", modified: "2026-10-19" });
+const title = "Levels Protein Powder Review: Grass-Fed Whey Concentrate on a Short Label, Priced Out";
+const description =
+  "Levels protein powder review: grass-fed whey and micellar casein label-checked, monk fruit, testing gaps and cost per 25 g against Naked and Transparent Labs.";
+
+const PRODUCTS: {
+  id: string;
+  name: string;
+  brand?: string;
+  badge: string;
+  category: string;
+  description: string;
+  pros: string[];
+  cons: string[];
+  bottomLine: string;
+  specs?: Record<string, string>;
+  rating?: number;
+  reviewCount?: number;
+  amazonUrl?: string;
+}[] = [
+  {
+    "id": "levels-grass-fed-whey-protein",
+    "name": "Levels Grass Fed Whey Protein (Vanilla Bean, 2 lb)",
+    "brand": "Levels",
+    "badge": "The Flagship",
+    "category": "Grass-fed whey protein concentrate",
+    "description": "Levels' main product is a grass-fed, hormone-free whey concentrate with 24 g of protein and 5.4 g of BCAAs per scoop and no added sugar, per the Amazon listing at the time of writing. The vanilla is made with Madagascar vanilla extract and sweetened with monk fruit, with no artificial flavors or sweeteners. A 2 lb tub holds 28 servings, and buyers rate it highly for taste.",
+    "pros": [
+      "24 g of protein per scoop, per the label",
+      "Monk fruit sweetened, with no sucralose or artificial flavors",
+      "Short ingredient list from grass-fed dairy, per the brand",
+      "Highly rated by Amazon buyers, sold by Levels Nutrition"
+    ],
+    "cons": [
+      "Concentrate, so more lactose than an isolate",
+      "No sport or Clean Label Project certification we could find"
+    ],
+    "bottomLine": "A clean, well-liked daily whey at a fair mid-tier price, if you do not need certification.",
+    "specs": {
+      "Protein per serving": "24 g (label)",
+      "Calories": "About 130 (databases)",
+      "Third-party testing": "No certification found",
+      "Best for": "Sucralose-free daily shakes"
+    },
+    "amazonUrl": "https://www.amazon.com/dp/B071JG5QYT"
+  },
+  {
+    "id": "levels-grass-fed-whey-protein-5lb",
+    "name": "Levels Grass Fed Whey Protein (Vanilla Bean, 5 lb)",
+    "brand": "Levels",
+    "badge": "Best Value Size",
+    "category": "Grass-fed whey protein concentrate, large tub",
+    "description": "The 5 lb tub is the same Levels whey in a 71-serving size, per the listing, and it is the cheapest way to buy the brand per gram of protein. At typical Amazon prices it works out at roughly 1.90 dollars per 25 g of protein, against about 2.15 dollars for the 2 lb tub. Buy it once you know you like the flavor.",
+    "pros": [
+      "Lowest cost per 25 g of protein in the Levels range",
+      "Same 24 g scoop and monk fruit formula",
+      "71 servings per tub, per the listing"
+    ],
+    "cons": [
+      "A lot of powder to get through if you dislike the flavor",
+      "Same certification gap as the smaller tub"
+    ],
+    "bottomLine": "The tub to reorder, not the one to start with.",
+    "specs": {
+      "Protein per serving": "24 g (label)",
+      "Calories": "About 130 (databases)",
+      "Third-party testing": "No certification found",
+      "Best for": "Regular Levels buyers"
+    },
+    "amazonUrl": "https://www.amazon.com/dp/B072M8FKRW"
+  },
+  {
+    "id": "levels-micellar-casein",
+    "name": "Levels 100% Micellar Casein (Chocolate, 2 lb)",
+    "brand": "Levels",
+    "badge": "Best Before Bed",
+    "category": "Micellar casein protein",
+    "description": "Levels' casein lists 24 g of protein and 5.2 g of BCAAs per scoop with no added sugar, per the listing, from hormone-free dairy. The chocolate flavor uses cacao powder and natural flavor and is sweetened with monk fruit. Micellar casein digests slowly, which makes it a common before-bed shake. Buyer feedback on texture is more mixed than for the whey.",
+    "pros": [
+      "24 g of slow-digesting protein per scoop, per the label",
+      "Monk fruit sweetened, no artificial sweeteners",
+      "Also sold in Vanilla Bean and Unflavored"
+    ],
+    "cons": [
+      "Listing says hormone-free but not grass-fed",
+      "Mixed buyer reports on mixing and grittiness"
+    ],
+    "bottomLine": "A sensible sucralose-free casein for night-time shakes, if you blend it.",
+    "specs": {
+      "Protein per serving": "24 g (label)",
+      "Calories": "About 110 (databases)",
+      "Third-party testing": "No certification found",
+      "Best for": "Before-bed protein"
+    },
+    "amazonUrl": "https://www.amazon.com/dp/B08Q6N8PQS"
+  },
+  {
+    "id": "naked-nutrition-naked-whey",
+    "name": "Naked Whey",
+    "brand": "Naked Nutrition",
+    "badge": "Alternative: One Ingredient",
+    "category": "Unflavored grass-fed whey concentrate",
+    "description": "Naked Whey goes one step simpler than Levels: a single ingredient, grass-fed whey concentrate, with no sweetener or flavoring. It delivers about 25 g of protein per serving in roughly 120 calories, per the label at the time of writing. Its Amazon listing title mentions NSF certification, so check NSF's database for the program and product before relying on it.",
+    "pros": [
+      "One ingredient, with no sweeteners or flavorings",
+      "About 25 g of protein per serving, per the label",
+      "Ideal for smoothies and baking"
+    ],
+    "cons": [
+      "Unflavored, so it needs blending or mixing into food",
+      "Concentrate carries more lactose than an isolate"
+    ],
+    "bottomLine": "Choose Naked over Levels if you want no sweetener at all.",
+    "specs": {
+      "Protein per serving": "About 25 g (label)",
+      "Calories": "About 120",
+      "Third-party testing": "Check NSF database",
+      "Best for": "Minimal-ingredient buyers"
+    }
+  },
+  {
+    "id": "transparent-labs-grass-fed-whey-protein-isolate",
+    "name": "Transparent Labs 100% Grass-Fed Whey Protein Isolate",
+    "brand": "Transparent Labs",
+    "badge": "Alternative: Isolate Upgrade",
+    "category": "Grass-fed whey protein isolate",
+    "description": "Transparent Labs is the upgrade if you like Levels' grass-fed, sucralose-free approach but want an isolate. It lists about 28 g of protein per scoop depending on flavor, per the label at the time of writing, is sweetened with stevia, and the brand publishes lab results. It costs more per tub, but the larger scoop and lower lactose suit lifters and sensitive stomachs.",
+    "pros": [
+      "About 28 g of protein per scoop (label, varies by flavor)",
+      "Isolate, so less lactose than a concentrate",
+      "Published lab results"
+    ],
+    "cons": [
+      "Premium price",
+      "Stevia rather than monk fruit"
+    ],
+    "bottomLine": "More protein, less lactose and more documentation than Levels, for a higher price.",
+    "specs": {
+      "Protein per serving": "About 28 g (label)",
+      "Calories": "Check label by flavor",
+      "Third-party testing": "Published lab results",
+      "Best for": "Lifters, lactose-sensitive buyers"
+    }
+  }
+];
+
+const schema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Home",
+          item: `${SITE_URL}/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Best Lists",
+          item: `${SITE_URL}/best-of/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 3,
+          name: "Levels Protein Powder Review",
+          item: `${SITE_URL}/levels-protein-powder-review/`,
+        },
+      ],
+    },
+    {
+      "@type": "FAQPage",
+      mainEntity: [
+        {
+          "@type": "Question",
+          "name": "Is Levels protein powder good?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, for most everyday users. Levels Grass Fed Whey lists 24 g of protein per scoop from grass-fed whey concentrate, sweetened with monk fruit and free of artificial flavors, and Amazon buyers rate it highly for taste. Its gaps are no sport certification we could find and more lactose than an isolate. It is a good daily whey, not a tested-athlete product."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is Levels whey isolate or concentrate?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Levels Grass Fed Whey is a whey protein concentrate, per its Amazon listing, made from grass-fed, hormone-free dairy and cold-process microfiltered. Concentrate keeps a little more lactose, fat and carbohydrate than isolate. We did not find a Levels isolate on Amazon at the time of writing. For an isolate with grass-fed sourcing, Transparent Labs is a common alternative."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What sweetener does Levels use?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The Levels whey and casein listings name monk fruit extract as the sweetener, with no sucralose, acesulfame potassium or artificial flavors. Some buyer reviews also mention stevia, so the system may differ by flavor. If you avoid either sweetener, read the ingredient panel of the specific flavor you buy before ordering a large tub."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is Levels protein third-party tested?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "We could not find Levels in the NSF Certified for Sport, Informed Sport, Informed Choice or Clean Label Project databases at the time of writing, and the listings do not claim those certifications. We also did not find published batch test results. Drug-tested athletes should choose a certified whey instead, such as one from our isolate ranking."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How many servings are in a Levels tub?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The Amazon listings state 28 servings in the 2 lb Levels Grass Fed Whey and 71 servings in the 5 lb tub, each serving providing 24 g of protein. That implies a scoop of about 32 g. The casein is sold in 2 lb and 4 lb tubs; check the label for its serving count, as the listing details we checked did not state it."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Where can I buy Levels protein?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Levels sells mainly through its own Levels Nutrition storefront on Amazon, and the listings we checked were sold by Levels Nutrition. When we checked, the levelsnutrition.com address redirected to a domain-for-sale page rather than a store, so Amazon is the practical place to buy it at the time of writing. Avoid unknown third-party resellers."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is Levels casein good before bed?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It can be. Levels Micellar Casein lists 24 g of slow-digesting protein per scoop, and research suggests pre-sleep casein can support overnight muscle protein synthesis. But total daily protein matters more than timing for most people. Buyer feedback on its texture is mixed, so blending it or making a thicker pudding-style serving tends to work better than shaking it in water."
+          }
+        }
+      ],
+    },
+    {
+      "@type": "Article",
+      headline: title,
+      author: authorSchema(),
+      datePublished: dates.published,
+      dateModified: dates.modified,
+      publisher: { "@type": "Organization", name: SITE_NAME, url: SITE_URL },
+    },
+    {
+      "@type": "ItemList",
+      name: title,
+      numberOfItems: PRODUCTS.length,
+      itemListElement: PRODUCTS.map((product, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name: product.name,
+        url: new URL(`#${product.id}`, Astro.url).toString(),
+      })),
+    },
+    ...PRODUCTS.map((product) => ({
+      "@type": "Product",
+      name: product.name,
+      description: product.description,
+      brand: {
+        "@type": "Brand",
+        name: product.brand ?? product.name.split(" ")[0],
+      },
+    })),
+  ],
+};
+---
+
+<Layout
+  title={title}
+  description={description}
+  ogType="article"
+  article={{
+    publishedTime: dates.published,
+    modifiedTime: dates.modified,
+    author: author.name,
+    section: "Brand Reviews",
+    tags: [
+      "levels protein powder",
+      "levels grass fed whey",
+      "levels whey review",
+      "levels protein"
+    ],
+  }}
+  jsonLd={schema}
+  stickyCta={{
+    text: "See Our Top Whey Protein Picks",
+    link: "/best-whey-protein-powder/",
+  }}
+>
+  <article class="relative overflow-hidden">
+    <!-- Hero Section -->
+    <div class="bg-gray-900 py-16 lg:py-24 relative overflow-hidden">
+      <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(circle at 20% 20%, #38BDF8 0, transparent 45%), radial-gradient(circle at 80% 60%, #FF4500 0, transparent 40%);"></div>
+      <div class="max-w-4xl mx-auto px-4 relative z-10 text-center">
+        <div class="flex justify-center mb-6">
+          <TrustBadge />
+        </div>
+        <div class="flex justify-center gap-3 mb-6">
+          <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#FF4500]/20 text-[#FF4500] text-xs font-black uppercase tracking-widest border border-[#FF4500]/30">
+            Brand Review
+          </span>
+          <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-green-500/10 text-green-400 text-xs font-bold uppercase tracking-widest border border-green-500/20">
+            Label-Checked
+          </span>
+        </div>
+        <h1 class="text-4xl lg:text-6xl font-black text-white leading-tight mb-8">
+          Levels Protein Powder <span class="text-[#38BDF8]">Review</span>
+        </h1>
+        <p class="text-xl text-gray-300 leading-relaxed mb-8 max-w-3xl mx-auto">
+          Levels is an Amazon-first brand selling a grass-fed whey concentrate and a micellar casein, both with 24 g of protein a scoop and monk fruit instead of sucralose. We checked what the labels promise, what is missing and what each 25 g of protein costs.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a
+            href="#levels-grass-fed-whey-protein"
+            class="px-8 py-4 bg-[#FF4500] hover:bg-[#E63E00] text-white font-black rounded-xl shadow-lg transition-all no-underline"
+          >
+            See Our #1 Pick
+          </a>
+          <a
+            href="#whey"
+            class="px-8 py-4 bg-white/10 hover:bg-white/20 text-white font-bold rounded-xl border border-white/10 no-underline"
+          >
+            Read the Label Breakdown
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Author & Meta -->
+    <div class="max-w-3xl mx-auto px-4 pt-12">
+      <div class="flex items-center gap-6 border-b border-gray-100 pb-8">
+        <div class="flex items-center gap-3">
+          <AuthorAvatar size={48} />
+          <div>
+            <p class="text-sm font-bold text-gray-900">{author.name}</p>
+            <p class="text-xs text-gray-500 uppercase tracking-widest">{author.role}</p>
+          </div>
+        </div>
+        <div class="h-10 w-px bg-gray-200 hidden sm:block"></div>
+        <div class="hidden sm:block">
+          <p class="text-sm font-bold text-gray-900">Last Updated</p>
+          <p class="text-xs text-gray-500">{dates.display}</p>
+        </div>
+        <div class="hidden sm:block ml-auto">
+          <SocialProof />
+        </div>
+      </div>
+    </div>
+
+    <!-- Table of Contents -->
+    <div class="max-w-3xl mx-auto px-4 py-10">
+      <div class="bg-gray-50 border border-gray-200 rounded-2xl p-6 lg:p-8">
+        <h2 class="text-lg font-black text-gray-900 mb-4 flex items-center gap-2">
+          In This Guide
+        </h2>
+        <nav class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <a href="#verdict" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">1. The Short Verdict</a>
+          <a href="#brand" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">2. Who Levels Is and Where It Sells</a>
+          <a href="#top-picks" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">3. Our Top Picks</a>
+          <a href="#whey" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">4. Levels Grass Fed Whey, Label-Checked</a>
+          <a href="#casein" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">5. Levels Micellar Casein</a>
+          <a href="#cost" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">6. Cost per 25 g of Protein</a>
+          <a href="#claims" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">7. Monk Fruit, Undenatured and Other Claims</a>
+          <a href="#testing" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">8. Testing, Grass-Fed and Lactose</a>
+          <a href="#taste" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">9. Taste and Mixing</a>
+          <a href="#who" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">10. Who Should Buy Levels, and the Alternatives</a>
+          <a href="#mistakes" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">11. Common Mistakes</a>
+          <a href="#faq" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">12. FAQ</a>
+        </nav>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="max-w-3xl mx-auto px-4 pb-16 lg:pb-24">
+      <div class="prose prose-lg prose-blue max-w-none text-gray-700 leading-relaxed">
+        <p class="text-2xl font-medium text-gray-900 mb-8 italic">
+          Levels Grass Fed Whey is a solid, short-label whey concentrate that buyers rate highly for taste, at a fair mid-tier price. It is not an isolate, it carries no sport certification we could find, and its marketing claims go further than the evidence. Buy it for a clean everyday shake; skip it if you are drug-tested or lactose-sensitive.
+        </p>
+
+        <QuickPicks products={PRODUCTS} />
+
+        <div id="verdict" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            1. The Short Verdict
+          </h2>
+
+          <p>
+            Levels Grass Fed Whey is a good everyday whey with an unusually short label. Each scoop lists 24 g of protein and 5.4 g of BCAAs, per the Amazon listing at the time of writing, from grass-fed, hormone-free whey protein concentrate. It is sweetened with monk fruit extract rather than sucralose or acesulfame potassium, and the flavors use ingredients such as vanilla extract and cacao rather than artificial flavoring.
+          </p>
+
+          <p>
+            Buyers like it. The Vanilla Bean 2 lb listing we checked carried about 4.4 out of 5 stars across more than 7,000 ratings, and Amazon's review summary highlights taste, the clean formula and mixing. Levels has been selling on Amazon since 2017 and the whey ranks among the top sellers in its Amazon category, which is a useful signal of consistency even if it is not a quality test.
+          </p>
+
+          <p>
+            The limits are clear too. It is a concentrate, so it carries more lactose and a little more fat and carbohydrate per scoop than an isolate. We could not find NSF Certified for Sport, Informed Sport or Clean Label Project certification. And some of the marketing, such as claims about naturally occurring growth factors, says more than the evidence supports. Our <a href="/best-whey-protein-powder/">best whey protein powder</a> ranking shows where it sits against the big names.
+          </p>
+
+          <div class="bg-gray-900 text-white rounded-2xl p-6 lg:p-8 my-8">
+            <p class="text-xs font-black uppercase tracking-widest text-[#38BDF8] mb-3">THE VERDICT</p>
+            <p class="text-xl font-bold text-white mb-3">A clean, well-liked concentrate at a fair price.</p>
+            <p class="text-gray-300 leading-relaxed m-0">Levels is worth buying for a sucralose-free daily whey. It is not the pick for drug-tested athletes, people with lactose trouble or anyone chasing the lowest cost per gram.</p>
+          </div>
+
+          <p>
+            The casein is the less-reviewed half of the range, with fewer ratings and more mixed feedback on texture. It shares the whey's approach, with 24 g of protein a scoop, monk fruit and no artificial flavors, and suits people who want a slow-digesting shake before bed. Most buyers only need the whey.
+          </p>
+        </div>
+
+        <div id="brand" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            2. Who Levels Is and Where It Sells
+          </h2>
+
+          <p>
+            Levels Nutrition is a US brand that sells mainly through its own storefront on Amazon. The first Levels whey listing dates to June 2017, per Amazon's product details, and the product is labelled as made in the USA. The listings we checked were shipped and sold by Levels Nutrition itself, which is the seller line you want to see when buying protein on Amazon.
+          </p>
+
+          <p>
+            One thing worth knowing before you search for the brand directly: when we checked, the levelsnutrition.com address redirected to a domain-for-sale page rather than a store. That does not affect the Amazon listings, which were active and in stock, but it means Amazon is effectively the place to buy Levels, and the place to find label details, at the time of writing.
+          </p>
+
+          <p>
+            That Amazon-first model has trade-offs. Prices can move quickly, sale pricing is common, and label information is spread across listing text and images rather than a single brand page. It also means there is less brand-published detail on sourcing and testing than you get from companies that publish certificates of analysis on their own sites. We did not find published batch test results for Levels.
+          </p>
+
+          <p>
+            The range itself is focused. There is Levels Grass Fed Whey, sold in flavors including Vanilla Bean, Double Chocolate, Chocolate Peanut Butter and Strawberry, in 2 lb and 5 lb tubs; and Levels 100% Micellar Casein, in Chocolate, Vanilla Bean and Unflavored, in 2 lb and 4 lb tubs. There is no Levels isolate, plant protein or clear whey on Amazon that we could find.
+          </p>
+
+          <div class="overflow-hidden border border-gray-200 rounded-2xl my-8">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Product</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Sizes</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Protein per scoop</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Levels Grass Fed Whey</td>
+                    <td class="px-4 py-4 text-gray-700">2 lb (28 servings), 5 lb (71 servings)</td>
+                    <td class="px-4 py-4 text-gray-700">24 g</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Levels 100% Micellar Casein</td>
+                    <td class="px-4 py-4 text-gray-700">2 lb, 4 lb</td>
+                    <td class="px-4 py-4 text-gray-700">24 g</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Picks -->
+        <div id="top-picks" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            3. The Levels Range and Two Alternatives
+          </h2>
+
+          <p>
+            Levels sells two proteins, a grass-fed whey concentrate and a micellar casein, in a handful of flavors and two tub sizes. The cards below cover the flagship whey, the large tub that lowers its cost per gram, the casein, and two clearly labelled alternatives. Figures are per the Amazon listings at the time of writing and can vary by flavor.
+          </p>
+
+          {PRODUCTS.map((product, index) => (
+            <div id={product.id} class="scroll-mt-24 mt-12 first:mt-8">
+              <div class="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                <div class="bg-gray-900 px-6 py-4 flex items-center justify-between">
+                  <div class="flex items-center gap-3">
+                    <span class="bg-[#FF4500] text-white w-8 h-8 rounded-full flex items-center justify-center text-sm font-black">
+                      {index + 1}
+                    </span>
+                    {productImages[product.id] && (
+                      <img
+                        src={productImages[product.id]}
+                        alt={product.name}
+                        loading="lazy"
+                        width="40"
+                        height="40"
+                        class="w-10 h-10 rounded-lg bg-white object-contain p-1 shrink-0"
+                      />
+                    )}
+                    <div>
+                      <p class="text-white font-black text-lg">{product.name}</p>
+                      <p class="text-gray-400 text-xs">{product.category}</p>
+                    </div>
+                  </div>
+                  <span class="bg-[#38BDF8]/20 text-[#38BDF8] px-3 py-1 rounded-full text-xs font-bold hidden sm:block">
+                    {product.badge}
+                  </span>
+                </div>
+                <div class="p-6">
+                  {product.rating && (
+                  <div class="flex items-center gap-2 mb-4">
+                    <div class="flex text-yellow-400">
+                      {[...Array(5)].map((_, i) => (
+                        <svg
+                          class={`w-4 h-4 ${i < Math.floor(product.rating) ? "fill-current" : "text-gray-200"}`}
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                        >
+                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        </svg>
+                      ))}
+                    </div>
+                    <span class="text-gray-500 text-sm font-bold">{product.rating}</span>
+                    {product.reviewCount && <span class="text-gray-400 text-xs">({product.reviewCount.toLocaleString()} retailer reviews)</span>}
+                  </div>
+                  )}
+
+                  <SpecGrid specs={product.specs} />
+
+                  <p class="text-gray-700 leading-relaxed mb-6">{product.description}</p>
+
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                    <div class="bg-green-50 rounded-xl p-4">
+                      <p class="text-xs font-black uppercase tracking-widest text-green-700 mb-3">Pros</p>
+                      <ul class="space-y-2">
+                        {product.pros.map((pro) => (
+                          <li class="flex items-start gap-2 text-sm text-green-800">
+                            <svg class="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            {pro}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div class="bg-red-50 rounded-xl p-4">
+                      <p class="text-xs font-black uppercase tracking-widest text-red-700 mb-3">Cons</p>
+                      <ul class="space-y-2">
+                        {product.cons.map((con) => (
+                          <li class="flex items-start gap-2 text-sm text-red-800">
+                            <svg class="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                            {con}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+
+                  <div class="bg-gray-50 rounded-xl p-4 border border-gray-100">
+                    <p class="text-xs font-black uppercase tracking-widest text-gray-500 mb-1">The Bottom Line</p>
+                    <p class="text-gray-900 font-bold">{product.bottomLine}</p>
+                  </div>
+
+                  <a
+                    href={amazonLink(product.amazonUrl, product.name, product.id)}
+                    target="_blank"
+                    rel="sponsored nofollow noopener"
+                    class="mt-6 block bg-[#FF4500] hover:bg-[#E63E00] text-white text-center py-4 rounded-xl font-black no-underline transition-colors uppercase tracking-widest text-sm"
+                  >
+                    Check Price &rarr;
+                  </a>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div id="whey" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            4. Levels Grass Fed Whey, Label-Checked
+          </h2>
+
+          <p>
+            The protein is whey protein concentrate made from grass-fed, hormone-free dairy, per the listing. Levels says each batch is cold-process microfiltered and blended with non-GMO sunflower lecithin to help it mix. The Vanilla Bean flavor uses Madagascar vanilla extract and monk fruit extract; the chocolate flavors use cacao powder. Amazon's review summary describes the vanilla formula as having six ingredients.
+          </p>
+
+          <p>
+            Each scoop lists 24 g of protein and 5.4 g of BCAAs, with no added sugar. A 2 lb tub holds 28 servings, which implies a scoop of roughly 32 g, so protein makes up about three quarters of the powder by weight. That is typical for a good concentrate. Nutrition databases list a scoop at about 130 calories; check the label on your tub, as it can vary slightly by flavor.
+          </p>
+
+          <p>
+            Those numbers put Levels in line with the mainstream. Gold Standard 100% Whey, for comparison, lists 24 g of protein per scoop as a blend of isolate and concentrate. The difference with Levels is not the dose but the label: no sucralose, no artificial flavors and no gums or fillers listed. If you care about that kind of label, Levels gets it with a mainstream protein dose rather than a reduced one.
+          </p>
+
+          <p>
+            What the label does not offer is the extra purity of an isolate. Concentrate typically keeps more lactose, fat and carbohydrate than isolate, and the gap is a few grams per scoop rather than a different product. For most people that is fine, and some prefer the creamier taste. For people who get bloated after milk, an isolate is the safer first try, which our <a href="/whey-vs-whey-isolate/">whey vs whey isolate</a> guide explains.
+          </p>
+
+          <div class="bg-gray-900 text-white rounded-2xl p-6 lg:p-8 my-8">
+            <p class="text-xs font-black uppercase tracking-widest text-[#38BDF8] mb-4">Grass Fed Whey, per Scoop</p>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+              <div>
+                <p class="text-3xl font-black text-white">24 g</p>
+                <p class="text-gray-400 text-xs mt-1">Protein</p>
+              </div>
+              <div>
+                <p class="text-3xl font-black text-[#38BDF8]">5.4 g</p>
+                <p class="text-gray-400 text-xs mt-1">BCAAs</p>
+              </div>
+              <div>
+                <p class="text-3xl font-black text-white">0 g</p>
+                <p class="text-gray-400 text-xs mt-1">Added sugar</p>
+              </div>
+              <div>
+                <p class="text-3xl font-black text-[#38BDF8]">28</p>
+                <p class="text-gray-400 text-xs mt-1">Servings per 2 lb</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="casein" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            5. Levels Micellar Casein
+          </h2>
+
+          <p>
+            Levels 100% Micellar Casein lists 24 g of protein and 5.2 g of BCAAs per scoop with no added sugar, per the listing. It is made from hormone-free dairy, and the listing calls micellar casein the least processed form of casein. The chocolate flavor uses cacao powder and natural flavor, the vanilla uses natural vanilla flavor, and both are sweetened with monk fruit and mixed with sunflower lecithin.
+          </p>
+
+          <p>
+            Note one difference from the whey: the casein listing describes the dairy as hormone-free but does not call it grass-fed. That may simply be a wording choice, but if grass-fed sourcing is the reason you buy Levels, it is the whey, not the casein, that carries the claim. Nutrition databases list a casein scoop at about 110 calories; check your tub's label.
+          </p>
+
+          <p>
+            Micellar casein digests more slowly than whey, which is why it is popular as a before-bed shake. Research on pre-sleep casein suggests it can support overnight muscle protein synthesis, though total daily protein matters far more than timing for most people. Our <a href="/best-casein-protein-powder/">best casein protein powder</a> guide covers the evidence and the alternatives.
+          </p>
+
+          <p>
+            Buyer feedback on the casein is less settled than on the whey. The chocolate 2 lb listing sat at about 4.3 out of 5 stars across roughly 500 ratings, and Amazon's summary reports mixed comments on mixing and texture, with some buyers finding it smooth and others gritty or thick. That is common for casein, which naturally forms a thicker shake. Using a blender, or making it into a pudding with less liquid, helps.
+          </p>
+        </div>
+
+        <div id="cost" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            6. Cost per 25 g of Protein
+          </h2>
+
+          <p>
+            At the prices we saw on Amazon at the time of writing, a 2 lb tub of Levels Grass Fed Whey worked out at roughly 2.05 to 2.10 dollars per 24 g serving, or about 2.15 dollars per 25 g of protein. The 5 lb tub brings that down to roughly 1.85 dollars per serving, or about 1.90 dollars per 25 g. Sales and Subscribe and Save discounts can move both figures noticeably.
+          </p>
+
+          <p>
+            That places Levels in the mid tier for whey. It costs more per gram than large tubs of mainstream whey concentrate, which our <a href="/best-cheap-protein-powder/">best cheap protein powder</a> guide puts around 1 to 1.50 dollars per 25 g at typical prices. It costs less than many premium grass-fed isolates. You are paying a modest premium for the grass-fed sourcing and the sucralose-free label rather than for more protein.
+          </p>
+
+          <div class="overflow-hidden border border-gray-200 rounded-2xl my-8">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Product</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Protein per serving</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Approx. cost per 25 g</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Levels Grass Fed Whey, 2 lb</td>
+                    <td class="px-4 py-4 text-gray-700">24 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 2.15 dollars</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Levels Grass Fed Whey, 5 lb</td>
+                    <td class="px-4 py-4 text-gray-700">24 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 1.90 dollars</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Levels Micellar Casein, 2 lb</td>
+                    <td class="px-4 py-4 text-gray-700">24 g</td>
+                    <td class="px-4 py-4 text-gray-700">Lower per tub than the whey; check servings</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Naked Whey (alternative)</td>
+                    <td class="px-4 py-4 text-gray-700">About 25 g</td>
+                    <td class="px-4 py-4 text-gray-700">Mid tier</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Transparent Labs Isolate (alternative)</td>
+                    <td class="px-4 py-4 text-gray-700">About 28 g</td>
+                    <td class="px-4 py-4 text-gray-700">Premium tier</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <p>
+            The casein lists at a lower price per 2 lb tub than the whey at the time of writing, but its listing does not state servings per container in the details we checked, so we have not put a precise figure on it. To work it out yourself, divide the price by the number of servings on the label, divide by 24 and multiply by 25. That gives you a true cost per 25 g to compare against any other casein.
+          </p>
+
+          <p>
+            If you are committed to Levels, the 5 lb tub is the obvious buy once you know you like a flavor. If you are trying it for the first time, start with the 2 lb size. The saving per gram on the large tub is real, but not large enough to justify being stuck with 71 servings of a flavor you dislike.
+          </p>
+        </div>
+
+        <div id="claims" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            7. Monk Fruit, Undenatured and Other Claims
+          </h2>
+
+          <p>
+            The strongest part of Levels' pitch is the sweetener. The listings name monk fruit extract as the sweetener, with no sucralose, acesulfame potassium or sugar alcohols. Monk fruit is a natural, zero-calorie sweetener that many people find cleaner tasting than stevia, though some buyer reviews mention stevia as well, so the system may differ between flavors. Check the panel on your flavor if you avoid either one.
+          </p>
+
+          <p>
+            The weaker part is the language around processing. Levels describes its whey as undenatured, cold-processed and rich in naturally occurring growth factors. Gentle processing can preserve more of whey's native protein structure, but there is no good evidence that this makes a meaningful difference to muscle growth or health for people drinking a shake. Once whey hits your stomach, digestion breaks it down regardless.
+          </p>
+
+          <p>
+            The no-hormones claim deserves context too. Levels says it uses hormone-free dairy, which usually refers to milk from cows not treated with the synthetic growth hormone rbST. That is a reasonable preference, but it is a common practice among US dairy suppliers rather than a unique feature, and all milk naturally contains small amounts of hormones. It is not a reason on its own to pay more.
+          </p>
+
+          <p>
+            None of this makes Levels a bad product. The protein dose is real, the label is short and the sweetener choice is genuinely appealing to people who react to sucralose. The point is simply to buy it for those concrete reasons, not for the wellness language around them. The same caution applies to every grass-fed brand, and our <a href="/best-clean-protein-powder/">best clean protein powder</a> guide explains what clean claims can and cannot prove.
+          </p>
+        </div>
+
+        <div id="testing" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            8. Testing, Grass-Fed and Lactose
+          </h2>
+
+          <p>
+            We could not find Levels in the NSF Certified for Sport, Informed Sport, Informed Choice or Clean Label Project databases at the time of writing, and the Amazon listings we checked do not claim any of those certifications. We also did not find published certificates of analysis for individual batches. That leaves buyers relying on the brand's own quality control.
+          </p>
+
+          <p>
+            For drug-tested athletes, that is a dealbreaker regardless of how good the label looks. Only third-party sport certifications screen batches for banned substances and stand behind the result. For everyone else, whey from dairy generally tests lower for heavy metals than many plant proteins, and nothing we found points to a problem with Levels. Our <a href="/is-protein-powder-safe/">is protein powder safe</a> guide covers what each certification checks.
+          </p>
+
+          <p>
+            The grass-fed claim is the brand's own. Levels does not name a third-party grass-fed certification on the listings we checked. That is common: most grass-fed whey brands rely on supplier statements, and the term has no single, strict US standard for dairy. If you want grass-fed sourcing with published lab testing, Transparent Labs is the alternative to look at, as its reviews on our site explain.
+          </p>
+
+          <p>
+            On lactose, Levels is a concentrate, so it contains more than an isolate. Many people with mild lactose intolerance handle a single scoop of concentrate without issue, but some do not. If you have had stomach trouble with milk-based shakes, try a single tub first, take it with food, or choose an isolate. Anyone with a diagnosed milk allergy should avoid whey and casein entirely, and check with a doctor or dietitian.
+          </p>
+        </div>
+
+        <div id="taste" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            9. Taste and Mixing
+          </h2>
+
+          <p>
+            We have not tasted Levels, so this section reports buyer feedback. Taste is the most-mentioned topic in the whey's Amazon reviews, and Amazon's breakdown at the time of writing counted roughly 1,230 positive mentions against about 340 negative ones. The common theme is that it tastes natural and not overly sweet, which makes sense for a monk fruit formula without artificial flavoring.
+          </p>
+
+          <p>
+            That lower sweetness cuts both ways. Buyers used to dessert-style wheys sweetened with sucralose sometimes describe Levels as bland. If you like intense flavors, the chocolate peanut butter and double chocolate flavors are the more forgiving choices, and mixing with milk rather than water adds body. If you mainly use protein in smoothies, oats or baking, a mild flavor is an advantage, not a flaw.
+          </p>
+
+          <p>
+            Mixing gets good marks for the whey, helped by the sunflower lecithin, and Amazon's summary notes buyers using it in baking and smoothies as well as shakes. The casein draws more mixed comments, which is typical of casein's naturally thicker texture. A blender or a shaker with a mixing ball makes a noticeable difference for either product.
+          </p>
+
+          <p>
+            If flavor is the main thing you are shopping for, our <a href="/best-tasting-protein-powder/">best tasting protein powder</a> guide covers the brands buyers rate highest for taste. Levels does well there among sucralose-free options, but the dessert-flavor specialists win if sweetness is what you want.
+          </p>
+        </div>
+
+        <div id="who" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            10. Who Should Buy Levels, and the Alternatives
+          </h2>
+
+          <p>
+            Buy Levels Grass Fed Whey if you want a daily whey with a full 24 g dose, no sucralose and a short ingredient list, and you are happy with a concentrate at a mid-tier price. It suits people who drink one shake a day, people who bake with protein and anyone who has found sucralose-sweetened wheys too sweet. The 5 lb tub is the value choice once you have found a flavor.
+          </p>
+
+          <p>
+            Skip it if you compete in a drug-tested sport, because there is no sport certification. Skip it if you are lactose-sensitive, because an isolate will usually suit you better. And skip it if your only goal is the cheapest protein, since mainstream whey concentrates cost less per gram. Pregnant readers, people with kidney disease and anyone on medication should check with a doctor or registered dietitian before adding protein supplements.
+          </p>
+
+          <p>
+            The closest alternative is Naked Whey, which strips the label down further to a single ingredient, grass-fed whey concentrate, with no sweetener at all. It suits people who blend their shakes or bake. Our <a href="/naked-nutrition-protein-powder-review/">Naked Nutrition protein powder review</a> compares its range in detail.
+          </p>
+
+          <p>
+            The upgrade alternative is Transparent Labs Grass-Fed Whey Isolate, which delivers more protein per scoop, less lactose and published lab results, at a higher price. If you want grass-fed whey with more documentation behind it, start there; our <a href="/transparent-labs-protein-powder-review/">Transparent Labs protein powder review</a> covers it, and the <a href="/best-whey-protein-isolate/">best whey protein isolate</a> ranking compares it with other isolates.
+          </p>
+        </div>
+
+        <!-- Common Mistakes -->
+        <div id="mistakes" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            11. Common Mistakes to Avoid
+          </h2>
+
+          <div class="space-y-6 my-8">
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Treating grass-fed as a testing claim</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Grass-fed describes how the cows were raised, per the brand. It says nothing about banned substances, heavy metals or label accuracy, and Levels names no third-party grass-fed certification. If you need verified testing, look for NSF Certified for Sport or Informed Sport, which Levels does not carry that we could find.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Buying concentrate with lactose trouble</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Levels is a whey concentrate, which keeps more lactose than an isolate. Many people handle it fine, but if milk-based shakes have bloated you before, start with an isolate such as Transparent Labs, or try a single 2 lb tub of Levels with food before committing to the 5 lb size.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Paying for undenatured marketing</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Claims about undenatured whey and preserved growth factors sound impressive, but there is no good evidence they change results for people drinking a shake. Judge Levels on its 24 g dose, short label and monk fruit sweetener, which are real advantages, and ignore the rest.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Starting with the 5 lb tub</h3>
+              <p class="text-gray-700 text-sm m-0">
+                The 5 lb tub cuts the cost per 25 g of protein from about 2.15 to about 1.90 dollars at typical prices, but 71 servings is a lot of a flavor you might not like. Lower-sweetness formulas divide opinion, so buy a 2 lb tub first, then reorder in the large size.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Buying from unknown resellers</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Levels sells through its own Amazon storefront, and the listings we checked were sold by Levels Nutrition. Third-party sellers can offer old or mishandled stock. Check the seller line under the price, look at the best-by date on arrival and return anything with a broken seal.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ -->
+        <div id="faq" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            12. Frequently Asked Questions
+          </h2>
+
+          <div class="space-y-6">
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is Levels protein powder good?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Yes, for most everyday users. Levels Grass Fed Whey lists 24 g of protein per scoop from grass-fed whey concentrate, sweetened with monk fruit and free of artificial flavors, and Amazon buyers rate it highly for taste. Its gaps are no sport certification we could find and more lactose than an isolate. It is a good daily whey, not a tested-athlete product.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is Levels whey isolate or concentrate?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Levels Grass Fed Whey is a whey protein concentrate, per its Amazon listing, made from grass-fed, hormone-free dairy and cold-process microfiltered. Concentrate keeps a little more lactose, fat and carbohydrate than isolate. We did not find a Levels isolate on Amazon at the time of writing. For an isolate with grass-fed sourcing, Transparent Labs is a common alternative.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">What sweetener does Levels use?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                The Levels whey and casein listings name monk fruit extract as the sweetener, with no sucralose, acesulfame potassium or artificial flavors. Some buyer reviews also mention stevia, so the system may differ by flavor. If you avoid either sweetener, read the ingredient panel of the specific flavor you buy before ordering a large tub.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is Levels protein third-party tested?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                We could not find Levels in the NSF Certified for Sport, Informed Sport, Informed Choice or Clean Label Project databases at the time of writing, and the listings do not claim those certifications. We also did not find published batch test results. Drug-tested athletes should choose a certified whey instead, such as one from our isolate ranking.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">How many servings are in a Levels tub?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                The Amazon listings state 28 servings in the 2 lb Levels Grass Fed Whey and 71 servings in the 5 lb tub, each serving providing 24 g of protein. That implies a scoop of about 32 g. The casein is sold in 2 lb and 4 lb tubs; check the label for its serving count, as the listing details we checked did not state it.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Where can I buy Levels protein?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Levels sells mainly through its own Levels Nutrition storefront on Amazon, and the listings we checked were sold by Levels Nutrition. When we checked, the levelsnutrition.com address redirected to a domain-for-sale page rather than a store, so Amazon is the practical place to buy it at the time of writing. Avoid unknown third-party resellers.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is Levels casein good before bed?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                It can be. Levels Micellar Casein lists 24 g of slow-digesting protein per scoop, and research suggests pre-sleep casein can support overnight muscle protein synthesis. But total daily protein matters more than timing for most people. Buyer feedback on its texture is mixed, so blending it or making a thicker pudding-style serving tends to work better than shaking it in water.
+              </p>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Related Guides -->
+        <div class="mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">Related Whey Protein Guides</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <a href="/best-whey-protein-powder/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#FF4500] font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Whey Protein Powder</h3>
+              <p class="text-gray-500 text-sm mt-2">Where Levels sits against Gold Standard, ISO100 and the rest on dose and cost.</p>
+            </a>
+            <a href="/naked-nutrition-protein-powder-review/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#38BDF8] font-black text-xs uppercase tracking-widest mb-2">Brand Review</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Naked Nutrition Review</h3>
+              <p class="text-gray-500 text-sm mt-2">The one-ingredient grass-fed whey that strips the label down further.</p>
+            </a>
+            <a href="/transparent-labs-protein-powder-review/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-green-600 font-black text-xs uppercase tracking-widest mb-2">Brand Review</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Transparent Labs Review</h3>
+              <p class="text-gray-500 text-sm mt-2">Grass-fed isolate with published lab results, the upgrade from Levels.</p>
+            </a>
+          </div>
+        </div>
+
+        <!-- Closing -->
+        <div class="mt-16 bg-gray-900 text-white rounded-2xl p-8">
+          <h2 class="text-2xl font-black text-white mb-4">The Bottom Line</h2>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            Levels does the basics well: a full 24 g of protein per scoop from grass-fed whey concentrate, a short label, monk fruit instead of sucralose and flavors that buyers genuinely like. At roughly 1.90 to 2.15 dollars per 25 g of protein, it is a fair mid-tier price for that combination, and the 5 lb tub is the one to reorder.
+          </p>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            It is not a tested-athlete product, it is not an isolate and some of its processing claims are marketing rather than evidence. If you need certification or less lactose, step up to an isolate from our <a href="/best-whey-protein-powder/">best whey protein powder</a> ranking. If you want a clean, sucralose-free everyday shake, Levels is an easy recommendation.
+          </p>
+        </div>
+
+        <MoreInCategory category="Brand Reviews" links={moreInCategory} />
+
+        <AuthorBio />
+      </div>
+    </div>
+  </article>
+</Layout>

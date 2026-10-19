@@ -7,6 +7,11 @@
 // Sibling of scaffold-article.mjs, which produces the supporting/informational
 // format. See .claude/skills/daily-publish/SKILL.md for the spec fields.
 //
+// Optional fields: `kicker` replaces the "Buyer's Guide" hero chip (a brand review
+// uses "Brand Review"), and `ctaText` + `ctaLink` add a sticky CTA. A page that is
+// not itself a pillar (a brand review in product-card format, say) sets ctaLink to
+// its pillar, which is how the cluster report files it.
+//
 // NOTE ON LENGTH: product names, pros, cons and descriptions live in the page
 // frontmatter, which the word-count validator does not read. A roundup therefore
 // needs 8-9 body sections of real prose to clear 2,500 words, not the 7 an
@@ -229,7 +234,11 @@ const schema = {
     section: ${q(spec.section)},
     tags: ${indent(spec.tags, 4)},
   }}
-  jsonLd={schema}
+  jsonLd={schema}${spec.ctaLink ? `
+  stickyCta={{
+    text: ${q(spec.ctaText)},
+    link: ${q(spec.ctaLink)},
+  }}` : ''}
 >
   <article class="relative overflow-hidden">
     <!-- Hero Section -->
@@ -241,7 +250,7 @@ const schema = {
         </div>
         <div class="flex justify-center gap-3 mb-6">
           <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#FF4500]/20 text-[#FF4500] text-xs font-black uppercase tracking-widest border border-[#FF4500]/30">
-            Buyer's Guide
+            ${spec.kicker ?? "Buyer's Guide"}
           </span>
           <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-green-500/10 text-green-400 text-xs font-bold uppercase tracking-widest border border-green-500/20">
             ${spec.badge}

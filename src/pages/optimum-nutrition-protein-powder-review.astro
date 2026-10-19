@@ -1,0 +1,931 @@
+---
+import Layout from "../layouts/Layout.astro";
+import MoreInCategory from "../components/MoreInCategory.astro";
+import { AUTHORS, DEFAULT_AUTHOR, authorSchema } from "../data/authors";
+import { SITE_NAME, SITE_URL } from "../data/site";
+import AuthorAvatar from "../components/AuthorAvatar.astro";
+import QuickPicks from "../components/QuickPicks.astro";
+import AuthorBio from "../components/AuthorBio.astro";
+import { amazonLink } from "../data/affiliate";
+import TrustBadge from "../components/TrustBadge.astro";
+import SocialProof from "../components/SocialProof.astro";
+import SpecGrid from "../components/SpecGrid.astro";
+import productImages from "../data/product-images.json";
+import { pageDates } from "../data/dates";
+
+const moreInCategory = [
+  {
+    "title": "Best Whey Protein Powder",
+    "url": "/best-whey-protein-powder/"
+  },
+  {
+    "title": "Premier Protein Powder Review",
+    "url": "/premier-protein-powder-review/"
+  },
+  {
+    "title": "Dymatize Protein Powder Review",
+    "url": "/dymatize-protein-powder-review/"
+  }
+];
+const author = AUTHORS[DEFAULT_AUTHOR];
+const dates = pageDates(Astro.url.pathname, { published: "2026-10-19", modified: "2026-10-19" });
+const title = "Optimum Nutrition Protein Powder Review: Which ON Tub to Buy";
+const description =
+  "ON protein powder reviewed tub by tub: Gold Standard Whey, Isolate, Platinum Hydrowhey, Casein and Plant, compared on label, testing and cost per 25 g.";
+
+const PRODUCTS: {
+  id: string;
+  name: string;
+  brand?: string;
+  badge: string;
+  category: string;
+  description: string;
+  pros: string[];
+  cons: string[];
+  bottomLine: string;
+  specs?: Record<string, string>;
+  rating?: number;
+  reviewCount?: number;
+  amazonUrl?: string;
+}[] = [
+  {
+    "id": "optimum-nutrition-gold-standard-100-whey",
+    "name": "Optimum Nutrition Gold Standard 100% Whey",
+    "brand": "Optimum Nutrition",
+    "badge": "Flagship Pick",
+    "category": "Isolate-led whey blend",
+    "description": "Gold Standard is the default whey for good reason. Per ON's site and label at the time of writing, one scoop gives 24 g of protein, 5.5 g of BCAAs and about 120 to 130 calories depending on flavor, with whey isolate listed as the first ingredient. ON describes it as banned-substance tested and has promoted Informed Choice on many flavors. It comes in more than 20 flavors and tubs up to about 10 lb, and buyers consistently report that it mixes easily with a spoon.",
+    "pros": [
+      "24 g of protein per scoop with isolate listed first",
+      "More than 20 flavors and sizes up to about 10 lb",
+      "Roughly $1.30 to $1.50 per 25 g in the 5 lb tub",
+      "Banned-substance tested, per the brand"
+    ],
+    "cons": [
+      "Most flavors use sucralose and acesulfame potassium",
+      "Not a pure isolate, so some lactose remains"
+    ],
+    "bottomLine": "The one ON protein most people should buy, ideally in the 5 lb tub.",
+    "specs": {
+      "Protein per serving": "24 g (label)",
+      "Calories": "About 120-130",
+      "Third-party testing": "Banned-substance tested (brand)",
+      "Best for": "Almost everyone"
+    }
+  },
+  {
+    "id": "optimum-nutrition-gold-standard-100-isolate",
+    "name": "Optimum Nutrition Gold Standard 100% Isolate",
+    "brand": "Optimum Nutrition",
+    "badge": "Best for Lactose",
+    "category": "Ultra-filtered whey protein isolate",
+    "description": "Gold Standard Isolate is the leaner, lower-lactose version of the flagship. Per ON's site at the time of writing, a serving gives 25 g of protein, 5.5 g of BCAAs, about 1 g of carbohydrate and 0.5 g of fat, at roughly 100 to 110 calories depending on flavor. It is banned-substance tested per ON and comes in Chocolate Bliss and Rich Vanilla, at about $2.35 per 25 g of protein in a roughly 3 lb, 44-serving tub.",
+    "pros": [
+      "25 g of protein in roughly 100-110 calories",
+      "Isolate-only, so very low in lactose",
+      "Banned-substance tested, per the brand"
+    ],
+    "cons": [
+      "Only two flavors",
+      "About 60 to 80 percent more per gram than Gold Standard Whey"
+    ],
+    "bottomLine": "Worth the premium only if regular whey bloats you or you are cutting hard.",
+    "specs": {
+      "Protein per serving": "25 g (brand)",
+      "Calories": "About 100-110",
+      "Third-party testing": "Banned-substance tested (brand)",
+      "Best for": "Lactose-sensitive, cutting"
+    }
+  },
+  {
+    "id": "optimum-nutrition-gold-standard-100-casein",
+    "name": "Optimum Nutrition Gold Standard 100% Casein",
+    "brand": "Optimum Nutrition",
+    "badge": "Best Before Bed",
+    "category": "Micellar casein",
+    "description": "Gold Standard Casein gives 24 g of slow-digesting micellar casein per scoop, per ON, at about 120 calories per the label at the time of writing. Flavors include Chocolate Supreme, Creamy Vanilla, Cookies and Cream and Chocolate Peanut Butter. It mixes thick, so buyers often use it as a pudding with less liquid. ON lists it as banned-substance tested, and at about $1.90 per 25 g on ON's site it is cheaper per gram than the isolate.",
+    "pros": [
+      "Slow-digesting protein for pre-bed or long gaps",
+      "Thickens into a pudding with less liquid",
+      "Banned-substance tested, per the brand"
+    ],
+    "cons": [
+      "Optional if you already hit your protein target",
+      "Thick in a shaker bottle"
+    ],
+    "bottomLine": "A good second tub for evening shakes, not a replacement for whey.",
+    "specs": {
+      "Protein per serving": "24 g (brand)",
+      "Calories": "About 120",
+      "Third-party testing": "Banned-substance tested (brand)",
+      "Best for": "Pre-bed shakes, protein pudding"
+    }
+  },
+  {
+    "id": "optimum-nutrition-platinum-hydrowhey",
+    "name": "Optimum Nutrition Platinum Hydrowhey",
+    "brand": "Optimum Nutrition",
+    "badge": "Premium Pick",
+    "category": "Hydrolyzed whey protein isolate",
+    "description": "Platinum Hydrowhey is ON's top tier: 30 g of protein per serving from hydrolyzed whey protein isolate alone, with 8.8 g of BCAAs including added BCAAs, per ON's site at the time of writing. Hydrolyzed protein is partly pre-digested, which some people with sensitive stomachs find easier. It is banned-substance tested per ON, but at about $3.10 per 25 g it costs more than twice Gold Standard Whey.",
+    "pros": [
+      "30 g of protein per serving from hydrolyzed isolate",
+      "May suit people who cannot tolerate other wheys",
+      "Banned-substance tested, per the brand"
+    ],
+    "cons": [
+      "About $3.10 per 25 g of protein",
+      "Weak evidence of extra muscle benefit over regular whey"
+    ],
+    "bottomLine": "Only for sensitive stomachs or buyers who do not mind paying double.",
+    "specs": {
+      "Protein per serving": "30 g (brand)",
+      "BCAAs": "8.8 g (incl. added)",
+      "Third-party testing": "Banned-substance tested (brand)",
+      "Best for": "Sensitive stomachs"
+    }
+  },
+  {
+    "id": "optimum-nutrition-gold-standard-100-plant",
+    "name": "Optimum Nutrition Gold Standard 100% Plant",
+    "brand": "Optimum Nutrition",
+    "badge": "Best Vegan",
+    "category": "Pea, rice and fava bean protein blend",
+    "description": "Gold Standard Plant gives 24 g of protein per serving from pea, rice and fava bean proteins, per ON's site at the time of writing, with 0 g of sugar and no artificial colors, flavors or sweeteners. It comes in Creamy Vanilla and Rich Chocolate Fudge. The blend provides all nine essential amino acids, per ON, but at about $2.45 per 25 g in the 12-serving size it costs much more per gram than ON's whey.",
+    "pros": [
+      "24 g of plant protein from a pea, rice and fava blend",
+      "No artificial sweeteners, colors or flavors, per ON",
+      "Familiar brand for vegans switching from whey"
+    ],
+    "cons": [
+      "About $2.45 per 25 g of protein",
+      "Only two flavors and no sport certification we could find"
+    ],
+    "bottomLine": "A solid vegan option from ON, though certified plant proteins compete hard on value.",
+    "specs": {
+      "Protein per serving": "24 g (brand)",
+      "Sugar": "0 g (brand)",
+      "Third-party testing": "No sport certification found",
+      "Best for": "Vegans, no artificial sweeteners"
+    }
+  },
+  {
+    "id": "premier-protein-100-whey-chocolate-milkshake",
+    "name": "Premier Protein 100% Whey Protein Powder, Chocolate Milkshake",
+    "brand": "Premier Protein",
+    "badge": "Alternative: More Protein per Serving",
+    "category": "Whey isolate and concentrate blend",
+    "description": "If you want more protein per shake at a similar price, Premier is the alternative. Per the label at the time of writing, two scoops give 30 g of protein in about 150 calories, from an isolate-led blend of whey isolate and concentrate, at roughly $1.20 to $1.70 per 25 g at typical prices. It comes in only three classic flavors and has no sport certification we could find.",
+    "pros": [
+      "30 g of protein per serving",
+      "Competitive cost per 25 g",
+      "Easy to find in supermarkets and on Amazon"
+    ],
+    "cons": [
+      "Only three flavors",
+      "No NSF or Informed certification we could find"
+    ],
+    "bottomLine": "A good-value alternative for buyers who do not need ON's flavor range or testing claims.",
+    "specs": {
+      "Protein per serving": "30 g (label, 2 scoops)",
+      "Calories": "About 150",
+      "Third-party testing": "No sport certification found",
+      "Best for": "Budget everyday whey"
+    },
+    "amazonUrl": "https://www.amazon.com/dp/B06Y5ZG66K"
+  }
+];
+
+const schema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Home",
+          item: `${SITE_URL}/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Best Lists",
+          item: `${SITE_URL}/best-of/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 3,
+          name: "Optimum Nutrition Review",
+          item: `${SITE_URL}/optimum-nutrition-protein-powder-review/`,
+        },
+      ],
+    },
+    {
+      "@type": "FAQPage",
+      mainEntity: [
+        {
+          "@type": "Question",
+          "name": "What does ON stand for in protein powder?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "ON stands for Optimum Nutrition, the brand behind Gold Standard 100% Whey. Optimum Nutrition is owned by Glanbia, an Irish nutrition group that also owns brands such as Isopure through its performance nutrition division. When people search for ON protein, they usually mean Gold Standard 100% Whey, the brand's best-selling product for decades."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How much protein is in ON Gold Standard Whey?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "One scoop of Gold Standard 100% Whey gives 24 g of protein and 5.5 g of naturally occurring BCAAs, with about 120 to 130 calories depending on flavor, per ON's site and label at the time of writing. The serving is about 30 to 32 g of powder. A double scoop gives 48 g of protein for about 240 to 260 calories."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is Optimum Nutrition Gold Standard whey isolate?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It is an isolate-led blend. The label lists whey protein isolate first, followed by whey protein concentrate and whey peptides. That makes it leaner than a concentrate-led whey but not a pure isolate. If you want isolate only, Gold Standard 100% Isolate gives 25 g of protein with about 1 g of carbohydrate and 0.5 g of fat per serving."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is ON protein third-party tested?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "ON describes Gold Standard Whey, Isolate, Hydrowhey and Casein as banned-substance tested on its US product pages, and it has promoted Informed Choice certification on many Gold Standard flavors. Certifications are flavor- and market-specific, so drug-tested athletes should check the exact product, flavor and lot number in the Informed Choice database before buying."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Which ON protein is best for beginners?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Gold Standard 100% Whey. It gives 24 g of protein per scoop, comes in more than 20 flavors, mixes easily according to buyer feedback and is one of the cheapest major-brand wheys per gram in the 5 lb tub. Start with a smaller tub of a popular flavor such as Double Rich Chocolate, then move to a bigger tub."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is ON Gold Standard good for weight loss?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It can help. About 24 g of protein in roughly 120 to 130 calories is a strong ratio, and protein helps with fullness and preserving muscle while dieting. Gold Standard Isolate is slightly leaner still. Neither is a weight-loss product on its own, and anyone planning a large calorie deficit should speak with a doctor or registered dietitian."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is Optimum Nutrition worth the price?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Gold Standard Whey in the 5 lb tub is good value at roughly $1.30 to $1.50 per 25 g of protein at typical prices. The rest of the range costs more: about $1.90 per 25 g for Casein, $2.35 for Isolate, $2.45 for Plant and $3.10 for Platinum Hydrowhey, based on ON's listed prices. Buy the others only for a specific need."
+          }
+        }
+      ],
+    },
+    {
+      "@type": "Article",
+      headline: title,
+      author: authorSchema(),
+      datePublished: dates.published,
+      dateModified: dates.modified,
+      publisher: { "@type": "Organization", name: SITE_NAME, url: SITE_URL },
+    },
+    {
+      "@type": "ItemList",
+      name: title,
+      numberOfItems: PRODUCTS.length,
+      itemListElement: PRODUCTS.map((product, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name: product.name,
+        url: new URL(`#${product.id}`, Astro.url).toString(),
+      })),
+    },
+    ...PRODUCTS.map((product) => ({
+      "@type": "Product",
+      name: product.name,
+      description: product.description,
+      brand: {
+        "@type": "Brand",
+        name: product.brand ?? product.name.split(" ")[0],
+      },
+    })),
+  ],
+};
+---
+
+<Layout
+  title={title}
+  description={description}
+  ogType="article"
+  article={{
+    publishedTime: dates.published,
+    modifiedTime: dates.modified,
+    author: author.name,
+    section: "Brand Reviews",
+    tags: [
+      "on protein powder",
+      "optimum nutrition protein powder",
+      "on protein",
+      "optimum protein powder",
+      "gold standard whey review"
+    ],
+  }}
+  jsonLd={schema}
+  stickyCta={{
+    text: "See Our Top Whey Protein Picks",
+    link: "/best-whey-protein-powder/",
+  }}
+>
+  <article class="relative overflow-hidden">
+    <!-- Hero Section -->
+    <div class="bg-gray-900 py-16 lg:py-24 relative overflow-hidden">
+      <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(circle at 20% 20%, #38BDF8 0, transparent 45%), radial-gradient(circle at 80% 60%, #FF4500 0, transparent 40%);"></div>
+      <div class="max-w-4xl mx-auto px-4 relative z-10 text-center">
+        <div class="flex justify-center mb-6">
+          <TrustBadge />
+        </div>
+        <div class="flex justify-center gap-3 mb-6">
+          <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#FF4500]/20 text-[#FF4500] text-xs font-black uppercase tracking-widest border border-[#FF4500]/30">
+            Brand Review
+          </span>
+          <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-green-500/10 text-green-400 text-xs font-bold uppercase tracking-widest border border-green-500/20">
+            Label-Checked
+          </span>
+        </div>
+        <h1 class="text-4xl lg:text-6xl font-black text-white leading-tight mb-8">
+          Optimum Nutrition Protein: <span class="text-[#38BDF8]">Which ON Tub to Buy</span>
+        </h1>
+        <p class="text-xl text-gray-300 leading-relaxed mb-8 max-w-3xl mx-auto">
+          Gold Standard 100% Whey is the default protein powder in America. We read the labels across the ON range, priced each tub per 25 g of protein and set out who should buy which one, and who should skip ON altogether.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a
+            href="#optimum-nutrition-gold-standard-100-whey"
+            class="px-8 py-4 bg-[#FF4500] hover:bg-[#E63E00] text-white font-black rounded-xl shadow-lg transition-all no-underline"
+          >
+            See Our #1 Pick
+          </a>
+          <a
+            href="#gold-standard"
+            class="px-8 py-4 bg-white/10 hover:bg-white/20 text-white font-bold rounded-xl border border-white/10 no-underline"
+          >
+            Read the Range Breakdown
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Author & Meta -->
+    <div class="max-w-3xl mx-auto px-4 pt-12">
+      <div class="flex items-center gap-6 border-b border-gray-100 pb-8">
+        <div class="flex items-center gap-3">
+          <AuthorAvatar size={48} />
+          <div>
+            <p class="text-sm font-bold text-gray-900">{author.name}</p>
+            <p class="text-xs text-gray-500 uppercase tracking-widest">{author.role}</p>
+          </div>
+        </div>
+        <div class="h-10 w-px bg-gray-200 hidden sm:block"></div>
+        <div class="hidden sm:block">
+          <p class="text-sm font-bold text-gray-900">Last Updated</p>
+          <p class="text-xs text-gray-500">{dates.display}</p>
+        </div>
+        <div class="hidden sm:block ml-auto">
+          <SocialProof />
+        </div>
+      </div>
+    </div>
+
+    <!-- Table of Contents -->
+    <div class="max-w-3xl mx-auto px-4 py-10">
+      <div class="bg-gray-50 border border-gray-200 rounded-2xl p-6 lg:p-8">
+        <h2 class="text-lg font-black text-gray-900 mb-4 flex items-center gap-2">
+          In This Guide
+        </h2>
+        <nav class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <a href="#verdict" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">1. The Short Verdict</a>
+          <a href="#range" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">2. The ON Protein Range</a>
+          <a href="#top-picks" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">3. Which One to Buy</a>
+          <a href="#gold-standard" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">4. Gold Standard Whey Label</a>
+          <a href="#cost" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">5. Cost per 25 g of Protein</a>
+          <a href="#isolate-hydro" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">6. Isolate vs Hydrowhey</a>
+          <a href="#casein-plant" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">7. Casein and Plant</a>
+          <a href="#testing" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">8. Testing and Certification</a>
+          <a href="#vs-rivals" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">9. ON vs Rivals</a>
+          <a href="#who" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">10. Who Should Skip ON</a>
+          <a href="#mistakes" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">11. Common Mistakes</a>
+          <a href="#faq" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">12. FAQ</a>
+        </nav>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="max-w-3xl mx-auto px-4 pb-16 lg:pb-24">
+      <div class="prose prose-lg prose-blue max-w-none text-gray-700 leading-relaxed">
+        <p class="text-2xl font-medium text-gray-900 mb-8 italic">
+          For most people, the only Optimum Nutrition product worth buying is the one they already know: Gold Standard 100% Whey in the 5 lb tub. It gives about 24 g of protein per scoop with isolate listed first, it is banned-substance tested per the brand, and in the big tub it is one of the cheapest major-brand wheys per gram. The rest of the range is good but costs more, and only suits specific needs.
+        </p>
+
+        <QuickPicks products={PRODUCTS} />
+
+        <div id="verdict" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            1. The Short Verdict
+          </h2>
+
+          <p>
+            Optimum Nutrition Gold Standard 100% Whey is still the safest default protein powder you can buy. Per ON's site and label at the time of writing, one scoop of about 30 to 32 g gives 24 g of protein, 5.5 g of naturally occurring BCAAs and about 120 to 130 calories depending on flavor. Whey protein isolate is listed as the first ingredient, and ON describes the product as banned-substance tested.
+          </p>
+
+          <p>
+            It is not the best at anything in particular. It is not the leanest, the cheapest, the cleanest label or the best-tasting. But it is good at everything, comes in more than 20 flavors, mixes with a spoon according to years of buyer feedback, and is sold almost everywhere. In the 5 lb tub it works out to roughly $1.30 to $1.50 per 25 g of protein at typical prices, which is hard to beat from a major brand.
+          </p>
+
+          <p>
+            The rest of the range is worth knowing about but is a narrower buy. Gold Standard 100% Isolate gives 25 g of protein with about 1 g of carbohydrate and 0.5 g of fat for people who are lactose-sensitive or cutting hard. Platinum Hydrowhey gives 30 g of hydrolyzed isolate at a steep price. Gold Standard Casein is for pre-bed shakes, and Gold Standard Plant is a decent vegan option that costs more per gram than the whey.
+          </p>
+
+          <p>
+            Our ranking is simple: Gold Standard Whey for almost everyone, Isolate if regular whey upsets your stomach, Casein as an optional second tub, and Hydrowhey or Plant only for specific needs. For the wider category, see our <a href="/best-whey-protein-powder/">best whey protein powder</a> rankings, where Gold Standard is our top pick.
+          </p>
+        </div>
+
+        <div id="range" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            2. The ON Protein Range
+          </h2>
+
+          <p>
+            Optimum Nutrition, usually shortened to ON, is owned by Glanbia, the Irish nutrition group whose Glanbia Performance Nutrition division also owns brands including Isopure. Gold Standard 100% Whey has been one of the best-selling protein powders in the US for decades, and many people searching for ON protein are really searching for that one tub.
+          </p>
+
+          <p>
+            ON's US site lists five protein powders at the time of writing: Gold Standard 100% Whey, Gold Standard 100% Isolate, Platinum Hydrowhey, Gold Standard 100% Plant and Gold Standard 100% Casein, alongside Gold Standard Pro Gainer and Serious Mass, which are weight gainers rather than protein powders. If you want a gainer, our <a href="/best-protein-powder-for-weight-gain/">best protein powder for weight gain</a> guide covers both.
+          </p>
+
+          <p>
+            Sizes vary by product. Gold Standard Whey comes in tubs of roughly 10, 29, 74 and 149 servings, from about 0.7 lb up to about 10 lb, per ON's site. Gold Standard Isolate comes in a roughly 3 lb tub of about 44 servings, Platinum Hydrowhey in a 1.76 lb tub of about 20 servings, Casein in a roughly 4 lb tub of about 53 servings on ON's site, and Plant in 12-serving and 20-serving sizes.
+          </p>
+
+          <p>
+            The whole range is sold on Amazon in the US, and Gold Standard Whey in particular is stocked by almost every supplement retailer, warehouse club and many supermarkets. That ubiquity is part of its value: you can compare prices easily, and big-tub discounts are frequent.
+          </p>
+        </div>
+
+        <!-- Picks -->
+        <div id="top-picks" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            3. Which Optimum Nutrition Protein to Buy
+          </h2>
+
+          <p>
+            Optimum Nutrition's current US protein powder range is Gold Standard 100% Whey, Gold Standard 100% Isolate, Platinum Hydrowhey, Gold Standard 100% Casein and Gold Standard 100% Plant, plus mass gainers we cover elsewhere. Here they are ranked by how many buyers they suit, with one clearly labelled alternative for readers who want more protein per serving for less. Nutrition figures are per the label or ON's site at the time of writing and vary by flavor.
+          </p>
+
+          {PRODUCTS.map((product, index) => (
+            <div id={product.id} class="scroll-mt-24 mt-12 first:mt-8">
+              <div class="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                <div class="bg-gray-900 px-6 py-4 flex items-center justify-between">
+                  <div class="flex items-center gap-3">
+                    <span class="bg-[#FF4500] text-white w-8 h-8 rounded-full flex items-center justify-center text-sm font-black">
+                      {index + 1}
+                    </span>
+                    {productImages[product.id] && (
+                      <img
+                        src={productImages[product.id]}
+                        alt={product.name}
+                        loading="lazy"
+                        width="40"
+                        height="40"
+                        class="w-10 h-10 rounded-lg bg-white object-contain p-1 shrink-0"
+                      />
+                    )}
+                    <div>
+                      <p class="text-white font-black text-lg">{product.name}</p>
+                      <p class="text-gray-400 text-xs">{product.category}</p>
+                    </div>
+                  </div>
+                  <span class="bg-[#38BDF8]/20 text-[#38BDF8] px-3 py-1 rounded-full text-xs font-bold hidden sm:block">
+                    {product.badge}
+                  </span>
+                </div>
+                <div class="p-6">
+                  {product.rating && (
+                  <div class="flex items-center gap-2 mb-4">
+                    <div class="flex text-yellow-400">
+                      {[...Array(5)].map((_, i) => (
+                        <svg
+                          class={`w-4 h-4 ${i < Math.floor(product.rating) ? "fill-current" : "text-gray-200"}`}
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                        >
+                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        </svg>
+                      ))}
+                    </div>
+                    <span class="text-gray-500 text-sm font-bold">{product.rating}</span>
+                    {product.reviewCount && <span class="text-gray-400 text-xs">({product.reviewCount.toLocaleString()} retailer reviews)</span>}
+                  </div>
+                  )}
+
+                  <SpecGrid specs={product.specs} />
+
+                  <p class="text-gray-700 leading-relaxed mb-6">{product.description}</p>
+
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                    <div class="bg-green-50 rounded-xl p-4">
+                      <p class="text-xs font-black uppercase tracking-widest text-green-700 mb-3">Pros</p>
+                      <ul class="space-y-2">
+                        {product.pros.map((pro) => (
+                          <li class="flex items-start gap-2 text-sm text-green-800">
+                            <svg class="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            {pro}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div class="bg-red-50 rounded-xl p-4">
+                      <p class="text-xs font-black uppercase tracking-widest text-red-700 mb-3">Cons</p>
+                      <ul class="space-y-2">
+                        {product.cons.map((con) => (
+                          <li class="flex items-start gap-2 text-sm text-red-800">
+                            <svg class="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                            {con}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+
+                  <div class="bg-gray-50 rounded-xl p-4 border border-gray-100">
+                    <p class="text-xs font-black uppercase tracking-widest text-gray-500 mb-1">The Bottom Line</p>
+                    <p class="text-gray-900 font-bold">{product.bottomLine}</p>
+                  </div>
+
+                  <a
+                    href={amazonLink(product.amazonUrl, product.name, product.id)}
+                    target="_blank"
+                    rel="sponsored nofollow noopener"
+                    class="mt-6 block bg-[#FF4500] hover:bg-[#E63E00] text-white text-center py-4 rounded-xl font-black no-underline transition-colors uppercase tracking-widest text-sm"
+                  >
+                    Check Price &rarr;
+                  </a>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div id="gold-standard" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            4. The Gold Standard 100% Whey Label, Line by Line
+          </h2>
+
+          <p>
+            Gold Standard's protein comes from a blend of whey protein isolate, whey protein concentrate and whey peptides, with isolate listed first, per the label at the time of writing. ON calls isolate the primary source. That means it is an isolate-led blend rather than a pure isolate: a little more lactose and fat than an isolate, but noticeably leaner than the concentrate-led budget wheys that dominate the cheap end of the market.
+          </p>
+
+          <p>
+            The macros are lean. One scoop gives 24 g of protein in about 120 to 130 calories depending on flavor, typically with 1 to 1.5 g of fat and 3 to 4 g of carbohydrate. That is roughly 75 to 80 percent of calories from protein. A double scoop gives 48 g of protein for about 240 to 260 calories, which suits bigger lifters who want a full post-workout dose in one shake.
+          </p>
+
+          <div class="bg-gray-900 text-white rounded-2xl p-6 lg:p-8 my-8">
+            <p class="text-xs font-black uppercase tracking-widest text-[#38BDF8] mb-3">THE LABEL IN ONE LINE</p>
+            <p class="text-xl font-bold text-white mb-3">24 g protein, 5.5 g BCAAs, about 120-130 calories</p>
+            <p class="text-gray-300 leading-relaxed m-0">Per the label and ON's site at the time of writing, varying by flavor. The protein is an isolate-led whey blend, and ON describes it as banned-substance tested.</p>
+          </div>
+
+          <p>
+            The rest of the label is typical of a flavored mass-market whey: cocoa in chocolate flavors, natural and artificial flavors, lecithin to help it mix, a gum for texture, and sweetening with sucralose and acesulfame potassium in most flavors. If you avoid artificial sweeteners, Gold Standard is not your powder. If you do not, the formula is straightforward and has been stable for years.
+          </p>
+
+          <p>
+            The 5.5 g BCAA figure includes about 2.5 to 3 g of leucine per scoop in most whey of this protein density, the amino acid most closely tied to muscle protein synthesis. Combined with 24 g of protein, one scoop sits comfortably in the 20 to 40 g per sitting range that research on muscle building typically uses.
+          </p>
+
+          <p>
+            Whey is one of the most studied protein sources and is safe for most healthy adults at normal intakes. If you have kidney disease, are pregnant, take medication or have been advised to limit protein, check with your doctor or a registered dietitian first. This is general information, not medical advice.
+          </p>
+        </div>
+
+        <div id="cost" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            5. Cost per 25 g of Protein
+          </h2>
+
+          <p>
+            Cost per 25 g of protein is the fairest way to compare ON's tubs, because serving sizes and protein per scoop differ across the range. The headline is that tub size matters more than product. Gold Standard Whey in the smallest 10-serving tub listed at about $26 on ON's site at the time of writing, or roughly $2.75 per 25 g, while the 5 lb tub typically works out to roughly $1.30 to $1.50 per 25 g. Prices change, so treat these as approximate.
+          </p>
+
+          <div class="overflow-hidden border border-gray-200 rounded-2xl my-8">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Product</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Protein per serving</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Size on ON's site</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Approx. cost per 25 g</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Gold Standard 100% Whey (5 lb)</td>
+                    <td class="px-4 py-4 text-gray-700">24 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 74 servings</td>
+                    <td class="px-4 py-4 text-gray-700">About $1.30-$1.50</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Gold Standard 100% Casein</td>
+                    <td class="px-4 py-4 text-gray-700">24 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 53 servings</td>
+                    <td class="px-4 py-4 text-gray-700">About $1.90</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Gold Standard 100% Isolate</td>
+                    <td class="px-4 py-4 text-gray-700">25 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 44 servings</td>
+                    <td class="px-4 py-4 text-gray-700">About $2.35</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Gold Standard 100% Plant</td>
+                    <td class="px-4 py-4 text-gray-700">24 g</td>
+                    <td class="px-4 py-4 text-gray-700">12 servings</td>
+                    <td class="px-4 py-4 text-gray-700">About $2.45</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Platinum Hydrowhey</td>
+                    <td class="px-4 py-4 text-gray-700">30 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 20 servings</td>
+                    <td class="px-4 py-4 text-gray-700">About $3.10</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <p>
+            Those figures make the decision for most people. Gold Standard Whey in the 5 lb tub is the cheapest ON protein by a wide margin. Isolate costs about 60 to 80 percent more per gram, and Hydrowhey more than twice as much. Unless you have a specific reason to pay for isolate or hydrolyzed protein, the standard whey is the better buy.
+          </p>
+
+          <p>
+            Buy the biggest tub you will finish before its best-by date. The 10 lb tub is cheapest per serving but takes most people months to finish. Amazon Subscribe and Save, warehouse clubs and ON's own sales regularly bring the 5 lb price down. Compare per-serving prices rather than tub prices, and watch out for listings that bundle shaker bottles to hide a higher price.
+          </p>
+
+          <p>
+            If you want the lowest possible cost per gram regardless of brand, budget whey concentrates and store brands can come in lower, often with less protein per scoop. Our <a href="/best-cheap-protein-powder/">best cheap protein powder</a> guide lists the cheapest options we would still drink.
+          </p>
+        </div>
+
+        <div id="isolate-hydro" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            6. Gold Standard Isolate vs Platinum Hydrowhey
+          </h2>
+
+          <p>
+            Gold Standard 100% Isolate is ON's answer to people who want a leaner whey. Per ON's site at the time of writing, a serving gives 25 g of protein, 5.5 g of naturally occurring BCAAs, about 1 g of carbohydrate and 0.5 g of fat, with roughly 100 to 110 calories depending on flavor. It is ultra-filtered whey isolate, comes in Chocolate Bliss and Rich Vanilla, and is banned-substance tested per ON.
+          </p>
+
+          <p>
+            The main reason to buy it is lactose. Isolate is filtered to remove most lactose, so people who get bloated on regular whey often tolerate it better. The second reason is calories: if you are cutting hard, saving 15 to 20 calories per scoop over Gold Standard Whey adds up over several shakes a day. The cost is about $2.35 per 25 g, per ON's listed price, and only two flavors. Our <a href="/whey-vs-whey-isolate/">whey vs whey isolate</a> guide explains when that is worth it.
+          </p>
+
+          <p>
+            Platinum Hydrowhey is the premium tier. Per ON's site, each serving gives 30 g of protein from hydrolyzed whey protein isolate alone, with 8.8 g of BCAAs, which includes added BCAAs on top of those naturally present. Hydrolyzed protein is partly broken down, which may help some people with sensitive stomachs, and it digests quickly. Flavors are Turbo Chocolate, Velocity Vanilla and Supercharged Strawberry.
+          </p>
+
+          <p>
+            Hydrowhey's problem is price. At about $74 for 20 servings on ON's site, it is roughly $3.10 per 25 g, more than twice Gold Standard Whey. The evidence that hydrolyzed whey builds more muscle than regular whey at the same protein dose is weak. Buy it only if regular whey and isolate both upset your stomach, or if you simply prefer it and do not mind paying.
+          </p>
+        </div>
+
+        <div id="casein-plant" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            7. Gold Standard Casein and Gold Standard Plant
+          </h2>
+
+          <p>
+            Gold Standard 100% Casein gives 24 g of micellar casein per scoop, per ON, at about 120 calories per the label, in Chocolate Supreme, Creamy Vanilla, Cookies and Cream and Chocolate Peanut Butter. Casein digests slowly, which makes it a common choice for a pre-bed shake or a long gap between meals. Mixed with less liquid it thickens into a pudding, which buyers often use as a dessert.
+          </p>
+
+          <p>
+            Casein is optional. If you already hit your daily protein target, there is no need for a second tub. Research on pre-sleep protein suggests a modest benefit for overnight muscle protein synthesis in people who train, but total daily protein matters far more. At about $1.90 per 25 g on ON's site, Casein is still reasonably priced, cheaper per gram than ON's isolate.
+          </p>
+
+          <p>
+            Gold Standard 100% Plant gives 24 g of protein per serving from pea, rice and fava bean proteins, per ON's site, with 0 g of sugar and no artificial colors, flavors or sweeteners. It comes in Creamy Vanilla and Rich Chocolate Fudge. The pea-rice-fava blend gives a complete amino acid profile, and avoiding artificial sweeteners is a plus for people who dislike sucralose.
+          </p>
+
+          <p>
+            The catch is cost and range. At about $28 for 12 servings on ON's site, it is roughly $2.45 per 25 g, and only two flavors. For vegans that is acceptable, but plant-based buyers have strong alternatives with sport certification. Our <a href="/best-plant-based-protein-powder/">best plant-based protein powder</a> rankings compare it with them.
+          </p>
+        </div>
+
+        <div id="testing" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            8. Testing and Certification
+          </h2>
+
+          <p>
+            ON describes Gold Standard Whey, Isolate, Platinum Hydrowhey and Casein as banned-substance tested on its US product pages at the time of writing. Optimum Nutrition has also long promoted Informed Choice certification on many Gold Standard flavors. Informed Choice tests finished products for substances banned in sport and lists certified products in a public database.
+          </p>
+
+          <p>
+            The important detail is that certifications are product- and flavor-specific. A certification on Double Rich Chocolate in one market does not automatically cover every flavor or size, and certification status can change. If you are a drug-tested athlete, look up your exact product, flavor and lot number in the certifier's database before you buy, rather than relying on a logo in a listing photo.
+          </p>
+
+          <p>
+            For everyone else, ON's scale, retail distribution and testing claims are reasonable reassurance. Whey is also less prone to heavy-metal issues than many plant proteins. If you buy Gold Standard Plant and drink it daily, the usual advice for plant proteins applies: vanilla tends to carry less cadmium and lead than chocolate, because cacao is itself a source. Our guide to whether <a href="/is-protein-powder-safe/">protein powder is safe</a> has more.
+          </p>
+
+          <p>
+            Counterfeit Gold Standard has been reported over the years because it is such a popular product. Buy from Amazon itself, ON's official Amazon store or authorized retailers, check that the seal is intact, and compare the lot number and best-by date with what you would expect. Prices that look far too good from an unknown seller are a warning sign.
+          </p>
+        </div>
+
+        <div id="vs-rivals" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            9. ON vs Ghost, Premier, Dymatize and Myprotein
+          </h2>
+
+          <p>
+            Against Ghost Whey, Gold Standard is the value pick. Ghost gives 25 g of protein per scoop with a fully disclosed protein split and licensed cereal and dessert flavors, but costs roughly 30 to 50 percent more per gram, and we could not find a sport certification for it. If flavor is what keeps you drinking shakes, Ghost may be worth it; our sibling <a href="/ghost-protein-powder-review/">Ghost protein powder review</a> covers it in detail.
+          </p>
+
+          <p>
+            Against Premier Protein powder, the comparison is closer. Premier gives 30 g of protein for about 150 calories per two-scoop serving at a similar or slightly lower cost per gram than Gold Standard's smaller tubs, but in just three flavors and without a sport certification we could find. Our <a href="/premier-protein-powder-review/">Premier Protein powder review</a> has the numbers.
+          </p>
+
+          <p>
+            Against Dymatize ISO100, ON's Isolate is the direct rival. Both give about 25 g of protein in roughly 100 to 120 calories per scoop. Dymatize states ISO100 carries Informed Choice certification and offers many more flavors, while ON's Isolate has only two flavors, so for most isolate buyers ISO100 is the more flexible pick. Our sibling <a href="/dymatize-protein-powder-review/">Dymatize protein powder review</a> compares them in depth.
+          </p>
+
+          <p>
+            Against budget brands like Myprotein Impact Whey, Gold Standard costs more per gram outside of sales, but offers more protein per scoop and an isolate-led blend. For people who buy one tub a month for years, the difference is small. For people on a very tight budget, Myprotein on sale is usually cheaper.
+          </p>
+        </div>
+
+        <div id="who" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            10. Who Should Buy ON and Who Should Skip It
+          </h2>
+
+          <p>
+            Buy Gold Standard 100% Whey if you want one reliable whey that does everything reasonably well, you tolerate dairy, you do not mind sucralose, and you want to buy in a big tub at a good price. That covers most beginners, most gym-goers and most people adding a daily shake to hit a protein target. The 5 lb tub in Double Rich Chocolate is the classic first purchase.
+          </p>
+
+          <p>
+            Buy Gold Standard Isolate if regular whey makes you bloated or you want the leanest macros, Casein if you want a slow pre-bed shake or a protein pudding, and Plant if you are vegan and want a familiar brand without artificial sweeteners. Buy Hydrowhey only if nothing else agrees with your stomach and price is not a concern.
+          </p>
+
+          <p>
+            Skip ON if you avoid artificial sweeteners and flavors, since most of the whey range uses sucralose and acesulfame potassium; if you want a grass-fed or single-ingredient whey, since ON does not market either; or if you want the most exciting flavors, which Ghost and other flavor-led brands do better. Our <a href="/best-clean-protein-powder/">best clean protein powder</a> guide covers simpler labels.
+          </p>
+
+          <p>
+            Drug-tested athletes can use ON, but only after checking the exact product and flavor in the Informed Choice database. If your flavor is not listed, choose one that is, or pick a different certified product.
+          </p>
+        </div>
+
+        <!-- Common Mistakes -->
+        <div id="mistakes" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            11. Common Mistakes to Avoid
+          </h2>
+
+          <div class="space-y-6 my-8">
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Buying the small tub to save money</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Gold Standard Whey in the 10-serving tub listed at roughly $2.75 per 25 g of protein on ON's site at the time of writing, about twice the cost of the 5 lb tub. If you know you like the flavor, buy the biggest tub you will finish before its best-by date.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Paying for Hydrowhey without a reason</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Platinum Hydrowhey costs more than twice as much per gram as Gold Standard Whey, and the evidence that hydrolyzed whey builds more muscle at the same protein dose is weak. Buy it only if regular whey and isolate both upset your stomach, not because the tub looks more premium.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Trusting a certification logo without checking</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Informed Choice and similar certifications are specific to the product, flavor and market. A logo in a listing photo does not guarantee your tub is covered. Drug-tested athletes should look up the exact product, flavor and lot number in the certifier's public database before buying.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Buying Gold Standard from unknown sellers</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Gold Standard is popular enough that counterfeits have been reported over the years. Buy from Amazon itself, ON's official store or authorized retailers, check the seal and best-by date, and treat prices far below the usual range from an unknown seller as a warning sign.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Adding casein when protein is already covered</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Casein before bed has some research support, but total daily protein matters far more. If you already hit your target with food and one whey shake, a second tub of casein adds cost without much benefit. Use it only if evenings are where your protein falls short.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ -->
+        <div id="faq" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            12. Frequently Asked Questions
+          </h2>
+
+          <div class="space-y-6">
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">What does ON stand for in protein powder?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                ON stands for Optimum Nutrition, the brand behind Gold Standard 100% Whey. Optimum Nutrition is owned by Glanbia, an Irish nutrition group that also owns brands such as Isopure through its performance nutrition division. When people search for ON protein, they usually mean Gold Standard 100% Whey, the brand's best-selling product for decades.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">How much protein is in ON Gold Standard Whey?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                One scoop of Gold Standard 100% Whey gives 24 g of protein and 5.5 g of naturally occurring BCAAs, with about 120 to 130 calories depending on flavor, per ON's site and label at the time of writing. The serving is about 30 to 32 g of powder. A double scoop gives 48 g of protein for about 240 to 260 calories.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is Optimum Nutrition Gold Standard whey isolate?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                It is an isolate-led blend. The label lists whey protein isolate first, followed by whey protein concentrate and whey peptides. That makes it leaner than a concentrate-led whey but not a pure isolate. If you want isolate only, Gold Standard 100% Isolate gives 25 g of protein with about 1 g of carbohydrate and 0.5 g of fat per serving.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is ON protein third-party tested?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                ON describes Gold Standard Whey, Isolate, Hydrowhey and Casein as banned-substance tested on its US product pages, and it has promoted Informed Choice certification on many Gold Standard flavors. Certifications are flavor- and market-specific, so drug-tested athletes should check the exact product, flavor and lot number in the Informed Choice database before buying.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Which ON protein is best for beginners?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Gold Standard 100% Whey. It gives 24 g of protein per scoop, comes in more than 20 flavors, mixes easily according to buyer feedback and is one of the cheapest major-brand wheys per gram in the 5 lb tub. Start with a smaller tub of a popular flavor such as Double Rich Chocolate, then move to a bigger tub.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is ON Gold Standard good for weight loss?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                It can help. About 24 g of protein in roughly 120 to 130 calories is a strong ratio, and protein helps with fullness and preserving muscle while dieting. Gold Standard Isolate is slightly leaner still. Neither is a weight-loss product on its own, and anyone planning a large calorie deficit should speak with a doctor or registered dietitian.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is Optimum Nutrition worth the price?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Gold Standard Whey in the 5 lb tub is good value at roughly $1.30 to $1.50 per 25 g of protein at typical prices. The rest of the range costs more: about $1.90 per 25 g for Casein, $2.35 for Isolate, $2.45 for Plant and $3.10 for Platinum Hydrowhey, based on ON's listed prices. Buy the others only for a specific need.
+              </p>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Related Guides -->
+        <div class="mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">Related Whey Protein Guides</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <a href="/best-whey-protein-powder/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#FF4500] font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Whey Protein Powder</h3>
+              <p class="text-gray-500 text-sm mt-2">Where Gold Standard ranks against the other major wheys.</p>
+            </a>
+            <a href="/ghost-protein-powder-review/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#38BDF8] font-black text-xs uppercase tracking-widest mb-2">Brand Review</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Ghost Protein Powder Review</h3>
+              <p class="text-gray-500 text-sm mt-2">The flavor-led rival, priced per 25 g and label-checked.</p>
+            </a>
+            <a href="/whey-vs-whey-isolate/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-green-600 font-black text-xs uppercase tracking-widest mb-2">Comparison</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Whey vs Whey Isolate</h3>
+              <p class="text-gray-500 text-sm mt-2">When Gold Standard Isolate is worth the extra cost.</p>
+            </a>
+          </div>
+        </div>
+
+        <!-- Closing -->
+        <div class="mt-16 bg-gray-900 text-white rounded-2xl p-8">
+          <h2 class="text-2xl font-black text-white mb-4">The Bottom Line</h2>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            Optimum Nutrition Gold Standard 100% Whey earns its reputation: 24 g of protein per scoop with isolate listed first, banned-substance testing per the brand, more than 20 flavors and roughly $1.30 to $1.50 per 25 g in the 5 lb tub. For most people it is the only ON protein worth buying.
+          </p>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            Buy Gold Standard Isolate if regular whey bloats you, Casein if you want a pre-bed shake, and Plant if you are vegan. Skip Platinum Hydrowhey unless your stomach demands it, and skip ON altogether if you avoid artificial sweeteners or want flavor-first powders like Ghost.
+          </p>
+        </div>
+
+        <MoreInCategory category="Brand Reviews" links={moreInCategory} />
+
+        <AuthorBio />
+      </div>
+    </div>
+  </article>
+</Layout>

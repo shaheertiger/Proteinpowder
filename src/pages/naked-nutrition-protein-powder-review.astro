@@ -1,0 +1,939 @@
+---
+import Layout from "../layouts/Layout.astro";
+import MoreInCategory from "../components/MoreInCategory.astro";
+import { AUTHORS, DEFAULT_AUTHOR, authorSchema } from "../data/authors";
+import { SITE_NAME, SITE_URL } from "../data/site";
+import AuthorAvatar from "../components/AuthorAvatar.astro";
+import QuickPicks from "../components/QuickPicks.astro";
+import AuthorBio from "../components/AuthorBio.astro";
+import { amazonLink } from "../data/affiliate";
+import TrustBadge from "../components/TrustBadge.astro";
+import SocialProof from "../components/SocialProof.astro";
+import SpecGrid from "../components/SpecGrid.astro";
+import productImages from "../data/product-images.json";
+import { pageDates } from "../data/dates";
+
+const moreInCategory = [
+  {
+    "title": "Transparent Labs Protein Powder Review",
+    "url": "/transparent-labs-protein-powder-review/"
+  },
+  {
+    "title": "Ascent Protein Powder Review",
+    "url": "/ascent-protein-powder-review/"
+  },
+  {
+    "title": "Vega Protein Powder Review",
+    "url": "/vega-protein-powder-review/"
+  }
+];
+const author = AUTHORS[DEFAULT_AUTHOR];
+const dates = pageDates(Astro.url.pathname, { published: "2026-10-19", modified: "2026-10-19" });
+const title = "Naked Protein Powder Review: Single-Ingredient Whey, Pea and Casein Ranked";
+const description =
+  "Naked Nutrition protein reviewed by label: Naked Whey vs the isolate, Naked Pea and Casein, what NSF Contents Certified covers, and cost per 25 g of protein.";
+
+const PRODUCTS: {
+  id: string;
+  name: string;
+  brand?: string;
+  badge: string;
+  category: string;
+  description: string;
+  pros: string[];
+  cons: string[];
+  bottomLine: string;
+  specs?: Record<string, string>;
+  rating?: number;
+  reviewCount?: number;
+  amazonUrl?: string;
+}[] = [
+  {
+    "id": "naked-nutrition-naked-whey",
+    "name": "Naked Whey (Grass-Fed Whey Protein)",
+    "brand": "Naked Nutrition",
+    "badge": "Best Overall Naked",
+    "category": "Single-ingredient grass-fed whey",
+    "description": "Naked Whey is the product the brand is built on. The unflavored version has one ingredient, grass-fed whey from small non-GMO dairy farms whose cows are raised without rBGH or rBST, per Naked. A two-scoop serving gives 25 g of protein and 5.9 g of BCAAs. Naked says it is cold-processed without acid or bleach and NSF Contents Certified, which covers label accuracy and contaminants such as heavy metals and pesticides.",
+    "pros": [
+      "One ingredient in the unflavored version",
+      "NSF Contents Certified, per Naked",
+      "About $1.84 per 25 g in the 5 lb bag at list price, less on autoship",
+      "Disappears into smoothies, oats and baking"
+    ],
+    "cons": [
+      "Not an isolate, so more lactose than Naked's whey isolate",
+      "No sport certification such as NSF Certified for Sport or Informed Sport"
+    ],
+    "bottomLine": "The simplest grass-fed whey you can buy. Ideal if you blend or bake, less so if you want a flavored shake.",
+    "specs": {
+      "Protein / serving": "25 g (brand)",
+      "Serving size": "2 scoops",
+      "Third-party testing": "NSF Contents Certified (brand)",
+      "Best for": "Smoothies, baking, clean labels"
+    },
+    "amazonUrl": "https://www.amazon.com/dp/B00XIKPUK4"
+  },
+  {
+    "id": "naked-nutrition-naked-pea",
+    "name": "Naked Pea Protein",
+    "brand": "Naked Nutrition",
+    "badge": "Best Value",
+    "category": "Single-ingredient yellow pea protein",
+    "description": "Naked Pea has one ingredient, protein from yellow split peas grown in the US and Canada, extracted with water rather than chemical solvents, per the brand. A two-scoop serving gives 27 g of protein and about 120 calories. Naked says it is NSF Contents Certified and independently tested for heavy metals. In the 5 lb bag at list price it costs well under a dollar per 25 g of protein, the cheapest in the range.",
+    "pros": [
+      "About $0.70 per 25 g in the 5 lb bag at list price",
+      "27 g of protein in about 120 calories, per the brand",
+      "Vegan, soy-free and gluten-free"
+    ],
+    "cons": [
+      "Earthy taste and thick texture in water, as buyers commonly report",
+      "No sport certification"
+    ],
+    "bottomLine": "The best-value plant protein we know of, as long as it goes into a blender.",
+    "specs": {
+      "Protein / serving": "27 g (brand)",
+      "Serving size": "2 scoops, about 120 calories",
+      "Third-party testing": "NSF Contents Certified (brand)",
+      "Best for": "Vegans, budget, smoothies"
+    },
+    "amazonUrl": "https://www.amazon.com/dp/B00NBIUGA2"
+  },
+  {
+    "id": "naked-nutrition-naked-casein",
+    "name": "Naked Casein",
+    "brand": "Naked Nutrition",
+    "badge": "Best Before Bed",
+    "category": "Single-ingredient micellar casein",
+    "description": "Naked Casein is one ingredient, micellar casein from US farms made with rBGH-free skim milk, per the brand. A two-scoop serving gives 26 g of protein and 5.4 g of BCAAs. Naked says it is cold-processed without solvents and NSF Contents Certified. Casein digests slowly, so it suits bedtime shakes and puddings. Unflavored casein is thick and bland on its own, which makes it better as an ingredient than as a drink.",
+    "pros": [
+      "About $1.38 per 25 g in the 5 lb bag at list price",
+      "26 g of protein per serving, per the brand",
+      "Thickens puddings, oats and baking well"
+    ],
+    "cons": [
+      "Very thick in a shaker",
+      "No sport certification"
+    ],
+    "bottomLine": "One of the cheapest clean caseins per gram, and a great kitchen ingredient.",
+    "specs": {
+      "Protein / serving": "26 g (brand)",
+      "Serving size": "2 scoops",
+      "Third-party testing": "NSF Contents Certified (brand)",
+      "Best for": "Before bed, puddings, baking"
+    },
+    "amazonUrl": "https://www.amazon.com/dp/B00NBILDQ8"
+  },
+  {
+    "id": "naked-nutrition-naked-whey-isolate",
+    "name": "Naked Whey Isolate",
+    "brand": "Naked Nutrition",
+    "badge": "Best for Lactose Sensitivity",
+    "category": "Grass-fed whey protein isolate",
+    "description": "Naked Whey Isolate is sourced from pasture-raised cows in New Zealand, per the brand. The unflavored version has two ingredients, whey protein isolate and sunflower lecithin. A two-scoop serving gives 30 g of protein in about 120 calories, with zero sugar and only about 0.1 g of lactose, per Naked. The brand says its nutrition values are verified by an independent third party. It is the most expensive Naked whey per gram.",
+    "pros": [
+      "30 g of protein in about 120 calories, per the brand",
+      "About 0.1 g of lactose per serving, per Naked",
+      "Two ingredients in the unflavored version"
+    ],
+    "cons": [
+      "About $2.20 per 25 g at list price, the priciest Naked whey",
+      "No sport certification"
+    ],
+    "bottomLine": "Buy this over Naked Whey only if regular whey upsets your stomach.",
+    "specs": {
+      "Protein / serving": "30 g (brand)",
+      "Serving size": "2 rounded scoops, about 120 calories",
+      "Third-party testing": "Independent nutrition verification (brand)",
+      "Best for": "Lactose-sensitive users"
+    }
+  },
+  {
+    "id": "transparent-labs-grass-fed-whey-protein-isolate",
+    "name": "Transparent Labs 100% Grass-Fed Whey Protein Isolate",
+    "brand": "Transparent Labs",
+    "badge": "Alternative: Certified Grass-Fed Isolate",
+    "category": "Grass-fed whey protein isolate, unflavored or flavored",
+    "description": "If you like Naked's grass-fed sourcing but need a sport certification, Transparent Labs is the alternative. Its whey isolate, which comes in an unflavored version among many flavors, gives 28 g of protein in a scoop of about 32 g, per the brand at the time of writing. It is Informed Choice and Informed Protein certified. At list price it costs a little less per gram than Naked Whey Isolate, and a serving is one scoop rather than two.",
+    "pros": [
+      "Informed Choice and Informed Protein certified, per the brand",
+      "Unflavored version available alongside many flavors",
+      "28 g of protein per single scoop"
+    ],
+    "cons": [
+      "More expensive per gram than standard Naked Whey",
+      "Flavored versions add sweeteners and flavors"
+    ],
+    "bottomLine": "The pick for tested athletes who want a grass-fed, unflavored isolate.",
+    "specs": {
+      "Protein / serving": "28 g (brand)",
+      "Serving size": "1 scoop (about 32 g)",
+      "Third-party testing": "Informed Choice + Informed Protein",
+      "Best for": "Tested athletes"
+    },
+    "amazonUrl": "https://www.amazon.com/dp/B0CQ32D39X"
+  }
+];
+
+const schema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Home",
+          item: `${SITE_URL}/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Best Lists",
+          item: `${SITE_URL}/best-of/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 3,
+          name: "Naked Nutrition Protein Review",
+          item: `${SITE_URL}/naked-nutrition-protein-powder-review/`,
+        },
+      ],
+    },
+    {
+      "@type": "FAQPage",
+      mainEntity: [
+        {
+          "@type": "Question",
+          "name": "Is Naked Whey a whey isolate?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Naked Whey is a standard grass-fed whey with 25 g of protein per two-scoop serving, and Naked does not label it an isolate. Naked sells a separate Naked Whey Isolate with 30 g of protein and about 0.1 g of lactose per serving. If regular whey upsets your stomach, the isolate is the version to try."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is in Naked protein powder?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The unflavored core products are single ingredients. Naked Whey is grass-fed whey, Naked Pea is yellow pea protein and Naked Casein is micellar casein. Naked Whey Isolate adds sunflower lecithin. Flavored versions add flavoring and sweetening ingredients but no artificial sweeteners, according to Naked. Check each flavor's label for sugar."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is Naked Nutrition third-party tested?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Naked says Naked Whey, Naked Pea and Naked Casein are NSF Contents Certified, which covers label accuracy and contaminants such as heavy metals and pesticides. Naked Pea and Naked Rice are also independently tested for heavy metals. These are not sport certifications, so tested athletes should choose a product with NSF Certified for Sport or Informed Sport."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How much protein is in Naked Pea?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Naked lists 27 g of protein and about 120 calories per two-scoop serving of unflavored Naked Pea at the time of writing. It is made from yellow split peas grown in the US and Canada, extracted with water. Flavored versions have slightly different figures, so check the label on the bag you buy."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is Naked protein good for weight loss?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Unflavored Naked Pea and Naked Whey Isolate are both about 120 calories for 27-30 g of protein, which makes them efficient for hitting protein targets while cutting. Protein helps with fullness and muscle retention during a diet. Weight loss still depends on your total calorie intake. No powder causes it by itself."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is Naked Nutrition sold on Amazon?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Naked Whey, Naked Pea and Naked Casein are all sold on Amazon US in several sizes, alongside Naked's own store. Buy from listings sold by the brand or by Amazon itself, not unknown third-party sellers, to reduce the risk of old stock. Compare cost per serving on the day, because prices move."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does Naked protein taste bad?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Unflavored protein is not meant to taste of anything, so expectations matter. Buyers commonly describe unflavored whey as mild and easy to blend, unflavored pea as earthy, and unflavored casein as thick and bland. Most satisfied buyers blend it into smoothies or use it in cooking. Flavored versions are available if you want a drinkable shake."
+          }
+        }
+      ],
+    },
+    {
+      "@type": "Article",
+      headline: title,
+      author: authorSchema(),
+      datePublished: dates.published,
+      dateModified: dates.modified,
+      publisher: { "@type": "Organization", name: SITE_NAME, url: SITE_URL },
+    },
+    {
+      "@type": "ItemList",
+      name: title,
+      numberOfItems: PRODUCTS.length,
+      itemListElement: PRODUCTS.map((product, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name: product.name,
+        url: new URL(`#${product.id}`, Astro.url).toString(),
+      })),
+    },
+    ...PRODUCTS.map((product) => ({
+      "@type": "Product",
+      name: product.name,
+      description: product.description,
+      brand: {
+        "@type": "Brand",
+        name: product.brand ?? product.name.split(" ")[0],
+      },
+    })),
+  ],
+};
+---
+
+<Layout
+  title={title}
+  description={description}
+  ogType="article"
+  article={{
+    publishedTime: dates.published,
+    modifiedTime: dates.modified,
+    author: author.name,
+    section: "Brand Reviews",
+    tags: [
+      "naked protein powder",
+      "naked whey protein powder",
+      "naked nutrition review",
+      "naked pea protein"
+    ],
+  }}
+  jsonLd={schema}
+  stickyCta={{
+    text: "See Our Top Unflavored Picks",
+    link: "/best-unflavored-protein-powder/",
+  }}
+>
+  <article class="relative overflow-hidden">
+    <!-- Hero Section -->
+    <div class="bg-gray-900 py-16 lg:py-24 relative overflow-hidden">
+      <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(circle at 20% 20%, #38BDF8 0, transparent 45%), radial-gradient(circle at 80% 60%, #FF4500 0, transparent 40%);"></div>
+      <div class="max-w-4xl mx-auto px-4 relative z-10 text-center">
+        <div class="flex justify-center mb-6">
+          <TrustBadge />
+        </div>
+        <div class="flex justify-center gap-3 mb-6">
+          <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#FF4500]/20 text-[#FF4500] text-xs font-black uppercase tracking-widest border border-[#FF4500]/30">
+            Brand Review
+          </span>
+          <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-green-500/10 text-green-400 text-xs font-bold uppercase tracking-widest border border-green-500/20">
+            Label-Checked
+          </span>
+        </div>
+        <h1 class="text-4xl lg:text-6xl font-black text-white leading-tight mb-8">
+          Naked Nutrition Protein <span class="text-[#38BDF8]">Review</span>
+        </h1>
+        <p class="text-xl text-gray-300 leading-relaxed mb-8 max-w-3xl mx-auto">
+          One-ingredient whey, pea and casein at fair prices. Here is which Naked powder to buy, what its testing claims actually cover, and who should pick a different brand.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a
+            href="#naked-nutrition-naked-whey"
+            class="px-8 py-4 bg-[#FF4500] hover:bg-[#E63E00] text-white font-black rounded-xl shadow-lg transition-all no-underline"
+          >
+            See Our #1 Pick
+          </a>
+          <a
+            href="#whey"
+            class="px-8 py-4 bg-white/10 hover:bg-white/20 text-white font-bold rounded-xl border border-white/10 no-underline"
+          >
+            Compare the Range
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Author & Meta -->
+    <div class="max-w-3xl mx-auto px-4 pt-12">
+      <div class="flex items-center gap-6 border-b border-gray-100 pb-8">
+        <div class="flex items-center gap-3">
+          <AuthorAvatar size={48} />
+          <div>
+            <p class="text-sm font-bold text-gray-900">{author.name}</p>
+            <p class="text-xs text-gray-500 uppercase tracking-widest">{author.role}</p>
+          </div>
+        </div>
+        <div class="h-10 w-px bg-gray-200 hidden sm:block"></div>
+        <div class="hidden sm:block">
+          <p class="text-sm font-bold text-gray-900">Last Updated</p>
+          <p class="text-xs text-gray-500">{dates.display}</p>
+        </div>
+        <div class="hidden sm:block ml-auto">
+          <SocialProof />
+        </div>
+      </div>
+    </div>
+
+    <!-- Table of Contents -->
+    <div class="max-w-3xl mx-auto px-4 py-10">
+      <div class="bg-gray-50 border border-gray-200 rounded-2xl p-6 lg:p-8">
+        <h2 class="text-lg font-black text-gray-900 mb-4 flex items-center gap-2">
+          In This Guide
+        </h2>
+        <nav class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <a href="#verdict" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">1. The Short Verdict</a>
+          <a href="#lineup" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">2. The Naked Range</a>
+          <a href="#top-picks" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">3. Our Top Picks</a>
+          <a href="#whey" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">4. Whey vs Whey Isolate</a>
+          <a href="#testing" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">5. Testing</a>
+          <a href="#cost" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">6. Cost per 25 g</a>
+          <a href="#taste" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">7. Taste and Mixing</a>
+          <a href="#compare" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">8. Naked vs Other Brands</a>
+          <a href="#who" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">9. Who Should Buy It</a>
+          <a href="#use" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">10. Using Unflavored Protein</a>
+          <a href="#mistakes" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">11. Common Mistakes</a>
+          <a href="#faq" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">12. FAQ</a>
+        </nav>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="max-w-3xl mx-auto px-4 pb-16 lg:pb-24">
+      <div class="prose prose-lg prose-blue max-w-none text-gray-700 leading-relaxed">
+        <p class="text-2xl font-medium text-gray-900 mb-8 italic">
+          Naked Nutrition sells the simplest protein powders on the market, and most of them are good value. The catch is that unflavored means unflavored, and NSF Contents Certified is not a sport certification. Buy Naked to blend and bake with, not to sip from a shaker.
+        </p>
+
+        <QuickPicks products={PRODUCTS} />
+
+        <div id="verdict" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            1. The Short Verdict on Naked Nutrition
+          </h2>
+
+          <p>
+            Naked Nutrition does one thing better than almost anyone: it sells protein powders with nothing in them except the protein. Unflavored <strong>Naked Whey</strong> is one ingredient, grass-fed whey. <strong>Naked Pea</strong> is one ingredient, yellow pea protein. <strong>Naked Casein</strong> is one ingredient, micellar casein. If you want to know exactly what you are eating, or you want a neutral base for smoothies and baking, that simplicity is worth a lot.
+          </p>
+
+          <p>
+            It is also good value. At list price on the brand's site, Naked Whey in the 5 lb bag works out to about $1.84 per 25 g of protein, Naked Casein to about $1.38 and Naked Pea to about $0.70. Autoship cuts those by around 20%. Those are strong numbers for clean-label powders, and Naked Pea in particular is one of the cheapest grams of plant protein we have come across.
+          </p>
+
+          <p>
+            The trade-offs are taste and certification. Unflavored protein tastes like what it is: milky for whey, earthy for pea, chalky and thick for casein. Most buyers who are happy with Naked blend it into something. And while Naked says its core products are NSF Contents Certified, that is not the same as NSF Certified for Sport or Informed Sport. Tested athletes need to look elsewhere.
+          </p>
+
+          <p>
+            We rank Naked's products on the label, testing claims and cost per 25 g of protein. We have not tasted them, so any taste comments are summarized buyer feedback. For the wider field of plain powders, see our <a href="/best-unflavored-protein-powder/">best unflavored protein powders</a> roundup, which is where Naked usually sits near the top.
+          </p>
+        </div>
+
+        <div id="lineup" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            2. The Naked Nutrition Range
+          </h2>
+
+          <p>
+            Naked's catalog has grown well beyond its original three powders. The protein shelf now includes Naked Whey, Naked Whey Isolate, Naked Casein, Naked Pea, Naked Rice (organic sprouted brown rice protein), Naked Egg (egg white protein), a goat whey, a seed protein, a bone broth protein, a beef protein, a clear whey, a flavored vegan shake, collagen, and the Naked Mass gainers. Most of the core powders come in unflavored and a few flavored versions.
+          </p>
+
+          <div class="overflow-hidden border border-gray-200 rounded-2xl my-8">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Product</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Protein per serving</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">What is in it (unflavored)</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">List cost per 25 g (largest bag)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Naked Whey</td>
+                    <td class="px-4 py-4 text-gray-700">25 g</td>
+                    <td class="px-4 py-4 text-gray-700">Grass-fed whey</td>
+                    <td class="px-4 py-4 text-gray-700">About $1.84</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Naked Whey Isolate</td>
+                    <td class="px-4 py-4 text-gray-700">30 g</td>
+                    <td class="px-4 py-4 text-gray-700">Whey isolate, sunflower lecithin</td>
+                    <td class="px-4 py-4 text-gray-700">About $2.20 (2 lb only)</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Naked Casein</td>
+                    <td class="px-4 py-4 text-gray-700">26 g</td>
+                    <td class="px-4 py-4 text-gray-700">Micellar casein</td>
+                    <td class="px-4 py-4 text-gray-700">About $1.38</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Naked Pea</td>
+                    <td class="px-4 py-4 text-gray-700">27 g</td>
+                    <td class="px-4 py-4 text-gray-700">Yellow pea protein</td>
+                    <td class="px-4 py-4 text-gray-700">About $0.70</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <p>
+            Figures come from Naked's product pages at the time of writing. Most Naked servings are two scoops, which matters when you compare tub sizes with brands that use one large scoop. The 5 lb bags hold about 76 servings, the 2 lb bags about 30, and the 1 lb bags about 15. The isolate is the exception, sold in a 2 lb size only.
+          </p>
+
+          <p>
+            The flavored versions are where the one-ingredient promise loosens. Chocolate, vanilla and strawberry versions add flavoring and sweetening ingredients, and Naked's flavored lines avoid artificial sweeteners, according to the brand. They are still short labels, but check the panel for sugar if that matters to you. Naked Shake is a different product again: pea protein with MCT oil and natural flavors, 20 g of protein and 3 g of sugar per serving.
+          </p>
+
+          <p>
+            Naked Mass is worth singling out so nobody buys it by accident. Naked says each serving contains 1,250 calories and 50 g of protein, from Naked Whey, Naked Casein and organic maltodextrin. That is a weight-gain product for people who struggle to eat enough. If that is you, compare it in our <a href="/best-protein-powder-for-weight-gain/">weight gain protein guide</a>. If not, stay well away.
+          </p>
+        </div>
+
+        <!-- Picks -->
+        <div id="top-picks" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            3. The Naked Powders Worth Considering
+          </h2>
+
+          <p>
+            Four Naked Nutrition proteins, flagship first, plus one certified alternative for tested athletes. Figures are per Naked's product pages at the time of writing and vary by flavor. Most Naked servings are two scoops. We have not tasted these products, and any taste notes are buyer feedback.
+          </p>
+
+          {PRODUCTS.map((product, index) => (
+            <div id={product.id} class="scroll-mt-24 mt-12 first:mt-8">
+              <div class="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                <div class="bg-gray-900 px-6 py-4 flex items-center justify-between">
+                  <div class="flex items-center gap-3">
+                    <span class="bg-[#FF4500] text-white w-8 h-8 rounded-full flex items-center justify-center text-sm font-black">
+                      {index + 1}
+                    </span>
+                    {productImages[product.id] && (
+                      <img
+                        src={productImages[product.id]}
+                        alt={product.name}
+                        loading="lazy"
+                        width="40"
+                        height="40"
+                        class="w-10 h-10 rounded-lg bg-white object-contain p-1 shrink-0"
+                      />
+                    )}
+                    <div>
+                      <p class="text-white font-black text-lg">{product.name}</p>
+                      <p class="text-gray-400 text-xs">{product.category}</p>
+                    </div>
+                  </div>
+                  <span class="bg-[#38BDF8]/20 text-[#38BDF8] px-3 py-1 rounded-full text-xs font-bold hidden sm:block">
+                    {product.badge}
+                  </span>
+                </div>
+                <div class="p-6">
+                  {product.rating && (
+                  <div class="flex items-center gap-2 mb-4">
+                    <div class="flex text-yellow-400">
+                      {[...Array(5)].map((_, i) => (
+                        <svg
+                          class={`w-4 h-4 ${i < Math.floor(product.rating) ? "fill-current" : "text-gray-200"}`}
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                        >
+                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        </svg>
+                      ))}
+                    </div>
+                    <span class="text-gray-500 text-sm font-bold">{product.rating}</span>
+                    {product.reviewCount && <span class="text-gray-400 text-xs">({product.reviewCount.toLocaleString()} retailer reviews)</span>}
+                  </div>
+                  )}
+
+                  <SpecGrid specs={product.specs} />
+
+                  <p class="text-gray-700 leading-relaxed mb-6">{product.description}</p>
+
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                    <div class="bg-green-50 rounded-xl p-4">
+                      <p class="text-xs font-black uppercase tracking-widest text-green-700 mb-3">Pros</p>
+                      <ul class="space-y-2">
+                        {product.pros.map((pro) => (
+                          <li class="flex items-start gap-2 text-sm text-green-800">
+                            <svg class="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            {pro}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div class="bg-red-50 rounded-xl p-4">
+                      <p class="text-xs font-black uppercase tracking-widest text-red-700 mb-3">Cons</p>
+                      <ul class="space-y-2">
+                        {product.cons.map((con) => (
+                          <li class="flex items-start gap-2 text-sm text-red-800">
+                            <svg class="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                            {con}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+
+                  <div class="bg-gray-50 rounded-xl p-4 border border-gray-100">
+                    <p class="text-xs font-black uppercase tracking-widest text-gray-500 mb-1">The Bottom Line</p>
+                    <p class="text-gray-900 font-bold">{product.bottomLine}</p>
+                  </div>
+
+                  <a
+                    href={amazonLink(product.amazonUrl, product.name, product.id)}
+                    target="_blank"
+                    rel="sponsored nofollow noopener"
+                    class="mt-6 block bg-[#FF4500] hover:bg-[#E63E00] text-white text-center py-4 rounded-xl font-black no-underline transition-colors uppercase tracking-widest text-sm"
+                  >
+                    Check Price &rarr;
+                  </a>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div id="whey" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            4. Naked Whey vs Naked Whey Isolate
+          </h2>
+
+          <p>
+            These two cause the most confusion, so it is worth being precise. <strong>Naked Whey</strong> is a standard grass-fed whey from small non-GMO dairy farms, with cows raised without rBGH or rBST, per the brand. It is not labelled as an isolate. Two scoops give 25 g of protein and 5.9 g of BCAAs. Naked says it is cold-processed without acid or bleach and describes it as non-denatured, meaning less damaged by heat.
+          </p>
+
+          <p>
+            <strong>Naked Whey Isolate</strong> uses whey from pasture-raised cows in New Zealand, per the brand. The unflavored version has two ingredients, whey isolate and sunflower lecithin, which helps it mix. Two rounded scoops give 30 g of protein and about 120 calories, with zero sugar and only about 0.1 g of lactose, according to Naked. Naked's own comparison makes the point that regular whey carries more lactose.
+          </p>
+
+          <p>
+            For most people, the regular Naked Whey is the better buy. It is cheaper per gram and the protein quality is excellent. Choose the isolate if regular whey gives you bloating or gas, which is usually lactose at work, or if you want more protein per serving with fewer calories from fat and carbs. Our <a href="/whey-vs-whey-isolate/">whey vs whey isolate</a> guide explains when the upgrade is worth paying for.
+          </p>
+
+          <p>
+            One more distinction: testing claims differ. Naked's pages for Naked Whey, Naked Casein and Naked Pea describe them as NSF Contents Certified. The isolate's page instead says its nutrition values are verified by an independent third party and that it is tested to meet FDA safety standards. Both are reassuring, but they are not the same claim. If contaminant testing is your main reason to buy, the regular Naked Whey has the stronger stated certification.
+          </p>
+        </div>
+
+        <div id="testing" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            5. Testing and Certifications
+          </h2>
+
+          <p>
+            Naked uses the phrase <strong>NSF Contents Certified</strong> on its core products. According to Naked's product pages, that means the contents are tested for accuracy and purity and confirmed to have no harmful levels of contaminants, including heavy metals and pesticides. That covers the two questions most buyers care about: is the protein figure on the label true, and is the powder clean. It is a good standard for a single-ingredient brand to meet.
+          </p>
+
+          <p>
+            What it is not is a sport certification. <strong>NSF Certified for Sport</strong> and <strong>Informed Sport</strong> also screen for substances banned in sport and are the programs athletes rely on. Naked's pages do not claim either. If you compete in a tested sport, a single-ingredient powder is already lower risk than a heavily formulated one, but low risk is not documented. Buy a certified product, such as the Transparent Labs alternative on this page.
+          </p>
+
+          <p>
+            Heavy metals matter most for the plant products. Pea and rice proteins tend to carry more lead and cadmium than whey because plants absorb metals from soil. Naked states that Naked Pea and Naked Rice are independently tested for heavy metals, and Naked Pea is also NSF Contents Certified. That is more than many budget plant brands offer. Our guide on <a href="/is-protein-powder-safe/">whether protein powder is safe</a> explains what those tests mean.
+          </p>
+
+          <p>
+            The general rule applies here too: certification belongs to a product, not a brand. Before you rely on it, check the exact product and flavor in the certifier's listing. Flavored versions are manufactured with extra ingredients, and their certification status does not automatically match the unflavored version. Keep your batch number if testing matters to you.
+          </p>
+        </div>
+
+        <div id="cost" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            6. Cost per 25 g of Protein
+          </h2>
+
+          <p>
+            Naked's pricing is unusually transparent. The brand site lists cost per serving for each bag size, and the table below converts those list prices to cost per 25 g of protein so the products can be compared fairly. Naked's autoship takes around 20% off most of these, and Amazon prices move on their own, so treat these as approximate.
+          </p>
+
+          <div class="overflow-hidden border border-gray-200 rounded-2xl my-8">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Product and size</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">List price (approx.)</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Cost per 25 g protein (approx.)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Naked Whey, 5 lb (76 servings)</td>
+                    <td class="px-4 py-4 text-gray-700">About $140</td>
+                    <td class="px-4 py-4 text-gray-700">About $1.84</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Naked Whey, 2 lb (30 servings)</td>
+                    <td class="px-4 py-4 text-gray-700">About $63</td>
+                    <td class="px-4 py-4 text-gray-700">About $2.09</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Naked Whey Isolate, 2 lb</td>
+                    <td class="px-4 py-4 text-gray-700">About $75</td>
+                    <td class="px-4 py-4 text-gray-700">About $2.20</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Naked Casein, 5 lb (76 servings)</td>
+                    <td class="px-4 py-4 text-gray-700">About $110</td>
+                    <td class="px-4 py-4 text-gray-700">About $1.38</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Naked Pea, 5 lb (76 servings)</td>
+                    <td class="px-4 py-4 text-gray-700">About $58</td>
+                    <td class="px-4 py-4 text-gray-700">About $0.70</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Naked Pea, 2 lb (30 servings)</td>
+                    <td class="px-4 py-4 text-gray-700">About $35</td>
+                    <td class="px-4 py-4 text-gray-700">About $1.07</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <p>
+            The 5 lb bags are the clear value play. Naked Whey costs about 12% less per gram in the 5 lb bag than the 2 lb bag, and Naked Pea costs about a third less. Unflavored protein keeps well when sealed and dry, so if you use one serving a day, the big bag lasts about two and a half months. That makes the savings easy to capture.
+          </p>
+
+          <p>
+            Compared with the market, Naked Whey is mid-priced for a whey and very good value for a grass-fed, single-ingredient one. Naked Pea is in a class of its own on price. A daily shake of Naked Pea costs roughly $20-25 a month at list price, against $40-100 for flavored plant brands. Our <a href="/vega-protein-powder-review/">Vega review</a> shows that gap in detail, and our <a href="/best-pea-protein-powder/">pea protein guide</a> ranks Naked Pea against other isolates.
+          </p>
+
+          <p>
+            The isolate is the only Naked protein that is expensive per gram, and the reason is the format. You are paying for extra filtration and lower lactose. If you do not need those, the regular Naked Whey gets you excellent protein for less.
+          </p>
+        </div>
+
+        <div id="taste" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            7. Taste and Mixing: What Buyers Report
+          </h2>
+
+          <p>
+            We have not tasted these products, so this section summarizes buyer feedback. Expectations matter more with Naked than with most brands. Unflavored whey tastes mildly milky and mixes reasonably well, and buyers often describe it as close to tasteless in a smoothie. Unflavored pea is the opposite: earthy, slightly bitter and thick in plain water. Many buyers say they would not drink it straight, but it disappears in a fruit smoothie.
+          </p>
+
+          <p>
+            Casein is the hardest to drink on its own. Micellar casein thickens as it hydrates, and unflavored casein in water is bland and chalky, according to common buyer reports. That same thickness makes it excellent for puddings, overnight oats and protein ice cream, which is how a lot of buyers use it.
+          </p>
+
+          <p>
+            The flavored versions solve most of this, at the cost of a slightly longer ingredient list. Buyers who want Naked's sourcing and a drinkable shaker shake tend to choose chocolate whey. If you mainly drink protein from a shaker, starting with a flavored version or another brand is wiser than forcing down unflavored pea for a month.
+          </p>
+
+          <p>
+            Blending tips help across the range. Use a blender rather than a shaker for pea and casein, add the powder after the liquid to avoid clumps, and pair unflavored protein with something that has its own flavor: banana, cocoa, berries, peanut butter or coffee. Our <a href="/best-protein-powder-for-smoothies/">smoothie protein guide</a> covers which bases work best.
+          </p>
+        </div>
+
+        <div id="compare" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            8. Naked vs Other Clean-Label Brands
+          </h2>
+
+          <p>
+            Against <strong>Transparent Labs</strong>, Naked wins on simplicity and cost, and Transparent Labs wins on certification and flavor range. Transparent Labs' unflavored grass-fed whey isolate is Informed Choice certified and costs a little less per gram than Naked's isolate at list price, but more than regular Naked Whey. Our <a href="/transparent-labs-protein-powder-review/">Transparent Labs review</a> has the details.
+          </p>
+
+          <p>
+            Against <strong>Ascent</strong>, the contrast is similar. Ascent's whey and casein are Informed Sport certified and stevia-sweetened, with an unflavored whey option too. Naked's casein is cheaper per 25 g in the 5 lb bag, and its unflavored products are true single ingredients. Our <a href="/ascent-protein-powder-review/">Ascent review</a> covers that range.
+          </p>
+
+          <p>
+            Against other single-ingredient brands like <strong>NOW Sports</strong>, Naked is usually a little more expensive and offers grass-fed sourcing and NSF Contents Certified status in return. Against clean-label premium brands like <strong>Just Ingredients</strong> and <strong>Truvani</strong>, Naked is cheaper and simpler, but less focused on flavor. See our <a href="/just-ingredients-protein-powder-review/">Just Ingredients review</a> and <a href="/truvani-protein-powder-review/">Truvani review</a> if flavor without additives matters most.
+          </p>
+
+          <p>
+            Against mainstream flavored wheys, Naked is a different kind of product. You give up convenience and flavor in exchange for knowing exactly what is in the bag. That trade suits people who blend or bake, people avoiding sweeteners, and parents who want a plain protein to add to family food. It does not suit someone who wants a dessert-flavored shake after the gym.
+          </p>
+        </div>
+
+        <div id="who" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            9. Who Should Buy Naked, and Who Should Skip It
+          </h2>
+
+          <p>
+            <strong>Buy Naked Whey</strong> if you want a clean, grass-fed whey for smoothies, oats and baking, and you value a one-ingredient label. Buy the 5 lb bag once you know you get on with it. <strong>Buy Naked Pea</strong> if you are vegan or dairy-free and want the cheapest honest gram of plant protein available, and you will blend it rather than drink it straight.
+          </p>
+
+          <p>
+            <strong>Buy Naked Casein</strong> if you make protein puddings, overnight oats or bedtime shakes and want a plain, cheap casein. <strong>Buy Naked Whey Isolate</strong> only if regular whey upsets your stomach, or you specifically want 30 g of protein in 120 calories. For everyone else, the regular whey is better value.
+          </p>
+
+          <p>
+            <strong>Skip Naked</strong> if you are a tested athlete who needs NSF Certified for Sport or Informed Sport. Skip the unflavored products if you want to drink protein from a shaker with water and enjoy it. And skip Naked Mass unless you have a genuine weight-gain goal, because 1,250 calories a serving is a lot.
+          </p>
+
+          <p>
+            If you have kidney disease, are pregnant, have a milk allergy or take medication, talk to your doctor or a registered dietitian before adding a protein supplement. Whey and casein are milk proteins and are not suitable for people with a milk protein allergy. Naked Pea or Naked Rice are the dairy-free options. This review is not medical advice.
+          </p>
+        </div>
+
+        <div id="use" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            10. How to Get the Most From Unflavored Protein
+          </h2>
+
+          <p>
+            Dose by protein, not by scoop. Naked servings are mostly two scoops, so one scoop gives about 12-15 g of protein. That is fine as a top-up in coffee or oats, but a meal-sized dose for most adults is 20-40 g. Our <a href="/how-much-protein-do-i-need/">protein needs guide</a> shows how to set a daily target and how much of it a powder should cover.
+          </p>
+
+          <p>
+            Use the plain powders as ingredients. Unflavored whey blends into smoothies, yogurt and pancake batter. Casein thickens puddings and makes a passable protein ice cream. Pea works in savory dishes, soups and baked goods where its earthiness is hidden. In baking, replace no more than about a quarter to a third of the flour with protein, and add extra liquid, or the result turns dry and rubbery.
+          </p>
+
+          <p>
+            Pair plant proteins sensibly. Naked Pea is high in lysine and lower in methionine, while rice protein is the reverse. Blending Naked Pea with Naked Rice, or simply eating a varied diet, covers both. At 27 g a serving, Naked Pea already clears a sensible per-meal dose on its own. Our <a href="/whey-vs-plant-protein/">whey vs plant protein</a> breakdown covers how the two compare for muscle building.
+          </p>
+
+          <p>
+            Store bags sealed, cool and dry, and press the air out before closing. Unflavored protein has no flavors to go stale, but moisture still causes clumping. If you buy the 5 lb bag, decanting a week's supply into a smaller container keeps the main bag closed and fresh.
+          </p>
+        </div>
+
+        <!-- Common Mistakes -->
+        <div id="mistakes" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            11. Common Mistakes to Avoid
+          </h2>
+
+          <div class="space-y-6 my-8">
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Using one scoop and counting it as a serving</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Most Naked servings are two scoops. One scoop of Naked Whey gives about 12-13 g of protein, not 25 g. If you have been using one scoop and wondering why you are not reaching your protein target, that is likely the reason. Check the serving size on each bag.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Reading NSF Contents Certified as sport certified</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Naked's NSF Contents Certified claim covers label accuracy and contaminants, per the brand. It does not cover screening for substances banned in sport. If you are drug tested, choose a product with NSF Certified for Sport or Informed Sport, and confirm the exact flavor in the certifier's database.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Paying for the isolate without needing it</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Naked Whey Isolate costs noticeably more per gram than regular Naked Whey. Its advantages are lower lactose and fewer calories from fat and carbs. If regular whey does not bloat you, the isolate's main benefit does not apply to you, and the standard bag is the smarter buy.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Drinking unflavored pea in plain water</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Unflavored pea protein is earthy and thick, and buyers who try it straight from a shaker often give up. Blend it with fruit, milk or cocoa, or use it in cooking. If you only ever use a shaker with water, buy a flavored product instead.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Buying Naked Mass by mistake</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Naked Mass is a weight gainer, not a protein powder. Naked lists 1,250 calories and 50 g of protein per serving, much of it from maltodextrin. If you wanted more protein without a large number of extra calories, Naked Whey or Naked Pea is almost certainly what you meant to buy.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ -->
+        <div id="faq" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            12. Frequently Asked Questions
+          </h2>
+
+          <div class="space-y-6">
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is Naked Whey a whey isolate?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                No. Naked Whey is a standard grass-fed whey with 25 g of protein per two-scoop serving, and Naked does not label it an isolate. Naked sells a separate Naked Whey Isolate with 30 g of protein and about 0.1 g of lactose per serving. If regular whey upsets your stomach, the isolate is the version to try.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">What is in Naked protein powder?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                The unflavored core products are single ingredients. Naked Whey is grass-fed whey, Naked Pea is yellow pea protein and Naked Casein is micellar casein. Naked Whey Isolate adds sunflower lecithin. Flavored versions add flavoring and sweetening ingredients but no artificial sweeteners, according to Naked. Check each flavor's label for sugar.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is Naked Nutrition third-party tested?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Naked says Naked Whey, Naked Pea and Naked Casein are NSF Contents Certified, which covers label accuracy and contaminants such as heavy metals and pesticides. Naked Pea and Naked Rice are also independently tested for heavy metals. These are not sport certifications, so tested athletes should choose a product with NSF Certified for Sport or Informed Sport.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">How much protein is in Naked Pea?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Naked lists 27 g of protein and about 120 calories per two-scoop serving of unflavored Naked Pea at the time of writing. It is made from yellow split peas grown in the US and Canada, extracted with water. Flavored versions have slightly different figures, so check the label on the bag you buy.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is Naked protein good for weight loss?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Unflavored Naked Pea and Naked Whey Isolate are both about 120 calories for 27-30 g of protein, which makes them efficient for hitting protein targets while cutting. Protein helps with fullness and muscle retention during a diet. Weight loss still depends on your total calorie intake. No powder causes it by itself.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is Naked Nutrition sold on Amazon?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Yes. Naked Whey, Naked Pea and Naked Casein are all sold on Amazon US in several sizes, alongside Naked's own store. Buy from listings sold by the brand or by Amazon itself, not unknown third-party sellers, to reduce the risk of old stock. Compare cost per serving on the day, because prices move.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Does Naked protein taste bad?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Unflavored protein is not meant to taste of anything, so expectations matter. Buyers commonly describe unflavored whey as mild and easy to blend, unflavored pea as earthy, and unflavored casein as thick and bland. Most satisfied buyers blend it into smoothies or use it in cooking. Flavored versions are available if you want a drinkable shake.
+              </p>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Related Guides -->
+        <div class="mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">Related Unflavored Protein Guides</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <a href="/best-unflavored-protein-powder/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#FF4500] font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Unflavored Protein Powder</h3>
+              <p class="text-gray-500 text-sm mt-2">Naked ranked against every leading plain powder for smoothies and baking.</p>
+            </a>
+            <a href="/best-pea-protein-powder/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#38BDF8] font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Pea Protein Powder</h3>
+              <p class="text-gray-500 text-sm mt-2">How Naked Pea compares with other single-ingredient pea isolates.</p>
+            </a>
+            <a href="/best-clean-protein-powder/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-green-600 font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Clean Protein Powder</h3>
+              <p class="text-gray-500 text-sm mt-2">Short-label powders ranked on testing, sourcing and cost.</p>
+            </a>
+          </div>
+        </div>
+
+        <!-- Closing -->
+        <div class="mt-16 bg-gray-900 text-white rounded-2xl p-8">
+          <h2 class="text-2xl font-black text-white mb-4">The Bottom Line</h2>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            Naked Nutrition is the brand to buy if you want protein and nothing else. Naked Whey is a clean, grass-fed, single-ingredient whey at a fair price. Naked Pea is the cheapest good plant protein we know of, and Naked Casein is a great kitchen ingredient. Buy the 5 lb bags once you know you like them.
+          </p>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            Skip Naked if you need a sport certification or want a flavored shake straight from a shaker. For every plain powder ranked side by side, read our <a href="/best-unflavored-protein-powder/">best unflavored protein powder</a> guide.
+          </p>
+        </div>
+
+        <MoreInCategory category="Brand Reviews" links={moreInCategory} />
+
+        <AuthorBio />
+      </div>
+    </div>
+  </article>
+</Layout>

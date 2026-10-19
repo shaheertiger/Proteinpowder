@@ -1,0 +1,931 @@
+---
+import Layout from "../layouts/Layout.astro";
+import MoreInCategory from "../components/MoreInCategory.astro";
+import { AUTHORS, DEFAULT_AUTHOR, authorSchema } from "../data/authors";
+import { SITE_NAME, SITE_URL } from "../data/site";
+import AuthorAvatar from "../components/AuthorAvatar.astro";
+import QuickPicks from "../components/QuickPicks.astro";
+import AuthorBio from "../components/AuthorBio.astro";
+import { amazonLink } from "../data/affiliate";
+import TrustBadge from "../components/TrustBadge.astro";
+import SocialProof from "../components/SocialProof.astro";
+import SpecGrid from "../components/SpecGrid.astro";
+import productImages from "../data/product-images.json";
+import { pageDates } from "../data/dates";
+
+const moreInCategory = [
+  {
+    "title": "Devotion Protein Powder Review",
+    "url": "/devotion-protein-powder-review/"
+  },
+  {
+    "title": "Ghost Protein Powder Review",
+    "url": "/ghost-protein-powder-review/"
+  },
+  {
+    "title": "Best Vanilla Protein Powder",
+    "url": "/best-vanilla-protein-powder/"
+  }
+];
+const author = AUTHORS[DEFAULT_AUTHOR];
+const dates = pageDates(Astro.url.pathname, { published: "2026-10-19", modified: "2026-10-19" });
+const title = "PEScience Protein Powder Review: Select Protein Flavors, Formula and Value";
+const description =
+  "PEScience Select Protein and Select Vegan checked by label: 24 g per scoop, the casein-whey formula, which flavor to start with and cost per 25 g of protein.";
+
+const PRODUCTS: {
+  id: string;
+  name: string;
+  brand?: string;
+  badge: string;
+  category: string;
+  description: string;
+  pros: string[];
+  cons: string[];
+  bottomLine: string;
+  specs?: Record<string, string>;
+  rating?: number;
+  reviewCount?: number;
+  amazonUrl?: string;
+}[] = [
+  {
+    "id": "pescience-select-protein",
+    "name": "PEScience Select Protein, Gourmet Vanilla",
+    "brand": "PEScience",
+    "badge": "Best Overall",
+    "category": "Milk protein isolate and whey blend",
+    "description": "Gourmet Vanilla is the most versatile Select flavor and the best first tub. Per the label at the time of writing, a 31 g scoop delivers 24 g of protein in 120 calories, with 2.5 g of carbohydrate and 1.5 g of fat, from a blend of milk protein isolate, whey concentrate and leucine peptides. It is sweetened with sucralose and acesulfame potassium and works in shakes, oats and baking.",
+    "pros": [
+      "24 g of protein per scoop",
+      "Creamy casein and whey texture",
+      "Works in shakes, oats and recipes",
+      "55-serving tub lowers cost per 25 g"
+    ],
+    "cons": [
+      "No sport certification advertised",
+      "Sucralose and acesulfame potassium"
+    ],
+    "bottomLine": "The PEScience tub to buy first, and the best value in the big size.",
+    "specs": {
+      "Protein per serving": "24 g (label)",
+      "Calories": "120",
+      "Third-party testing": "Brand says third-party tested",
+      "Best for": "All-purpose dessert shakes"
+    },
+    "amazonUrl": "https://www.amazon.com/dp/B01789VSRE"
+  },
+  {
+    "id": "pescience-select-protein-cake-pop",
+    "name": "PEScience Select Protein, Cake Pop",
+    "brand": "PEScience",
+    "badge": "Best Dessert Flavor",
+    "category": "Milk protein isolate and whey blend",
+    "description": "Cake Pop is one of Select's signature dessert flavors: a sweet birthday-cake profile on the same base. Retailer labels at the time of writing show 24 g of protein in about 120 calories per 31 g scoop. It is sweeter than Gourmet Vanilla, so it suits people who want a dessert-style shake rather than a neutral base for cooking.",
+    "pros": [
+      "Same 24 g protein dose as vanilla",
+      "Sweet birthday-cake dessert profile",
+      "Good in protein pudding and fluff"
+    ],
+    "cons": [
+      "Too sweet for some buyers",
+      "Less versatile than vanilla in cooking"
+    ],
+    "bottomLine": "The fun flavor to buy once you know you like Select.",
+    "specs": {
+      "Protein per serving": "24 g (label)",
+      "Calories": "About 120",
+      "Third-party testing": "Brand says third-party tested",
+      "Best for": "Dessert-style shakes"
+    },
+    "amazonUrl": "https://www.amazon.com/dp/B07SF8XD1V"
+  },
+  {
+    "id": "pescience-select-protein-chocolate-truffle",
+    "name": "PEScience Select Protein, Chocolate Truffle",
+    "brand": "PEScience",
+    "badge": "Best Chocolate",
+    "category": "Milk protein isolate and whey blend",
+    "description": "Chocolate Truffle is the richer of the Select chocolate options. Per retailer labels at the time of writing, a 33 g scoop delivers 23 g of protein in about 125 calories, slightly less protein per scoop than vanilla because cocoa takes up some of the weight. It is the pick for chocolate shakes, mocha drinks and chocolate protein baking.",
+    "pros": [
+      "23 g of protein per scoop",
+      "Rich chocolate profile for shakes and mochas",
+      "Available in the 55-serving size"
+    ],
+    "cons": [
+      "Slightly lower protein than vanilla",
+      "Sucralose and acesulfame potassium"
+    ],
+    "bottomLine": "The chocolate Select to choose for daily shakes.",
+    "specs": {
+      "Protein per serving": "23 g (label)",
+      "Calories": "About 125",
+      "Third-party testing": "Brand says third-party tested",
+      "Best for": "Chocolate shakes and mochas"
+    },
+    "amazonUrl": "https://www.amazon.com/dp/B0BPTM62WZ"
+  },
+  {
+    "id": "pescience-select-vegan-protein",
+    "name": "PEScience Select Vegan Protein, Chocolate Bliss",
+    "brand": "PEScience",
+    "badge": "Best Dairy-Free",
+    "category": "Pea and brown rice protein blend",
+    "description": "Select Vegan blends pea and brown rice protein concentrates for about 20 g of protein per scoop, with roughly 110 calories for Chocolate Bliss, per retailer labels at the time of writing. It is sweetened only with stevia and is free of dairy, soy and gluten. Sodium is relatively high, and some buyers report a chalky texture and stevia aftertaste.",
+    "pros": [
+      "Dairy-free, soy-free and gluten-free",
+      "Stevia only, no sucralose",
+      "Pea and rice pairing for a rounder amino profile"
+    ],
+    "cons": [
+      "About 20 g per scoop",
+      "Sodium around 290-330 mg per scoop",
+      "Mixed texture reviews"
+    ],
+    "bottomLine": "A solid flavored plant protein, below Select on taste reviews.",
+    "specs": {
+      "Protein per serving": "About 20 g (label)",
+      "Calories": "About 100-110",
+      "Third-party testing": "Brand says third-party tested",
+      "Best for": "Dairy-free shakes"
+    },
+    "amazonUrl": "https://www.amazon.com/dp/B01LWIVYQN"
+  },
+  {
+    "id": "devotion-angel-food-cake-protein",
+    "name": "Devotion Nutrition Angel Food Cake Protein Powder",
+    "brand": "Devotion Nutrition",
+    "badge": "Alternative: For Baking",
+    "category": "Whey isolate and micellar casein blend",
+    "description": "Devotion is the closest rival to PEScience for bakers. Its Angel Food Cake flavor delivers about 20 g of protein per scoop from roughly 80 percent whey isolate and 20 percent micellar casein, with about 100 to 110 calories and 1 g of MCT, per Devotion's label and Amazon listing at the time of writing. It costs more per 25 g than Select, but its range includes a savory flavor.",
+    "pros": [
+      "Built for baking as well as shakes",
+      "Savory Buttery Blend flavor in the same range",
+      "No added sugar, gluten-free, kosher"
+    ],
+    "cons": [
+      "About 20 g per scoop",
+      "Higher cost per 25 g than Select"
+    ],
+    "bottomLine": "Choose it over Select if you bake more than you drink.",
+    "specs": {
+      "Protein per serving": "About 20 g (label)",
+      "Calories": "About 100-110",
+      "Third-party testing": "Brand says third-party tested",
+      "Best for": "Protein baking"
+    },
+    "amazonUrl": "https://www.amazon.com/dp/B07CGPHC78"
+  }
+];
+
+const schema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Home",
+          item: `${SITE_URL}/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Best Lists",
+          item: `${SITE_URL}/best-of/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 3,
+          name: "PEScience Protein Powder Review",
+          item: `${SITE_URL}/pescience-protein-powder-review/`,
+        },
+      ],
+    },
+    {
+      "@type": "FAQPage",
+      mainEntity: [
+        {
+          "@type": "Question",
+          "name": "Is PEScience protein powder good?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, for most people who want dessert flavors. Select Protein lists 23 to 24 g of protein per scoop from a milk protein isolate and whey blend, in about 120 calories, and buyers rate its flavors highly. It is not certified for tested sport and uses sucralose, so drug-tested athletes and people avoiding artificial sweeteners should look elsewhere."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How much protein is in PEScience Select Protein?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Gourmet Vanilla and Cake Pop list 24 g of protein per 31 g scoop in about 120 calories, per retailer labels at the time of writing. Chocolate Truffle and Chocolate Peanut Butter Cup list 23 g in slightly larger scoops. Figures vary by flavor and label version, so check the panel on the tub you buy."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is PEScience Select whey or casein?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Both. The main ingredient is milk protein isolate, which contains casein and whey in roughly the ratio found in milk, followed by whey protein concentrate and leucine peptides. That makes Select thicker and slower to digest than a pure whey isolate, which helps with fullness and makes it work well in recipes."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the best PEScience flavor?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Gourmet Vanilla is the most versatile and the safest first tub, because it works in shakes, oats and baking. Cake Pop is the sweeter dessert-style pick, and Chocolate Truffle is the richer chocolate option. Taste is personal and we did not taste-test, so the sample kit is a cheap way to decide."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is PEScience third-party tested?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "PEScience says its protein products are third-party tested for purity and potency. It does not advertise NSF Certified for Sport, Informed Choice or Informed Sport status for Select Protein at the time of writing. That is fine for most buyers, but athletes in tested sport should choose a product listed in a certification database."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is PEScience Select Vegan good?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It is a reasonable flavored plant protein: about 20 g of protein per scoop from pea and brown rice, sweetened only with stevia, and free of dairy, soy and gluten. Buyer reviews are more mixed than for the dairy Select, with some noting chalkiness and a stevia aftertaste. Sodium is relatively high at around 290 to 330 mg."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Where should I buy PEScience?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Buy from PEScience's own site, Amazon listings sold by PEScience or Amazon, or established retailers such as Vitamin Shoppe and Vitacost. We found lookalike websites using the brand's name on unusual domains, so avoid unfamiliar sites with steep discounts. The 55-serving tub on sale is usually the cheapest way to buy Select."
+          }
+        }
+      ],
+    },
+    {
+      "@type": "Article",
+      headline: title,
+      author: authorSchema(),
+      datePublished: dates.published,
+      dateModified: dates.modified,
+      publisher: { "@type": "Organization", name: SITE_NAME, url: SITE_URL },
+    },
+    {
+      "@type": "ItemList",
+      name: title,
+      numberOfItems: PRODUCTS.length,
+      itemListElement: PRODUCTS.map((product, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name: product.name,
+        url: new URL(`#${product.id}`, Astro.url).toString(),
+      })),
+    },
+    ...PRODUCTS.map((product) => ({
+      "@type": "Product",
+      name: product.name,
+      description: product.description,
+      brand: {
+        "@type": "Brand",
+        name: product.brand ?? product.name.split(" ")[0],
+      },
+    })),
+  ],
+};
+---
+
+<Layout
+  title={title}
+  description={description}
+  ogType="article"
+  article={{
+    publishedTime: dates.published,
+    modifiedTime: dates.modified,
+    author: author.name,
+    section: "Brand Reviews",
+    tags: [
+      "pescience protein powder",
+      "pescience select protein",
+      "pescience review",
+      "pescience flavors"
+    ],
+  }}
+  jsonLd={schema}
+  stickyCta={{
+    text: "See Our Best-Tasting Picks",
+    link: "/best-tasting-protein-powder/",
+  }}
+>
+  <article class="relative overflow-hidden">
+    <!-- Hero Section -->
+    <div class="bg-gray-900 py-16 lg:py-24 relative overflow-hidden">
+      <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(circle at 20% 20%, #38BDF8 0, transparent 45%), radial-gradient(circle at 80% 60%, #FF4500 0, transparent 40%);"></div>
+      <div class="max-w-4xl mx-auto px-4 relative z-10 text-center">
+        <div class="flex justify-center mb-6">
+          <TrustBadge />
+        </div>
+        <div class="flex justify-center gap-3 mb-6">
+          <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#FF4500]/20 text-[#FF4500] text-xs font-black uppercase tracking-widest border border-[#FF4500]/30">
+            Brand Review
+          </span>
+          <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-green-500/10 text-green-400 text-xs font-bold uppercase tracking-widest border border-green-500/20">
+            Label-Checked
+          </span>
+        </div>
+        <h1 class="text-4xl lg:text-6xl font-black text-white leading-tight mb-8">
+          PEScience Protein Powder: <span class="text-[#38BDF8]">Select, Reviewed</span>
+        </h1>
+        <p class="text-xl text-gray-300 leading-relaxed mb-8 max-w-3xl mx-auto">
+          PEScience Select Protein is one of the most popular dessert-flavored proteins sold in the US. Here is what the casein and whey formula delivers per scoop, which flavors buyers rate, how the vegan version compares, and what it really costs per 25 g.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a
+            href="#pescience-select-protein"
+            class="px-8 py-4 bg-[#FF4500] hover:bg-[#E63E00] text-white font-black rounded-xl shadow-lg transition-all no-underline"
+          >
+            See Our #1 Pick
+          </a>
+          <a
+            href="#formula"
+            class="px-8 py-4 bg-white/10 hover:bg-white/20 text-white font-bold rounded-xl border border-white/10 no-underline"
+          >
+            Read the Formula Breakdown
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Author & Meta -->
+    <div class="max-w-3xl mx-auto px-4 pt-12">
+      <div class="flex items-center gap-6 border-b border-gray-100 pb-8">
+        <div class="flex items-center gap-3">
+          <AuthorAvatar size={48} />
+          <div>
+            <p class="text-sm font-bold text-gray-900">{author.name}</p>
+            <p class="text-xs text-gray-500 uppercase tracking-widest">{author.role}</p>
+          </div>
+        </div>
+        <div class="h-10 w-px bg-gray-200 hidden sm:block"></div>
+        <div class="hidden sm:block">
+          <p class="text-sm font-bold text-gray-900">Last Updated</p>
+          <p class="text-xs text-gray-500">{dates.display}</p>
+        </div>
+        <div class="hidden sm:block ml-auto">
+          <SocialProof />
+        </div>
+      </div>
+    </div>
+
+    <!-- Table of Contents -->
+    <div class="max-w-3xl mx-auto px-4 py-10">
+      <div class="bg-gray-50 border border-gray-200 rounded-2xl p-6 lg:p-8">
+        <h2 class="text-lg font-black text-gray-900 mb-4 flex items-center gap-2">
+          In This Guide
+        </h2>
+        <nav class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <a href="#verdict" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">1. The Short Verdict</a>
+          <a href="#who-is-pescience" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">2. Who PEScience Is</a>
+          <a href="#top-picks" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">3. Our Top Picks</a>
+          <a href="#formula" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">4. The Select Formula</a>
+          <a href="#blend" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">5. Casein Blend vs. Whey</a>
+          <a href="#flavors" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">6. Where to Start on Flavor</a>
+          <a href="#vegan" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">7. Select Vegan Protein</a>
+          <a href="#cost" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">8. Cost per 25 g</a>
+          <a href="#where-to-buy" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">9. Testing and Where to Buy</a>
+          <a href="#who-should-skip" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">10. Who Should Skip PEScience</a>
+          <a href="#mistakes" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">11. Common Mistakes</a>
+          <a href="#faq" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">12. FAQ</a>
+        </nav>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="max-w-3xl mx-auto px-4 pb-16 lg:pb-24">
+      <div class="prose prose-lg prose-blue max-w-none text-gray-700 leading-relaxed">
+        <p class="text-2xl font-medium text-gray-900 mb-8 italic">
+          PEScience Select Protein is a good buy for people who want dessert flavors without giving up much protein. Most flavors list 23 to 24 g of protein per scoop from a milk protein isolate and whey blend, the texture is thicker than a plain whey, and in the big 55-serving tub it costs roughly $1.50 to $1.90 per 25 g. It is not certified for tested sport and it uses sucralose. For everyone else, it is one of the better flavor-first proteins on the market.
+        </p>
+
+        <QuickPicks products={PRODUCTS} />
+
+        <div id="verdict" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            1. The Short Verdict
+          </h2>
+
+          <p>
+            <strong>PEScience Select Protein</strong> is the product most people mean when they search for PEScience, and it earns its reputation. Gourmet Vanilla lists 24 g of protein in 120 calories per 31 g scoop, with 2.5 g of carbohydrate and 1.5 g of fat, per the label at the time of writing. Other flavors land at 23 to 24 g. That is a real dose for a dessert-flavored powder, not a token one.
+          </p>
+
+          <p>
+            The formula is a blend of milk protein isolate, which contains both casein and whey, with whey protein concentrate and leucine peptides. That gives Select a thicker, creamier texture than most whey isolates and a slower digestion profile, which buyers notice as a more filling shake. It also makes Select behave well in recipes such as protein pancakes, puddings and fluff.
+          </p>
+
+          <p>
+            The value is good if you buy the large tub. At typical prices, the 55-serving size works out to roughly $1.50 to $1.90 per 25 g of protein, while the smaller tubs land closer to $2. That is more than a budget whey, but noticeably less than many flavor-first rivals that deliver fewer grams per scoop.
+          </p>
+
+          <div class="bg-gray-900 text-white rounded-2xl p-6 lg:p-8 my-8">
+            <p class="text-xs font-black uppercase tracking-widest text-[#38BDF8] mb-3">THE VERDICT</p>
+            <p class="text-xl font-bold text-white mb-3">One of the best flavor-first proteins, if you do not need certification.</p>
+            <p class="text-gray-300 leading-relaxed m-0">Buy Select Protein for dessert flavors with a near-full protein dose. Skip it if you are drug-tested, avoid sucralose, or simply want the cheapest protein per gram.</p>
+          </div>
+
+          <p>
+            The rest of this review explains the formula in detail, picks the flavors to start with, covers Select Vegan, runs the numbers and flags the counterfeit risk with this brand. If flavor is your top priority, compare Select with the rest of our <a href="/best-tasting-protein-powder/">best tasting protein powder</a> picks before you buy.
+          </p>
+        </div>
+
+        <div id="who-is-pescience" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            2. Who PEScience Is
+          </h2>
+
+          <p>
+            PEScience, short for Physique Enhancing Science, is a US sports supplement brand best known for Select Protein and its High Volume pre-workout. The company built its following on flavor, and its protein line now runs to around 14 flavors on its own site, from Gourmet Vanilla and Cake Pop to Chocolate Truffle, Cookies and Cream, Snickerdoodle and Frosted Sugar Cookie.
+          </p>
+
+          <p>
+            Beyond the core powder, the PEScience protein range includes Select Vegan Protein, a ready-to-drink Select shake, a Cafe Series, Protein4Oats for mixing into oatmeal, a protein pancake and waffle mix, an unflavored multi-purpose protein flour and a mass gainer. A straight whey isolate called ISOLATE was listed as sold out at the time of writing, so Select remains the brand's main product.
+          </p>
+
+          <p>
+            PEScience sells direct, through Amazon, and through retailers such as Vitamin Shoppe and Vitacost. Its site describes all its protein products as low carb, gluten-free and third-party tested for purity and potency. The brand does not advertise NSF Certified for Sport or Informed Sport status for Select Protein, which matters for tested athletes and which we come back to below.
+          </p>
+
+          <p>
+            The audience is broad: gym-goers who want a shake that tastes like dessert, dieters who use protein to replace sweet snacks, and home cooks who use the powder in recipes. That positions PEScience directly against brands like Devotion, which we compare in our <a href="/devotion-protein-powder-review/">Devotion protein powder review</a>, and against the dessert flavors of mainstream whey brands.
+          </p>
+        </div>
+
+        <!-- Picks -->
+        <div id="top-picks" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            3. The PEScience Picks: Three Select Flavors and the Vegan Line
+          </h2>
+
+          <p>
+            Select Protein uses one base formula across its flavors, so the picks below are the flavors and formats worth starting with, plus Select Vegan for dairy-free buyers and one clearly labeled alternative from another brand for bakers. Figures come from PEScience labels and retailer listings at the time of writing and vary slightly by flavor, so check the tub you buy. We ranked on label analysis, buyer feedback and approximate cost per 25 g, not our own taste or lab tests.
+          </p>
+
+          {PRODUCTS.map((product, index) => (
+            <div id={product.id} class="scroll-mt-24 mt-12 first:mt-8">
+              <div class="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                <div class="bg-gray-900 px-6 py-4 flex items-center justify-between">
+                  <div class="flex items-center gap-3">
+                    <span class="bg-[#FF4500] text-white w-8 h-8 rounded-full flex items-center justify-center text-sm font-black">
+                      {index + 1}
+                    </span>
+                    {productImages[product.id] && (
+                      <img
+                        src={productImages[product.id]}
+                        alt={product.name}
+                        loading="lazy"
+                        width="40"
+                        height="40"
+                        class="w-10 h-10 rounded-lg bg-white object-contain p-1 shrink-0"
+                      />
+                    )}
+                    <div>
+                      <p class="text-white font-black text-lg">{product.name}</p>
+                      <p class="text-gray-400 text-xs">{product.category}</p>
+                    </div>
+                  </div>
+                  <span class="bg-[#38BDF8]/20 text-[#38BDF8] px-3 py-1 rounded-full text-xs font-bold hidden sm:block">
+                    {product.badge}
+                  </span>
+                </div>
+                <div class="p-6">
+                  {product.rating && (
+                  <div class="flex items-center gap-2 mb-4">
+                    <div class="flex text-yellow-400">
+                      {[...Array(5)].map((_, i) => (
+                        <svg
+                          class={`w-4 h-4 ${i < Math.floor(product.rating) ? "fill-current" : "text-gray-200"}`}
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                        >
+                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        </svg>
+                      ))}
+                    </div>
+                    <span class="text-gray-500 text-sm font-bold">{product.rating}</span>
+                    {product.reviewCount && <span class="text-gray-400 text-xs">({product.reviewCount.toLocaleString()} retailer reviews)</span>}
+                  </div>
+                  )}
+
+                  <SpecGrid specs={product.specs} />
+
+                  <p class="text-gray-700 leading-relaxed mb-6">{product.description}</p>
+
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                    <div class="bg-green-50 rounded-xl p-4">
+                      <p class="text-xs font-black uppercase tracking-widest text-green-700 mb-3">Pros</p>
+                      <ul class="space-y-2">
+                        {product.pros.map((pro) => (
+                          <li class="flex items-start gap-2 text-sm text-green-800">
+                            <svg class="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            {pro}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div class="bg-red-50 rounded-xl p-4">
+                      <p class="text-xs font-black uppercase tracking-widest text-red-700 mb-3">Cons</p>
+                      <ul class="space-y-2">
+                        {product.cons.map((con) => (
+                          <li class="flex items-start gap-2 text-sm text-red-800">
+                            <svg class="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                            {con}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+
+                  <div class="bg-gray-50 rounded-xl p-4 border border-gray-100">
+                    <p class="text-xs font-black uppercase tracking-widest text-gray-500 mb-1">The Bottom Line</p>
+                    <p class="text-gray-900 font-bold">{product.bottomLine}</p>
+                  </div>
+
+                  <a
+                    href={amazonLink(product.amazonUrl, product.name, product.id)}
+                    target="_blank"
+                    rel="sponsored nofollow noopener"
+                    class="mt-6 block bg-[#FF4500] hover:bg-[#E63E00] text-white text-center py-4 rounded-xl font-black no-underline transition-colors uppercase tracking-widest text-sm"
+                  >
+                    Check Price &rarr;
+                  </a>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div id="formula" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            4. The Select Formula, Line by Line
+          </h2>
+
+          <p>
+            The Gourmet Vanilla ingredient list reads: Select protein blend of milk protein isolate (casein and whey protein), whey protein concentrate 80 percent and leucine peptides, then salt, natural and artificial flavors, guar gum, sucralose and acesulfame potassium. The label states it contains milk and soy. It is a fairly short list for a flavored protein, with no proprietary amounts hiding fillers.
+          </p>
+
+          <div class="overflow-hidden border border-gray-200 rounded-2xl my-8">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Label item</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Select Protein, Gourmet Vanilla (per 31 g scoop)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Protein</td>
+                    <td class="px-4 py-4 text-gray-700">24 g</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Calories</td>
+                    <td class="px-4 py-4 text-gray-700">120</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Carbohydrate</td>
+                    <td class="px-4 py-4 text-gray-700">2.5 g, 1.5 g sugar</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Fat</td>
+                    <td class="px-4 py-4 text-gray-700">1.5 g</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Sodium</td>
+                    <td class="px-4 py-4 text-gray-700">About 230 mg</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Sweeteners</td>
+                    <td class="px-4 py-4 text-gray-700">Sucralose, acesulfame potassium</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <p>
+            The protein figures vary a little by flavor. Gourmet Vanilla and Cake Pop list 24 g per 31 g scoop, Chocolate Truffle lists 23 g per 33 g scoop at 125 calories, and Chocolate Peanut Butter Cup lists 23 g per 32.5 g scoop, per retailer labels at the time of writing. The vanilla label also shows about 280 mg of calcium, a useful bonus from the milk protein isolate.
+          </p>
+
+          <p>
+            Leucine peptides deserve a note. They are a disclosed part of the protein blend that raises the leucine content, and PEScience lists roughly 5 g of branched-chain amino acids per scoop. Because they are listed openly in the blend rather than added as cheap free amino acids such as glycine, this is not amino spiking in the usual sense, but it does mean a small share of the protein figure comes from added leucine rather than whole milk protein.
+          </p>
+
+          <p>
+            PEScience also says Select is very low in lactose, about 50 percent lower than 100 percent whey concentrate products. That is the brand's own claim, and it is plausible given that milk protein isolate is filtered. People with mild lactose sensitivity may tolerate it; anyone with a milk allergy should not use it.
+          </p>
+        </div>
+
+        <div id="blend" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            5. Casein Blend vs. Whey: What It Means for You
+          </h2>
+
+          <p>
+            Milk protein isolate is roughly 80 percent casein and 20 percent whey, the same ratio as in milk. Casein forms a gel in the stomach and releases amino acids more slowly, while whey digests quickly. Select combines the two, so a shake hits a little more slowly and stays with you longer than a pure whey isolate, which many buyers describe as being more filling.
+          </p>
+
+          <p>
+            For muscle building, the difference is small. Total daily protein matters far more than digestion speed, and a 24 g dose of milk protein provides enough leucine to stimulate muscle protein synthesis in most adults. If you want a fast post-workout shake, whey isolate is marginally quicker, but research does not suggest this makes a meaningful difference to results over time. Our <a href="/when-to-take-protein-powder/">when to take protein powder</a> guide covers timing in more detail.
+          </p>
+
+          <p>
+            Where the blend helps is texture and versatility. Casein thickens, so Select makes a creamier shake with less liquid and works well for protein pudding, overnight oats and protein fluff. It also bakes better than pure whey, which tends to dry out. If you want a dedicated slow protein for bedtime, compare Select with the options in our <a href="/best-casein-protein-powder/">best casein protein powder</a> guide.
+          </p>
+
+          <p>
+            The trade-off is that Select is a little heavier in the stomach for some people, and the whey concentrate portion carries slightly more lactose and fat than an isolate. If you want the lightest, fastest shake possible, a straight isolate from our <a href="/best-whey-protein-isolate/">best whey protein isolate</a> rankings is a better fit.
+          </p>
+        </div>
+
+        <div id="flavors" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            6. Where to Start on Flavor
+          </h2>
+
+          <p>
+            We did not taste-test the range, so this section reflects how PEScience positions each flavor and what buyers consistently report. Flavor is the main reason people choose PEScience, and the brand's reviews on Amazon and retailer sites focus heavily on it. Start with one of the flavors below, then branch out once you know how sweet you like your shakes.
+          </p>
+
+          <p>
+            <strong>Gourmet Vanilla</strong> is the safest first tub because it works in everything: shakes, oats, coffee, pancakes and baking. <strong>Cake Pop</strong> is one of the brand's signature dessert flavors, a sweeter birthday-cake profile with the same 24 g of protein. <strong>Chocolate Truffle</strong> is the richer chocolate option, at 23 g per slightly larger scoop.
+          </p>
+
+          <p>
+            The wider range includes Cookies and Cream, Snickerdoodle, Peanut Butter Cookie, Frosted Chocolate Cupcake, Frosted Sugar Cookie and Chocolate Peanut Butter Cup, among others. Sweetness is the most common buyer complaint across the range, as it is with most sucralose-sweetened powders, so if you find mainstream protein too sweet, mix Select with more liquid or with unsweetened milk.
+          </p>
+
+          <p>
+            PEScience sells a sample kit and variety packs, which are the cheapest way to try several flavors without buying full tubs. If you are choosing specifically between chocolate or vanilla powders across brands, our <a href="/best-chocolate-protein-powder/">best chocolate protein powder</a> and <a href="/best-vanilla-protein-powder/">best vanilla protein powder</a> guides compare Select with its closest rivals.
+          </p>
+        </div>
+
+        <div id="vegan" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            7. Select Vegan Protein: Worth It?
+          </h2>
+
+          <p>
+            <strong>Select Vegan Protein</strong> blends pea protein concentrate and brown rice protein concentrate for about 20 g of protein per scoop, with roughly 100 calories for vanilla and 110 for chocolate, per retailer labels at the time of writing. It is sweetened only with stevia, and it is free of dairy, soy and gluten. Flavors include Chocolate Bliss, Vanilla Indulgence, Peanut Butter Delight, Wild Berry and Cinnamon Delight.
+          </p>
+
+          <p>
+            The pea and rice combination is the classic plant pairing, because pea is rich in lysine and rice in methionine, so together they give a rounder amino acid profile than either alone. The 20 g dose is a little lower than Select's 24 g, and sodium is relatively high, around 290 to 330 mg per scoop depending on the listing, which is worth noting if you watch salt.
+          </p>
+
+          <p>
+            Buyer feedback is more mixed than for the whey-based Select. Some reviewers note a chalky texture and a noticeable stevia aftertaste, which is common across stevia-sweetened plant proteins. PEScience lists it at about $45 for roughly 27 servings, which is about $2 per 25 g of protein, competitive for a flavored plant powder but not cheap.
+          </p>
+
+          <p>
+            Because plant proteins tend to carry more heavy metals than dairy, testing matters more here. One retailer listing describes Select Vegan as third-party tested for heavy metals and pesticides; ask PEScience for results if that is important to you. For a wider comparison, see our <a href="/best-plant-based-protein-powder/">best plant-based protein powder</a> guide.
+          </p>
+        </div>
+
+        <div id="cost" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            8. Cost per 25 g: Where Select Lands
+          </h2>
+
+          <p>
+            Select Protein comes in roughly 27-serving tubs and larger 55-serving tubs, and the size you buy changes the value considerably. PEScience lists the standard tub at about $50, and other retailers show it around $55, which works out to roughly $1.90 to $2.10 per 25 g of protein. The 55-serving tub on Amazon listed around $100 before discount and about $81 on sale when we checked, or roughly $1.50 to $1.90 per 25 g.
+          </p>
+
+          <div class="overflow-hidden border border-gray-200 rounded-2xl my-8">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Product and size</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Protein per serving</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Approx. cost per 25 g</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Select Protein, about 27 servings</td>
+                    <td class="px-4 py-4 text-gray-700">23-24 g</td>
+                    <td class="px-4 py-4 text-gray-700">About $1.90-2.10</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Select Protein, 55 servings</td>
+                    <td class="px-4 py-4 text-gray-700">23-24 g</td>
+                    <td class="px-4 py-4 text-gray-700">About $1.50-1.90</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Select Vegan, about 27 servings</td>
+                    <td class="px-4 py-4 text-gray-700">About 20 g</td>
+                    <td class="px-4 py-4 text-gray-700">About $2.00-2.10</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Devotion, 2 lb pouch</td>
+                    <td class="px-4 py-4 text-gray-700">About 20 g</td>
+                    <td class="px-4 py-4 text-gray-700">About $2.30-2.70</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <p>
+            Against mainstream whey brands, Select is a little more expensive; a large tub of a budget whey on sale often lands somewhere around $1.20 to $1.70 per 25 g. Against other flavor-first brands, it usually wins, because it delivers 23 to 24 g per scoop where several rivals give you 20 g. That combination of dose and price is the main reason Select ranks well with us.
+          </p>
+
+          <p>
+            The cheapest way to buy it is the 55-serving tub on sale, ideally in a flavor you already know you like. PEScience and retailers run frequent promotions, so it rarely makes sense to pay full price. If you are budget-first, our <a href="/best-cheap-protein-powder/">best cheap protein powder</a> guide lists tubs with a lower cost per 25 g.
+          </p>
+        </div>
+
+        <div id="where-to-buy" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            9. Testing, Fakes and Where to Buy
+          </h2>
+
+          <p>
+            PEScience says its protein products are third-party tested for purity and potency, but it does not advertise NSF Certified for Sport, Informed Choice or Informed Sport status for Select Protein at the time of writing. That is fine for most buyers, but it rules Select out for athletes who compete under anti-doping rules and need a product listed in a public certification database.
+          </p>
+
+          <p>
+            There is a counterfeit risk worth knowing about. While researching this review, we found several lookalike websites using PEScience's name on unusual domains and offering its products. A brand this popular is an obvious target, and a fake protein can be anything from underdosed to contaminated. Treat any PEScience deal far below normal pricing on an unfamiliar site as a red flag.
+          </p>
+
+          <p>
+            The safe channels are PEScience's own site, Amazon listings sold by PEScience or shipped from Amazon's own inventory, and established retailers such as Vitamin Shoppe and Vitacost. On Amazon, check the seller name and avoid third-party sellers offering steep discounts on sealed tubs. When the tub arrives, check the seal, lot number and best-by date.
+          </p>
+
+          <p>
+            Finally, buy the right size for your habit. The 55-serving tub is the best value, but it lasts nearly two months at one shake a day. If you are trying a new flavor, start with a smaller tub or the sample kit, then move up once you know it is a flavor you will finish.
+          </p>
+        </div>
+
+        <div id="who-should-skip" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            10. Who Should Skip PEScience
+          </h2>
+
+          <p>
+            Skip PEScience if you are a drug-tested athlete. Without an NSF Certified for Sport or Informed Sport listing to check, you cannot verify that the product has been screened for banned substances under a sport program. A certified isolate such as Thorne's is the safer choice; our <a href="/thorne-protein-powder-review/">Thorne protein powder review</a> explains what that certification covers.
+          </p>
+
+          <p>
+            Skip it if you avoid artificial sweeteners. Select uses sucralose and acesulfame potassium, and buyers who are sensitive to sweetness often find the dessert flavors strong. Select Vegan uses stevia only, but it is a different product with a lower protein dose and mixed texture reviews.
+          </p>
+
+          <p>
+            Skip it if you want the lightest, fastest-digesting shake. The casein in milk protein isolate makes Select thicker and slower to digest, which many people like but some find heavy. A straight whey isolate is the better pick for a light post-workout drink.
+          </p>
+
+          <p>
+            And check with a clinician first if you have a milk allergy, kidney disease, are pregnant or take medication that affects protein needs. Select contains milk proteins and lists soy on the label. Nothing on this page is medical advice, and a doctor or registered dietitian is the right person to help with protein decisions in those situations.
+          </p>
+        </div>
+
+        <!-- Common Mistakes -->
+        <div id="mistakes" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            11. Common Mistakes to Avoid
+          </h2>
+
+          <div class="space-y-6 my-8">
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Buying the small tub every time</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Select's roughly 27-serving tub costs noticeably more per 25 g of protein than the 55-serving size, especially when the large tub is on sale. Once you know you like a flavor, move up to the big tub. Use the sample kit or variety packs only for trying new flavors.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Shopping on unfamiliar sites</h3>
+              <p class="text-gray-700 text-sm m-0">
+                We found lookalike sites using PEScience's name on unusual domains. Fake protein can be underdosed or contaminated, which defeats the purpose of buying it. Stick to PEScience's own site, Amazon listings sold by PEScience or Amazon, and established retailers, and check the seal and lot number on arrival.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Treating Select Vegan as the same product</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Select Vegan is a different formula, a pea and brown rice blend with about 20 g of protein, stevia sweetening and higher sodium. It does not taste or mix like the dairy Select, and buyer reviews are more mixed. Judge it on its own label and reviews before buying.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Ignoring the casein in the blend</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Milk protein isolate is mostly casein, so Select digests more slowly and feels heavier than whey isolate. That is good for fullness and baking, but some people find it too thick after training. Use more liquid, or keep a lighter whey isolate for immediately after workouts.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Assuming third-party tested means certified</h3>
+              <p class="text-gray-700 text-sm m-0">
+                PEScience says its protein is third-party tested for purity and potency, but it does not advertise NSF Certified for Sport or Informed Sport status. Drug-tested athletes need a product they can look up in a public certification database by exact product and flavor before they buy it.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ -->
+        <div id="faq" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            12. Frequently Asked Questions
+          </h2>
+
+          <div class="space-y-6">
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is PEScience protein powder good?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Yes, for most people who want dessert flavors. Select Protein lists 23 to 24 g of protein per scoop from a milk protein isolate and whey blend, in about 120 calories, and buyers rate its flavors highly. It is not certified for tested sport and uses sucralose, so drug-tested athletes and people avoiding artificial sweeteners should look elsewhere.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">How much protein is in PEScience Select Protein?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Gourmet Vanilla and Cake Pop list 24 g of protein per 31 g scoop in about 120 calories, per retailer labels at the time of writing. Chocolate Truffle and Chocolate Peanut Butter Cup list 23 g in slightly larger scoops. Figures vary by flavor and label version, so check the panel on the tub you buy.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is PEScience Select whey or casein?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Both. The main ingredient is milk protein isolate, which contains casein and whey in roughly the ratio found in milk, followed by whey protein concentrate and leucine peptides. That makes Select thicker and slower to digest than a pure whey isolate, which helps with fullness and makes it work well in recipes.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">What is the best PEScience flavor?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Gourmet Vanilla is the most versatile and the safest first tub, because it works in shakes, oats and baking. Cake Pop is the sweeter dessert-style pick, and Chocolate Truffle is the richer chocolate option. Taste is personal and we did not taste-test, so the sample kit is a cheap way to decide.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is PEScience third-party tested?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                PEScience says its protein products are third-party tested for purity and potency. It does not advertise NSF Certified for Sport, Informed Choice or Informed Sport status for Select Protein at the time of writing. That is fine for most buyers, but athletes in tested sport should choose a product listed in a certification database.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is PEScience Select Vegan good?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                It is a reasonable flavored plant protein: about 20 g of protein per scoop from pea and brown rice, sweetened only with stevia, and free of dairy, soy and gluten. Buyer reviews are more mixed than for the dairy Select, with some noting chalkiness and a stevia aftertaste. Sodium is relatively high at around 290 to 330 mg.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Where should I buy PEScience?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Buy from PEScience's own site, Amazon listings sold by PEScience or Amazon, or established retailers such as Vitamin Shoppe and Vitacost. We found lookalike websites using the brand's name on unusual domains, so avoid unfamiliar sites with steep discounts. The 55-serving tub on sale is usually the cheapest way to buy Select.
+              </p>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Related Guides -->
+        <div class="mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">Related Protein Flavor Guides</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <a href="/best-tasting-protein-powder/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#FF4500] font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Tasting Protein Powder</h3>
+              <p class="text-gray-500 text-sm mt-2">Select ranked against the other flavor-first proteins on label and value.</p>
+            </a>
+            <a href="/devotion-protein-powder-review/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#1E90FF] font-black text-xs uppercase tracking-widest mb-2">Brand Review</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Devotion Protein Powder Review</h3>
+              <p class="text-gray-500 text-sm mt-2">The baking-focused whey and casein blend that competes with Select.</p>
+            </a>
+            <a href="/best-casein-protein-powder/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#38BDF8] font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Casein Protein Powder</h3>
+              <p class="text-gray-500 text-sm mt-2">Slow-digesting proteins for evenings, fullness and recipes.</p>
+            </a>
+          </div>
+        </div>
+
+        <!-- Closing -->
+        <div class="mt-16 bg-gray-900 text-white rounded-2xl p-8">
+          <h2 class="text-2xl font-black text-white mb-4">The Bottom Line</h2>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            PEScience Select Protein is one of the best-balanced flavor-first proteins available: 23 to 24 g of protein per scoop, a creamy casein and whey texture that works in recipes, and a reasonable cost per 25 g when you buy the big tub. Select Vegan is a decent dairy-free option, though it trails the original on buyer reviews.
+          </p>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            Buy it if dessert flavors keep you consistent and you do not need sport certification. Start with Gourmet Vanilla or Cake Pop, buy from PEScience, Amazon or an established retailer, and move to the 55-serving tub once you have found a flavor you will finish.
+          </p>
+        </div>
+
+        <MoreInCategory category="Brand Reviews" links={moreInCategory} />
+
+        <AuthorBio />
+      </div>
+    </div>
+  </article>
+</Layout>
