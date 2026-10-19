@@ -1,0 +1,938 @@
+---
+import Layout from "../layouts/Layout.astro";
+import MoreInCategory from "../components/MoreInCategory.astro";
+import { AUTHORS, DEFAULT_AUTHOR, authorSchema } from "../data/authors";
+import { SITE_NAME, SITE_URL } from "../data/site";
+import AuthorAvatar from "../components/AuthorAvatar.astro";
+import QuickPicks from "../components/QuickPicks.astro";
+import AuthorBio from "../components/AuthorBio.astro";
+import { amazonLink } from "../data/affiliate";
+import TrustBadge from "../components/TrustBadge.astro";
+import SocialProof from "../components/SocialProof.astro";
+import SpecGrid from "../components/SpecGrid.astro";
+import productImages from "../data/product-images.json";
+import { pageDates } from "../data/dates";
+
+const moreInCategory = [
+  {
+    "title": "Best Protein Powder",
+    "url": "/best-protein-powder/"
+  },
+  {
+    "title": "Protein Powder Comparison",
+    "url": "/protein-powder-comparison/"
+  },
+  {
+    "title": "Is Protein Powder Safe?",
+    "url": "/is-protein-powder-safe/"
+  }
+];
+const author = AUTHORS[DEFAULT_AUTHOR];
+const dates = pageDates(Astro.url.pathname, { published: "2026-10-19", modified: "2026-10-19" });
+const title = "Amazon Protein Powder: The Best Sellers Worth Buying and How to Avoid Fakes";
+const description =
+  "The best protein powder on Amazon, label-checked: top sellers worth buying, what happened to Amazon's own whey, how to avoid fakes and Subscribe and Save maths.";
+
+const PRODUCTS: {
+  id: string;
+  name: string;
+  brand?: string;
+  badge: string;
+  category: string;
+  description: string;
+  pros: string[];
+  cons: string[];
+  bottomLine: string;
+  specs?: Record<string, string>;
+  rating?: number;
+  reviewCount?: number;
+  amazonUrl?: string;
+}[] = [
+  {
+    "id": "optimum-nutrition-gold-standard-100-whey",
+    "name": "Optimum Nutrition Gold Standard 100% Whey",
+    "brand": "Optimum Nutrition",
+    "badge": "Best Overall",
+    "category": "Whey isolate + concentrate blend",
+    "description": "The best-selling whey on Amazon by most third-party estimates, and a sensible default. Per the label at the time of writing, a roughly 30 to 31 g scoop provides about 24 g of protein and 120 calories, with about 3 g of carbohydrate and 1 g of sugar. It comes in many sizes and flavors on Amazon, goes on deal frequently, and Optimum Nutrition promotes it as Informed Choice certified.",
+    "pros": [
+      "About 24 g of protein per scoop, per the label",
+      "Huge range of sizes and flavors with frequent deals",
+      "Promoted as Informed Choice certified"
+    ],
+    "cons": [
+      "Concentrate in the blend means some lactose",
+      "Flavored versions use artificial sweeteners"
+    ],
+    "bottomLine": "The safest first purchase on Amazon for most people who tolerate whey.",
+    "specs": {
+      "Protein per serving": "About 24 g (label)",
+      "Calories": "About 120",
+      "Third-party testing": "Informed Choice (confirm flavor)",
+      "Best for": "Most people"
+    }
+  },
+  {
+    "id": "dymatize-iso100-hydrolyzed",
+    "name": "Dymatize ISO100 Hydrolyzed Whey Isolate",
+    "brand": "Dymatize",
+    "badge": "Best Isolate",
+    "category": "Hydrolyzed whey isolate + whey isolate",
+    "description": "The benchmark isolate on Amazon. Per the label at the time of writing, a 30 g scoop delivers 25 g of protein in about 110 to 120 calories, with roughly 1 g of sugar and very little lactose or fat. It is sold in many flavors, including licensed cereal flavors such as Fruity Pebbles, and Dymatize describes it as banned-substance tested.",
+    "pros": [
+      "25 g of protein per scoop, per the label",
+      "Very low lactose, fat and carbohydrate",
+      "Wide flavor range, including cereal flavors"
+    ],
+    "cons": [
+      "Premium cost per 25 g of protein",
+      "Sucralose and stevia in flavored versions"
+    ],
+    "bottomLine": "The isolate to buy on Amazon if lactose or macros justify paying more.",
+    "specs": {
+      "Protein per serving": "About 25 g (label)",
+      "Calories": "About 110-120",
+      "Third-party testing": "Banned-substance tested, per brand",
+      "Best for": "Lactose-sensitive, cutting"
+    }
+  },
+  {
+    "id": "premier-protein-100-whey-chocolate-milkshake",
+    "name": "Premier Protein 100% Whey Protein Powder, Chocolate Milkshake",
+    "brand": "Premier Protein",
+    "badge": "Best 30 g Serving",
+    "category": "Whey isolate + concentrate blend",
+    "description": "The powder from the brand best known for its ready-to-drink shakes. Per the label at the time of writing, a two-scoop serving provides 30 g of protein, about 150 calories and 1 g of sugar, from whey protein isolate and concentrate, sweetened with sucralose and acesulfame potassium. A 24.5 oz tub holds about 17 servings, so it suits people who want a big protein hit per shake.",
+    "pros": [
+      "30 g of protein per serving, per the label",
+      "About 1 g of sugar per serving",
+      "Familiar flavors from the Premier shake range"
+    ],
+    "cons": [
+      "Two scoops per serving, so fewer servings per tub",
+      "Artificial sweeteners"
+    ],
+    "bottomLine": "A good pick if you like Premier shakes and want the same flavors for less per gram.",
+    "specs": {
+      "Protein per serving": "30 g per 2 scoops (label)",
+      "Calories": "About 150",
+      "Third-party testing": "Check certifier databases",
+      "Best for": "Big single servings"
+    }
+  },
+  {
+    "id": "orgain-organic-protein-plant-based",
+    "name": "Orgain Organic Protein Plant-Based Protein Powder",
+    "brand": "Orgain",
+    "badge": "Best Plant-Based",
+    "category": "Organic pea, brown rice and chia blend",
+    "description": "One of the top-selling protein powders of any kind on Amazon, per third-party sales estimates. Per the label at the time of writing, two scoops (about 46 g) give 21 g of protein from organic pea, brown rice and chia seed, at roughly 150 calories, sweetened with organic erythritol and stevia. It is USDA Organic and dairy-free, and Nestlé Health Science took a majority stake in Orgain in 2022.",
+    "pros": [
+      "USDA Organic and dairy-free",
+      "Among the most widely sold plant powders on Amazon",
+      "Budget-friendly for a certified organic product"
+    ],
+    "cons": [
+      "21 g of protein needs two scoops",
+      "Erythritol can upset some stomachs"
+    ],
+    "bottomLine": "The plant-based powder most Amazon shoppers should try first.",
+    "specs": {
+      "Protein per serving": "About 21 g (label)",
+      "Calories": "About 150",
+      "Third-party testing": "USDA Organic; no sport certification confirmed",
+      "Best for": "Dairy-free, organic"
+    }
+  },
+  {
+    "id": "nutricost-whey-protein-concentrate",
+    "name": "Nutricost Whey Protein Concentrate",
+    "brand": "Nutricost",
+    "badge": "Best Budget",
+    "category": "Whey concentrate",
+    "description": "A value brand with a large Amazon presence. Retailer listings for the milk chocolate concentrate show 25 g of protein per 36 g scoop and about 130 to 140 calories, depending on tub size. Nutricost states its products are third-party tested and made in a GMP-compliant facility, although listings do not name the testing lab. Grass-fed and other variations are also sold.",
+    "pros": [
+      "25 g of protein per scoop, per listings",
+      "Budget-tier cost per 25 g in large tubs",
+      "Simple concentrate formula"
+    ],
+    "cons": [
+      "Large 36 g scoop and more calories than an isolate",
+      "Testing lab not named on the listings we checked"
+    ],
+    "bottomLine": "The budget pick if you want a plain whey concentrate at a low cost per gram.",
+    "specs": {
+      "Protein per serving": "25 g per 36 g scoop (listing)",
+      "Calories": "About 130-140",
+      "Third-party testing": "Brand states third-party tested",
+      "Best for": "Tight budgets"
+    }
+  },
+  {
+    "id": "isopure-zero-carb",
+    "name": "Isopure Zero Carb Protein Powder",
+    "brand": "Isopure",
+    "badge": "Best Low-Carb",
+    "category": "Whey isolate",
+    "description": "About as close to pure protein as a flavored powder gets: roughly 25 g of protein for about 100 to 110 calories per scoop, with essentially no carbohydrate, per the label. That gives it some of the highest protein density on Amazon and makes it a natural fit for low-carb diets and tight calorie budgets. Flavor opinions among buyers are more mixed than for the top whey blends.",
+    "pros": [
+      "About 25 g of protein in around 100 to 110 calories",
+      "Essentially zero carbohydrate, per the label",
+      "Long-established isolate"
+    ],
+    "cons": [
+      "Costs more per 25 g than whey blends",
+      "Mixed buyer feedback on some flavors"
+    ],
+    "bottomLine": "The low-carb pick on Amazon when every calorie counts.",
+    "specs": {
+      "Protein per serving": "About 25 g (label)",
+      "Calories": "About 100-110",
+      "Third-party testing": "Check certifier databases",
+      "Best for": "Low-carb, cutting"
+    }
+  }
+];
+
+const schema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Home",
+          item: `${SITE_URL}/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Best Lists",
+          item: `${SITE_URL}/best-of/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 3,
+          name: "Amazon Protein Powder",
+          item: `${SITE_URL}/amazon-protein-powder/`,
+        },
+      ],
+    },
+    {
+      "@type": "FAQPage",
+      mainEntity: [
+        {
+          "@type": "Question",
+          "name": "What is the best protein powder on Amazon?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "For most people, Optimum Nutrition Gold Standard 100% Whey, which third-party trackers place at or near the top of Amazon protein sales and which lists about 24 g of protein per scoop. Dymatize ISO100 is the best isolate, Orgain Organic Protein the best plant-based option, and Nutricost Whey Concentrate the budget pick. Buy from listings sold by Amazon or the brand."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does Amazon make its own protein powder?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Amazon's supplement brand, Amazon Elements, launched a grass-fed whey isolate in 2018 with about 25 g of protein per 32 g scoop, sweetened with stevia. At the time of writing the chocolate listing showed as out of stock and the vanilla as currently unavailable. There is no Amazon Basics protein powder, and we found none under Amazon's other house brands."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is protein powder on Amazon fake?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Most protein powder on Amazon is genuine, but counterfeits and stale stock do appear, mainly through third-party sellers. Amazon announced in 2025 that it would end the commingling of identical items from different sellers, which reduces the risk. Buy listings sold by Amazon.com or the brand, check the seal and lot number, and report anything suspicious."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is Subscribe and Save worth it for protein powder?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Usually, yes, for a product you already like. Discounts are typically around 5 percent and can reach 15 percent on many items when five or more subscriptions arrive together. On a $50 monthly tub, that is $30 to $90 saved per year. Prices can change before each delivery, so check the reminder email, and skip deliveries freely."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Why are some protein powders non-returnable on Amazon?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Food and supplement items are often marked non-returnable for safety reasons, because a returned tub cannot be resold with confidence. That makes it more important to check the seller, the size and the flavor before you buy. If a third-party order arrives damaged or appears counterfeit, the A-to-z Guarantee and the report an issue link are your routes."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Are Amazon protein reviews reliable?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Partly. Flavor and mixing feedback, filtered by flavor and sorted by recent, is often a fair guide. Overall star averages cluster so tightly on big listings that they say little, and fake or incentivized reviews still appear despite Amazon policy and the FTC's 2024 rule against fake reviews. Reviews cannot verify protein content or purity; the label and testing can."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I check if a protein powder is third-party tested?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Search the exact product and flavor in the certifier's own database: NSF Certified for Sport, Informed Sport or Informed Choice for banned-substance testing, and the USDA Organic Integrity Database for organic claims. A badge in an Amazon listing photo may apply only to one flavor or size, so the database is the only reliable check."
+          }
+        }
+      ],
+    },
+    {
+      "@type": "Article",
+      headline: title,
+      author: authorSchema(),
+      datePublished: dates.published,
+      dateModified: dates.modified,
+      publisher: { "@type": "Organization", name: SITE_NAME, url: SITE_URL },
+    },
+    {
+      "@type": "ItemList",
+      name: title,
+      numberOfItems: PRODUCTS.length,
+      itemListElement: PRODUCTS.map((product, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name: product.name,
+        url: new URL(`#${product.id}`, Astro.url).toString(),
+      })),
+    },
+    ...PRODUCTS.map((product) => ({
+      "@type": "Product",
+      name: product.name,
+      description: product.description,
+      brand: {
+        "@type": "Brand",
+        name: product.brand ?? product.name.split(" ")[0],
+      },
+    })),
+  ],
+};
+---
+
+<Layout
+  title={title}
+  description={description}
+  ogType="article"
+  article={{
+    publishedTime: dates.published,
+    modifiedTime: dates.modified,
+    author: author.name,
+    section: "Protein Powder",
+    tags: [
+      "amazon protein powder",
+      "best protein powder on amazon",
+      "amazon basics protein powder",
+      "amazon whey protein"
+    ],
+  }}
+  jsonLd={schema}
+  stickyCta={{
+    text: "See Our Top Protein Powder Picks",
+    link: "/best-protein-powder/",
+  }}
+>
+  <article class="relative overflow-hidden">
+    <!-- Hero Section -->
+    <div class="bg-gray-900 py-16 lg:py-24 relative overflow-hidden">
+      <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(circle at 20% 20%, #38BDF8 0, transparent 45%), radial-gradient(circle at 80% 60%, #FF4500 0, transparent 40%);"></div>
+      <div class="max-w-4xl mx-auto px-4 relative z-10 text-center">
+        <div class="flex justify-center mb-6">
+          <TrustBadge />
+        </div>
+        <div class="flex justify-center gap-3 mb-6">
+          <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#FF4500]/20 text-[#FF4500] text-xs font-black uppercase tracking-widest border border-[#FF4500]/30">
+            Shopping Guide
+          </span>
+          <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-green-500/10 text-green-400 text-xs font-bold uppercase tracking-widest border border-green-500/20">
+            Label-Checked
+          </span>
+        </div>
+        <h1 class="text-4xl lg:text-6xl font-black text-white leading-tight mb-8">
+          Amazon <span class="text-[#38BDF8]">Protein Powder</span>
+        </h1>
+        <p class="text-xl text-gray-300 leading-relaxed mb-8 max-w-3xl mx-auto">
+          Amazon is the easiest place to buy protein powder and one of the easiest places to buy the wrong tub. Here are the best sellers worth your money, the truth about Amazon's own brand, and the checks that keep fakes and stale stock out of your cupboard.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a
+            href="#optimum-nutrition-gold-standard-100-whey"
+            class="px-8 py-4 bg-[#FF4500] hover:bg-[#E63E00] text-white font-black rounded-xl shadow-lg transition-all no-underline"
+          >
+            See Our #1 Pick
+          </a>
+          <a
+            href="#avoid-fakes"
+            class="px-8 py-4 bg-white/10 hover:bg-white/20 text-white font-bold rounded-xl border border-white/10 no-underline"
+          >
+            How to Avoid Fakes
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Author & Meta -->
+    <div class="max-w-3xl mx-auto px-4 pt-12">
+      <div class="flex items-center gap-6 border-b border-gray-100 pb-8">
+        <div class="flex items-center gap-3">
+          <AuthorAvatar size={48} />
+          <div>
+            <p class="text-sm font-bold text-gray-900">{author.name}</p>
+            <p class="text-xs text-gray-500 uppercase tracking-widest">{author.role}</p>
+          </div>
+        </div>
+        <div class="h-10 w-px bg-gray-200 hidden sm:block"></div>
+        <div class="hidden sm:block">
+          <p class="text-sm font-bold text-gray-900">Last Updated</p>
+          <p class="text-xs text-gray-500">{dates.display}</p>
+        </div>
+        <div class="hidden sm:block ml-auto">
+          <SocialProof />
+        </div>
+      </div>
+    </div>
+
+    <!-- Table of Contents -->
+    <div class="max-w-3xl mx-auto px-4 py-10">
+      <div class="bg-gray-50 border border-gray-200 rounded-2xl p-6 lg:p-8">
+        <h2 class="text-lg font-black text-gray-900 mb-4 flex items-center gap-2">
+          In This Guide
+        </h2>
+        <nav class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <a href="#amazon-brands" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">1. Amazon's Own Brands</a>
+          <a href="#best-sellers" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">2. What Sells on Amazon</a>
+          <a href="#top-picks" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">3. Best Sellers Worth Buying</a>
+          <a href="#avoid-fakes" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">4. How to Avoid Fakes</a>
+          <a href="#read-the-listing" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">5. Reading the Listing</a>
+          <a href="#subscribe-and-save" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">6. Subscribe and Save Maths</a>
+          <a href="#cost-per-25g" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">7. Cost per 25 g</a>
+          <a href="#reviews" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">8. Reading the Reviews</a>
+          <a href="#certifications" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">9. Certifications to Check</a>
+          <a href="#mistakes" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">10. Common Mistakes</a>
+          <a href="#faq" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">11. FAQ</a>
+        </nav>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="max-w-3xl mx-auto px-4 pb-16 lg:pb-24">
+      <div class="prose prose-lg prose-blue max-w-none text-gray-700 leading-relaxed">
+        <p class="text-2xl font-medium text-gray-900 mb-8 italic">
+          The best protein powder on Amazon is usually not a mystery brand with a perfect rating. It is one of a handful of established products, such as Optimum Nutrition Gold Standard, Dymatize ISO100 or Orgain, bought from a listing that the brand or Amazon itself sells. Amazon's own whey isolate has been out of stock for a long time, there is no Amazon Basics protein powder, and the real savings come from buying the right size and checking the seller before you click.
+        </p>
+
+        <QuickPicks products={PRODUCTS} />
+
+        <div id="amazon-brands" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            1. Does Amazon Make Its Own Protein Powder?
+          </h2>
+
+          <p>
+            Sort of, but you probably cannot buy it right now. Amazon's supplement brand, <strong>Amazon Elements</strong>, launched a grass-fed whey isolate in 2018, initially as an item for Prime members, in Natural Chocolate and Natural Vanilla. The chocolate listing describes about 25 g of protein per 32 g scoop, a short ingredient list of whey isolate, cocoa, xanthan gum, sunflower lecithin, salt and stevia, and no artificial colors or flavors.
+          </p>
+
+          <p>
+            At the time of writing, though, the chocolate listing on Amazon US was showing as out of stock, with Amazon suggesting other available items, and the vanilla listing was marked currently unavailable, with reviewers noting it had been out of stock for a long time. A product that is never in stock is not much use to you, so it does not appear in our picks. If it returns, the label is a reasonable one, and it would compete with mid-priced isolates.
+          </p>
+
+          <p>
+            There is no <strong>Amazon Basics protein powder</strong>. We found no current or past Amazon Basics whey or plant protein product, and none under Amazon's grocery and household brands either. Searches for Amazon Basics protein usually surface third-party budget brands with similar-looking packaging, which is worth knowing because a generic look is not the same as Amazon making or vouching for the product.
+          </p>
+
+          <p>
+            In practice, that means the question is not which Amazon-brand powder to buy, but which established brand to buy on Amazon. The good news is that Amazon carries almost every major US protein brand, often in more sizes and flavors than physical stores. The products below are the ones we would buy there, and our main <a href="/best-protein-powder/">best protein powder</a> roundup ranks the wider field.
+          </p>
+        </div>
+
+        <div id="best-sellers" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            2. What Actually Sells on Amazon
+          </h2>
+
+          <p>
+            Amazon does not publish unit sales, but third-party sales trackers give a rough picture. In 2026 estimates, <strong>Optimum Nutrition Gold Standard 100% Whey</strong> sits at or near the top of protein powder sales across several search terms, with one tracker recording a 5 lb tub at about 4.7 stars from roughly 48,000 ratings. <strong>Orgain Organic Protein</strong>, a plant-based powder, ranked second in one tracker's April 2026 protein powder estimates.
+          </p>
+
+          <p>
+            Treat those figures as directional. Tracker data mixes sizes, flavors and sometimes even unrelated products under one heading, and the numbers swing month to month with deals. What they do show clearly is that a small group of big brands dominates: Optimum Nutrition, Dymatize, Orgain, Premier Protein, Isopure and a few value brands such as Nutricost, which has a large Amazon presence.
+          </p>
+
+          <p>
+            Best-seller status is a useful filter but not a recommendation on its own. A product can sell well because it is cheap, heavily advertised or frequently discounted, and none of those tell you about protein per scoop, sweeteners or testing. The picks below start from the best sellers and then apply the same label checks we use everywhere on the site.
+          </p>
+
+          <p>
+            One more reason to favor established best sellers: they tend to have the most stable listings, with the brand or Amazon as the seller and high stock turnover. That makes stale or tampered stock less likely than on a small listing that sells a few units a month through a reseller. If you are shopping for the cheapest options specifically, our <a href="/best-cheap-protein-powder/">best cheap protein powder</a> guide covers the budget field in more depth.
+          </p>
+        </div>
+
+        <!-- Picks -->
+        <div id="top-picks" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            3. The Best Protein Powders on Amazon
+          </h2>
+
+          <p>
+            These six are established products that sell in large volumes on Amazon US, ranked on label quality, value per 25 g of protein and how easy they are to buy from a trustworthy listing. Label figures come from the brand or retailer listings at the time of writing and vary by flavor, so check the panel on the tub you receive.
+          </p>
+
+          {PRODUCTS.map((product, index) => (
+            <div id={product.id} class="scroll-mt-24 mt-12 first:mt-8">
+              <div class="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                <div class="bg-gray-900 px-6 py-4 flex items-center justify-between">
+                  <div class="flex items-center gap-3">
+                    <span class="bg-[#FF4500] text-white w-8 h-8 rounded-full flex items-center justify-center text-sm font-black">
+                      {index + 1}
+                    </span>
+                    {productImages[product.id] && (
+                      <img
+                        src={productImages[product.id]}
+                        alt={product.name}
+                        loading="lazy"
+                        width="40"
+                        height="40"
+                        class="w-10 h-10 rounded-lg bg-white object-contain p-1 shrink-0"
+                      />
+                    )}
+                    <div>
+                      <p class="text-white font-black text-lg">{product.name}</p>
+                      <p class="text-gray-400 text-xs">{product.category}</p>
+                    </div>
+                  </div>
+                  <span class="bg-[#38BDF8]/20 text-[#38BDF8] px-3 py-1 rounded-full text-xs font-bold hidden sm:block">
+                    {product.badge}
+                  </span>
+                </div>
+                <div class="p-6">
+                  {product.rating && (
+                  <div class="flex items-center gap-2 mb-4">
+                    <div class="flex text-yellow-400">
+                      {[...Array(5)].map((_, i) => (
+                        <svg
+                          class={`w-4 h-4 ${i < Math.floor(product.rating) ? "fill-current" : "text-gray-200"}`}
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                        >
+                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        </svg>
+                      ))}
+                    </div>
+                    <span class="text-gray-500 text-sm font-bold">{product.rating}</span>
+                    {product.reviewCount && <span class="text-gray-400 text-xs">({product.reviewCount.toLocaleString()} retailer reviews)</span>}
+                  </div>
+                  )}
+
+                  <SpecGrid specs={product.specs} />
+
+                  <p class="text-gray-700 leading-relaxed mb-6">{product.description}</p>
+
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                    <div class="bg-green-50 rounded-xl p-4">
+                      <p class="text-xs font-black uppercase tracking-widest text-green-700 mb-3">Pros</p>
+                      <ul class="space-y-2">
+                        {product.pros.map((pro) => (
+                          <li class="flex items-start gap-2 text-sm text-green-800">
+                            <svg class="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            {pro}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div class="bg-red-50 rounded-xl p-4">
+                      <p class="text-xs font-black uppercase tracking-widest text-red-700 mb-3">Cons</p>
+                      <ul class="space-y-2">
+                        {product.cons.map((con) => (
+                          <li class="flex items-start gap-2 text-sm text-red-800">
+                            <svg class="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                            {con}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+
+                  <div class="bg-gray-50 rounded-xl p-4 border border-gray-100">
+                    <p class="text-xs font-black uppercase tracking-widest text-gray-500 mb-1">The Bottom Line</p>
+                    <p class="text-gray-900 font-bold">{product.bottomLine}</p>
+                  </div>
+
+                  <a
+                    href={amazonLink(product.amazonUrl, product.name, product.id)}
+                    target="_blank"
+                    rel="sponsored nofollow noopener"
+                    class="mt-6 block bg-[#FF4500] hover:bg-[#E63E00] text-white text-center py-4 rounded-xl font-black no-underline transition-colors uppercase tracking-widest text-sm"
+                  >
+                    Check Price &rarr;
+                  </a>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div id="avoid-fakes" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            4. How to Avoid Fake and Tampered Protein Powder
+          </h2>
+
+          <p>
+            Counterfeit supplements on Amazon have been a real problem, and one cause was <strong>commingling</strong>: for years, Amazon could pool identical items from different sellers in its warehouses, so the tub you received might come from a different seller than the one you bought from. Amazon announced in 2025 that it would end the practice, and seller-industry reports say the commingled inventory program was scheduled to close at the end of March 2026. That reduces the risk, but it does not remove it.
+          </p>
+
+          <p>
+            The single most useful check is the line under the price that says who the item <strong>ships from</strong> and who it is <strong>sold by</strong>. The safest combinations are sold by Amazon.com, or sold by the brand itself, such as Myprotein North America on the Impact Whey Isolate listing we checked, and shipped by Amazon. A third-party seller you have never heard of, especially at a price far below every other listing, is the clearest warning sign.
+          </p>
+
+          <p>
+            When the tub arrives, check it before you use it. The safety seal under the lid should be intact, the lot number and best-before date should be printed clearly, and the label should be in English with the US nutrition facts format. If the powder looks, smells or mixes very differently from previous tubs of the same flavor, stop using it and contact the seller and the brand, quoting the lot number.
+          </p>
+
+          <p>
+            Most supplements on Amazon are marked non-returnable, which makes these checks more important. If something is wrong with a third-party order, the A-to-z Guarantee is the route to a refund, and Amazon's report an issue link on the product page is the way to flag a suspected counterfeit. For the wider question of what can go wrong with protein powder itself, our <a href="/is-protein-powder-safe/">is protein powder safe</a> guide covers contamination and testing.
+          </p>
+
+          <div class="bg-gray-900 text-white rounded-2xl p-6 lg:p-8 my-8">
+            <p class="text-xs font-black uppercase tracking-widest text-[#38BDF8] mb-3">THE RULE</p>
+            <p class="text-xl font-bold text-white mb-3">Check who it is sold by before you check the price.</p>
+            <p class="text-gray-300 leading-relaxed m-0">Sold by Amazon.com or by the brand, and shipped by Amazon, is the safest combination. A much cheaper listing from an unknown third-party seller is the one most likely to be old, diverted or fake.</p>
+          </div>
+        </div>
+
+        <div id="read-the-listing" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            5. Reading the Listing: Size, Flavor and Packaging
+          </h2>
+
+          <p>
+            Amazon listings bundle many sizes and flavors under one product page, and the price shown is for whichever variation is selected. Before comparing, select the exact size and flavor you want, then check the price per pound or per ounce Amazon shows beneath the main price. A 5 lb tub that looks expensive next to a 2 lb tub is usually much cheaper per scoop.
+          </p>
+
+          <p>
+            Read the nutrition panel image, not just the title. Titles often lead with the most flattering number, such as 30 g of protein, without saying that it takes two scoops. Premier Protein's powder, for example, delivers 30 g of protein per two-scoop serving, which is fine, but you need to know it is two scoops when you compare servings per tub with a product that uses one.
+          </p>
+
+          <p>
+            Packaging may vary is a phrase you will see on many listings, and it usually means a brand has refreshed its label. It becomes relevant when a formula changes, for example when a brand removes a color additive or changes a sweetener. If an ingredient matters to you, check the panel on the tub that arrives rather than the listing photo, which may show an older version.
+          </p>
+
+          <p>
+            Finally, check the variation reviews filter. Reviews are often pooled across every flavor and size on a listing, so a 4.6-star average may hide a flavor that buyers dislike. Filtering to the flavor you want, and to recent reviews, gives a much better sense of what you will actually receive.
+          </p>
+        </div>
+
+        <div id="subscribe-and-save" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            6. Subscribe and Save: Does the Maths Work?
+          </h2>
+
+          <p>
+            Subscribe and Save is Amazon's repeat-delivery program. Eligible items usually get a discount of around 5 percent, and on many items that rises to as much as 15 percent when five or more subscriptions arrive in the same monthly delivery, according to Amazon seller guides. The exact percentages are set per listing, so check the product page rather than assuming a number.
+          </p>
+
+          <p>
+            Here is what that means for a typical tub. On a $50 protein powder bought once a month, a 5 percent discount saves $2.50 a month, or $30 a year. At 15 percent, the saving is $7.50 a month, or $90 a year, which is close to two free tubs. If you already buy other household staples on subscription, adding your protein powder to the same delivery day can be the easiest way to reach the higher tier.
+          </p>
+
+          <div class="overflow-hidden border border-gray-200 rounded-2xl my-8">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Tub price</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">5% discount, per year</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">15% discount, per year</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">$30 per month</td>
+                    <td class="px-4 py-4 text-gray-700">$18 saved</td>
+                    <td class="px-4 py-4 text-gray-700">$54 saved</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">$50 per month</td>
+                    <td class="px-4 py-4 text-gray-700">$30 saved</td>
+                    <td class="px-4 py-4 text-gray-700">$90 saved</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">$70 per month</td>
+                    <td class="px-4 py-4 text-gray-700">$42 saved</td>
+                    <td class="px-4 py-4 text-gray-700">$126 saved</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <p>
+            There are catches. The subscription price is not locked: the price can change between the day you subscribe and the day an order ships, and the discount applies to the price at that time. Amazon emails you before each delivery, so glance at the price then. You can skip a delivery or cancel at any time, which makes it easy to avoid a pile of tubs if your training changes.
+          </p>
+
+          <p>
+            Our rule of thumb: subscribe only to a product and flavor you have already finished at least once, set the frequency to slightly longer than you need, and bring the date forward if you run low. That avoids paying for a large tub you do not like, and it avoids stockpiling powder that sits past its best-before date.
+          </p>
+        </div>
+
+        <div id="cost-per-25g" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            7. Cost per 25 g: The Only Price That Matters
+          </h2>
+
+          <p>
+            Price per tub, per pound and even per serving can all mislead, because scoop sizes and protein per scoop vary. The fair comparison is cost per 25 g of protein: divide the price by the number of servings, multiply by 25, and divide by the grams of protein per serving. It takes a minute and removes most of the marketing from the decision.
+          </p>
+
+          <div class="overflow-hidden border border-gray-200 rounded-2xl my-8">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Product</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Protein per serving</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Approx. cost tier per 25 g</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Notes</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Nutricost Whey Protein Concentrate</td>
+                    <td class="px-4 py-4 text-gray-700">25 g per 36 g scoop</td>
+                    <td class="px-4 py-4 text-gray-700">Budget</td>
+                    <td class="px-4 py-4 text-gray-700">Larger scoop, simple label</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Optimum Nutrition Gold Standard</td>
+                    <td class="px-4 py-4 text-gray-700">About 24 g</td>
+                    <td class="px-4 py-4 text-gray-700">Low to mid-price</td>
+                    <td class="px-4 py-4 text-gray-700">Frequent Amazon deals</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Premier Protein 100% Whey powder</td>
+                    <td class="px-4 py-4 text-gray-700">30 g per 2 scoops</td>
+                    <td class="px-4 py-4 text-gray-700">Low to mid-price</td>
+                    <td class="px-4 py-4 text-gray-700">Two scoops per serving</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Orgain Organic Protein (plant)</td>
+                    <td class="px-4 py-4 text-gray-700">21 g per 2 scoops</td>
+                    <td class="px-4 py-4 text-gray-700">Mid-price</td>
+                    <td class="px-4 py-4 text-gray-700">Certified organic, plant-based</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Isopure Zero Carb</td>
+                    <td class="px-4 py-4 text-gray-700">About 25 g</td>
+                    <td class="px-4 py-4 text-gray-700">Mid to premium</td>
+                    <td class="px-4 py-4 text-gray-700">Near-zero carbohydrate</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Dymatize ISO100</td>
+                    <td class="px-4 py-4 text-gray-700">25 g</td>
+                    <td class="px-4 py-4 text-gray-700">Premium</td>
+                    <td class="px-4 py-4 text-gray-700">Hydrolyzed isolate</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <p>
+            Tiers rather than exact prices are deliberate. Amazon prices on protein move constantly, sometimes daily, with lightning deals, coupons and Subscribe and Save stacking on top. A product that is mid-priced most weeks can briefly become the cheapest option on the page, so it pays to know your own target price per 25 g and buy when a product drops below it.
+          </p>
+
+          <p>
+            Size has the biggest effect. On most of these products, the 5 lb tub costs meaningfully less per 25 g of protein than the 2 lb tub, and the smallest sample sizes cost the most. Once you know you like a flavor, moving to the larger size is the easiest saving available, often bigger than any coupon.
+          </p>
+
+          <p>
+            For context against the rest of the site: whey concentrates and blends almost always beat isolates on cost per 25 g, and plant powders usually sit in the middle. If you want to compare isolates specifically, our <a href="/best-whey-protein-isolate/">best whey protein isolate</a> guide breaks down that category, and our <a href="/myprotein-review/">Myprotein review</a> explains why scoop size can make a cheap tub less cheap than it looks.
+          </p>
+        </div>
+
+        <div id="reviews" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            8. How to Read Amazon Reviews for Protein Powder
+          </h2>
+
+          <p>
+            Star ratings on big protein listings cluster between about 4.3 and 4.8, so the average alone tells you little. What helps is the shape of the reviews: how many one-star reviews mention the same problem, and whether that problem is recent. Repeated recent complaints about a changed taste, clumping or a broken seal are worth more than thousands of five-star reviews from years ago.
+          </p>
+
+          <p>
+            Be wary of reviews that read like advertising, of new listings with hundreds of near-identical five-star ratings in a short period, and of reviews that mention a free product or a gift card. Fake and incentivized reviews are against Amazon's policies, and in the US the Federal Trade Commission's rule banning fake reviews took effect in 2024, but enforcement is imperfect and manipulated listings still appear.
+          </p>
+
+          <p>
+            Taste reviews are genuinely useful when filtered by flavor. Buyers are often clear about whether a chocolate flavor is rich or watery, whether a vanilla is sweet or bland, and whether a plant powder is gritty. Treat these as other people's preferences rather than facts, but where dozens of reviewers describe the same thing, it is usually a fair guide.
+          </p>
+
+          <p>
+            What reviews cannot tell you is whether the protein figure is accurate or the product is clean. For that you need the label, the protein source, and independent testing. That is why every pick on this page is chosen on label analysis first and buyer feedback second, never the other way round.
+          </p>
+        </div>
+
+        <div id="certifications" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            9. Certifications Worth Checking Before You Buy
+          </h2>
+
+          <p>
+            Amazon listings mention certifications freely, so check them at the source. <strong>NSF Certified for Sport</strong> and <strong>Informed Sport</strong> or <strong>Informed Choice</strong> test for banned substances and list certified products, often by flavor, in public databases. <strong>USDA Organic</strong> certifies ingredient sourcing, not purity. <strong>Clean Label Project</strong> runs its own contaminant testing program. Each answers a different question.
+          </p>
+
+          <p>
+            The most common trap is a certification that applies to one product or flavor being shown on every variation of a listing. If you are a drug-tested athlete, search the exact product name and flavor in the certifier's database before you buy. For everyone else, a certification is a useful sign of quality control but not a requirement; many good powders carry none.
+          </p>
+
+          <p>
+            Plant powders deserve one extra check. Rice and pea proteins can carry more heavy metals than whey, so look for a brand that publishes heavy-metal testing or carries a contaminant-focused certification. Our <a href="/best-plant-based-protein-powder/">best plant-based protein powder</a> guide covers which brands do this.
+          </p>
+
+          <p>
+            Finally, a health note. Protein powder is a convenience food, not a medicine, and most healthy adults can use it safely. If you have kidney disease, are pregnant or breastfeeding, take regular medication, have a food allergy or are buying for a teenager, talk to a doctor or registered dietitian first. This guide is general information, not medical advice.
+          </p>
+        </div>
+
+        <!-- Common Mistakes -->
+        <div id="mistakes" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            10. Common Mistakes to Avoid
+          </h2>
+
+          <div class="space-y-6 my-8">
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Ignoring who the seller is</h3>
+              <p class="text-gray-700 text-sm m-0">
+                The line that says ships from and sold by matters more than the price. Sold by Amazon.com or the brand, and shipped by Amazon, is the safest combination. An unknown third-party seller with a price far below every other listing is the most likely source of old, diverted or counterfeit tubs.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Comparing price per tub</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Scoop sizes range from about 25 g to 46 g, and protein per serving from about 20 g to 30 g. Comparing tub prices tells you almost nothing. Work out cost per 25 g of protein for each option you are considering, and the real value order usually changes.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Subscribing before you have tried it</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Subscribe and Save is worth having, but only for a product and flavor you already like. Subscribing to an untested flavor in a 5 lb tub is the fastest way to end up with a cupboard of powder you will not finish. Buy one tub first, then subscribe.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Trusting the listing photo</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Packaging may vary means the label on your tub may not match the photo, especially when formulas change. If a specific sweetener, color or allergen matters to you, read the panel on the tub you receive. Most supplements on Amazon are non-returnable, so check promptly.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Looking for Amazon Basics protein</h3>
+              <p class="text-gray-700 text-sm m-0">
+                There is no Amazon Basics protein powder, and the Amazon Elements whey isolate has been out of stock for a long time. Generic-looking budget tubs are third-party brands, not Amazon products. Judge them on their labels and sellers like any other brand.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ -->
+        <div id="faq" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            11. Frequently Asked Questions
+          </h2>
+
+          <div class="space-y-6">
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">What is the best protein powder on Amazon?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                For most people, Optimum Nutrition Gold Standard 100% Whey, which third-party trackers place at or near the top of Amazon protein sales and which lists about 24 g of protein per scoop. Dymatize ISO100 is the best isolate, Orgain Organic Protein the best plant-based option, and Nutricost Whey Concentrate the budget pick. Buy from listings sold by Amazon or the brand.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Does Amazon make its own protein powder?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Amazon's supplement brand, Amazon Elements, launched a grass-fed whey isolate in 2018 with about 25 g of protein per 32 g scoop, sweetened with stevia. At the time of writing the chocolate listing showed as out of stock and the vanilla as currently unavailable. There is no Amazon Basics protein powder, and we found none under Amazon's other house brands.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is protein powder on Amazon fake?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Most protein powder on Amazon is genuine, but counterfeits and stale stock do appear, mainly through third-party sellers. Amazon announced in 2025 that it would end the commingling of identical items from different sellers, which reduces the risk. Buy listings sold by Amazon.com or the brand, check the seal and lot number, and report anything suspicious.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is Subscribe and Save worth it for protein powder?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Usually, yes, for a product you already like. Discounts are typically around 5 percent and can reach 15 percent on many items when five or more subscriptions arrive together. On a $50 monthly tub, that is $30 to $90 saved per year. Prices can change before each delivery, so check the reminder email, and skip deliveries freely.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Why are some protein powders non-returnable on Amazon?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Food and supplement items are often marked non-returnable for safety reasons, because a returned tub cannot be resold with confidence. That makes it more important to check the seller, the size and the flavor before you buy. If a third-party order arrives damaged or appears counterfeit, the A-to-z Guarantee and the report an issue link are your routes.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Are Amazon protein reviews reliable?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Partly. Flavor and mixing feedback, filtered by flavor and sorted by recent, is often a fair guide. Overall star averages cluster so tightly on big listings that they say little, and fake or incentivized reviews still appear despite Amazon policy and the FTC's 2024 rule against fake reviews. Reviews cannot verify protein content or purity; the label and testing can.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">How do I check if a protein powder is third-party tested?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Search the exact product and flavor in the certifier's own database: NSF Certified for Sport, Informed Sport or Informed Choice for banned-substance testing, and the USDA Organic Integrity Database for organic claims. A badge in an Amazon listing photo may apply only to one flavor or size, so the database is the only reliable check.
+              </p>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Related Guides -->
+        <div class="mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">Related Protein Powder Guides</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <a href="/best-protein-powder/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#FF4500] font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Protein Powder</h3>
+              <p class="text-gray-500 text-sm mt-2">Our overall ranking across whey, isolate and plant protein.</p>
+            </a>
+            <a href="/best-cheap-protein-powder/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#38BDF8] font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Cheap Protein Powder</h3>
+              <p class="text-gray-500 text-sm mt-2">The lowest cost per 25 g of protein without a junk label.</p>
+            </a>
+            <a href="/optimum-nutrition-protein-powder-review/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#22C55E] font-black text-xs uppercase tracking-widest mb-2">Brand Review</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Optimum Nutrition Review</h3>
+              <p class="text-gray-500 text-sm mt-2">Gold Standard, Amazon's best-selling whey, label-checked.</p>
+            </a>
+          </div>
+        </div>
+
+        <!-- Closing -->
+        <div class="mt-16 bg-gray-900 text-white rounded-2xl p-8">
+          <h2 class="text-2xl font-black text-white mb-4">The Bottom Line</h2>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            Amazon is a good place to buy protein powder if you treat it like a marketplace rather than a store. Stick to established products such as Optimum Nutrition Gold Standard, Dymatize ISO100, Premier Protein, Orgain, Nutricost or Isopure, buy from listings sold by Amazon.com or the brand, and compare everything on cost per 25 g of protein rather than price per tub.
+          </p>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            Forget Amazon Basics protein, which does not exist, and do not wait for the Amazon Elements whey to come back into stock. Buy one tub, confirm you like it, then move to the larger size and add it to Subscribe and Save. That combination usually beats any coupon or lightning deal over a year.
+          </p>
+        </div>
+
+        <MoreInCategory category="Protein Powder" links={moreInCategory} />
+
+        <AuthorBio />
+      </div>
+    </div>
+  </article>
+</Layout>

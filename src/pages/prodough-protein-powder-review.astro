@@ -1,0 +1,976 @@
+---
+import Layout from "../layouts/Layout.astro";
+import MoreInCategory from "../components/MoreInCategory.astro";
+import { AUTHORS, DEFAULT_AUTHOR, authorSchema } from "../data/authors";
+import { SITE_NAME, SITE_URL } from "../data/site";
+import AuthorAvatar from "../components/AuthorAvatar.astro";
+import QuickPicks from "../components/QuickPicks.astro";
+import AuthorBio from "../components/AuthorBio.astro";
+import { amazonLink } from "../data/affiliate";
+import TrustBadge from "../components/TrustBadge.astro";
+import SocialProof from "../components/SocialProof.astro";
+import SpecGrid from "../components/SpecGrid.astro";
+import productImages from "../data/product-images.json";
+import { pageDates } from "../data/dates";
+
+const moreInCategory = [
+  {
+    "title": "Best Tasting Protein Powder",
+    "url": "/best-tasting-protein-powder/"
+  },
+  {
+    "title": "Best Whey Protein Isolate",
+    "url": "/best-whey-protein-isolate/"
+  },
+  {
+    "title": "Best Protein Powder for Smoothies",
+    "url": "/best-protein-powder-for-smoothies/"
+  }
+];
+const author = AUTHORS[DEFAULT_AUTHOR];
+const dates = pageDates(Astro.url.pathname, { published: "2026-10-19", modified: "2026-10-19" });
+const title = "ProDough Protein Powder Review: Dessert Flavors, 25 g Scoops, Steep Price";
+const description =
+  "ProDough protein reviewed on the label: the 25 g whey isolate, the beef and plant powders, the baking mixes, what is not disclosed and the real cost per 25 g.";
+
+const PRODUCTS: {
+  id: string;
+  name: string;
+  brand?: string;
+  badge: string;
+  category: string;
+  description: string;
+  pros: string[];
+  cons: string[];
+  bottomLine: string;
+  specs?: Record<string, string>;
+  rating?: number;
+  reviewCount?: number;
+  amazonUrl?: string;
+}[] = [
+  {
+    "id": "prodough-whey-protein-isolate",
+    "name": "ProDough Whey Protein Isolate",
+    "brand": "ProDough",
+    "badge": "Best Overall ProDough",
+    "category": "Grass-fed whey isolate, dessert flavors",
+    "description": "ProDough's flagship powder is described by the brand as 100 percent microfiltered, grass-fed whey isolate with 25 g of protein, 110 calories and 2 g of net carbs per serving, zero added sugar and no artificial flavors, colors or preservatives, per its page at the time of writing. It comes in around 19 dessert-style flavors and as single-serve Protein Singles. The page text did not name the sweetener or a third-party certification.",
+    "pros": [
+      "25 g of whey isolate protein in about 110 calories, per the brand",
+      "Unusually wide range of dessert flavors",
+      "Single-serve packs make it easy to sample"
+    ],
+    "cons": [
+      "About 2.65 to 2.95 dollars per 25 g of protein",
+      "Sweetener and serving weight not stated in page text; no certification named",
+      "Sold direct; no official Amazon listing confirmed"
+    ],
+    "bottomLine": "A flavor splurge with good macros; not the value or baking pick.",
+    "specs": {
+      "Protein / serving": "25 g (brand)",
+      "Calories": "About 110",
+      "Third-party testing": "None named",
+      "Best for": "Flavor variety in shakes and oats"
+    }
+  },
+  {
+    "id": "prodough-grass-fed-beef-protein",
+    "name": "ProDough Grass-Fed Beef Protein",
+    "brand": "ProDough",
+    "badge": "Best Dairy-Free ProDough",
+    "category": "Beef protein with collagen peptides, stick packs",
+    "description": "ProDough's beef protein is described as 100 percent grass-fed beef protein with bovine collagen peptides, delivering 25 g of protein, 100 calories and 2 g of carbs per stick, with zero added sugar, per the brand at the time of writing. It is sweetened with Reb A and Reb M stevia and comes in Double Chocolate, Frosted Vanilla, Toffee Cream and Cinnamon Sugar. It is dairy-free, with no whey, casein or lactose.",
+    "pros": [
+      "25 g of protein in about 100 calories, per the brand",
+      "Dairy-free and lactose-free",
+      "Sweetener clearly disclosed"
+    ],
+    "cons": [
+      "About 3.49 dollars per 25 g of protein",
+      "Beef and collagen proteins are lower in leucine than whey"
+    ],
+    "bottomLine": "A reasonable dairy-free option if you want beef over plant protein and accept the price.",
+    "specs": {
+      "Protein / serving": "25 g (brand, per stick)",
+      "Calories": "About 100",
+      "Third-party testing": "None named",
+      "Best for": "Dairy-free buyers"
+    }
+  },
+  {
+    "id": "prodough-plant-protein",
+    "name": "ProDough Plant Protein",
+    "brand": "ProDough",
+    "badge": "Plant-Based Option",
+    "category": "Plant protein powder, dessert flavors",
+    "description": "ProDough's plant protein lists 25 g of protein and 120 to 150 calories per serving with zero added sugar, in Brownie Batter, Cafe Mocha, Salted Caramel and Vanilla Cone, per its page at the time of writing. It was listed as sold out when we checked, and the page text did not name the plant protein sources or servings per bag. A store reply on the page put sodium at around 250 mg per scoop for most flavors.",
+    "pros": [
+      "25 g of protein per serving, per the brand",
+      "Dessert flavors not common in plant powders",
+      "Dairy-free"
+    ],
+    "cons": [
+      "Sold out at the time of writing",
+      "Protein sources and serving count not stated in page text"
+    ],
+    "bottomLine": "Check the panel and stock before buying; better-documented plant proteins are easy to find.",
+    "specs": {
+      "Protein / serving": "25 g (brand)",
+      "Calories": "About 120-150",
+      "Third-party testing": "None named",
+      "Best for": "Plant-based dessert shakes"
+    }
+  },
+  {
+    "id": "transparent-labs-grass-fed-whey-protein-isolate",
+    "name": "Transparent Labs 100% Grass-Fed Whey Protein Isolate (Unflavored)",
+    "brand": "Transparent Labs",
+    "badge": "Alternative: Documented Grass-Fed Isolate",
+    "category": "Grass-fed whey isolate",
+    "description": "If what appeals about ProDough is a grass-fed whey isolate, Transparent Labs gives you one with more protein per scoop and published third-party lab results. The unflavored version delivers about 28 g of protein per scoop with no sweeteners or flavors, per the label at the time of writing, which also makes it a far more flexible baking ingredient. It is sold on Amazon.",
+    "pros": [
+      "About 28 g of protein per scoop, per the label",
+      "No sweeteners or flavors, so it bakes cleanly",
+      "Brand publishes third-party lab results"
+    ],
+    "cons": [
+      "Premium cost per 25 g of protein",
+      "Unflavored availability varies; check the current flavor list"
+    ],
+    "bottomLine": "The better grass-fed isolate if you value documentation over dessert flavors.",
+    "specs": {
+      "Protein / serving": "About 28 g (label)",
+      "Calories": "Check panel",
+      "Third-party testing": "Published lab results",
+      "Best for": "Baking, maximum protein per scoop"
+    }
+  },
+  {
+    "id": "naked-nutrition-naked-whey",
+    "name": "Naked Nutrition Naked Whey (Unflavored)",
+    "brand": "Naked Nutrition",
+    "badge": "Alternative: Best for Baking",
+    "category": "Grass-fed whey concentrate",
+    "description": "Naked Whey is the benchmark single-ingredient unflavored whey: grass-fed whey protein concentrate and nothing else, per the label. It delivers about 25 g of protein per two-scoop serving and buyers consistently describe it as mild and milky, easy to hide in oats, smoothies and baking. In large bags it costs far less per 25 g than ProDough, which makes it the sensible base for homemade protein baking.",
+    "pros": [
+      "One ingredient: grass-fed whey protein concentrate, per the label",
+      "About 25 g of protein per two-scoop serving",
+      "Mid-range cost per 25 g in large bags"
+    ],
+    "cons": [
+      "Concentrate contains some lactose",
+      "Unflavored, so it needs a recipe to taste of anything"
+    ],
+    "bottomLine": "The default unflavored whey for baking and cooking at a fraction of ProDough's cost.",
+    "specs": {
+      "Protein / serving": "About 25 g (2 scoops, label)",
+      "Calories": "Check panel",
+      "Third-party testing": "Verify current status",
+      "Best for": "Baking, oats, smoothies"
+    }
+  }
+];
+
+const schema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Home",
+          item: `${SITE_URL}/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Best Lists",
+          item: `${SITE_URL}/best-of/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 3,
+          name: "ProDough Protein Review",
+          item: `${SITE_URL}/prodough-protein-powder-review/`,
+        },
+      ],
+    },
+    {
+      "@type": "FAQPage",
+      mainEntity: [
+        {
+          "@type": "Question",
+          "name": "Is ProDough protein powder good?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "ProDough's whey is a credible product: the brand describes it as grass-fed whey isolate with 25 g of protein and 110 calories per serving, in a long list of dessert flavors buyers rate highly. Its drawbacks are a premium price around 3 dollars per 25 g, no named third-party certification and an undisclosed sweetener in its page text."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does ProDough actually make protein powder?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Although ProDough is best known for protein pancake, crepe, cupcake and donut mixes, it sells three protein powders at the time of writing: a grass-fed whey isolate, a grass-fed beef protein with collagen peptides in stick packs, and a plant protein. Each lists 25 g of protein per serving, per the brand."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How much protein is in a scoop of ProDough whey?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "ProDough lists 25 g of protein, 110 calories and 2 g of net carbs per serving of its whey isolate, with zero added sugar, per its page at the time of writing. The published text did not give the serving weight in grams, so check the label image for the exact scoop size and full panel."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is ProDough protein sold on Amazon?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "We could not confirm an official ProDough listing on Amazon at the time of writing. The brand sells primarily through its own online store, where it lists Subscribe and Save discounts and free shipping over 100 dollars. Third-party resellers have listed some ProDough mixes, but availability and freshness are harder to verify that way."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is ProDough protein third-party tested?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "ProDough's product pages that we checked did not mention a third-party testing program or certification such as NSF Certified for Sport, Informed Sport or the Clean Label Project. That does not mean the products are unsafe, but there is no public database to check, so drug-tested athletes should choose a certified powder instead."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can you bake with ProDough protein powder?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "You can, and buyers report using it in oats, yogurt and protein ice cream. But flavored, sweetened protein at around 3 dollars per 25 g is an expensive baking ingredient. Most home bakers get better value and more flexibility from a large bag of unflavored whey, replacing part of the flour and adding moisture."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is ProDough whey lactose-free?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "ProDough describes its whey as isolate rather than concentrate, which typically contains very little lactose, and adds a digestive enzyme blend. It does not claim the product is lactose-free. Its beef protein is fully dairy-free. If you are lactose intolerant or allergic to milk, check the label and speak to a doctor before using whey."
+          }
+        }
+      ],
+    },
+    {
+      "@type": "Article",
+      headline: title,
+      author: authorSchema(),
+      datePublished: dates.published,
+      dateModified: dates.modified,
+      publisher: { "@type": "Organization", name: SITE_NAME, url: SITE_URL },
+    },
+    {
+      "@type": "ItemList",
+      name: title,
+      numberOfItems: PRODUCTS.length,
+      itemListElement: PRODUCTS.map((product, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name: product.name,
+        url: new URL(`#${product.id}`, Astro.url).toString(),
+      })),
+    },
+    ...PRODUCTS.map((product) => ({
+      "@type": "Product",
+      name: product.name,
+      description: product.description,
+      brand: {
+        "@type": "Brand",
+        name: product.brand ?? product.name.split(" ")[0],
+      },
+    })),
+  ],
+};
+---
+
+<Layout
+  title={title}
+  description={description}
+  ogType="article"
+  article={{
+    publishedTime: dates.published,
+    modifiedTime: dates.modified,
+    author: author.name,
+    section: "Brand Reviews",
+    tags: [
+      "prodough protein powder",
+      "prodough protein",
+      "prodough review",
+      "prodough protein baking mix"
+    ],
+  }}
+  jsonLd={schema}
+  stickyCta={{
+    text: "See Our Top Unflavored Protein Picks",
+    link: "/best-unflavored-protein-powder/",
+  }}
+>
+  <article class="relative overflow-hidden">
+    <!-- Hero Section -->
+    <div class="bg-gray-900 py-16 lg:py-24 relative overflow-hidden">
+      <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(circle at 20% 20%, #38BDF8 0, transparent 45%), radial-gradient(circle at 80% 60%, #FF4500 0, transparent 40%);"></div>
+      <div class="max-w-4xl mx-auto px-4 relative z-10 text-center">
+        <div class="flex justify-center mb-6">
+          <TrustBadge />
+        </div>
+        <div class="flex justify-center gap-3 mb-6">
+          <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#FF4500]/20 text-[#FF4500] text-xs font-black uppercase tracking-widest border border-[#FF4500]/30">
+            Brand Review
+          </span>
+          <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-green-500/10 text-green-400 text-xs font-bold uppercase tracking-widest border border-green-500/20">
+            Label-Checked
+          </span>
+        </div>
+        <h1 class="text-4xl lg:text-6xl font-black text-white leading-tight mb-8">
+          ProDough Protein Powder: <span class="text-[#38BDF8]">A Bakeshop Brand With a Whey Isolate</span>
+        </h1>
+        <p class="text-xl text-gray-300 leading-relaxed mb-8 max-w-3xl mx-auto">
+          ProDough started with protein donut and pancake mixes and now sells its own whey isolate, beef protein and plant protein in dessert flavors. Here is what the labels actually say, which product to buy, who should skip it, and what it costs per 25 g of protein.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a
+            href="#prodough-whey-protein-isolate"
+            class="px-8 py-4 bg-[#FF4500] hover:bg-[#E63E00] text-white font-black rounded-xl shadow-lg transition-all no-underline"
+          >
+            See Our #1 Pick
+          </a>
+          <a
+            href="#which-one"
+            class="px-8 py-4 bg-white/10 hover:bg-white/20 text-white font-bold rounded-xl border border-white/10 no-underline"
+          >
+            See the Label Breakdown
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Author & Meta -->
+    <div class="max-w-3xl mx-auto px-4 pt-12">
+      <div class="flex items-center gap-6 border-b border-gray-100 pb-8">
+        <div class="flex items-center gap-3">
+          <AuthorAvatar size={48} />
+          <div>
+            <p class="text-sm font-bold text-gray-900">{author.name}</p>
+            <p class="text-xs text-gray-500 uppercase tracking-widest">{author.role}</p>
+          </div>
+        </div>
+        <div class="h-10 w-px bg-gray-200 hidden sm:block"></div>
+        <div class="hidden sm:block">
+          <p class="text-sm font-bold text-gray-900">Last Updated</p>
+          <p class="text-xs text-gray-500">{dates.display}</p>
+        </div>
+        <div class="hidden sm:block ml-auto">
+          <SocialProof />
+        </div>
+      </div>
+    </div>
+
+    <!-- Table of Contents -->
+    <div class="max-w-3xl mx-auto px-4 py-10">
+      <div class="bg-gray-50 border border-gray-200 rounded-2xl p-6 lg:p-8">
+        <h2 class="text-lg font-black text-gray-900 mb-4 flex items-center gap-2">
+          In This Guide
+        </h2>
+        <nav class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <a href="#verdict" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">1. The Short Verdict</a>
+          <a href="#what-prodough-sells" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">2. What ProDough Actually Sells</a>
+          <a href="#label" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">3. What Is in ProDough Whey</a>
+          <a href="#top-picks" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">4. The Lineup</a>
+          <a href="#which-one" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">5. Which ProDough Product to Buy</a>
+          <a href="#cost" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">6. Cost per 25 g of Protein</a>
+          <a href="#transparency" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">7. Testing and Label Transparency</a>
+          <a href="#skip" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">8. Who Should Skip ProDough</a>
+          <a href="#baking" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">9. Baking With Protein: ProDough vs Unflavored</a>
+          <a href="#compare" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">10. How ProDough Compares</a>
+          <a href="#mistakes" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">11. Common Mistakes</a>
+          <a href="#faq" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">12. FAQ</a>
+        </nav>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="max-w-3xl mx-auto px-4 pb-16 lg:pb-24">
+      <div class="prose prose-lg prose-blue max-w-none text-gray-700 leading-relaxed">
+        <p class="text-2xl font-medium text-gray-900 mb-8 italic">
+          ProDough's whey is a 25 g grass-fed whey isolate in about 110 calories, sold in an unusually long list of dessert flavors. It is also around 2.95 dollars per 25 g of protein, sold only direct as far as we could confirm, and published without a named sweetener, a serving weight or a third-party certification. Buy it for the flavors; buy something else for value or for baking.
+        </p>
+
+        <QuickPicks products={PRODUCTS} />
+
+        <div id="verdict" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            1. The Short Verdict
+          </h2>
+
+          <p>
+            ProDough is a real brand with a real protein powder, which is worth saying because many people know it only for its protein pancake and donut mixes. Its whey protein is described by the brand as 100 percent microfiltered, grass-fed whey isolate with 25 g of protein and 110 calories per serving, 2 g of net carbs and zero added sugar. That is a good macro profile, roughly in line with premium isolates from mainstream brands.
+          </p>
+
+          <p>
+            The draw is flavor. ProDough lists around 19 flavors on its whey page, from Vanilla Bean and Chocolate Mousse to Raspberry Cheesecake, Horchata, Maple Donut and Orange Cream, and refers to more than 30 elsewhere. Buyer reviews on the brand's review platform overwhelmingly focus on taste, with frequent mentions of mixing it into coffee, overnight oats, yogurt and protein ice cream. If dessert flavors keep you consistent with protein, that has real value.
+          </p>
+
+          <p>
+            The weaknesses are price and disclosure. A full bag lists at about 60 dollars, which ProDough itself prices at about 2.95 dollars per serving, or about 2.95 dollars per 25 g of protein, since each serving holds 25 g. That is premium pricing. And the published product text we checked did not name the sweetener, give a serving weight in grams or name any third-party certification, despite the brand's tagline promising transparent labels. The panel is published as an image, so check it before you buy.
+          </p>
+
+          <div class="bg-gray-900 text-white rounded-2xl p-6 lg:p-8 my-8">
+            <p class="text-xs font-black uppercase tracking-widest text-[#38BDF8] mb-3">THE VERDICT</p>
+            <p class="text-xl font-bold text-white mb-3">Good macros and fun flavors, priced like a premium isolate, with less disclosure than one.</p>
+            <p class="text-gray-300 leading-relaxed m-0">Buy ProDough whey if flavor variety is what keeps you using protein and you are happy to pay around 3 dollars per 25 g. If you want protein for baking, an unflavored isolate is the better and cheaper tool. If you need certification, look elsewhere.</p>
+          </div>
+
+          <p>
+            This review is built on ProDough's own product pages, retailer and wholesale listings, and buyer reviews reported as buyer feedback. We have not tasted, baked with or lab-tested ProDough products ourselves. For the unflavored powders most bakers end up using instead, see our <a href="/best-unflavored-protein-powder/">best unflavored protein powder</a> guide.
+          </p>
+        </div>
+
+        <div id="what-prodough-sells" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            2. What ProDough Actually Sells
+          </h2>
+
+          <p>
+            ProDough trades as ProDough Protein Bakeshop and sells primarily through its own online store. Its wholesale listing describes a line of high-protein, low-sugar baked goods and pantry staples, from protein cupcakes to gluten-free flour and breakfast options, and its site carries the tagline Clean Ingredients, Great Macros, Transparent Labels. The review platform attached to its store showed more than 7,000 buyer reviews at the time of writing, which suggests a sizeable direct customer base.
+          </p>
+
+          <p>
+            The protein powder side of the range has three products. The whey protein is the flagship, sold in full-size bags and as Protein Singles, single-serve packs that the brand also bundles as a sampler with one serving of every flavor. A grass-fed beef protein is sold in single-serve stick packs in four flavors. A plant protein is sold in full bags in four flavors, and was listed as sold out when we checked.
+          </p>
+
+          <p>
+            The bakeshop side is larger. At the time of writing ProDough sold protein crepe mixes in Original and Chocolate, Buttermilk and Cinnamon Swirl Protein Pancake and Waffle Mixes, cupcake mixes in flavors such as Chocolate, Cinnamon Swirl and Pumpkin Spice, protein donut mixes, a gluten-free one-to-one flour blend, protein oatmeal quick cups and a greens powder. Baking mixes run about 12 to 15 dollars a bag at list price on the brand's site.
+          </p>
+
+          <p>
+            Amazon is the awkward part for this site's readers. We could not confirm an official ProDough storefront or listing on Amazon at the time of writing. One buyer on ProDough's review page mentioned previously buying on Amazon, and a third-party grocery reseller listed the buttermilk pancake mix as sold out. If you want ProDough, the brand's own store is the reliable source, and the Amazon buttons on this page for ProDough items may lead to a search rather than a product page.
+          </p>
+        </div>
+
+        <div id="label" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            3. What Is in ProDough Whey
+          </h2>
+
+          <p>
+            ProDough's whey page makes a handful of specific claims: 100 percent microfiltered whey isolate, described as isolate, not concentrate; 100 percent grass-fed; 25 g of protein and 110 calories per serving; 2 g of net carbs; zero added sugar; and zero artificial flavors, colors or preservatives. It also describes the powder as gluten-free and keto-friendly and says it includes a proprietary digestive enzyme blend.
+          </p>
+
+          <p>
+            Those macros are credible for a whey isolate. Isolate is typically around 90 percent protein by weight, and the brand claims more than 90 percent protein per scoop, which would put a 25 g serving at roughly 27 to 28 g of powder. That would be a normal scoop for an isolate. Isolate also contains much less lactose and fat than concentrate, which is why many people with mild lactose sensitivity tolerate it better.
+          </p>
+
+          <p>
+            What the page text does not tell you is the sweetener. ProDough says zero added sugar and no artificial flavors, but the published text we checked did not name whether the whey is sweetened with stevia, monk fruit, sucralose or something else. Its beef protein page, by contrast, clearly lists Reb A and Reb M stevia. The supplement facts for the whey appear only as images, so read the panel on the flavor you are considering before buying, especially if you avoid a particular sweetener.
+          </p>
+
+          <div class="overflow-hidden border border-gray-200 rounded-2xl my-8">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Per serving (brand claims)</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Whey Protein</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Beef Protein</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Plant Protein</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Protein</td>
+                    <td class="px-4 py-4 text-gray-700">25 g</td>
+                    <td class="px-4 py-4 text-gray-700">25 g</td>
+                    <td class="px-4 py-4 text-gray-700">25 g</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Calories</td>
+                    <td class="px-4 py-4 text-gray-700">110</td>
+                    <td class="px-4 py-4 text-gray-700">100</td>
+                    <td class="px-4 py-4 text-gray-700">120-150</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Carbohydrate</td>
+                    <td class="px-4 py-4 text-gray-700">2 g net</td>
+                    <td class="px-4 py-4 text-gray-700">2 g</td>
+                    <td class="px-4 py-4 text-gray-700">Not stated in text</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Source</td>
+                    <td class="px-4 py-4 text-gray-700">Grass-fed whey isolate</td>
+                    <td class="px-4 py-4 text-gray-700">Grass-fed beef protein plus collagen</td>
+                    <td class="px-4 py-4 text-gray-700">Plant, sources not stated in text</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Sweetener</td>
+                    <td class="px-4 py-4 text-gray-700">Not stated in text</td>
+                    <td class="px-4 py-4 text-gray-700">Reb A and Reb M stevia</td>
+                    <td class="px-4 py-4 text-gray-700">Not stated in text</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <p>
+            Proprietary digestive enzyme blends are common in flavored wheys and are hard to evaluate, because the amounts are not disclosed. They are unlikely to cause harm, and some people feel they help with bloating, but they are not a reason on their own to pay more. If digestion is your main concern, the isolate base matters far more than the enzyme blend.
+          </p>
+        </div>
+
+        <!-- Picks -->
+        <div id="top-picks" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            4. The ProDough Protein Lineup, Ranked
+          </h2>
+
+          <p>
+            These are the ProDough protein powders we could confirm on the brand's own site at the time of writing, flagship first, followed by two clearly labelled unflavored alternatives that are sold on Amazon. ProDough sells direct, and we could not confirm an official ProDough listing on Amazon, so the buttons on its own products may lead to a search rather than a product page. Figures are per the brand's published claims at the time of writing and vary by flavor.
+          </p>
+
+          {PRODUCTS.map((product, index) => (
+            <div id={product.id} class="scroll-mt-24 mt-12 first:mt-8">
+              <div class="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                <div class="bg-gray-900 px-6 py-4 flex items-center justify-between">
+                  <div class="flex items-center gap-3">
+                    <span class="bg-[#FF4500] text-white w-8 h-8 rounded-full flex items-center justify-center text-sm font-black">
+                      {index + 1}
+                    </span>
+                    {productImages[product.id] && (
+                      <img
+                        src={productImages[product.id]}
+                        alt={product.name}
+                        loading="lazy"
+                        width="40"
+                        height="40"
+                        class="w-10 h-10 rounded-lg bg-white object-contain p-1 shrink-0"
+                      />
+                    )}
+                    <div>
+                      <p class="text-white font-black text-lg">{product.name}</p>
+                      <p class="text-gray-400 text-xs">{product.category}</p>
+                    </div>
+                  </div>
+                  <span class="bg-[#38BDF8]/20 text-[#38BDF8] px-3 py-1 rounded-full text-xs font-bold hidden sm:block">
+                    {product.badge}
+                  </span>
+                </div>
+                <div class="p-6">
+                  {product.rating && (
+                  <div class="flex items-center gap-2 mb-4">
+                    <div class="flex text-yellow-400">
+                      {[...Array(5)].map((_, i) => (
+                        <svg
+                          class={`w-4 h-4 ${i < Math.floor(product.rating) ? "fill-current" : "text-gray-200"}`}
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                        >
+                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        </svg>
+                      ))}
+                    </div>
+                    <span class="text-gray-500 text-sm font-bold">{product.rating}</span>
+                    {product.reviewCount && <span class="text-gray-400 text-xs">({product.reviewCount.toLocaleString()} retailer reviews)</span>}
+                  </div>
+                  )}
+
+                  <SpecGrid specs={product.specs} />
+
+                  <p class="text-gray-700 leading-relaxed mb-6">{product.description}</p>
+
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                    <div class="bg-green-50 rounded-xl p-4">
+                      <p class="text-xs font-black uppercase tracking-widest text-green-700 mb-3">Pros</p>
+                      <ul class="space-y-2">
+                        {product.pros.map((pro) => (
+                          <li class="flex items-start gap-2 text-sm text-green-800">
+                            <svg class="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            {pro}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div class="bg-red-50 rounded-xl p-4">
+                      <p class="text-xs font-black uppercase tracking-widest text-red-700 mb-3">Cons</p>
+                      <ul class="space-y-2">
+                        {product.cons.map((con) => (
+                          <li class="flex items-start gap-2 text-sm text-red-800">
+                            <svg class="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                            {con}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+
+                  <div class="bg-gray-50 rounded-xl p-4 border border-gray-100">
+                    <p class="text-xs font-black uppercase tracking-widest text-gray-500 mb-1">The Bottom Line</p>
+                    <p class="text-gray-900 font-bold">{product.bottomLine}</p>
+                  </div>
+
+                  <a
+                    href={amazonLink(product.amazonUrl, product.name, product.id)}
+                    target="_blank"
+                    rel="sponsored nofollow noopener"
+                    class="mt-6 block bg-[#FF4500] hover:bg-[#E63E00] text-white text-center py-4 rounded-xl font-black no-underline transition-colors uppercase tracking-widest text-sm"
+                  >
+                    Check Price &rarr;
+                  </a>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div id="which-one" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            5. Which ProDough Product to Buy
+          </h2>
+
+          <p>
+            For most readers the answer is the whey. It has the best macros in the range, 25 g of protein in 110 calories, the most flavors and the most buyer feedback. Start with the Protein Singles or the sampler to find two or three flavors you like, then move to full bags with Subscribe and Save, which ProDough lists at 10 percent off. Buying full bags of flavors you have never tried is the quickest way to waste 60 dollars.
+          </p>
+
+          <p>
+            The beef protein is for people who cannot or will not use dairy and do not want a plant protein. ProDough describes it as 100 percent grass-fed beef protein with bovine collagen peptides added for body, at 25 g of protein, 100 calories and 2 g of carbs per stick, sweetened with Reb A and Reb M stevia and flavored with cocoa and natural flavors. It is dairy-free, with no whey, casein or lactose. Note that collagen peptides are an incomplete protein, so a blend that leans on collagen is less efficient for muscle building than the same grams of whey.
+          </p>
+
+          <p>
+            The plant protein lists 25 g of protein and 120 to 150 calories per serving in Brownie Batter, Cafe Mocha, Salted Caramel and Vanilla Cone, at about 50 dollars a bag. It was sold out when we checked, and the page text did not name the plant protein sources or the serving count, which makes it hard to compare on cost. A store reply on the page said most flavors carry around 250 mg of sodium per scoop. Wait until it is back in stock and check the panel before buying.
+          </p>
+
+          <p>
+            The baking mixes are a separate decision. They are a convenient way to make higher-protein pancakes, crepes, cupcakes and donuts, and buyers report fluffy results from the pancake mix. But the product page text we checked did not list protein per serving for the pancake mix, so compare its panel against a homemade version using unflavored protein powder, which is usually cheaper per gram.
+          </p>
+
+          <p>
+            If beef protein is what interests you, our <a href="/best-beef-protein-powder/">best beef protein powder</a> guide compares the main options on dose, sourcing and cost.
+          </p>
+        </div>
+
+        <div id="cost" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            6. Cost per 25 g of Protein
+          </h2>
+
+          <p>
+            Because every ProDough powder lists 25 g of protein per serving, its cost per 25 g is simply its cost per serving, which makes the comparison easy. ProDough prices its full-size whey bag at about 60 dollars, which it lists as about 2.95 dollars per serving. Subscribe and Save brings the bag to about 54 dollars, or roughly 2.65 dollars per 25 g. Protein Singles are listed at about 3.95 dollars each.
+          </p>
+
+          <p>
+            The beef protein Build Your Variety Pack was listed at about 3.49 dollars per stick, so about 3.49 dollars per 25 g of protein. The plant protein bag was listed at about 50 dollars, but without a serving count in the page text we could not convert it reliably. Shipping is free over 100 dollars, which matters for a direct-only brand: a single bag below that threshold costs more than the sticker price suggests.
+          </p>
+
+          <div class="bg-gray-900 text-white rounded-2xl p-6 lg:p-8 my-8">
+            <p class="text-xs font-black uppercase tracking-widest text-[#38BDF8] mb-4">Approximate cost per 25 g of protein</p>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+              <div>
+                <p class="text-3xl font-black text-white">~$2.65</p>
+                <p class="text-gray-400 text-xs mt-1">ProDough whey, subscribe</p>
+              </div>
+              <div>
+                <p class="text-3xl font-black text-[#38BDF8]">~$2.95</p>
+                <p class="text-gray-400 text-xs mt-1">ProDough whey, full bag</p>
+              </div>
+              <div>
+                <p class="text-3xl font-black text-white">~$3.49</p>
+                <p class="text-gray-400 text-xs mt-1">ProDough beef, stick</p>
+              </div>
+              <div>
+                <p class="text-3xl font-black text-[#38BDF8]">~$3.95</p>
+                <p class="text-gray-400 text-xs mt-1">ProDough whey, single</p>
+              </div>
+            </div>
+          </div>
+
+          <p>
+            For comparison, mainstream unflavored whey in large bags typically lands well under 1.50 dollars per 25 g of protein, and even premium grass-fed isolates from established brands often come in around 2 dollars. ProDough's whey is therefore one of the more expensive ways to buy a gram of whey isolate. You are paying for the flavor range and the brand's recipes, not for the protein itself.
+          </p>
+
+          <p>
+            These figures are approximate and built from list prices that change, so recheck them before you buy. If you are working out how much a month of protein would cost at your own target, the <a href="/protein-calculator/">protein calculator</a> gives you a daily number to multiply by.
+          </p>
+        </div>
+
+        <div id="transparency" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            7. Testing and Label Transparency
+          </h2>
+
+          <p>
+            ProDough's tagline promises transparent labels, and the headline macros are clearly stated. But the product pages we checked did not mention any third-party testing program or certification, such as NSF Certified for Sport, Informed Choice, Informed Sport or the Clean Label Project. The whey page says the brand keeps production in-house without naming where the products are made. None of that means the products are unsafe; it means there is no independent record you can check.
+          </p>
+
+          <p>
+            The missing sweetener disclosure in the page text is the bigger gap for everyday buyers. Many people choose a protein powder specifically to avoid sucralose or stevia, and dessert-flavored powders almost always use one or the other. The answer is likely on the label image, but a brand that leads with transparency should state it in text. If you ask ProDough directly, the store responds to questions on its product pages.
+          </p>
+
+          <p>
+            Whey isolate is generally a low-risk protein source for contaminants, as dairy proteins tend to test lower for heavy metals than plant proteins. That is reassuring for the whey, less so for the plant protein, where independent heavy-metal testing matters more. If contaminant testing is a priority, our guide to whether <a href="/is-protein-powder-safe/">protein powder is safe</a> explains what to look for.
+          </p>
+
+          <div class="bg-gray-900 text-white rounded-2xl p-6 lg:p-8 my-8">
+            <p class="text-xs font-black uppercase tracking-widest text-[#38BDF8] mb-3">WHO NEEDS CERTIFICATION</p>
+            <p class="text-xl font-bold text-white mb-3">Drug-tested athletes should not buy an uncertified powder.</p>
+            <p class="text-gray-300 leading-relaxed m-0">If you compete in a tested sport, buy a protein that carries NSF Certified for Sport or Informed Sport and check your lot in the certifier's database. ProDough does not advertise either, so it is the wrong choice for you regardless of flavor.</p>
+          </div>
+
+          <p>
+            As with any supplement, anyone with kidney disease, a milk or other food allergy, or who is pregnant or taking medication should check with a doctor or registered dietitian before adding protein powder. Nothing on this page is medical advice.
+          </p>
+        </div>
+
+        <div id="skip" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            8. Who Should Skip ProDough
+          </h2>
+
+          <p>
+            Skip ProDough if you want protein mainly for baking or cooking. Flavored, sweetened powders limit what you can make, and at around 3 dollars per 25 g they are an expensive ingredient to bake with. An unflavored whey or whey isolate goes into savory and sweet recipes alike, lets you control the sweetener, and costs far less per gram. That is the main reason this review points to unflavored alternatives.
+          </p>
+
+          <p>
+            Skip it if you are on a budget or use two shakes a day. At roughly 3 dollars per serving, two shakes a day is close to 180 dollars a month, several times what a large bag of mainstream whey would cost for the same protein. Skip it if you want to buy on Amazon with fast shipping, since we could not confirm an official listing there.
+          </p>
+
+          <p>
+            Skip it if you need to know the sweetener before you buy and cannot easily read the label image, or if you need a third-party certification. And skip the beef protein if your goal is maximizing muscle protein synthesis per gram: beef protein isolates and added collagen are lower in leucine than whey, so the same 25 g does less work.
+          </p>
+
+          <p>
+            ProDough makes the most sense for one kind of buyer: someone who already likes protein but is bored of chocolate and vanilla, uses one serving a day, and values dessert flavors such as Raspberry Cheesecake or Snickerdoodle enough to pay a premium for them. For that buyer, it is a reasonable splurge.
+          </p>
+        </div>
+
+        <div id="baking" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            9. Baking With Protein: ProDough vs Unflavored Powder
+          </h2>
+
+          <p>
+            ProDough's appeal for many buyers is that it takes the guesswork out of protein baking. Its mixes are formulated so that you add water, or milk and an egg for more protein, and cook. That convenience is real. Protein powder behaves differently from flour, and recipes that simply swap one for the other tend to come out dry, rubbery or dense, so a pre-built mix saves a lot of trial and error.
+          </p>
+
+          <p>
+            The trade-off is cost and control. If you bake regularly, an unflavored whey isolate or whey concentrate, mixed into your own recipes, is almost always cheaper per gram of protein, and you choose the sweetener and flavor. A good starting rule is to replace only part of the flour with protein powder, often around a quarter to a third, and add moisture with Greek yogurt, mashed banana, pumpkin or an extra egg.
+          </p>
+
+          <p>
+            Whey and casein behave differently in the oven. Whey can dry out baked goods if overused, while casein and blends tend to hold moisture better, which is why some bakers mix the two. Heating denatures protein, which changes its texture, but it does not destroy its nutritional value: the amino acids are still there and still count toward your intake.
+          </p>
+
+          <p>
+            Plant proteins absorb more liquid than whey and tend to taste earthier, so they suit chocolate, spice and banana recipes better than delicate vanilla bakes. Our <a href="/best-unflavored-protein-powder/">unflavored protein powder guide</a> ranks the plain options for cooking, and our <a href="/best-protein-powder-for-smoothies/">protein powder for smoothies</a> guide covers the blend-and-drink side.
+          </p>
+
+          <p>
+            If you like the idea of ProDough's flavors but want to control costs, a sensible split is to buy a bag of one or two ProDough flavors you genuinely enjoy for shakes and oats, and use a large bag of unflavored whey for everything you bake. That gets you the variety without paying dessert-brand prices for every gram you put in the oven.
+          </p>
+        </div>
+
+        <div id="compare" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            10. How ProDough Compares
+          </h2>
+
+          <p>
+            Against Transparent Labs Grass-Fed Whey Protein Isolate, ProDough is the closer match on paper, since both are grass-fed isolates. Transparent Labs lists about 28 g of protein per scoop in its unflavored version, publishes third-party lab results and is sold on Amazon. ProDough offers far more flavors. If you value documented testing, Transparent Labs is the better buy; our <a href="/transparent-labs-protein-powder-review/">Transparent Labs review</a> covers the range.
+          </p>
+
+          <p>
+            Against Naked Whey, ProDough loses on price and simplicity and wins on flavor. Naked Whey is grass-fed whey concentrate and nothing else, about 25 g of protein per two-scoop serving, at a mid-range cost per 25 g in large bags. It is the classic baking whey because it has no sweetener or flavor to fight with. Our <a href="/naked-nutrition-protein-powder-review/">Naked Nutrition review</a> goes into its full line.
+          </p>
+
+          <p>
+            Against other flavor-led, direct-to-consumer brands, ProDough's niche is its bakery heritage and dessert flavor range. Brands such as <a href="/flavcity-protein-powder-review/">FlavCity</a> and <a href="/clean-simple-eats-protein-powder-review/">Clean Simple Eats</a> play in similar territory, with flavor-forward powders sold largely to home cooks. If flavor is your main criterion, our <a href="/best-tasting-protein-powder/">best tasting protein powder</a> guide covers the mainstream options.
+          </p>
+
+          <div class="overflow-hidden border border-gray-200 rounded-2xl my-8">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Product</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Protein / serving</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Flavors</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Verification</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">On Amazon</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">ProDough Whey</td>
+                    <td class="px-4 py-4 text-gray-700">25 g</td>
+                    <td class="px-4 py-4 text-gray-700">Around 19 or more</td>
+                    <td class="px-4 py-4 text-gray-700">None named</td>
+                    <td class="px-4 py-4 text-gray-700">Not confirmed</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Transparent Labs Grass-Fed Isolate</td>
+                    <td class="px-4 py-4 text-gray-700">About 28 g</td>
+                    <td class="px-4 py-4 text-gray-700">Several, incl. unflavored</td>
+                    <td class="px-4 py-4 text-gray-700">Published lab results</td>
+                    <td class="px-4 py-4 text-gray-700">Yes</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Naked Whey</td>
+                    <td class="px-4 py-4 text-gray-700">About 25 g</td>
+                    <td class="px-4 py-4 text-gray-700">Unflavored plus a few</td>
+                    <td class="px-4 py-4 text-gray-700">Verify current status</td>
+                    <td class="px-4 py-4 text-gray-700">Yes</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <p>
+            The pattern is consistent. ProDough is competitive on macros, ahead on flavor variety and convenience, and behind on price, testing documentation and availability. Choose it as a flavor splurge, not as your everyday or baking protein.
+          </p>
+        </div>
+
+        <!-- Common Mistakes -->
+        <div id="mistakes" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            11. Common Mistakes to Avoid
+          </h2>
+
+          <div class="space-y-6 my-8">
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Buying full bags of untried flavors</h3>
+              <p class="text-gray-700 text-sm m-0">
+                ProDough's appeal is its flavor range, but dessert flavors are personal and a full bag costs around 60 dollars. Buy the Protein Singles or the sampler first, keep notes on which flavors you would actually drink every day, and only then commit to full bags with Subscribe and Save.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Baking with expensive flavored protein</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Flavored, sweetened protein at around 3 dollars per 25 g is a costly baking ingredient and limits what you can make. For regular baking, use a large bag of unflavored whey or isolate and add your own sweetener and flavor, keeping ProDough for shakes and oats.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Assuming transparent labels means certification</h3>
+              <p class="text-gray-700 text-sm m-0">
+                ProDough's tagline promises transparent labels, but we found no named third-party certification on its pages. Drug-tested athletes and anyone who wants independent contaminant data should buy a powder with a certification they can look up by lot number, not rely on marketing language.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Ignoring the sweetener</h3>
+              <p class="text-gray-700 text-sm m-0">
+                ProDough's whey page says zero added sugar and no artificial flavors but did not name the sweetener in its text. If you avoid stevia, sucralose or monk fruit, read the label image for your flavor or ask the brand before buying, because dessert-flavored powders almost always use one of them.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Forgetting the free-shipping threshold</h3>
+              <p class="text-gray-700 text-sm m-0">
+                ProDough sells direct, and its site lists free shipping only on orders over 100 dollars. A single bag ordered on its own costs more than the sticker price suggests once shipping is added. Bundle orders, or factor shipping into your cost per 25 g comparison.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ -->
+        <div id="faq" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            12. Frequently Asked Questions
+          </h2>
+
+          <div class="space-y-6">
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is ProDough protein powder good?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                ProDough's whey is a credible product: the brand describes it as grass-fed whey isolate with 25 g of protein and 110 calories per serving, in a long list of dessert flavors buyers rate highly. Its drawbacks are a premium price around 3 dollars per 25 g, no named third-party certification and an undisclosed sweetener in its page text.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Does ProDough actually make protein powder?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Yes. Although ProDough is best known for protein pancake, crepe, cupcake and donut mixes, it sells three protein powders at the time of writing: a grass-fed whey isolate, a grass-fed beef protein with collagen peptides in stick packs, and a plant protein. Each lists 25 g of protein per serving, per the brand.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">How much protein is in a scoop of ProDough whey?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                ProDough lists 25 g of protein, 110 calories and 2 g of net carbs per serving of its whey isolate, with zero added sugar, per its page at the time of writing. The published text did not give the serving weight in grams, so check the label image for the exact scoop size and full panel.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is ProDough protein sold on Amazon?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                We could not confirm an official ProDough listing on Amazon at the time of writing. The brand sells primarily through its own online store, where it lists Subscribe and Save discounts and free shipping over 100 dollars. Third-party resellers have listed some ProDough mixes, but availability and freshness are harder to verify that way.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is ProDough protein third-party tested?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                ProDough's product pages that we checked did not mention a third-party testing program or certification such as NSF Certified for Sport, Informed Sport or the Clean Label Project. That does not mean the products are unsafe, but there is no public database to check, so drug-tested athletes should choose a certified powder instead.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Can you bake with ProDough protein powder?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                You can, and buyers report using it in oats, yogurt and protein ice cream. But flavored, sweetened protein at around 3 dollars per 25 g is an expensive baking ingredient. Most home bakers get better value and more flexibility from a large bag of unflavored whey, replacing part of the flour and adding moisture.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is ProDough whey lactose-free?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                ProDough describes its whey as isolate rather than concentrate, which typically contains very little lactose, and adds a digestive enzyme blend. It does not claim the product is lactose-free. Its beef protein is fully dairy-free. If you are lactose intolerant or allergic to milk, check the label and speak to a doctor before using whey.
+              </p>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Related Guides -->
+        <div class="mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">Related Unflavored Protein Guides</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <a href="/best-unflavored-protein-powder/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#FF4500] font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Unflavored Protein Powder</h3>
+              <p class="text-gray-500 text-sm mt-2">The plain powders that bake, blend and cook best.</p>
+            </a>
+            <a href="/best-beef-protein-powder/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#38BDF8] font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Beef Protein Powder</h3>
+              <p class="text-gray-500 text-sm mt-2">Dairy-free beef proteins compared on dose and cost.</p>
+            </a>
+            <a href="/naked-nutrition-protein-powder-review/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-green-600 font-black text-xs uppercase tracking-widest mb-2">Brand Review</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Naked Nutrition Review</h3>
+              <p class="text-gray-500 text-sm mt-2">The single-ingredient brand most home bakers end up using.</p>
+            </a>
+          </div>
+        </div>
+
+        <!-- Closing -->
+        <div class="mt-16 bg-gray-900 text-white rounded-2xl p-8">
+          <h2 class="text-2xl font-black text-white mb-4">The Bottom Line</h2>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            ProDough is a real protein brand, not just a pancake mix company. Its whey isolate lists 25 g of protein in about 110 calories, it comes in one of the widest dessert flavor ranges you will find, and buyers clearly enjoy it. If flavor variety is what keeps you using protein every day, and you are comfortable buying direct at around 3 dollars per 25 g, it is a defensible splurge.
+          </p>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            For baking, budgets, certification or Amazon convenience, it is the wrong pick. A plain whey such as Naked Whey or a documented isolate such as Transparent Labs does the cooking job better for less, and our <a href="/best-unflavored-protein-powder/">best unflavored protein powder</a> guide ranks the full field.
+          </p>
+        </div>
+
+        <MoreInCategory category="Brand Reviews" links={moreInCategory} />
+
+        <AuthorBio />
+      </div>
+    </div>
+  </article>
+</Layout>

@@ -1,0 +1,946 @@
+---
+import Layout from "../layouts/Layout.astro";
+import MoreInCategory from "../components/MoreInCategory.astro";
+import { AUTHORS, DEFAULT_AUTHOR, authorSchema } from "../data/authors";
+import { SITE_NAME, SITE_URL } from "../data/site";
+import AuthorAvatar from "../components/AuthorAvatar.astro";
+import QuickPicks from "../components/QuickPicks.astro";
+import AuthorBio from "../components/AuthorBio.astro";
+import { amazonLink } from "../data/affiliate";
+import TrustBadge from "../components/TrustBadge.astro";
+import SocialProof from "../components/SocialProof.astro";
+import SpecGrid from "../components/SpecGrid.astro";
+import productImages from "../data/product-images.json";
+import { pageDates } from "../data/dates";
+
+const moreInCategory = [
+  {
+    "title": "Naked Nutrition Protein Powder Review",
+    "url": "/naked-nutrition-protein-powder-review/"
+  },
+  {
+    "title": "Whey vs Whey Isolate",
+    "url": "/whey-vs-whey-isolate/"
+  },
+  {
+    "title": "Best Clear Protein Powder",
+    "url": "/best-clear-protein-powder/"
+  }
+];
+const author = AUTHORS[DEFAULT_AUTHOR];
+const dates = pageDates(Astro.url.pathname, { published: "2026-10-19", modified: "2026-10-19" });
+const title = "Ascent Protein Powder Review: Native Whey, Casein and What to Buy";
+const description =
+  "Ascent protein reviewed by label: what native whey means on today's tub, why the casein is the standout, Informed Sport status and the real cost per 25 g.";
+
+const PRODUCTS: {
+  id: string;
+  name: string;
+  brand?: string;
+  badge: string;
+  category: string;
+  description: string;
+  pros: string[];
+  cons: string[];
+  bottomLine: string;
+  specs?: Record<string, string>;
+  rating?: number;
+  reviewCount?: number;
+  amazonUrl?: string;
+}[] = [
+  {
+    "id": "ascent-whey-protein",
+    "name": "Ascent Whey Protein",
+    "brand": "Ascent",
+    "badge": "Best Overall Ascent",
+    "category": "Whey isolate blend (incl. native whey isolate) with whey concentrate",
+    "description": "Ascent's flagship gives 25 g of protein and 120 calories per scoop, per the label at the time of writing (33 g scoop for chocolate, 31 g for vanilla). The protein is a whey isolate blend of native whey isolate and regular whey isolate, plus some whey concentrate. It is sweetened with stevia and uses no artificial flavors. Ascent lists 5.5 g of BCAAs and 2.6 g of leucine per scoop, and it is Informed Sport certified.",
+    "pros": [
+      "Informed Sport certified and certified gluten-free, per Ascent",
+      "Stevia only, with no artificial flavors or sweeteners",
+      "2.6 g of leucine per scoop, per the brand",
+      "4 lb bag is competitively priced per 25 g"
+    ],
+    "cons": [
+      "Contains whey concentrate, so not a pure isolate",
+      "Soy lecithin, so the label says it contains soy"
+    ],
+    "bottomLine": "A cleanly sweetened, certified whey at a fair price. Lactose-sensitive buyers may still prefer a pure isolate.",
+    "specs": {
+      "Protein / serving": "25 g (label)",
+      "Calories": "About 120",
+      "Third-party testing": "Informed Sport",
+      "Best for": "Tested athletes, daily shakes"
+    }
+  },
+  {
+    "id": "ascent-micellar-casein",
+    "name": "Ascent Micellar Casein",
+    "brand": "Ascent",
+    "badge": "Best Ascent for Night",
+    "category": "Micellar casein isolate",
+    "description": "Ascent's casein gives 25 g of protein and 120 calories in a 36 g scoop of chocolate, per the label at the time of writing. That scoop also has about 661 mg of calcium, roughly half the daily value. The protein is micellar casein isolate, thickened with a guar, acacia and xanthan gum blend and sweetened with stevia. It is soy-free and Informed Sport certified, per Ascent. It is the most interesting product in the range, and the best value per gram.",
+    "pros": [
+      "25 g of slow-digesting protein in 120 calories",
+      "Informed Sport certified and soy-free, per Ascent",
+      "Lowest cost per 25 g in the Ascent range at list price"
+    ],
+    "cons": [
+      "Only three flavors",
+      "Gum blend makes it thick, which some buyers dislike in a shaker"
+    ],
+    "bottomLine": "One of the better-value certified caseins, and the Ascent product we would buy first if you want casein.",
+    "specs": {
+      "Protein / serving": "25 g (label, chocolate)",
+      "Calories": "About 120",
+      "Third-party testing": "Informed Sport",
+      "Best for": "Before bed, puddings"
+    }
+  },
+  {
+    "id": "ascent-clear-whey-protein-isolate",
+    "name": "Ascent Clear Whey Protein Isolate",
+    "brand": "Ascent",
+    "badge": "Best Light Option",
+    "category": "Clear whey protein isolate",
+    "description": "Clear whey is mixed with water into a juice-style drink rather than a milkshake. Ascent's version gives 20 g of protein and 100 calories in a 26 g scoop, per the label at the time of writing. It is pure whey isolate with organic cane sugar, natural flavors, vegetable juice for color, sea salt and stevia, which adds up to about 1 g of added sugar. It is Informed Sport certified and comes in Orange Mango and Pineapple Coconut.",
+    "pros": [
+      "Light, juice-style drink for hot days or after cardio",
+      "Pure whey isolate, Informed Sport certified, per Ascent",
+      "No sucralose, unlike many clear wheys"
+    ],
+    "cons": [
+      "Only 20 g of protein per scoop",
+      "Highest cost per 25 g in the range"
+    ],
+    "bottomLine": "Buy it for the format, not for value. A standard whey is cheaper per gram.",
+    "specs": {
+      "Protein / serving": "20 g (label)",
+      "Calories": "About 100",
+      "Third-party testing": "Informed Sport",
+      "Best for": "Summer, post-cardio"
+    }
+  },
+  {
+    "id": "transparent-labs-grass-fed-whey-protein-isolate",
+    "name": "Transparent Labs 100% Grass-Fed Whey Protein Isolate",
+    "brand": "Transparent Labs",
+    "badge": "Alternative: Pure Isolate",
+    "category": "Grass-fed whey protein isolate",
+    "description": "If you want what Ascent offers, certification and no artificial sweeteners, but in a pure isolate, Transparent Labs is the upgrade. Per the brand at the time of writing, a scoop of about 32 g gives 28 g of protein from grass-fed whey isolate, with roughly 120-150 calories depending on flavor. It is Informed Choice and Informed Protein certified. It costs a little more per gram than Ascent's 4 lb bag at list price, but has no whey concentrate.",
+    "pros": [
+      "Pure isolate, described as virtually lactose-free",
+      "28 g of protein per scoop, per the brand",
+      "Informed Choice and Informed Protein certified, per the brand"
+    ],
+    "cons": [
+      "Slightly higher cost per 25 g than Ascent's 4 lb bag",
+      "Some flavors contain peanuts"
+    ],
+    "bottomLine": "The pick for lactose-sensitive buyers who like Ascent's clean label.",
+    "specs": {
+      "Protein / serving": "28 g (brand)",
+      "Calories": "About 120-150",
+      "Third-party testing": "Informed Choice + Informed Protein",
+      "Best for": "Lactose-sensitive lifters"
+    },
+    "amazonUrl": "https://www.amazon.com/dp/B0CQ32D39X"
+  },
+  {
+    "id": "naked-nutrition-naked-casein",
+    "name": "Naked Casein",
+    "brand": "Naked Nutrition",
+    "badge": "Alternative: Cheaper Casein",
+    "category": "Single-ingredient micellar casein",
+    "description": "Naked Casein is one ingredient, micellar casein sourced from US farms. Per the brand, it gives 26 g of protein per two-scoop serving, and it comes unflavored, chocolate or vanilla. In the 5 lb bag it works out cheaper per 25 g than Ascent's casein at list price. Naked says it is NSF Contents Certified, which checks contents and contaminants but is not the same as a sport certification.",
+    "pros": [
+      "Unflavored version is a single ingredient",
+      "Cheaper per 25 g than Ascent casein in the 5 lb bag",
+      "26 g of protein per serving, per the brand"
+    ],
+    "cons": [
+      "No Informed Sport or NSF Certified for Sport",
+      "Unflavored casein is bland and thick on its own"
+    ],
+    "bottomLine": "The better buy if you blend casein into recipes and do not need sport certification.",
+    "specs": {
+      "Protein / serving": "26 g (brand)",
+      "Calories": "Check label",
+      "Third-party testing": "NSF Contents Certified (brand)",
+      "Best for": "Baking, budget casein"
+    },
+    "amazonUrl": "https://www.amazon.com/dp/B00NBILDQ8"
+  }
+];
+
+const schema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Home",
+          item: `${SITE_URL}/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Best Lists",
+          item: `${SITE_URL}/best-of/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 3,
+          name: "Ascent Protein Powder Review",
+          item: `${SITE_URL}/ascent-protein-powder-review/`,
+        },
+      ],
+    },
+    {
+      "@type": "FAQPage",
+      mainEntity: [
+        {
+          "@type": "Question",
+          "name": "Is Ascent protein a whey isolate?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Partly. Ascent's flagship whey lists a whey isolate blend of native whey isolate and regular whey isolate, followed by whey concentrate. So it is mostly isolate, with some concentrate. The Clear Whey Isolate is a pure isolate. If you need a pure isolate for lactose sensitivity, read the ingredient list on the specific product before you buy."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is Ascent native whey?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Native whey is filtered directly from milk rather than collected as a by-product of cheesemaking, so it skips the cheese process. Ascent has long marketed native whey, and its current whey label includes native whey protein isolate within an isolate blend. The research showing native whey beats good conventional whey for results is limited."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is Ascent protein third-party tested?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Ascent says its whey, casein and clear whey are Informed Sport certified, a program that screens for substances banned in sport. They are also certified gluten-free. Certification applies to tested batches, so if you are a tested athlete, check the product and flavor in the Informed Sport database and keep your batch number."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How much protein is in Ascent casein?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The chocolate Micellar Casein label lists 25 g of protein and 120 calories in a 36 g scoop at the time of writing, plus about 661 mg of calcium. Ascent also lists 2.2 g of leucine and 10.7 g of essential amino acids per scoop. Other flavors are similar but vary slightly, so check the panel."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What sweetener does Ascent use?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Ascent uses stevia leaf extract and no artificial sweeteners or flavors in its whey, casein and clear whey, per the labels at the time of writing. The Clear Whey Isolate also contains organic cane sugar, about 1 g of added sugar per scoop. The unflavored whey has no sweetener, for anyone who wants to avoid stevia."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is Ascent good for weight loss?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It can help, as any protein can, because a 120-calorie, 25 g scoop is filling and easy to fit into a calorie budget. The casein's slow digestion and thick texture may help some people feel full for longer. Weight loss still depends on your overall diet. No powder causes fat loss by itself."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Who makes Ascent protein?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Ascent describes itself as a family-owned business based in Denver, Colorado, with more than 30 years of experience making protein. It sells online and through retail stores, and its website has a store locator. Alongside protein, the brand also sells collagen, Creapure creatine and hydration products, according to its website at the time of writing."
+          }
+        }
+      ],
+    },
+    {
+      "@type": "Article",
+      headline: title,
+      author: authorSchema(),
+      datePublished: dates.published,
+      dateModified: dates.modified,
+      publisher: { "@type": "Organization", name: SITE_NAME, url: SITE_URL },
+    },
+    {
+      "@type": "ItemList",
+      name: title,
+      numberOfItems: PRODUCTS.length,
+      itemListElement: PRODUCTS.map((product, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name: product.name,
+        url: new URL(`#${product.id}`, Astro.url).toString(),
+      })),
+    },
+    ...PRODUCTS.map((product) => ({
+      "@type": "Product",
+      name: product.name,
+      description: product.description,
+      brand: {
+        "@type": "Brand",
+        name: product.brand ?? product.name.split(" ")[0],
+      },
+    })),
+  ],
+};
+---
+
+<Layout
+  title={title}
+  description={description}
+  ogType="article"
+  article={{
+    publishedTime: dates.published,
+    modifiedTime: dates.modified,
+    author: author.name,
+    section: "Brand Reviews",
+    tags: [
+      "ascent protein powder",
+      "ascent native whey",
+      "ascent protein review",
+      "ascent casein"
+    ],
+  }}
+  jsonLd={schema}
+  stickyCta={{
+    text: "See Our Top Whey Isolate Picks",
+    link: "/best-whey-protein-isolate/",
+  }}
+>
+  <article class="relative overflow-hidden">
+    <!-- Hero Section -->
+    <div class="bg-gray-900 py-16 lg:py-24 relative overflow-hidden">
+      <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(circle at 20% 20%, #38BDF8 0, transparent 45%), radial-gradient(circle at 80% 60%, #FF4500 0, transparent 40%);"></div>
+      <div class="max-w-4xl mx-auto px-4 relative z-10 text-center">
+        <div class="flex justify-center mb-6">
+          <TrustBadge />
+        </div>
+        <div class="flex justify-center gap-3 mb-6">
+          <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#FF4500]/20 text-[#FF4500] text-xs font-black uppercase tracking-widest border border-[#FF4500]/30">
+            Brand Review
+          </span>
+          <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-green-500/10 text-green-400 text-xs font-bold uppercase tracking-widest border border-green-500/20">
+            Label-Checked
+          </span>
+        </div>
+        <h1 class="text-4xl lg:text-6xl font-black text-white leading-tight mb-8">
+          Ascent Protein Powder <span class="text-[#38BDF8]">Review</span>
+        </h1>
+        <p class="text-xl text-gray-300 leading-relaxed mb-8 max-w-3xl mx-auto">
+          Stevia-only, Informed Sport certified and sold almost everywhere. Here is what is actually in the tub, which Ascent product is the real standout, and who should buy something else.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a
+            href="#ascent-whey-protein"
+            class="px-8 py-4 bg-[#FF4500] hover:bg-[#E63E00] text-white font-black rounded-xl shadow-lg transition-all no-underline"
+          >
+            See Our #1 Pick
+          </a>
+          <a
+            href="#label"
+            class="px-8 py-4 bg-white/10 hover:bg-white/20 text-white font-bold rounded-xl border border-white/10 no-underline"
+          >
+            Compare the Range
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Author & Meta -->
+    <div class="max-w-3xl mx-auto px-4 pt-12">
+      <div class="flex items-center gap-6 border-b border-gray-100 pb-8">
+        <div class="flex items-center gap-3">
+          <AuthorAvatar size={48} />
+          <div>
+            <p class="text-sm font-bold text-gray-900">{author.name}</p>
+            <p class="text-xs text-gray-500 uppercase tracking-widest">{author.role}</p>
+          </div>
+        </div>
+        <div class="h-10 w-px bg-gray-200 hidden sm:block"></div>
+        <div class="hidden sm:block">
+          <p class="text-sm font-bold text-gray-900">Last Updated</p>
+          <p class="text-xs text-gray-500">{dates.display}</p>
+        </div>
+        <div class="hidden sm:block ml-auto">
+          <SocialProof />
+        </div>
+      </div>
+    </div>
+
+    <!-- Table of Contents -->
+    <div class="max-w-3xl mx-auto px-4 py-10">
+      <div class="bg-gray-50 border border-gray-200 rounded-2xl p-6 lg:p-8">
+        <h2 class="text-lg font-black text-gray-900 mb-4 flex items-center gap-2">
+          In This Guide
+        </h2>
+        <nav class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <a href="#verdict" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">1. The Short Verdict</a>
+          <a href="#lineup" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">2. The Ascent Range</a>
+          <a href="#top-picks" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">3. Our Top Picks</a>
+          <a href="#label" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">4. What Is in the Whey</a>
+          <a href="#casein" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">5. Why the Casein Stands Out</a>
+          <a href="#cost" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">6. Cost per 25 g</a>
+          <a href="#taste" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">7. Taste and Mixing</a>
+          <a href="#compare" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">8. Ascent vs Other Brands</a>
+          <a href="#who" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">9. Who Should Buy It</a>
+          <a href="#use" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">10. How to Use It</a>
+          <a href="#mistakes" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">11. Common Mistakes</a>
+          <a href="#faq" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">12. FAQ</a>
+        </nav>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="max-w-3xl mx-auto px-4 pb-16 lg:pb-24">
+      <div class="prose prose-lg prose-blue max-w-none text-gray-700 leading-relaxed">
+        <p class="text-2xl font-medium text-gray-900 mb-8 italic">
+          Ascent makes clean, certified protein at a fair price, and its casein is better value than its whey. The one thing to know before you buy is that the flagship whey is an isolate and concentrate blend, not a pure isolate.
+        </p>
+
+        <QuickPicks products={PRODUCTS} />
+
+        <div id="verdict" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            1. The Short Verdict on Ascent
+          </h2>
+
+          <p>
+            Ascent is one of the more honest-looking labels in the protein aisle. Its whey, casein and clear whey are all Informed Sport certified, according to the brand. All use stevia rather than sucralose or other artificial sweeteners, and all carry certified gluten-free status. For a brand sold in physical stores as well as online, that is a strong combination.
+          </p>
+
+          <p>
+            Our ranking is simple. The <strong>Micellar Casein</strong> is the standout: 25 g of protein in 120 calories, Informed Sport certified, and the best value per gram in the range at list price. The flagship <strong>Whey Protein</strong> is a good, cleanly sweetened daily whey, and it is competitive in the 4 lb bag. The <strong>Clear Whey Isolate</strong> is a nice format and a poor value. Buy it for the format if that matters to you.
+          </p>
+
+          <p>
+            One thing to understand before you buy is the native whey question. Many people search for Ascent native whey because the brand has long marketed native whey. The current label lists a whey isolate blend that includes native whey isolate, plus regular whey isolate and some whey concentrate. That is a perfectly good formula. It is just not a pure native isolate, and it is not a pure isolate of any kind.
+          </p>
+
+          <p>
+            We rank Ascent on the label, certification status and cost per 25 g of protein. We have not tasted these products, so any comments on taste are summarized buyer feedback. For the broader isolate market, including the pure isolates Ascent competes with, see our <a href="/best-whey-protein-isolate/">best whey protein isolates</a> roundup.
+          </p>
+        </div>
+
+        <div id="lineup" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            2. The Ascent Range, Explained
+          </h2>
+
+          <p>
+            Ascent's protein range is compact. There is the core <strong>Whey Protein</strong> in a long list of flavors, the <strong>Micellar Casein</strong> in three flavors, and the <strong>Clear Whey Isolate</strong> in two fruit flavors. Around them sit an Iced Coffee With Protein (20 g of protein and 100 mg of caffeine per serving, per Ascent), collagen peptides, a Creapure creatine and hydration mixes. Ascent describes itself as a family-owned business based in Denver with more than 30 years of experience making protein.
+          </p>
+
+          <div class="overflow-hidden border border-gray-200 rounded-2xl my-8">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Product</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Protein</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Calories</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Scoop</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Certification</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Whey Protein (chocolate)</td>
+                    <td class="px-4 py-4 text-gray-700">25 g</td>
+                    <td class="px-4 py-4 text-gray-700">120</td>
+                    <td class="px-4 py-4 text-gray-700">33 g</td>
+                    <td class="px-4 py-4 text-gray-700">Informed Sport</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Whey Protein (vanilla bean)</td>
+                    <td class="px-4 py-4 text-gray-700">25 g</td>
+                    <td class="px-4 py-4 text-gray-700">120</td>
+                    <td class="px-4 py-4 text-gray-700">31 g</td>
+                    <td class="px-4 py-4 text-gray-700">Informed Sport</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Micellar Casein (chocolate)</td>
+                    <td class="px-4 py-4 text-gray-700">25 g</td>
+                    <td class="px-4 py-4 text-gray-700">120</td>
+                    <td class="px-4 py-4 text-gray-700">36 g</td>
+                    <td class="px-4 py-4 text-gray-700">Informed Sport</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Clear Whey Isolate</td>
+                    <td class="px-4 py-4 text-gray-700">20 g</td>
+                    <td class="px-4 py-4 text-gray-700">100</td>
+                    <td class="px-4 py-4 text-gray-700">26 g</td>
+                    <td class="px-4 py-4 text-gray-700">Informed Sport</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Iced Coffee With Protein</td>
+                    <td class="px-4 py-4 text-gray-700">20 g</td>
+                    <td class="px-4 py-4 text-gray-700">Check label</td>
+                    <td class="px-4 py-4 text-gray-700">Check label</td>
+                    <td class="px-4 py-4 text-gray-700">Check label</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <p>
+            Figures come from the nutrition panels on Ascent's product pages at the time of writing and vary a little by flavor. The core whey's flavor list is long: chocolate, vanilla bean, chocolate peanut butter and unflavored are joined by cookies and cream, strawberry, lemon sorbet, brownie batter, fruity cereal, key lime pie, blueberry muffin, mint chocolate chip and seasonal flavors. The specialty flavors are mostly sold in a single 25-serving bag size.
+          </p>
+
+          <p>
+            Unflavored is worth knowing about. Ascent lists 25 g of protein per serving, in 2 lb bags of 30 servings and 4 lb bags of 60. That makes it one of the cheaper ways into the range. With no sweetener or cocoa, it is the version to cook with. Our <a href="/best-unflavored-protein-powder/">unflavored protein guide</a> ranks it against other plain powders for baking and smoothies.
+          </p>
+        </div>
+
+        <!-- Picks -->
+        <div id="top-picks" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            3. The Ascent Powders Worth Considering
+          </h2>
+
+          <p>
+            Three Ascent proteins, flagship first, plus two alternatives from other brands for buyers who want a pure isolate or a cheaper casein. Label figures are per the brand's nutrition panels at the time of writing and vary by flavor. We have not tasted these products, and any taste notes are buyer feedback.
+          </p>
+
+          {PRODUCTS.map((product, index) => (
+            <div id={product.id} class="scroll-mt-24 mt-12 first:mt-8">
+              <div class="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                <div class="bg-gray-900 px-6 py-4 flex items-center justify-between">
+                  <div class="flex items-center gap-3">
+                    <span class="bg-[#FF4500] text-white w-8 h-8 rounded-full flex items-center justify-center text-sm font-black">
+                      {index + 1}
+                    </span>
+                    {productImages[product.id] && (
+                      <img
+                        src={productImages[product.id]}
+                        alt={product.name}
+                        loading="lazy"
+                        width="40"
+                        height="40"
+                        class="w-10 h-10 rounded-lg bg-white object-contain p-1 shrink-0"
+                      />
+                    )}
+                    <div>
+                      <p class="text-white font-black text-lg">{product.name}</p>
+                      <p class="text-gray-400 text-xs">{product.category}</p>
+                    </div>
+                  </div>
+                  <span class="bg-[#38BDF8]/20 text-[#38BDF8] px-3 py-1 rounded-full text-xs font-bold hidden sm:block">
+                    {product.badge}
+                  </span>
+                </div>
+                <div class="p-6">
+                  {product.rating && (
+                  <div class="flex items-center gap-2 mb-4">
+                    <div class="flex text-yellow-400">
+                      {[...Array(5)].map((_, i) => (
+                        <svg
+                          class={`w-4 h-4 ${i < Math.floor(product.rating) ? "fill-current" : "text-gray-200"}`}
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                        >
+                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        </svg>
+                      ))}
+                    </div>
+                    <span class="text-gray-500 text-sm font-bold">{product.rating}</span>
+                    {product.reviewCount && <span class="text-gray-400 text-xs">({product.reviewCount.toLocaleString()} retailer reviews)</span>}
+                  </div>
+                  )}
+
+                  <SpecGrid specs={product.specs} />
+
+                  <p class="text-gray-700 leading-relaxed mb-6">{product.description}</p>
+
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                    <div class="bg-green-50 rounded-xl p-4">
+                      <p class="text-xs font-black uppercase tracking-widest text-green-700 mb-3">Pros</p>
+                      <ul class="space-y-2">
+                        {product.pros.map((pro) => (
+                          <li class="flex items-start gap-2 text-sm text-green-800">
+                            <svg class="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            {pro}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div class="bg-red-50 rounded-xl p-4">
+                      <p class="text-xs font-black uppercase tracking-widest text-red-700 mb-3">Cons</p>
+                      <ul class="space-y-2">
+                        {product.cons.map((con) => (
+                          <li class="flex items-start gap-2 text-sm text-red-800">
+                            <svg class="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                            {con}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+
+                  <div class="bg-gray-50 rounded-xl p-4 border border-gray-100">
+                    <p class="text-xs font-black uppercase tracking-widest text-gray-500 mb-1">The Bottom Line</p>
+                    <p class="text-gray-900 font-bold">{product.bottomLine}</p>
+                  </div>
+
+                  <a
+                    href={amazonLink(product.amazonUrl, product.name, product.id)}
+                    target="_blank"
+                    rel="sponsored nofollow noopener"
+                    class="mt-6 block bg-[#FF4500] hover:bg-[#E63E00] text-white text-center py-4 rounded-xl font-black no-underline transition-colors uppercase tracking-widest text-sm"
+                  >
+                    Check Price &rarr;
+                  </a>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div id="label" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            4. What Is in Ascent Whey
+          </h2>
+
+          <p>
+            The chocolate whey label lists a whey protein isolate blend, made of native whey protein isolate and whey protein isolate, followed by whey protein concentrate, cocoa processed with alkali, natural flavors, lecithin, sea salt and stevia leaf extract. Vanilla is the same minus the cocoa. The label states that it contains milk and soy, and the soy comes from the lecithin, which helps the powder mix.
+          </p>
+
+          <p>
+            Per scoop, chocolate has 120 calories, 1 g of fat, 4 g of carbohydrate, 1 g of sugar with no added sugar, and 25 g of protein. Vanilla has 2 g of carbohydrate in a slightly smaller 31 g scoop. Ascent also lists 5.5 g of BCAAs and 2.6 g of leucine per scoop. That leucine figure is on the high side for 25 g of whey and comfortably above the roughly 2-3 g per meal that research associates with a strong muscle-building response.
+          </p>
+
+          <p>
+            So what does native whey actually mean? Most whey is a by-product of cheesemaking. Native whey is filtered directly from milk before any cheese is made, so it skips the heat and the cheese cultures. Brands argue this keeps the protein less processed and gives a slightly higher leucine content. The evidence that this produces meaningfully better results than good conventional whey is thin. Treat it as a quality marker, not a performance upgrade.
+          </p>
+
+          <p>
+            The concentrate is the part to notice if you are sensitive to lactose. Concentrate keeps more lactose and fat than isolate. The small amount in Ascent's blend will not bother most people, but if regular whey bloats you, a pure isolate is the safer pick. Our guide to <a href="/whey-vs-whey-isolate/">whey vs whey isolate</a> explains the difference, and the Transparent Labs card above is the pure-isolate alternative.
+          </p>
+
+          <div class="bg-gray-900 text-white rounded-2xl p-6 lg:p-8 my-8">
+            <p class="text-xs font-black uppercase tracking-widest text-[#38BDF8] mb-3">CLEAN LABEL CHECK</p>
+            <p class="text-xl font-bold text-white mb-3">What Ascent leaves out</p>
+            <p class="text-gray-300 leading-relaxed m-0">No sucralose, acesulfame potassium, aspartame or artificial flavors appear on Ascent's whey, casein or clear whey labels at the time of writing. Ascent also lists its products as rBST and rBGH free. The clear whey is the exception on sugar: it contains organic cane sugar, about 1 g of added sugar per scoop.</p>
+          </div>
+        </div>
+
+        <div id="casein" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            5. Why the Casein Is the Standout
+          </h2>
+
+          <p>
+            Ascent's Micellar Casein is the product in the range that beats most of its direct competition. A 36 g scoop of chocolate gives 25 g of protein and 120 calories, with 1 g of fat, 4 g of carbohydrate including 1 g of fiber, and 1 g of sugar. It is listed as micellar casein isolate, which is a cleaner protein base than many casein blends. It is soy-free, unlike the whey, and Informed Sport certified.
+          </p>
+
+          <p>
+            Casein digests slowly, releasing amino acids over several hours, which is why it is sold as a bedtime protein. Research on pre-sleep protein suggests around 30-40 g of casein before bed can support overnight muscle protein synthesis, so a heaping scoop or a scoop plus some Greek yogurt is a reasonable target. Ascent lists 2.2 g of leucine and 10.7 g of essential amino acids per scoop.
+          </p>
+
+          <p>
+            The calcium is a useful bonus. Casein carries calcium naturally, and the chocolate label lists about 661 mg, roughly 50% of the daily value. That is worth knowing if you avoid other dairy. It is also worth counting if you take a calcium supplement. Talk to your doctor or a dietitian if you have kidney stones or are on medication that interacts with calcium.
+          </p>
+
+          <p>
+            At list price, a 2 lb bag of about 25 servings costs around $45, which works out to roughly $1.80 per 25 g of protein. That makes it the cheapest product in the Ascent range per gram and competitive with other certified caseins. Our <a href="/best-casein-protein-powder/">best casein protein powder</a> guide ranks it against the rest of the category.
+          </p>
+        </div>
+
+        <div id="cost" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            6. Cost per 25 g of Protein
+          </h2>
+
+          <p>
+            The table uses Ascent's own list prices at the time of writing. Retailers and Amazon often run lower, and Ascent sells subscriptions, so treat these as approximate upper figures. We use cost per 25 g of protein because servings, scoop sizes and bag sizes all differ across the range.
+          </p>
+
+          <div class="overflow-hidden border border-gray-200 rounded-2xl my-8">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Product and size</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">List price (approx.)</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Cost per 25 g protein (approx.)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Whey, 2 lb chocolate (27 servings)</td>
+                    <td class="px-4 py-4 text-gray-700">About $55</td>
+                    <td class="px-4 py-4 text-gray-700">About $2.05</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Whey, 4 lb chocolate (54 servings)</td>
+                    <td class="px-4 py-4 text-gray-700">About $90</td>
+                    <td class="px-4 py-4 text-gray-700">About $1.65</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Unflavored whey, 4 lb (60 servings)</td>
+                    <td class="px-4 py-4 text-gray-700">About $90</td>
+                    <td class="px-4 py-4 text-gray-700">About $1.50</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Micellar Casein, 2 lb (about 25 servings)</td>
+                    <td class="px-4 py-4 text-gray-700">About $45</td>
+                    <td class="px-4 py-4 text-gray-700">About $1.80</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Clear Whey Isolate (20 servings)</td>
+                    <td class="px-4 py-4 text-gray-700">About $40</td>
+                    <td class="px-4 py-4 text-gray-700">About $2.50</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <p>
+            The 4 lb whey bag is where Ascent becomes good value. At about $1.65 per 25 g in chocolate, and about $1.50 for unflavored, it undercuts most premium certified wheys while keeping stevia-only sweetening. The 2 lb bag costs about 25% more per gram. The specialty dessert flavors only come in a 25-serving bag, so you pay a premium for variety.
+          </p>
+
+          <p>
+            Clear whey is the expensive way to buy protein in any brand, and Ascent's is no exception. At about $2.50 per 25 g, it costs roughly half again as much per gram as the 4 lb whey. That is a fair price for the format, but the format is a preference, not an upgrade. If you want light and refreshing on a budget, mixing a standard whey with more water and ice gets you partway there.
+          </p>
+
+          <p>
+            In context, Ascent sits between mainstream and premium. It is pricier than the big mass-market wheys when those are on sale, and cheaper than premium pure isolates like Transparent Labs, whose 4 lb isolate lists at about $1.65 per 25 g. Our <a href="/transparent-labs-protein-powder-review/">Transparent Labs review</a> covers that comparison from the other side.
+          </p>
+        </div>
+
+        <div id="taste" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            7. Taste and Mixing: What Buyers Report
+          </h2>
+
+          <p>
+            We have not tasted Ascent's products, so this is a summary of buyer feedback. The recurring theme is that Ascent tastes less sweet than sucralose-sweetened wheys and closer to real chocolate or vanilla, which fits a cocoa, natural flavor and stevia label. Buyers who are used to dessert-sweet proteins sometimes find it plain at first. Buyers who dislike artificial sweeteners tend to like it.
+          </p>
+
+          <p>
+            Mixing is generally reported as easy for the whey, helped by the lecithin. The casein is thicker, as all micellar casein is, and the gum blend adds body. That is good news for puddings and overnight oats and less good news if you want a thin shake from a bottle. Use more liquid than the whey needs, or make it with a blender.
+          </p>
+
+          <p>
+            Stevia is the most common complaint, as it is for every stevia-sweetened powder. A share of buyers notice a slight aftertaste in water that mostly disappears in milk. Mixing with milk also adds protein and calories, so account for that if you are tracking. If you know stevia bothers you, the unflavored whey avoids it entirely.
+          </p>
+
+          <p>
+            The clear whey divides opinion more than the others, as clear wheys usually do. Buyers who like it describe it as a refreshing alternative after cardio or in summer. Those who do not find it too tart, or miss the fullness of a milkshake-style protein. It is worth trying a single bag before you commit to it as a daily habit. Our <a href="/best-clear-protein-powder/">clear protein guide</a> compares the format across brands.
+          </p>
+        </div>
+
+        <div id="compare" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            8. Ascent vs Other Brands
+          </h2>
+
+          <p>
+            Against <strong>Transparent Labs</strong>, Ascent is cheaper and less pure. Transparent Labs' flagship is a 100% grass-fed whey isolate with 28 g of protein per scoop, Informed Choice certified, while Ascent's is an isolate and concentrate blend at 25 g, Informed Sport certified. Both avoid artificial sweeteners. Pick Transparent Labs if you are lactose-sensitive or want maximum protein per scoop. Pick Ascent if you want certification and a clean label for a little less money.
+          </p>
+
+          <p>
+            Against <strong>Naked Nutrition</strong>, Ascent wins on certification and flavor, and Naked wins on ingredient minimalism and, for casein, on cost. Naked's unflavored products are single ingredients, and its casein is cheaper per 25 g in the 5 lb bag. Naked's NSF Contents Certified status is not a sport certification, though. Our <a href="/naked-nutrition-protein-powder-review/">Naked Nutrition review</a> covers that range.
+          </p>
+
+          <p>
+            Against mainstream wheys from brands like <strong>Optimum Nutrition</strong> and <strong>Dymatize</strong>, Ascent's selling points are its stevia-only sweetening, no artificial flavors, and Informed Sport certification across the range. Big brands are frequently discounted and may be cheaper per gram on a sale, and most of their flavors are sweetened differently. Our <a href="/optimum-nutrition-protein-powder-review/">Optimum Nutrition review</a> and <a href="/dymatize-protein-powder-review/">Dymatize review</a> cover those lineups.
+          </p>
+
+          <p>
+            Against other clean-label certified brands like <strong>Thorne</strong> and <strong>Momentous</strong>, Ascent is usually the cheaper option per gram while offering similar positioning. Those brands use NSF Certified for Sport, which some professional leagues specifically require. If your sport names NSF in its rules, check that first. Our <a href="/thorne-protein-powder-review/">Thorne review</a> explains why that matters.
+          </p>
+        </div>
+
+        <div id="who" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            9. Who Should Buy Ascent, and Who Should Skip It
+          </h2>
+
+          <p>
+            <strong>Buy the Micellar Casein</strong> if you want a bedtime protein, a high-protein pudding base or a slow-digesting snack. It is the best product Ascent makes and good value for a certified casein. <strong>Buy the Whey Protein</strong> in the 4 lb bag if you want a daily whey with no artificial sweeteners and a sport certification, and you are not especially sensitive to lactose.
+          </p>
+
+          <p>
+            <strong>Buy the Clear Whey Isolate</strong> only if you specifically want a juice-style protein drink. It is well made, but it is the worst value in the range. <strong>Buy the unflavored whey</strong> if you cook with protein, or if stevia gives you an aftertaste you cannot stand. It is the cheapest way into the brand per gram.
+          </p>
+
+          <p>
+            <strong>Skip Ascent</strong> if you need a pure isolate for lactose sensitivity, if you have a soy allergy (the whey contains soy lecithin, though the casein is soy-free), or if your sport requires NSF Certified for Sport rather than Informed Sport. Skip it, too, if your only goal is the lowest cost per gram. Large tubs of mainstream concentrates on sale will usually beat it.
+          </p>
+
+          <p>
+            If you have kidney disease, are pregnant, have a diagnosed milk allergy or take medication, talk to your doctor or a registered dietitian before adding a protein supplement. Casein and whey are both milk proteins and are not suitable for people with a milk protein allergy. This review covers labels and value. It is not medical advice.
+          </p>
+        </div>
+
+        <div id="use" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            10. How to Use Ascent Well
+          </h2>
+
+          <p>
+            Match the product to the moment. The whey is fast-digesting and suits mornings or after training. The casein is slow-digesting and suits the evening or long gaps between meals. The clear whey works when you want something light. You do not need all three. Total daily protein matters far more than timing, as our guide on <a href="/when-to-take-protein-powder/">when to take protein powder</a> explains.
+          </p>
+
+          <p>
+            Dose by protein, not by scoop. A 25 g scoop of whey is about right per meal for most adults. Larger or older lifters may benefit from 30-40 g, and that is where the casein's slower digestion before bed helps. Use our <a href="/how-much-protein-do-i-need/">protein needs guide</a> to set a daily target, then fill the gap your meals leave rather than adding shakes on top of a diet that already meets it.
+          </p>
+
+          <p>
+            For a casein pudding, mix a scoop with a few ounces of milk or water until thick, then chill for 10-15 minutes. For overnight oats, stir a scoop into the oats with extra liquid. For baking, use unflavored whey or casein in place of part of the flour, and add a little more liquid, because protein absorbs moisture and can dry out a recipe.
+          </p>
+
+          <p>
+            If you are a tested athlete, check the Informed Sport listing for the exact product and flavor before you buy, and keep the batch number. Certification covers tested batches, and the database is the only reliable way to confirm a given bag is covered. That habit protects you whichever brand you choose.
+          </p>
+        </div>
+
+        <!-- Common Mistakes -->
+        <div id="mistakes" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            11. Common Mistakes to Avoid
+          </h2>
+
+          <div class="space-y-6 my-8">
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Assuming native whey means pure isolate</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Ascent's current whey label lists a whey isolate blend that includes native whey isolate, followed by whey concentrate. It is a good formula, but it carries a little more lactose than a pure isolate. If regular whey bloats you, choose a pure isolate rather than relying on the native whey wording.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Buying the 2 lb bag on repeat</h3>
+              <p class="text-gray-700 text-sm m-0">
+                At list price, Ascent's 4 lb chocolate whey costs roughly 20% less per 25 g of protein than the 2 lb bag. Once you know you like a flavor, the larger bag is the easiest saving available. The specialty flavors only come in 25-serving bags, so variety costs extra.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Overlooking the soy in the whey</h3>
+              <p class="text-gray-700 text-sm m-0">
+                The whey label states it contains milk and soy, because of the lecithin used to help it mix. Most people will not notice, but anyone with a soy allergy should read the panel carefully. Ascent's micellar casein is listed as soy-free, so it is the safer Ascent choice for them.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Paying clear-whey prices for daily protein</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Clear whey costs about $2.50 per 25 g of protein at list price, roughly half again as much as the 4 lb whey. It is a pleasant format for summer or after cardio. As your main daily protein, it is an expensive habit that delivers only 20 g per scoop.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Assuming Informed Sport meets every league rule</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Informed Sport is a respected banned-substance program, but some professional leagues and teams specifically require NSF Certified for Sport. If you compete under a governing body, check its approved list first, then confirm the exact Ascent product and flavor in the Informed Sport database before you buy.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ -->
+        <div id="faq" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            12. Frequently Asked Questions
+          </h2>
+
+          <div class="space-y-6">
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is Ascent protein a whey isolate?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Partly. Ascent's flagship whey lists a whey isolate blend of native whey isolate and regular whey isolate, followed by whey concentrate. So it is mostly isolate, with some concentrate. The Clear Whey Isolate is a pure isolate. If you need a pure isolate for lactose sensitivity, read the ingredient list on the specific product before you buy.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">What is Ascent native whey?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Native whey is filtered directly from milk rather than collected as a by-product of cheesemaking, so it skips the cheese process. Ascent has long marketed native whey, and its current whey label includes native whey protein isolate within an isolate blend. The research showing native whey beats good conventional whey for results is limited.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is Ascent protein third-party tested?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Yes. Ascent says its whey, casein and clear whey are Informed Sport certified, a program that screens for substances banned in sport. They are also certified gluten-free. Certification applies to tested batches, so if you are a tested athlete, check the product and flavor in the Informed Sport database and keep your batch number.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">How much protein is in Ascent casein?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                The chocolate Micellar Casein label lists 25 g of protein and 120 calories in a 36 g scoop at the time of writing, plus about 661 mg of calcium. Ascent also lists 2.2 g of leucine and 10.7 g of essential amino acids per scoop. Other flavors are similar but vary slightly, so check the panel.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">What sweetener does Ascent use?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Ascent uses stevia leaf extract and no artificial sweeteners or flavors in its whey, casein and clear whey, per the labels at the time of writing. The Clear Whey Isolate also contains organic cane sugar, about 1 g of added sugar per scoop. The unflavored whey has no sweetener, for anyone who wants to avoid stevia.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is Ascent good for weight loss?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                It can help, as any protein can, because a 120-calorie, 25 g scoop is filling and easy to fit into a calorie budget. The casein's slow digestion and thick texture may help some people feel full for longer. Weight loss still depends on your overall diet. No powder causes fat loss by itself.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Who makes Ascent protein?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Ascent describes itself as a family-owned business based in Denver, Colorado, with more than 30 years of experience making protein. It sells online and through retail stores, and its website has a store locator. Alongside protein, the brand also sells collagen, Creapure creatine and hydration products, according to its website at the time of writing.
+              </p>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Related Guides -->
+        <div class="mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">Related Whey Isolate Guides</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <a href="/best-whey-protein-isolate/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#FF4500] font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Whey Protein Isolate</h3>
+              <p class="text-gray-500 text-sm mt-2">Pure isolates ranked on label, testing and cost, for buyers who want more than a blend.</p>
+            </a>
+            <a href="/best-casein-protein-powder/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#38BDF8] font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Casein Protein Powder</h3>
+              <p class="text-gray-500 text-sm mt-2">Where Ascent's micellar casein sits among the certified night-time proteins.</p>
+            </a>
+            <a href="/transparent-labs-protein-powder-review/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-green-600 font-black text-xs uppercase tracking-widest mb-2">Brand Review</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Transparent Labs Protein Review</h3>
+              <p class="text-gray-500 text-sm mt-2">The pure grass-fed isolate Ascent buyers most often compare it with.</p>
+            </a>
+          </div>
+        </div>
+
+        <!-- Closing -->
+        <div class="mt-16 bg-gray-900 text-white rounded-2xl p-8">
+          <h2 class="text-2xl font-black text-white mb-4">The Bottom Line</h2>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            Ascent is a good brand with a clear standout. The Micellar Casein gives 25 g of certified, stevia-sweetened protein for about $1.80 per 25 g at list price. The whey is a solid daily option in the 4 lb bag, as long as you know it is an isolate and concentrate blend. The clear whey is a format choice, not a value pick.
+          </p>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            If you need a pure isolate, step up to Transparent Labs. For every leading option ranked side by side, read our <a href="/best-whey-protein-isolate/">best whey protein isolate</a> guide.
+          </p>
+        </div>
+
+        <MoreInCategory category="Brand Reviews" links={moreInCategory} />
+
+        <AuthorBio />
+      </div>
+    </div>
+  </article>
+</Layout>

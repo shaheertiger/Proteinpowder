@@ -1,0 +1,955 @@
+---
+import Layout from "../layouts/Layout.astro";
+import MoreInCategory from "../components/MoreInCategory.astro";
+import { AUTHORS, DEFAULT_AUTHOR, authorSchema } from "../data/authors";
+import { SITE_NAME, SITE_URL } from "../data/site";
+import AuthorAvatar from "../components/AuthorAvatar.astro";
+import QuickPicks from "../components/QuickPicks.astro";
+import AuthorBio from "../components/AuthorBio.astro";
+import { amazonLink } from "../data/affiliate";
+import TrustBadge from "../components/TrustBadge.astro";
+import SocialProof from "../components/SocialProof.astro";
+import SpecGrid from "../components/SpecGrid.astro";
+import productImages from "../data/product-images.json";
+import { pageDates } from "../data/dates";
+
+const moreInCategory = [
+  {
+    "title": "Just Ingredients Protein Powder Review",
+    "url": "/just-ingredients-protein-powder-review/"
+  },
+  {
+    "title": "Truvani Protein Powder Review",
+    "url": "/truvani-protein-powder-review/"
+  },
+  {
+    "title": "Naked Nutrition Protein Powder Review",
+    "url": "/naked-nutrition-protein-powder-review/"
+  }
+];
+const author = AUTHORS[DEFAULT_AUTHOR];
+const dates = pageDates(Astro.url.pathname, { published: "2026-10-19", modified: "2026-10-19" });
+const title = "FlavCity Protein Powder Review: What the Smoothie Mix Contains and What It Really Costs";
+const description =
+  "FlavCity protein powder from the label: grass-fed whey, 10 g collagen, stevia and mushrooms, the plant-based version, the Prop 65 note and cost per 25 g.";
+
+const PRODUCTS: {
+  id: string;
+  name: string;
+  brand?: string;
+  badge: string;
+  category: string;
+  description: string;
+  pros: string[];
+  cons: string[];
+  bottomLine: string;
+  specs?: Record<string, string>;
+  rating?: number;
+  reviewCount?: number;
+  amazonUrl?: string;
+}[] = [
+  {
+    "id": "flavcity-protein-smoothie",
+    "name": "FlavCity Protein Smoothie (Chocolate)",
+    "brand": "FlavCity",
+    "badge": "Flagship Pick",
+    "category": "Grass-fed whey and collagen smoothie mix",
+    "description": "FlavCity's core product lists about 25 g of protein and 10 g of grass-fed collagen per serving, per the brand at the time of writing. The chocolate flavor combines grass-fed undenatured whey concentrate, grass-fed milk protein, yeast protein, coconut milk powder, banana powder and organic cocoa, sweetened with stevia, with organic reishi and cordyceps and 0 g of added sugar. It is a well-made, real-ingredient smoothie mix. It is expensive per gram of protein, makes no third-party testing claims, and the page does not state whether the collagen counts toward the 25 g.",
+    "pros": [
+      "Grass-fed whey and milk protein base",
+      "Stevia sweetened with 0 g added sugar, per the brand",
+      "No artificial flavors; real banana and coconut milk",
+      "Ready-made flavor, no blending needed"
+    ],
+    "cons": [
+      "Roughly $3 to $4 per serving",
+      "Part of the protein may be collagen, which is incomplete",
+      "No third-party testing claims; Prop 65 warning on some products"
+    ],
+    "bottomLine": "A good real-ingredient breakfast shake, but a costly way to buy protein.",
+    "specs": {
+      "Protein per serving": "About 25 g incl. 10 g collagen (brand)",
+      "Calories": "Check panel; not in page text",
+      "Third-party testing": "None claimed",
+      "Best for": "Breakfast smoothies"
+    }
+  },
+  {
+    "id": "flavcity-pbj-protein-smoothie",
+    "name": "FlavCity PB&J Protein Smoothie",
+    "brand": "FlavCity",
+    "badge": "Most Food-Like",
+    "category": "Grass-fed whey smoothie mix with fruit and peanuts",
+    "description": "The PB&J smoothies, in strawberry and grape, are FlavCity's most food-like flavors. The brand says they use actual fruit and real peanuts with no natural or artificial flavoring, and lists about 25 g of protein and 10 g of grass-fed bovine collagen peptides per serving, with 100% grass-fed whey plus reishi and cordyceps. They contain peanuts and milk. Like the core line, they are priced at the premium end and make no third-party testing claims.",
+    "pros": [
+      "Real fruit and peanuts, no added flavoring, per the brand",
+      "About 25 g of protein per serving",
+      "Distinctive flavor few protein brands offer"
+    ],
+    "cons": [
+      "Contains peanuts and milk",
+      "Same premium cost per serving as the core line"
+    ],
+    "bottomLine": "The flavor to try if you want a protein smoothie that tastes like food.",
+    "specs": {
+      "Protein per serving": "About 25 g incl. 10 g collagen (brand)",
+      "Calories": "Check panel; not in page text",
+      "Third-party testing": "None claimed",
+      "Best for": "Flavor-first buyers"
+    }
+  },
+  {
+    "id": "flavcity-plant-based-vanilla-protein-smoothie",
+    "name": "FlavCity Plant-Based Vanilla Protein Smoothie",
+    "brand": "FlavCity",
+    "badge": "Dairy-Free Option",
+    "category": "Almond protein smoothie mix",
+    "description": "FlavCity's vegan option lists about 20 g of protein from almond protein, with organic banana powder, organic coconut milk powder, vanilla, sea salt, organic cordyceps and reishi, sweetened with organic stevia and organic monk fruit, per the brand. It is dairy free and contains almond. It costs about the same per pack as the whey line while giving less protein, and its product page includes a Prop 65 notice. A pea-based blend usually gives more protein per dollar.",
+    "pros": [
+      "Dairy free and vegan",
+      "Stevia and monk fruit, no added sugar claimed",
+      "Short, recognizable ingredient list"
+    ],
+    "cons": [
+      "Only about 20 g of protein per serving",
+      "Contains almond",
+      "High cost per 25 g for a plant protein"
+    ],
+    "bottomLine": "Fine for FlavCity fans who avoid dairy; better value exists elsewhere.",
+    "specs": {
+      "Protein per serving": "About 20 g (brand)",
+      "Calories": "Check panel; not in page text",
+      "Third-party testing": "None claimed",
+      "Best for": "Dairy-free smoothies"
+    }
+  },
+  {
+    "id": "flavcity-protein-smoothie-packets",
+    "name": "FlavCity Protein Smoothie Packets",
+    "brand": "FlavCity",
+    "badge": "Best for Travel",
+    "category": "Single-serve whey and collagen packets",
+    "description": "The packet format puts one serving of the Protein Smoothie, about 25 g of protein and 10 g of collagen per the brand, in a single-serve pouch. Each box holds 15 packets at about $4 each, or about $3.40 on a subscription. You add one packet to a shaker with 12 oz of milk or water and shake. It is the most convenient way to use FlavCity at work or on the road, and the most expensive way to buy it per serving.",
+    "pros": [
+      "No scooping or measuring",
+      "Easy to carry for travel and work",
+      "Same ingredient list as the bagged flavors"
+    ],
+    "cons": [
+      "About $4 per serving at one-time prices",
+      "More packaging waste than a bag"
+    ],
+    "bottomLine": "Worth it for travel; buy bags for everyday use.",
+    "specs": {
+      "Protein per serving": "About 25 g incl. 10 g collagen (brand)",
+      "Calories": "Check packet panel",
+      "Third-party testing": "None claimed",
+      "Best for": "Travel, office"
+    }
+  },
+  {
+    "id": "naked-nutrition-naked-whey",
+    "name": "Naked Whey (Unflavored)",
+    "brand": "Naked Nutrition",
+    "badge": "Alternative: One-Ingredient Whey",
+    "category": "Grass-fed whey protein concentrate",
+    "description": "If what you like about FlavCity is grass-fed whey and a clean label, Naked Whey is the cheaper base. It has one ingredient, grass-fed whey protein concentrate, and gives about 25 g of protein in roughly 120 calories per two-scoop serving, per the label, with no collagen dilution. It is unflavored and unsweetened, so you add your own banana, cocoa or stevia. It is sold on Amazon and costs a fraction of FlavCity per 25 g. We could not confirm a sport certification.",
+    "pros": [
+      "One ingredient, grass-fed whey concentrate",
+      "About 25 g of complete protein per serving",
+      "Far lower cost per 25 g than FlavCity"
+    ],
+    "cons": [
+      "Unflavored, so you build the smoothie yourself",
+      "No sport certification confirmed"
+    ],
+    "bottomLine": "The DIY FlavCity: add a banana and cocoa and save most of the cost.",
+    "amazonUrl": "https://www.amazon.com/dp/B00XIKPUK4",
+    "specs": {
+      "Protein per serving": "About 25 g (label)",
+      "Calories": "About 120",
+      "Third-party testing": "No sport certification confirmed",
+      "Best for": "Homemade smoothies"
+    }
+  },
+  {
+    "id": "orgain-grass-fed-whey-protein",
+    "name": "Orgain Grass-Fed Whey Protein Powder",
+    "brand": "Orgain",
+    "badge": "Alternative: Flavored Grass-Fed Whey",
+    "category": "Grass-fed whey protein concentrate",
+    "description": "If you want a ready-flavored grass-fed whey without FlavCity's price, Orgain's gives about 21 g of protein for roughly 140 calories per serving, per the listing, from pasture-raised grass-fed whey concentrate, sweetened with stevia and erythritol. It is widely sold on Amazon and in grocery stores and typically costs about half as much per 25 g. It lacks FlavCity's fruit and mushrooms, and it contains erythritol, which some stomachs dislike.",
+    "pros": [
+      "Flavored and ready to shake",
+      "Grass-fed whey, stevia sweetened",
+      "About half FlavCity's cost per 25 g"
+    ],
+    "cons": [
+      "Contains erythritol",
+      "Only about 21 g of protein per serving"
+    ],
+    "bottomLine": "The cheaper flavored grass-fed whey for people who just want a good shake.",
+    "amazonUrl": "https://www.amazon.com/dp/B01AAFZYQY",
+    "specs": {
+      "Protein per serving": "About 21 g (label)",
+      "Calories": "About 140",
+      "Third-party testing": "No sport certification confirmed",
+      "Best for": "Everyday flavored shakes"
+    }
+  }
+];
+
+const schema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Home",
+          item: `${SITE_URL}/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Best Lists",
+          item: `${SITE_URL}/best-of/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 3,
+          name: "FlavCity Protein Powder Review",
+          item: `${SITE_URL}/flavcity-protein-powder-review/`,
+        },
+      ],
+    },
+    {
+      "@type": "FAQPage",
+      mainEntity: [
+        {
+          "@type": "Question",
+          "name": "Is FlavCity protein powder healthy?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "For most healthy adults it is a reasonable choice. It uses grass-fed whey, milk protein and collagen, with banana, coconut milk and stevia, and the brand lists 0 g of added sugar. The caveats are that it makes no third-party testing claims, some FlavCity products carry Prop 65 warnings for lead and cadmium, and it costs far more per gram of protein than plain whey."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How much protein is in FlavCity Protein Smoothie?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "FlavCity lists about 25 g of protein and 10 g of grass-fed collagen per serving for its dairy smoothies, and about 20 g of protein for the plant-based vanilla. The product page does not say in text whether the collagen is part of the 25 g. Check the nutrition panel on the pouch or packet for the exact figures for your flavor."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What sweetener does FlavCity use?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The chocolate Protein Smoothie lists organic stevia leaf extract and stevia Reb M, and the Plant-Based Vanilla uses organic stevia and organic monk fruit, per FlavCity's product pages. The brand says its smoothies have 0 g of added sugar and no artificial flavors. There is no sucralose or sugar alcohol in the ingredient lists we read."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is FlavCity protein powder sold on Amazon?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "We could not confirm an official FlavCity listing on Amazon US at the time of writing. The brand sells primarily through its own online store, with a subscription discount and free shipping on subscriptions. If you see FlavCity on Amazon, check who the seller is. The grass-fed whey alternatives on this page are sold on Amazon."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is FlavCity protein third-party tested?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "FlavCity's product pages make no third-party testing claims, and we found no NSF Certified for Sport, Informed Sport or Clean Label Project claim and no published certificates of analysis. The site does say some products carry Prop 65 warnings for naturally occurring lead and cadmium. Drug-tested athletes should choose a certified product instead."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is FlavCity good for building muscle?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It is not the most efficient choice. If the 10 g of collagen counts toward the 25 g of protein, a serving has about 15 g of complete protein, below the 20 to 25 g most recovery studies use. Mixing it with dairy milk helps. For muscle building on a budget, a plain whey isolate or concentrate is better value."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Who owns FlavCity?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "FlavCity grew out of the food and cooking media brand known for Bobby Parrish's YouTube channel, which the brand links from its site, and the site lists DTBE, LLC as the trademark holder. It sells protein smoothies, coffee and other pantry products, mainly direct to consumers through its own online store with subscription options."
+          }
+        }
+      ],
+    },
+    {
+      "@type": "Article",
+      headline: title,
+      author: authorSchema(),
+      datePublished: dates.published,
+      dateModified: dates.modified,
+      publisher: { "@type": "Organization", name: SITE_NAME, url: SITE_URL },
+    },
+    {
+      "@type": "ItemList",
+      name: title,
+      numberOfItems: PRODUCTS.length,
+      itemListElement: PRODUCTS.map((product, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name: product.name,
+        url: new URL(`#${product.id}`, Astro.url).toString(),
+      })),
+    },
+    ...PRODUCTS.map((product) => ({
+      "@type": "Product",
+      name: product.name,
+      description: product.description,
+      brand: {
+        "@type": "Brand",
+        name: product.brand ?? product.name.split(" ")[0],
+      },
+    })),
+  ],
+};
+---
+
+<Layout
+  title={title}
+  description={description}
+  ogType="article"
+  article={{
+    publishedTime: dates.published,
+    modifiedTime: dates.modified,
+    author: author.name,
+    section: "Brand Reviews",
+    tags: [
+      "flavcity protein powder",
+      "flav city protein powder",
+      "flavcity whey protein",
+      "flavcity protein review"
+    ],
+  }}
+  jsonLd={schema}
+  stickyCta={{
+    text: "See Our Top Clean Protein Picks",
+    link: "/best-clean-protein-powder/",
+  }}
+>
+  <article class="relative overflow-hidden">
+    <!-- Hero Section -->
+    <div class="bg-gray-900 py-16 lg:py-24 relative overflow-hidden">
+      <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(circle at 20% 20%, #38BDF8 0, transparent 45%), radial-gradient(circle at 80% 60%, #FF4500 0, transparent 40%);"></div>
+      <div class="max-w-4xl mx-auto px-4 relative z-10 text-center">
+        <div class="flex justify-center mb-6">
+          <TrustBadge />
+        </div>
+        <div class="flex justify-center gap-3 mb-6">
+          <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#FF4500]/20 text-[#FF4500] text-xs font-black uppercase tracking-widest border border-[#FF4500]/30">
+            Brand Review
+          </span>
+          <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-green-500/10 text-green-400 text-xs font-bold uppercase tracking-widest border border-green-500/20">
+            Label-Checked
+          </span>
+        </div>
+        <h1 class="text-4xl lg:text-6xl font-black text-white leading-tight mb-8">
+          FlavCity <span class="text-[#38BDF8]">Protein Powder</span> Review
+        </h1>
+        <p class="text-xl text-gray-300 leading-relaxed mb-8 max-w-3xl mx-auto">
+          FlavCity's Protein Smoothies, read off the brand's own product pages: what is in a serving, how much of the protein is collagen, what the plant-based version uses, and how the price compares with plain grass-fed whey.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a
+            href="#flavcity-protein-smoothie"
+            class="px-8 py-4 bg-[#FF4500] hover:bg-[#E63E00] text-white font-black rounded-xl shadow-lg transition-all no-underline"
+          >
+            See Our #1 Pick
+          </a>
+          <a
+            href="#range-compared"
+            class="px-8 py-4 bg-white/10 hover:bg-white/20 text-white font-bold rounded-xl border border-white/10 no-underline"
+          >
+            Compare the Range
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Author & Meta -->
+    <div class="max-w-3xl mx-auto px-4 pt-12">
+      <div class="flex items-center gap-6 border-b border-gray-100 pb-8">
+        <div class="flex items-center gap-3">
+          <AuthorAvatar size={48} />
+          <div>
+            <p class="text-sm font-bold text-gray-900">{author.name}</p>
+            <p class="text-xs text-gray-500 uppercase tracking-widest">{author.role}</p>
+          </div>
+        </div>
+        <div class="h-10 w-px bg-gray-200 hidden sm:block"></div>
+        <div class="hidden sm:block">
+          <p class="text-sm font-bold text-gray-900">Last Updated</p>
+          <p class="text-xs text-gray-500">{dates.display}</p>
+        </div>
+        <div class="hidden sm:block ml-auto">
+          <SocialProof />
+        </div>
+      </div>
+    </div>
+
+    <!-- Table of Contents -->
+    <div class="max-w-3xl mx-auto px-4 py-10">
+      <div class="bg-gray-50 border border-gray-200 rounded-2xl p-6 lg:p-8">
+        <h2 class="text-lg font-black text-gray-900 mb-4 flex items-center gap-2">
+          In This Guide
+        </h2>
+        <nav class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <a href="#verdict" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">1. The Short Verdict</a>
+          <a href="#the-brand" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">2. Who Makes FlavCity</a>
+          <a href="#whats-inside" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">3. What Is Inside a Scoop</a>
+          <a href="#collagen-question" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">4. The Collagen Question</a>
+          <a href="#top-picks" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">5. Our Top Picks</a>
+          <a href="#range-compared" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">6. Flavors, Formats and the Plant Version</a>
+          <a href="#cost-per-25g" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">7. Cost per 25 g of Protein</a>
+          <a href="#testing" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">8. Testing and the Prop 65 Warning</a>
+          <a href="#who-should-skip" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">9. Who Should Skip It</a>
+          <a href="#how-to-use" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">10. Where to Buy and How to Use It</a>
+          <a href="#mistakes" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">11. Common Mistakes</a>
+          <a href="#faq" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">12. FAQ</a>
+        </nav>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="max-w-3xl mx-auto px-4 pb-16 lg:pb-24">
+      <div class="prose prose-lg prose-blue max-w-none text-gray-700 leading-relaxed">
+        <p class="text-2xl font-medium text-gray-900 mb-8 italic">
+          FlavCity sells protein the way a food brand would: as a flavored smoothie mix with grass-fed whey, collagen, banana, coconut milk and functional mushrooms, sweetened with stevia and no added sugar. The brand lists about 25 g of protein and 10 g of collagen per serving. It is a well-made, real-ingredient product for people who want a ready-to-shake breakfast drink. It is also expensive per gram of protein, it does not publish third-party testing, it carries a Prop 65 warning, and we could not confirm an official listing on Amazon US. For most people, a plain grass-fed whey plus a banana gets you most of the way for far less.
+        </p>
+
+        <QuickPicks products={PRODUCTS} />
+
+        <div id="verdict" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            1. The Short Verdict
+          </h2>
+
+          <p>
+            FlavCity's Protein Smoothies are a good product built for a specific job: a flavored, ready-to-shake breakfast or snack drink made from recognizable ingredients. The brand lists about 25 g of protein and 10 g of grass-fed collagen per serving, with grass-fed whey concentrate, milk protein, coconut milk powder, banana powder, stevia and two functional mushrooms in the chocolate flavor, and 0 g of added sugar.
+          </p>
+
+          <p>
+            As a protein powder judged on protein, it is weaker. The product page does not say whether the 10 g of collagen counts toward the 25 g, and collagen is an incomplete protein that does little for muscle compared with whey. If it does count, each serving carries closer to 15 g of high-quality protein. Either way, you are paying for flavor, fruit and extras as much as for protein.
+          </p>
+
+          <p>
+            Price is the other sticking point. At the one-time prices on FlavCity's site, a serving costs about $3 to $4, roughly double the cost per 25 g of a plain grass-fed whey such as Naked Whey. A subscription trims about 15%. Availability is patchy too: several flavors were listed as sold out when we checked, and we could not confirm an official FlavCity listing on Amazon US.
+          </p>
+
+          <p>
+            Our verdict: buy FlavCity if you value a real-ingredient, stevia-sweetened smoothie mix and the price does not bother you, and you are happy to buy direct. Skip it if you want the most protein for your money, need third-party testing, or want to buy on Amazon. A one-ingredient grass-fed whey blended with fruit gives you a similar drink for far less, and our <a href="/best-clean-protein-powder/">best clean protein powder</a> ranking lists the strongest options.
+          </p>
+
+          <div class="bg-gray-900 text-white rounded-2xl p-6 lg:p-8 my-8">
+            <p class="text-xs font-black uppercase tracking-widest text-[#38BDF8] mb-3">THE ONE-LINE ANSWER</p>
+            <p class="text-xl font-bold text-white mb-3">A nice smoothie mix, an expensive protein powder</p>
+            <p class="text-gray-300 leading-relaxed m-0">About 25 g of protein with 10 g of collagen per serving, at roughly $3 to $4 a serving. Buy plain grass-fed whey and add your own fruit if protein per dollar matters.</p>
+          </div>
+        </div>
+
+        <div id="the-brand" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            2. Who Makes FlavCity
+          </h2>
+
+          <p>
+            FlavCity began as a food and cooking media brand, best known for Bobby Parrish's YouTube channel, which the brand still links from its site. The channel built a large audience reviewing grocery products and reading ingredient labels, and the product line grew out of that: protein smoothies, coffee and other pantry items sold under the FlavCity name. The company behind the trademark is listed on the site as DTBE, LLC.
+          </p>
+
+          <p>
+            That background shapes the product. The pitch on FlavCity's site is flavor first and real food always: recognizable ingredients, real fruit, grass-fed whey, no artificial flavors, no GMOs and, in several products, no added sugar. That is a food-label philosophy rather than a sports-nutrition one, and it explains why the product reads like a smoothie recipe rather than a gym tub.
+          </p>
+
+          <p>
+            It also explains what is missing. Sports-nutrition brands tend to compete on protein per scoop, certifications and price per gram. FlavCity competes on ingredient quality and taste, and its pages make no third-party testing claims at all. For a clean-label brand, published lab results would be a natural next step, and some competitors in the same space already publish them.
+          </p>
+
+          <p>
+            FlavCity sells primarily through its own online store, with subscribe-and-save pricing and free shipping on larger or subscription orders. We could not confirm an official listing on Amazon US at the time of writing, so any FlavCity product you find there may come through a third-party seller. If you want to buy on Amazon, the alternatives below are the practical route.
+          </p>
+        </div>
+
+        <div id="whats-inside" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            3. What Is Inside a Scoop
+          </h2>
+
+          <p>
+            The chocolate Protein Smoothie's key ingredients, as listed on FlavCity's product page, are grass-fed undenatured whey protein concentrate, grass-fed collagen, organic cocoa powder, coconut milk powder, grass-fed milk protein concentrate, fermented nutritional yeast protein, banana powder, unrefined sea salt, organic stevia leaf extract and stevia Reb M, and organic cordyceps and reishi mushroom powders. It contains milk.
+          </p>
+
+          <div class="overflow-hidden border border-gray-200 rounded-2xl my-8">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Ingredient</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">What it does</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Our take</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Grass-fed whey concentrate</td>
+                    <td class="px-4 py-4 text-gray-700">Main protein</td>
+                    <td class="px-4 py-4 text-gray-700">High quality, complete protein</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Grass-fed collagen</td>
+                    <td class="px-4 py-4 text-gray-700">About 10 g per serving</td>
+                    <td class="px-4 py-4 text-gray-700">Incomplete protein, low in leucine</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Milk protein concentrate</td>
+                    <td class="px-4 py-4 text-gray-700">Extra dairy protein</td>
+                    <td class="px-4 py-4 text-gray-700">Complete, slower digesting</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Yeast protein</td>
+                    <td class="px-4 py-4 text-gray-700">Plant-based protein</td>
+                    <td class="px-4 py-4 text-gray-700">Small share, complete protein</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Coconut milk, banana</td>
+                    <td class="px-4 py-4 text-gray-700">Creaminess, flavor</td>
+                    <td class="px-4 py-4 text-gray-700">Adds some calories and fat</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Stevia Reb A and Reb M</td>
+                    <td class="px-4 py-4 text-gray-700">Sweetness</td>
+                    <td class="px-4 py-4 text-gray-700">No added sugar</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Reishi, cordyceps</td>
+                    <td class="px-4 py-4 text-gray-700">Functional mushrooms</td>
+                    <td class="px-4 py-4 text-gray-700">Weak evidence at these doses</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <p>
+            The protein base is genuinely good. Grass-fed whey concentrate and milk protein concentrate are both complete dairy proteins with plenty of leucine, and whey concentrate is what most of the clean-label category uses. Undenatured is a label term for whey processed at lower temperatures; it is a reasonable quality marker, though the evidence that it matters for muscle is limited.
+          </p>
+
+          <p>
+            The extras are where we would be more skeptical. FlavCity describes reishi and cordyceps as functional mushrooms shown to increase focus and cognition. The human research on both is small and mixed, and a protein smoothie does not list how much of each it contains, so treat them as a flavor of the brand's philosophy rather than a reason to buy. Coconut milk and banana powder add creaminess and taste, at the cost of some calories.
+          </p>
+
+          <p>
+            The sweetener choice is a clear plus for many buyers: stevia, in two forms, with no sucralose, no sugar alcohols and 0 g of added sugar per the brand. The calorie count is not in the product page text, only in the nutrition panel image, so check the pouch or packet. Expect more calories than a plain whey because of the coconut milk and banana.
+          </p>
+        </div>
+
+        <div id="collagen-question" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            4. The Collagen Question
+          </h2>
+
+          <p>
+            FlavCity's pages describe the smoothies as having 25 g of protein and 10 g of collagen. What they do not spell out in text is whether those numbers overlap. On a nutrition panel, collagen counts as protein, so if the 10 g is inside the 25 g, the serving carries about 15 g of whey, milk and yeast protein plus 10 g of collagen. That matters a lot for what the shake does.
+          </p>
+
+          <p>
+            Collagen is an incomplete protein. It lacks tryptophan and is low in leucine, the amino acid most strongly linked to triggering muscle protein synthesis. Studies on post-workout recovery mostly use 20 to 25 g of a complete protein such as whey, which delivers roughly 2.5 to 3 g of leucine. Fifteen grams of whey and milk protein falls short of that on its own.
+          </p>
+
+          <p>
+            That does not make collagen useless. There is reasonable evidence that collagen peptides may help skin elasticity and joint comfort for some people, and many buyers want it for exactly that. It just means FlavCity is better understood as a whey and collagen combination product than a 25 g muscle-building shake. Our <a href="/best-collagen-protein-powder/">collagen protein guide</a> covers what collagen can and cannot do.
+          </p>
+
+          <p>
+            If muscle is your goal, there are two easy fixes. Make the smoothie with dairy milk instead of water, which adds about 8 g of complete protein per cup, or pair it with a protein-rich breakfast. If you want to compare clean-label brands that do or do not dilute with collagen, our <a href="/just-ingredients-protein-powder-review/">Just Ingredients review</a> covers another real-food whey brand where collagen shares the scoop.
+          </p>
+        </div>
+
+        <!-- Picks -->
+        <div id="top-picks" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            5. The FlavCity Powders, Ranked
+          </h2>
+
+          <p>
+            We ranked the FlavCity protein products most buyers choose between on protein per serving, ingredient list and cost per 25 g, then added two clearly labelled grass-fed whey alternatives from other brands that are sold on Amazon. FlavCity figures come from the brand's product pages at the time of writing, which do not list calories in text, so check the pouch or packet for the full nutrition panel.
+          </p>
+
+          {PRODUCTS.map((product, index) => (
+            <div id={product.id} class="scroll-mt-24 mt-12 first:mt-8">
+              <div class="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                <div class="bg-gray-900 px-6 py-4 flex items-center justify-between">
+                  <div class="flex items-center gap-3">
+                    <span class="bg-[#FF4500] text-white w-8 h-8 rounded-full flex items-center justify-center text-sm font-black">
+                      {index + 1}
+                    </span>
+                    {productImages[product.id] && (
+                      <img
+                        src={productImages[product.id]}
+                        alt={product.name}
+                        loading="lazy"
+                        width="40"
+                        height="40"
+                        class="w-10 h-10 rounded-lg bg-white object-contain p-1 shrink-0"
+                      />
+                    )}
+                    <div>
+                      <p class="text-white font-black text-lg">{product.name}</p>
+                      <p class="text-gray-400 text-xs">{product.category}</p>
+                    </div>
+                  </div>
+                  <span class="bg-[#38BDF8]/20 text-[#38BDF8] px-3 py-1 rounded-full text-xs font-bold hidden sm:block">
+                    {product.badge}
+                  </span>
+                </div>
+                <div class="p-6">
+                  {product.rating && (
+                  <div class="flex items-center gap-2 mb-4">
+                    <div class="flex text-yellow-400">
+                      {[...Array(5)].map((_, i) => (
+                        <svg
+                          class={`w-4 h-4 ${i < Math.floor(product.rating) ? "fill-current" : "text-gray-200"}`}
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                        >
+                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        </svg>
+                      ))}
+                    </div>
+                    <span class="text-gray-500 text-sm font-bold">{product.rating}</span>
+                    {product.reviewCount && <span class="text-gray-400 text-xs">({product.reviewCount.toLocaleString()} retailer reviews)</span>}
+                  </div>
+                  )}
+
+                  <SpecGrid specs={product.specs} />
+
+                  <p class="text-gray-700 leading-relaxed mb-6">{product.description}</p>
+
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                    <div class="bg-green-50 rounded-xl p-4">
+                      <p class="text-xs font-black uppercase tracking-widest text-green-700 mb-3">Pros</p>
+                      <ul class="space-y-2">
+                        {product.pros.map((pro) => (
+                          <li class="flex items-start gap-2 text-sm text-green-800">
+                            <svg class="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            {pro}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div class="bg-red-50 rounded-xl p-4">
+                      <p class="text-xs font-black uppercase tracking-widest text-red-700 mb-3">Cons</p>
+                      <ul class="space-y-2">
+                        {product.cons.map((con) => (
+                          <li class="flex items-start gap-2 text-sm text-red-800">
+                            <svg class="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                            {con}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+
+                  <div class="bg-gray-50 rounded-xl p-4 border border-gray-100">
+                    <p class="text-xs font-black uppercase tracking-widest text-gray-500 mb-1">The Bottom Line</p>
+                    <p class="text-gray-900 font-bold">{product.bottomLine}</p>
+                  </div>
+
+                  <a
+                    href={amazonLink(product.amazonUrl, product.name, product.id)}
+                    target="_blank"
+                    rel="sponsored nofollow noopener"
+                    class="mt-6 block bg-[#FF4500] hover:bg-[#E63E00] text-white text-center py-4 rounded-xl font-black no-underline transition-colors uppercase tracking-widest text-sm"
+                  >
+                    Check Price &rarr;
+                  </a>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div id="range-compared" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            6. Flavors, Formats and the Plant Version
+          </h2>
+
+          <p>
+            FlavCity's store lists a long flavor range: chocolate, chocolate peanut butter, cinnamon roll, salted caramel, vanilla latte, butter coffee, cookies and cream, banana bread, mint chocolate, berries and cream, vanilla cream, two PB&amp;J flavors and a pumpkin spice latte. Several were marked sold out when we checked, so the live range varies. Most come as packets or in bags, with the brand's images showing 20-serving bags for some flavors.
+          </p>
+
+          <p>
+            The PB&amp;J Protein Smoothies, in strawberry and grape, are the most food-like of the range. FlavCity says they use actual fruit and real peanuts with no natural or artificial flavoring, and list the same 25 g of protein and 10 g of grass-fed bovine collagen peptides as the core line, plus reishi and cordyceps. They contain peanuts, so they are out for anyone with a peanut allergy.
+          </p>
+
+          <p>
+            The Plant-Based Vanilla Protein Smoothie is the dairy-free option. FlavCity lists about 20 g of protein from almond protein, with organic banana powder, organic coconut milk powder, vanilla, sea salt, cordyceps and reishi, sweetened with organic stevia and organic monk fruit. It is vegan and contains almond. Almond protein is less common than pea, and a single-source nut protein is typically lower in some essential amino acids than a pea and rice blend.
+          </p>
+
+          <p>
+            Single-serve packets are the convenience format: 15 packets per box, each mixed with 12 oz of milk or water and shaken. They are the most expensive way to buy FlavCity per serving, but they travel well. Bags cost less per serving if a flavor you like is in stock. If you want a cheaper vegan alternative, see our <a href="/orgain-protein-powder-review/">Orgain review</a>.
+          </p>
+        </div>
+
+        <div id="cost-per-25g" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            7. Cost per 25 g of Protein
+          </h2>
+
+          <p>
+            We compare powders on cost per 25 g of protein: the price, divided by total grams of protein, multiplied by 25. FlavCity's listed protein is about 25 g per serving, so cost per serving and cost per 25 g are the same number, as long as you count the collagen. Prices change, so treat these as approximate at the time of writing.
+          </p>
+
+          <p>
+            The single-serve packets list at about $60 for 15, roughly $4 per serving, or about $3.40 on a subscription. Several flavors are also shown in 20-serving bags; at a similar list price of about $60, a bag works out to roughly $3 per serving, or about $2.55 on subscription. Free shipping applies on subscriptions and larger orders, per the brand.
+          </p>
+
+          <div class="bg-gray-900 text-white rounded-2xl p-6 lg:p-8 my-8">
+            <p class="text-xs font-black uppercase tracking-widest text-[#38BDF8] mb-4">Approximate Cost per 25 g</p>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+              <div>
+                <p class="text-3xl font-black text-white">$4.00</p>
+                <p class="text-gray-400 text-xs mt-1">Packets, one-time</p>
+              </div>
+              <div>
+                <p class="text-3xl font-black text-[#38BDF8]">About $3</p>
+                <p class="text-gray-400 text-xs mt-1">20-serving bag at about $60</p>
+              </div>
+              <div>
+                <p class="text-3xl font-black text-white">15%</p>
+                <p class="text-gray-400 text-xs mt-1">Subscription discount</p>
+              </div>
+              <div>
+                <p class="text-3xl font-black text-[#38BDF8]">$3.40</p>
+                <p class="text-gray-400 text-xs mt-1">Packets, subscription</p>
+              </div>
+            </div>
+          </div>
+
+          <p>
+            For context, Orgain's flavored grass-fed whey lands around $1.60 to $2.20 per 25 g at the Amazon prices we saw, and a plain one-ingredient grass-fed whey such as Naked Whey is typically cheaper still in its larger bags. So FlavCity costs roughly two to three times as much per gram of protein as plain grass-fed whey. If you exclude the collagen and count only complete protein, the gap is wider still.
+          </p>
+
+          <p>
+            Some of that premium buys real things: banana and coconut milk, a ready-made flavor, stevia rather than sucralose, and the convenience of not having to build a smoothie. Whether that is worth paying roughly double per shake is a personal call. If you make smoothies at home anyway, you can buy plain grass-fed whey and add a banana for a fraction of the cost. Our <a href="/best-protein-powder-for-smoothies/">protein powder for smoothies</a> guide shows how.
+          </p>
+        </div>
+
+        <div id="testing" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            8. Testing and the Prop 65 Warning
+          </h2>
+
+          <p>
+            FlavCity's product pages make no third-party testing claims. We found no NSF Certified for Sport, Informed Sport or Clean Label Project claim on the pages we read, and no published certificates of analysis for heavy metals. For a brand whose pitch is ingredient transparency, that is the biggest gap, and the reason we cannot rank it highly in our clean protein guide.
+          </p>
+
+          <p>
+            The site does say, plainly, that some FlavCity products carry a California Prop 65 warning due to naturally occurring lead and cadmium in certain ingredients, and the chocolate and plant-based product pages we read include a Prop 65 notice. That honesty is worth noting. Cocoa, plant proteins and some superfood powders tend to carry more lead and cadmium than dairy proteins, because these metals come from soil.
+          </p>
+
+          <p>
+            A Prop 65 warning is not a measured result. California's thresholds are very low, and products can carry a warning without exceeding any federal limit. But without published lab numbers, you have no way to know how far above or below those thresholds a given flavor sits. Brands that publish batch results let you check; FlavCity, at the time of writing, does not.
+          </p>
+
+          <p>
+            Our advice: if heavy metals are a concern, favor the non-chocolate dairy flavors over cocoa or plant-based ones, rotate protein sources, and ask the brand for lab results. Pregnant readers and anyone buying for children should talk to a doctor or registered dietitian before using any protein product daily. Our guide to <a href="/is-protein-powder-safe/">whether protein powder is safe</a> explains how to read Prop 65 warnings and lab reports.
+          </p>
+        </div>
+
+        <div id="who-should-skip" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            9. Who Should Skip It
+          </h2>
+
+          <p>
+            Skip FlavCity if protein per dollar is your priority. At roughly $3 to $4 per serving, it costs two to three times as much per gram as a plain grass-fed whey, and part of its protein is collagen. Anyone drinking a shake every day will feel that difference in their monthly grocery bill quickly.
+          </p>
+
+          <p>
+            Skip it if you are a drug-tested athlete or need lab-verified purity. With no third-party testing claims and no published certificates of analysis, there is nothing for you to check. A certified isolate, or a brand that publishes batch results, is the safer choice, and our <a href="/naked-nutrition-protein-powder-review/">Naked Nutrition review</a> covers a cheaper grass-fed alternative.
+          </p>
+
+          <p>
+            Skip it if you want to buy on Amazon. We could not confirm an official FlavCity listing on Amazon US, and buying food supplements from unknown third-party sellers carries real risks around storage and authenticity. If Amazon is where you shop, the alternatives on this page are the better route.
+          </p>
+
+          <p>
+            And check allergens carefully. The dairy smoothies contain milk; the PB&amp;J flavors contain peanuts; the plant-based vanilla contains almond; and coconut milk powder appears across the range. Anyone with a milk, peanut or tree nut allergy needs to read each flavor's label. People with kidney disease should get a protein target from their doctor before adding any protein powder.
+          </p>
+        </div>
+
+        <div id="how-to-use" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            10. Where to Buy and How to Use It
+          </h2>
+
+          <p>
+            <strong>Where to buy:</strong> FlavCity's own store is the reliable source, with a subscription discount of about 15% and free shipping on subscription orders. Check stock before you plan around a flavor, because several were sold out when we looked. The product buttons on this page run a tagged Amazon search for FlavCity; because we could not confirm an official listing, check the seller carefully if you buy there.
+          </p>
+
+          <p>
+            <strong>For a breakfast smoothie:</strong> this is what FlavCity is designed for. Shake one serving with 12 oz of milk, which also adds about 8 g of complete protein and offsets the collagen share, or blend it with ice and frozen fruit. The packets are handy for travel and the office, where blending is not an option.
+          </p>
+
+          <p>
+            <strong>For muscle building:</strong> FlavCity is not the efficient choice. If you do use it after training, make it with milk or add a second protein source so you reach a full dose of complete protein. A plain whey isolate or concentrate does the job for less money. <strong>For dairy-free buyers:</strong> the Plant-Based Vanilla works, but a pea-based blend usually gives more protein for less.
+          </p>
+
+          <p>
+            <strong>The cheaper homemade version:</strong> one serving of unflavored grass-fed whey, half a frozen banana, a spoon of cocoa or cinnamon, a splash of coconut milk and a few drops of stevia gets you close to FlavCity's chocolate smoothie for well under half the price. Compare other real-ingredient brands in our <a href="/truvani-protein-powder-review/">Truvani review</a>.
+          </p>
+        </div>
+
+        <!-- Common Mistakes -->
+        <div id="mistakes" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            11. Common Mistakes to Avoid
+          </h2>
+
+          <div class="space-y-6 my-8">
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Reading 25 g as 25 g of whey</h3>
+              <p class="text-gray-700 text-sm m-0">
+                FlavCity lists 25 g of protein and 10 g of collagen per serving without saying in text whether they overlap. If the collagen is included, you get about 15 g of complete protein. For muscle building, make the shake with milk or add another protein source to reach a full dose.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Buying from random Amazon sellers</h3>
+              <p class="text-gray-700 text-sm m-0">
+                We could not confirm an official FlavCity listing on Amazon US. Third-party sellers may store supplements poorly or sell old stock, and food returns are limited. Buy direct from FlavCity, or choose an alternative sold by the brand or by Amazon itself if you want to shop there.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Treating Prop 65 as a lab result</h3>
+              <p class="text-gray-700 text-sm m-0">
+                FlavCity says some products carry Prop 65 warnings for naturally occurring lead and cadmium. A warning tells you a product may exceed California's very low thresholds, not by how much. Without published lab results, rotate protein sources and favor non-cocoa dairy flavors if heavy metals concern you.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Paying packet prices every day</h3>
+              <p class="text-gray-700 text-sm m-0">
+                The single-serve packets are the most expensive way to buy FlavCity, at about $4 a serving at one-time prices. They make sense for travel. For daily use, bags on a subscription cut the cost substantially, and a plain grass-fed whey cuts it further still.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Missing the allergens</h3>
+              <p class="text-gray-700 text-sm m-0">
+                The dairy smoothies contain milk, the PB&J flavors contain peanuts, the plant-based vanilla contains almond, and coconut milk powder appears widely. Because the range is long and stock rotates, check each flavor's label for allergens before you order, even if you have bought FlavCity before.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ -->
+        <div id="faq" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            12. Frequently Asked Questions
+          </h2>
+
+          <div class="space-y-6">
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is FlavCity protein powder healthy?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                For most healthy adults it is a reasonable choice. It uses grass-fed whey, milk protein and collagen, with banana, coconut milk and stevia, and the brand lists 0 g of added sugar. The caveats are that it makes no third-party testing claims, some FlavCity products carry Prop 65 warnings for lead and cadmium, and it costs far more per gram of protein than plain whey.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">How much protein is in FlavCity Protein Smoothie?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                FlavCity lists about 25 g of protein and 10 g of grass-fed collagen per serving for its dairy smoothies, and about 20 g of protein for the plant-based vanilla. The product page does not say in text whether the collagen is part of the 25 g. Check the nutrition panel on the pouch or packet for the exact figures for your flavor.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">What sweetener does FlavCity use?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                The chocolate Protein Smoothie lists organic stevia leaf extract and stevia Reb M, and the Plant-Based Vanilla uses organic stevia and organic monk fruit, per FlavCity's product pages. The brand says its smoothies have 0 g of added sugar and no artificial flavors. There is no sucralose or sugar alcohol in the ingredient lists we read.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is FlavCity protein powder sold on Amazon?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                We could not confirm an official FlavCity listing on Amazon US at the time of writing. The brand sells primarily through its own online store, with a subscription discount and free shipping on subscriptions. If you see FlavCity on Amazon, check who the seller is. The grass-fed whey alternatives on this page are sold on Amazon.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is FlavCity protein third-party tested?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                FlavCity's product pages make no third-party testing claims, and we found no NSF Certified for Sport, Informed Sport or Clean Label Project claim and no published certificates of analysis. The site does say some products carry Prop 65 warnings for naturally occurring lead and cadmium. Drug-tested athletes should choose a certified product instead.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is FlavCity good for building muscle?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                It is not the most efficient choice. If the 10 g of collagen counts toward the 25 g of protein, a serving has about 15 g of complete protein, below the 20 to 25 g most recovery studies use. Mixing it with dairy milk helps. For muscle building on a budget, a plain whey isolate or concentrate is better value.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Who owns FlavCity?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                FlavCity grew out of the food and cooking media brand known for Bobby Parrish's YouTube channel, which the brand links from its site, and the site lists DTBE, LLC as the trademark holder. It sells protein smoothies, coffee and other pantry products, mainly direct to consumers through its own online store with subscription options.
+              </p>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Related Guides -->
+        <div class="mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">Related Clean Protein Guides</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <a href="/best-clean-protein-powder/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#FF4500] font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Clean Protein Powder</h3>
+              <p class="text-gray-500 text-sm mt-2">Powders you can verify, ranked on testing, ingredients and cost per 25 g.</p>
+            </a>
+            <a href="/best-collagen-protein-powder/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#38BDF8] font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Collagen Protein Powder</h3>
+              <p class="text-gray-500 text-sm mt-2">What collagen does and does not do, and the powders worth buying.</p>
+            </a>
+            <a href="/best-protein-powder-for-smoothies/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#FF4500] font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Protein Powder for Smoothies</h3>
+              <p class="text-gray-500 text-sm mt-2">The powders that blend best with fruit, and how to build a cheaper smoothie.</p>
+            </a>
+          </div>
+        </div>
+
+        <!-- Closing -->
+        <div class="mt-16 bg-gray-900 text-white rounded-2xl p-8">
+          <h2 class="text-2xl font-black text-white mb-4">The Bottom Line</h2>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            FlavCity's Protein Smoothies do what they promise: a real-ingredient, stevia-sweetened smoothie mix with grass-fed whey, collagen, fruit and coconut milk, about 25 g of protein per serving per the brand, and no added sugar. For people who want a ready-made breakfast shake and like the brand's approach, they are a pleasant product.
+          </p>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            As a protein powder, they are hard to recommend over the alternatives. You pay roughly two to three times as much per gram, part of the protein is collagen, there is no third-party testing, and you cannot reliably buy them on Amazon. A plain grass-fed whey and a banana get you most of the way there; compare the options in our <a href="/best-clean-protein-powder/">best clean protein powder</a> ranking.
+          </p>
+        </div>
+
+        <MoreInCategory category="Brand Reviews" links={moreInCategory} />
+
+        <AuthorBio />
+      </div>
+    </div>
+  </article>
+</Layout>

@@ -1,0 +1,929 @@
+---
+import Layout from "../layouts/Layout.astro";
+import MoreInCategory from "../components/MoreInCategory.astro";
+import { AUTHORS, DEFAULT_AUTHOR, authorSchema } from "../data/authors";
+import { SITE_NAME, SITE_URL } from "../data/site";
+import AuthorAvatar from "../components/AuthorAvatar.astro";
+import QuickPicks from "../components/QuickPicks.astro";
+import AuthorBio from "../components/AuthorBio.astro";
+import { amazonLink } from "../data/affiliate";
+import TrustBadge from "../components/TrustBadge.astro";
+import SocialProof from "../components/SocialProof.astro";
+import SpecGrid from "../components/SpecGrid.astro";
+import productImages from "../data/product-images.json";
+import { pageDates } from "../data/dates";
+
+const moreInCategory = [
+  {
+    "title": "Garden of Life Protein Powder Review",
+    "url": "/garden-of-life-protein-powder-review/"
+  },
+  {
+    "title": "Vega Protein Powder Review",
+    "url": "/vega-protein-powder-review/"
+  },
+  {
+    "title": "Truvani Protein Powder Review",
+    "url": "/truvani-protein-powder-review/"
+  }
+];
+const author = AUTHORS[DEFAULT_AUTHOR];
+const dates = pageDates(Astro.url.pathname, { published: "2026-10-19", modified: "2026-10-19" });
+const title = "Orgain Protein Powder Review: Which Tub to Buy, and the Lead Result to Know First";
+const description =
+  "Orgain protein powder from the label: the 21 g organic plant tub, the 30 g vegan, grass-fed whey and Simple compared on protein, sweeteners, lead and cost.";
+
+const PRODUCTS: {
+  id: string;
+  name: string;
+  brand?: string;
+  badge: string;
+  category: string;
+  description: string;
+  pros: string[];
+  cons: string[];
+  bottomLine: string;
+  specs?: Record<string, string>;
+  rating?: number;
+  reviewCount?: number;
+  amazonUrl?: string;
+}[] = [
+  {
+    "id": "orgain-organic-protein-plant-based",
+    "name": "Orgain Organic Protein Plant-Based Protein Powder",
+    "brand": "Orgain",
+    "badge": "Flagship Pick",
+    "category": "USDA Organic pea, brown rice and chia blend",
+    "description": "Orgain's best seller delivers about 21 g of protein for roughly 150 calories per two-scoop, 46 g serving, per the label at the time of writing, with under 1 g of sugar and 4 to 7 g of fiber depending on flavor. The blend is organic pea, brown rice and chia, with mung bean on some newer labels, plus a creamer base that makes it richer than plain pea isolates. It is cheap for a USDA Organic powder. Consumer Reports' 2025 testing put it at about 143% of its daily lead level of concern per serving, so we treat it as an occasional rather than twice-daily shake.",
+    "pros": [
+      "USDA Organic, vegan, gluten free and non-GMO per the label",
+      "Low cost per 25 g for an organic plant powder",
+      "Creamy texture that buyers rate well in smoothies",
+      "Widely sold, from Amazon to warehouse clubs"
+    ],
+    "cons": [
+      "Consumer Reports placed it in its occasional-use group for lead",
+      "Only about 21 g of protein in a 46 g serving",
+      "No sport certification we could confirm"
+    ],
+    "bottomLine": "The best-value organic smoothie protein on the shelf, best used a few times a week rather than every day.",
+    "amazonUrl": "https://www.amazon.com/dp/B00J074W7Q",
+    "specs": {
+      "Protein per serving": "About 21 g (label)",
+      "Calories": "About 150",
+      "Third-party testing": "USDA Organic; no sport certification",
+      "Best for": "Occasional smoothies"
+    }
+  },
+  {
+    "id": "orgain-organic-vegan-30g-protein",
+    "name": "Orgain Organic Vegan 30g Protein Powder (Sport)",
+    "brand": "Orgain",
+    "badge": "Best for Lifters",
+    "category": "USDA Organic plant protein, higher dose",
+    "description": "Sold as Orgain Sport at some grocery chains and as Organic Vegan 30g High Protein on Amazon, this is the Orgain plant powder for people who train. Retail listings show about 30 g of protein for roughly 200 to 210 calories per two-scoop serving, varying by flavor, with about 1 g of sugar. That dose clears the threshold most muscle-building research uses in a single serving, which the 21 g tub does not. It costs more calories and a little more per gram, and it carries no banned-substance certification we could confirm.",
+    "pros": [
+      "About 30 g of protein per serving per retail listings",
+      "Organic and vegan, like the flagship",
+      "Covers a post-workout dose without doubling scoops"
+    ],
+    "cons": [
+      "About 200 to 210 calories per serving",
+      "No sport certification we could confirm",
+      "Not covered by the Consumer Reports test, so no lead data either way"
+    ],
+    "bottomLine": "The Orgain to buy if you lift and want plant protein, as long as you are not drug tested.",
+    "amazonUrl": "https://www.amazon.com/dp/B085B58NB4",
+    "specs": {
+      "Protein per serving": "About 30 g (listing)",
+      "Calories": "About 200-210",
+      "Third-party testing": "No sport certification confirmed",
+      "Best for": "Vegan lifters, bulking"
+    }
+  },
+  {
+    "id": "orgain-grass-fed-whey-protein",
+    "name": "Orgain Grass-Fed Whey Protein Powder",
+    "brand": "Orgain",
+    "badge": "Best Dairy Option",
+    "category": "Grass-fed whey protein concentrate",
+    "description": "Orgain's dairy powder gives about 21 g of protein for roughly 140 calories per two-scoop serving, per the listing at the time of writing, from pasture-raised, grass-fed whey concentrate, with close to 5 g of naturally occurring BCAAs and about 3 g of prebiotic fiber. It is sweetened with stevia and erythritol and is gluten free and kosher. It is a better muscle-building protein than the plant tub at the same dose and fewer calories, but as a concentrate it keeps more lactose than an isolate.",
+    "pros": [
+      "About 21 g of protein for roughly 140 calories",
+      "Grass-fed whey with a short ingredient list",
+      "Fair cost per 25 g at typical discounted prices"
+    ],
+    "cons": [
+      "Concentrate, so not ideal if you are lactose intolerant",
+      "Contains erythritol, which some stomachs dislike"
+    ],
+    "bottomLine": "The better Orgain for anyone who eats dairy and wants lean protein rather than a vegan powder.",
+    "amazonUrl": "https://www.amazon.com/dp/B01AAFZYQY",
+    "specs": {
+      "Protein per serving": "About 21 g (label)",
+      "Calories": "About 140",
+      "Third-party testing": "No sport certification confirmed",
+      "Best for": "Dairy eaters, everyday shakes"
+    }
+  },
+  {
+    "id": "orgain-simple-plant-protein",
+    "name": "Orgain Simple Organic Plant Protein Powder",
+    "brand": "Orgain",
+    "badge": "Best Stevia-Free",
+    "category": "Organic plant blend sweetened with coconut sugar",
+    "description": "Orgain Simple trades stevia and erythritol for organic coconut sugar and a shorter ingredient list. Retail panels show about 20 g of protein for roughly 150 calories per two-scoop, 40 g serving, with about 5 g of added sugar. The blend is organic pea, peanut flour, pumpkin seed, almond protein and chia on current labels, so it contains peanuts and tree nuts. It suits readers who cannot stand stevia's aftertaste, and it costs more per gram of protein than the flagship because the tubs are smaller.",
+    "pros": [
+      "No stevia or sugar alcohols",
+      "Short, organic ingredient list",
+      "Nut-based blend tastes richer than pea alone, per buyer feedback"
+    ],
+    "cons": [
+      "About 5 g of added sugar per serving",
+      "Contains peanuts and tree nuts",
+      "Higher cost per 25 g than the flagship"
+    ],
+    "bottomLine": "A good fix for stevia haters, not for anyone with a nut allergy or a tight sugar budget.",
+    "specs": {
+      "Protein per serving": "About 20 g (label)",
+      "Calories": "About 150",
+      "Third-party testing": "No sport certification confirmed",
+      "Best for": "Stevia-free shakes"
+    }
+  },
+  {
+    "id": "garden-of-life-sport-organic-plant-based-protein",
+    "name": "Garden of Life Sport Organic Plant-Based Protein",
+    "brand": "Garden of Life",
+    "badge": "Alternative: Certified Organic Plant",
+    "category": "USDA Organic pea-based plant protein",
+    "description": "If you like the idea of Orgain but need a banned-substance certification, Garden of Life Sport is the obvious swap. It gives about 30 g of organic plant protein for roughly 170 calories per serving, per the label, and the brand says it is NSF Certified for Sport. It costs more per 25 g than the Orgain flagship, and like every plant protein it is not immune to soil-borne heavy metals, but the certification and higher dose make it the stronger choice for athletes.",
+    "pros": [
+      "About 30 g of protein per serving",
+      "NSF Certified for Sport, per the brand",
+      "USDA Organic and vegan"
+    ],
+    "cons": [
+      "Higher cost per 25 g than Orgain",
+      "More calories per serving than the Orgain flagship"
+    ],
+    "bottomLine": "The organic plant protein to buy instead of Orgain if you are tested or train hard.",
+    "amazonUrl": "https://www.amazon.com/dp/B01N7DTD98",
+    "specs": {
+      "Protein per serving": "About 30 g (label)",
+      "Calories": "About 170",
+      "Third-party testing": "NSF Certified for Sport (per brand)",
+      "Best for": "Tested athletes"
+    }
+  }
+];
+
+const schema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Home",
+          item: `${SITE_URL}/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Best Lists",
+          item: `${SITE_URL}/best-of/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 3,
+          name: "Orgain Protein Powder Review",
+          item: `${SITE_URL}/orgain-protein-powder-review/`,
+        },
+      ],
+    },
+    {
+      "@type": "FAQPage",
+      mainEntity: [
+        {
+          "@type": "Question",
+          "name": "Is Orgain protein powder good for you?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "For most healthy adults, yes, in moderation. The flagship gives about 21 g of organic plant protein for roughly 150 calories with under 1 g of sugar and useful fiber. The caveat is lead: Consumer Reports' 2025 testing put it above its daily level of concern per serving, so we suggest using it a few times a week rather than as a twice-daily staple."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does Orgain protein powder have lead?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Consumer Reports' October 2025 investigation measured Orgain Organic Plant-Based Protein Powder at about 143% of its 0.5 microgram daily level of concern for lead per serving and listed it as fine to have occasionally through the week. Lead in plant protein comes mainly from soil. Pregnant readers and parents should talk to a doctor before daily use."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How much protein is in Orgain protein powder?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The flagship Organic Protein Plant-Based and the Grass-Fed Whey each give about 21 g of protein per two-scoop serving, per the label. Orgain Simple gives about 20 g, and the organic vegan 30g powder, sold as Orgain Sport at some stores, gives about 30 g. Figures vary slightly by flavor, so check the panel on your tub."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is Orgain protein good for building muscle?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It can help, but the 21 g serving is on the low side for a post-workout dose, and plant protein has less leucine per gram than whey. Lifters should choose the 30 g vegan powder, the Grass-Fed Whey with a little extra milk, or a higher-dose whey isolate. Total daily protein matters more than any single shake."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does Orgain protein powder contain erythritol?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Some flavors do. Retail ingredient lists for several plant-based flavors and the Grass-Fed Whey include organic erythritol alongside stevia, while a newer vanilla bean plant listing is marketed as erythritol free. Orgain says erythritol is always listed when present, so the ingredient panel on the specific tub you buy is the reliable answer."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is Orgain third-party tested?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Orgain's organic and plant-based claims are verified by third parties, and the organic tubs carry the USDA Organic seal. We could not confirm NSF Certified for Sport or Informed Sport status for any Orgain powder at the time of writing, so drug-tested athletes should choose a powder that appears in one of those certification databases."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Who owns Orgain?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Orgain was founded by physician Dr. Andrew Abraham. In February 2022 Nestl&eacute; Health Science agreed to buy a majority stake from Dr. Abraham and investment firm Butterfly Equity, who kept minority stakes, with Dr. Abraham remaining chief executive. Nestl&eacute; Health Science also owns Garden of Life and Vital Proteins, among other nutrition brands."
+          }
+        }
+      ],
+    },
+    {
+      "@type": "Article",
+      headline: title,
+      author: authorSchema(),
+      datePublished: dates.published,
+      dateModified: dates.modified,
+      publisher: { "@type": "Organization", name: SITE_NAME, url: SITE_URL },
+    },
+    {
+      "@type": "ItemList",
+      name: title,
+      numberOfItems: PRODUCTS.length,
+      itemListElement: PRODUCTS.map((product, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name: product.name,
+        url: new URL(`#${product.id}`, Astro.url).toString(),
+      })),
+    },
+    ...PRODUCTS.map((product) => ({
+      "@type": "Product",
+      name: product.name,
+      description: product.description,
+      brand: {
+        "@type": "Brand",
+        name: product.brand ?? product.name.split(" ")[0],
+      },
+    })),
+  ],
+};
+---
+
+<Layout
+  title={title}
+  description={description}
+  ogType="article"
+  article={{
+    publishedTime: dates.published,
+    modifiedTime: dates.modified,
+    author: author.name,
+    section: "Brand Reviews",
+    tags: [
+      "orgain protein powder",
+      "orgain organic protein powder",
+      "orgain protein review",
+      "orgain plant protein"
+    ],
+  }}
+  jsonLd={schema}
+  stickyCta={{
+    text: "See Our Top Organic Protein Picks",
+    link: "/best-organic-protein-powder/",
+  }}
+>
+  <article class="relative overflow-hidden">
+    <!-- Hero Section -->
+    <div class="bg-gray-900 py-16 lg:py-24 relative overflow-hidden">
+      <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(circle at 20% 20%, #38BDF8 0, transparent 45%), radial-gradient(circle at 80% 60%, #FF4500 0, transparent 40%);"></div>
+      <div class="max-w-4xl mx-auto px-4 relative z-10 text-center">
+        <div class="flex justify-center mb-6">
+          <TrustBadge />
+        </div>
+        <div class="flex justify-center gap-3 mb-6">
+          <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#FF4500]/20 text-[#FF4500] text-xs font-black uppercase tracking-widest border border-[#FF4500]/30">
+            Brand Review
+          </span>
+          <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-green-500/10 text-green-400 text-xs font-bold uppercase tracking-widest border border-green-500/20">
+            Label-Checked
+          </span>
+        </div>
+        <h1 class="text-4xl lg:text-6xl font-black text-white leading-tight mb-8">
+          Orgain <span class="text-[#38BDF8]">Protein Powder</span> Review
+        </h1>
+        <p class="text-xl text-gray-300 leading-relaxed mb-8 max-w-3xl mx-auto">
+          The supermarket's best-known organic protein, read off the label: what each Orgain tub gives you per scoop, what it costs per 25 g of protein, and what Consumer Reports found when it tested the flagship for lead.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a
+            href="#orgain-organic-protein-plant-based"
+            class="px-8 py-4 bg-[#FF4500] hover:bg-[#E63E00] text-white font-black rounded-xl shadow-lg transition-all no-underline"
+          >
+            See Our #1 Pick
+          </a>
+          <a
+            href="#plant-vs-whey"
+            class="px-8 py-4 bg-white/10 hover:bg-white/20 text-white font-bold rounded-xl border border-white/10 no-underline"
+          >
+            Compare the Range
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Author & Meta -->
+    <div class="max-w-3xl mx-auto px-4 pt-12">
+      <div class="flex items-center gap-6 border-b border-gray-100 pb-8">
+        <div class="flex items-center gap-3">
+          <AuthorAvatar size={48} />
+          <div>
+            <p class="text-sm font-bold text-gray-900">{author.name}</p>
+            <p class="text-xs text-gray-500 uppercase tracking-widest">{author.role}</p>
+          </div>
+        </div>
+        <div class="h-10 w-px bg-gray-200 hidden sm:block"></div>
+        <div class="hidden sm:block">
+          <p class="text-sm font-bold text-gray-900">Last Updated</p>
+          <p class="text-xs text-gray-500">{dates.display}</p>
+        </div>
+        <div class="hidden sm:block ml-auto">
+          <SocialProof />
+        </div>
+      </div>
+    </div>
+
+    <!-- Table of Contents -->
+    <div class="max-w-3xl mx-auto px-4 py-10">
+      <div class="bg-gray-50 border border-gray-200 rounded-2xl p-6 lg:p-8">
+        <h2 class="text-lg font-black text-gray-900 mb-4 flex items-center gap-2">
+          In This Guide
+        </h2>
+        <nav class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <a href="#verdict" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">1. The Short Verdict</a>
+          <a href="#the-brand" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">2. Who Makes Orgain</a>
+          <a href="#range-compared" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">3. The Range Side by Side</a>
+          <a href="#top-picks" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">4. Our Top Picks</a>
+          <a href="#plant-vs-whey" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">5. Plant-Based vs Grass-Fed Whey</a>
+          <a href="#cost-per-25g" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">6. Cost per 25 g of Protein</a>
+          <a href="#lead-testing" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">7. The Lead Result</a>
+          <a href="#sweeteners" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">8. Sweeteners, Fiber and Digestion</a>
+          <a href="#who-should-skip" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">9. Who Should Skip It</a>
+          <a href="#how-to-use" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">10. Matching the Tub to Your Goal</a>
+          <a href="#mistakes" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">11. Common Mistakes</a>
+          <a href="#faq" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">12. FAQ</a>
+        </nav>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="max-w-3xl mx-auto px-4 pb-16 lg:pb-24">
+      <div class="prose prose-lg prose-blue max-w-none text-gray-700 leading-relaxed">
+        <p class="text-2xl font-medium text-gray-900 mb-8 italic">
+          Orgain is the protein powder most people meet first, because it sits on the shelf at Target, Sam's Club and the grocery store as well as on Amazon. The flagship Organic Protein Plant-Based gives you about 21 g of protein for roughly 150 calories, it is USDA Organic, and it costs less per gram than most organic rivals. It is a sensible everyday smoothie powder. It is not a lifter's powder, it carries no sport certification we could confirm, and Consumer Reports' 2025 lead testing put it above its daily level of concern, so it belongs in the occasional rather than the twice-a-day column.
+        </p>
+
+        <QuickPicks products={PRODUCTS} />
+
+        <div id="verdict" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            1. The Short Verdict
+          </h2>
+
+          <p>
+            Orgain is good at one thing: an organic, plant-based protein powder that tastes sweet enough to drink, mixes into a smoothie without much fuss and costs less than most organic competitors. If that is what you want, the flagship <strong>Organic Protein Plant-Based</strong> tub is a reasonable buy. About 21 g of protein for roughly 150 calories, per the label at the time of writing, from a blend of organic pea, brown rice and chia, with under 1 g of sugar.
+          </p>
+
+          <p>
+            It is weaker on the things serious lifters and tested athletes care about. Twenty-one grams is on the low side for a two-scoop serving, the protein share by weight is under half because fiber, fat and a creamer base take up room, and we could not confirm NSF Certified for Sport or Informed Sport status for any Orgain powder. If you get drug tested, buy a certified product instead.
+          </p>
+
+          <p>
+            The bigger caveat is lead. In its October 2025 protein investigation, Consumer Reports measured Orgain Organic Plant-Based Protein Powder at about 143% of its daily level of concern for lead per serving and grouped it with products it said were fine to have occasionally through the week, not every day. That does not make the tub dangerous. It does change how often we would drink it, and we cover the numbers in full below.
+          </p>
+
+          <p>
+            So our verdict splits by reader. For a casual smoothie drinker who wants organic, Orgain is fine and good value. For a heavy daily user, especially someone having two shakes a day, the grass-fed whey or a certified organic plant powder is the better primary protein. Pregnant readers and parents buying for children should read the lead section before buying any plant protein, Orgain included.
+          </p>
+
+          <div class="bg-gray-900 text-white rounded-2xl p-6 lg:p-8 my-8">
+            <p class="text-xs font-black uppercase tracking-widest text-[#38BDF8] mb-3">THE ONE-LINE ANSWER</p>
+            <p class="text-xl font-bold text-white mb-3">Good value organic smoothie protein, not an everyday staple</p>
+            <p class="text-gray-300 leading-relaxed m-0">Buy the 21 g Organic Protein Plant-Based for occasional smoothies, the Grass-Fed Whey if you want more protein per calorie, and a sport-certified powder if you are tested.</p>
+          </div>
+        </div>
+
+        <div id="the-brand" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            2. Who Makes Orgain
+          </h2>
+
+          <p>
+            Orgain was founded by Dr. Andrew Abraham, a physician who has told the brand's origin story many times: he built the first shakes while recovering from cancer treatment because he could not find a clean nutrition drink he wanted to use. The company started with ready-to-drink shakes and grew into one of the largest organic protein powder brands in the United States.
+          </p>
+
+          <p>
+            In February 2022 Nestl&eacute; Health Science agreed to buy a majority stake in Orgain from Dr. Abraham and the investment firm Butterfly Equity, both of whom kept minority positions, with Dr. Abraham staying on as chief executive. That puts Orgain inside one of the biggest nutrition companies in the world, alongside brands such as Garden of Life and Vital Proteins that Nestl&eacute; Health Science also owns.
+          </p>
+
+          <p>
+            Big-company ownership cuts both ways. It is why Orgain is in almost every supermarket and why prices stay competitive, and it usually means mature manufacturing and quality systems. It also means the range is built for mass appeal: sweet flavors, gentle textures and serving sizes that suit a smoothie more than a post-workout shake. Orgain's own pitch is organic, plant-based and clean, not performance.
+          </p>
+
+          <p>
+            The label claims are consistent across the core range: USDA Organic for the organic lines, vegan for the plant powders, gluten free and non-GMO. Retail listings for the plant-based tub also mention kosher status and certified plant-based verification. What you will not find on the tub is a banned-substance certification, which is the single biggest gap if you compete in a tested sport.
+          </p>
+        </div>
+
+        <div id="range-compared" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            3. The Range Side by Side
+          </h2>
+
+          <p>
+            Orgain sells more protein powders than most shoppers realise, and the names are close enough to cause confusion. The four that matter are the flagship 21 g Organic Protein Plant-Based, a higher-dose 30 g organic vegan powder sold as Orgain Sport at some retailers, a Grass-Fed Whey made from cow's milk, and Orgain Simple, a shorter-ingredient plant powder sweetened with coconut sugar. There are also Superfoods and oat milk variants of the flagship.
+          </p>
+
+          <div class="overflow-hidden border border-gray-200 rounded-2xl my-8">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Powder</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Protein (label)</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Calories</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Protein source</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Sweetener</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Organic Protein Plant-Based</td>
+                    <td class="px-4 py-4 text-gray-700">About 21 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 150</td>
+                    <td class="px-4 py-4 text-gray-700">Organic pea, brown rice, chia</td>
+                    <td class="px-4 py-4 text-gray-700">Stevia; erythritol in some flavors</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Organic Vegan 30g (Sport)</td>
+                    <td class="px-4 py-4 text-gray-700">About 30 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 200-210</td>
+                    <td class="px-4 py-4 text-gray-700">Organic plant blend</td>
+                    <td class="px-4 py-4 text-gray-700">Check flavor</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Grass-Fed Whey</td>
+                    <td class="px-4 py-4 text-gray-700">About 21 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 140</td>
+                    <td class="px-4 py-4 text-gray-700">Grass-fed whey concentrate</td>
+                    <td class="px-4 py-4 text-gray-700">Stevia, erythritol</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Simple Plant Protein</td>
+                    <td class="px-4 py-4 text-gray-700">About 20 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 150</td>
+                    <td class="px-4 py-4 text-gray-700">Pea, peanut, pumpkin, almond, chia</td>
+                    <td class="px-4 py-4 text-gray-700">Coconut sugar</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <p>
+            The pattern is simple. Three of the four land at 20 to 21 g of protein per two-scoop serving, which is a moderate dose; most whey isolates give 25 g in a single scoop. Only the 30 g vegan powder reaches a dose that comfortably covers the roughly 2.5 to 3 g of leucine that research links to a strong muscle-building response, and it does that by doubling up on serving size and calories.
+          </p>
+
+          <p>
+            The flagship's 46 g serving is worth a second look. With 21 g of protein inside 46 g of powder, protein is under half of what you scoop. The rest is fiber, which ranges from about 4 g to 7 g depending on flavor, plus a creamer base of acacia, sunflower oil and rice dextrin, and about 4 g of fat. That is why it tastes richer than a plain pea isolate, and why it is not the leanest protein per calorie.
+          </p>
+
+          <p>
+            Orgain Simple is the odd one out. It swaps stevia and erythritol for organic coconut sugar, which adds about 5 g of added sugar per serving, and its blend includes peanut flour and almond protein, so it contains peanuts and tree nuts. It suits someone who dislikes stevia aftertaste and does not mind a little real sugar. It does not suit anyone with a nut allergy.
+          </p>
+        </div>
+
+        <!-- Picks -->
+        <div id="top-picks" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            4. The Orgain Powders, Ranked
+          </h2>
+
+          <p>
+            We ranked the four Orgain powders most buyers choose between on protein per serving, cost per 25 g, ingredient list and how well each fits its intended job, then added one clearly labelled alternative from another brand for readers who want a sport-certified organic plant protein. All figures are per the label or retailer listing at the time of writing and vary by flavor, so check the tub you buy.
+          </p>
+
+          {PRODUCTS.map((product, index) => (
+            <div id={product.id} class="scroll-mt-24 mt-12 first:mt-8">
+              <div class="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                <div class="bg-gray-900 px-6 py-4 flex items-center justify-between">
+                  <div class="flex items-center gap-3">
+                    <span class="bg-[#FF4500] text-white w-8 h-8 rounded-full flex items-center justify-center text-sm font-black">
+                      {index + 1}
+                    </span>
+                    {productImages[product.id] && (
+                      <img
+                        src={productImages[product.id]}
+                        alt={product.name}
+                        loading="lazy"
+                        width="40"
+                        height="40"
+                        class="w-10 h-10 rounded-lg bg-white object-contain p-1 shrink-0"
+                      />
+                    )}
+                    <div>
+                      <p class="text-white font-black text-lg">{product.name}</p>
+                      <p class="text-gray-400 text-xs">{product.category}</p>
+                    </div>
+                  </div>
+                  <span class="bg-[#38BDF8]/20 text-[#38BDF8] px-3 py-1 rounded-full text-xs font-bold hidden sm:block">
+                    {product.badge}
+                  </span>
+                </div>
+                <div class="p-6">
+                  {product.rating && (
+                  <div class="flex items-center gap-2 mb-4">
+                    <div class="flex text-yellow-400">
+                      {[...Array(5)].map((_, i) => (
+                        <svg
+                          class={`w-4 h-4 ${i < Math.floor(product.rating) ? "fill-current" : "text-gray-200"}`}
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                        >
+                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        </svg>
+                      ))}
+                    </div>
+                    <span class="text-gray-500 text-sm font-bold">{product.rating}</span>
+                    {product.reviewCount && <span class="text-gray-400 text-xs">({product.reviewCount.toLocaleString()} retailer reviews)</span>}
+                  </div>
+                  )}
+
+                  <SpecGrid specs={product.specs} />
+
+                  <p class="text-gray-700 leading-relaxed mb-6">{product.description}</p>
+
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                    <div class="bg-green-50 rounded-xl p-4">
+                      <p class="text-xs font-black uppercase tracking-widest text-green-700 mb-3">Pros</p>
+                      <ul class="space-y-2">
+                        {product.pros.map((pro) => (
+                          <li class="flex items-start gap-2 text-sm text-green-800">
+                            <svg class="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            {pro}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div class="bg-red-50 rounded-xl p-4">
+                      <p class="text-xs font-black uppercase tracking-widest text-red-700 mb-3">Cons</p>
+                      <ul class="space-y-2">
+                        {product.cons.map((con) => (
+                          <li class="flex items-start gap-2 text-sm text-red-800">
+                            <svg class="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                            {con}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+
+                  <div class="bg-gray-50 rounded-xl p-4 border border-gray-100">
+                    <p class="text-xs font-black uppercase tracking-widest text-gray-500 mb-1">The Bottom Line</p>
+                    <p class="text-gray-900 font-bold">{product.bottomLine}</p>
+                  </div>
+
+                  <a
+                    href={amazonLink(product.amazonUrl, product.name, product.id)}
+                    target="_blank"
+                    rel="sponsored nofollow noopener"
+                    class="mt-6 block bg-[#FF4500] hover:bg-[#E63E00] text-white text-center py-4 rounded-xl font-black no-underline transition-colors uppercase tracking-widest text-sm"
+                  >
+                    Check Price &rarr;
+                  </a>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div id="plant-vs-whey" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            5. Plant-Based vs Grass-Fed Whey
+          </h2>
+
+          <p>
+            If you are not vegan and you are choosing between Orgain's two 21 g powders, the Grass-Fed Whey is the stronger protein on paper. It gives about 21 g of protein for roughly 140 calories, and the listing claims close to 5 g of naturally occurring BCAAs per serving. Whey is a complete, fast-digesting dairy protein with more leucine per gram than a pea and rice blend, so the same 21 g does a little more for muscle repair.
+          </p>
+
+          <p>
+            The whey is a concentrate rather than an isolate, which matters if you are lactose intolerant. Concentrates keep more of milk's lactose and fat than isolates, so sensitive stomachs may do better with a true isolate such as those in our <a href="/best-whey-protein-isolate/">whey isolate guide</a>. Orgain's whey is gluten free and kosher per the listing, and is sweetened with stevia and erythritol.
+          </p>
+
+          <p>
+            The plant tub wins on dietary fit and fiber. It is dairy free and vegan, it carries 4 to 7 g of fiber per serving depending on flavor, and its pea, brown rice and chia blend is designed to cover all nine essential amino acids. Pea and rice complement each other: pea is low in methionine, rice is low in lysine, and together they make a more complete protein than either alone.
+          </p>
+
+          <p>
+            There is a lead angle here too. Plant proteins grow in soil and tend to carry more lead than dairy proteins, which is consistent with the Orgain plant tub's result in Consumer Reports' testing. If you are choosing purely on lowest contaminant exposure, a dairy protein is the safer default. If you are vegan, choosing a plant powder with published heavy-metal results is the better route, and our <a href="/best-organic-protein-powder/">organic protein powder guide</a> compares the certified options.
+          </p>
+        </div>
+
+        <div id="cost-per-25g" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            6. Cost per 25 g of Protein
+          </h2>
+
+          <p>
+            Price per tub is a poor way to compare protein powders, because tubs hold different serving counts and each serving holds a different dose. We compare cost per 25 g of protein instead: the price of the tub, divided by total grams of protein in it, multiplied by 25. Prices move constantly, so treat the figures here as approximate ranges at typical retail and subscribe prices at the time of writing.
+          </p>
+
+          <p>
+            The flagship plant tub is where Orgain is strongest. A 2.03 lb tub holds about 20 servings of 21 g, and at its usual price range on Amazon and at warehouse clubs it works out to roughly $1.40 to $2.00 per 25 g of protein. That is cheap for a USDA Organic plant powder; many organic rivals sit well above $2. The larger 2.74 lb club-size tubs bring the cost down further.
+          </p>
+
+          <p>
+            Grass-Fed Whey usually lands in a similar band. A 1.82 lb tub holds about 20 servings, and at the discounted prices we saw it works out to roughly $1.50 to $2.20 per 25 g. That is not bargain-bin whey money, but it is fair for grass-fed whey with a short label. The 30 g vegan powder and Simple tend to cost a little more per gram of protein, Simple especially, because its tubs are smaller.
+          </p>
+
+          <div class="bg-gray-900 text-white rounded-2xl p-6 lg:p-8 my-8">
+            <p class="text-xs font-black uppercase tracking-widest text-[#38BDF8] mb-4">Approximate Cost per 25 g</p>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+              <div>
+                <p class="text-3xl font-black text-white">$1.40-2.00</p>
+                <p class="text-gray-400 text-xs mt-1">Organic Plant-Based (2.03 lb)</p>
+              </div>
+              <div>
+                <p class="text-3xl font-black text-[#38BDF8]">$1.50-2.20</p>
+                <p class="text-gray-400 text-xs mt-1">Grass-Fed Whey (1.82 lb)</p>
+              </div>
+              <div>
+                <p class="text-3xl font-black text-white">Higher</p>
+                <p class="text-gray-400 text-xs mt-1">Simple, per gram</p>
+              </div>
+              <div>
+                <p class="text-3xl font-black text-[#38BDF8]">20</p>
+                <p class="text-gray-400 text-xs mt-1">Servings in a 2.03 lb tub</p>
+              </div>
+            </div>
+          </div>
+
+          <p>
+            One wrinkle: because the plant tub's serving is 21 g, you need about 1.2 servings to reach 25 g, which means a tub lasts fewer shakes than its label suggests if you dose to a muscle-building target. Do the math on grams of protein, not scoops. Our <a href="/protein-calculator/">protein calculator</a> will tell you how much you actually need per day.
+          </p>
+        </div>
+
+        <div id="lead-testing" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            7. The Lead Result
+          </h2>
+
+          <p>
+            In October 2025 Consumer Reports published lead test results for 23 protein powders and ready-to-drink shakes from popular brands. It judged each product against a level of concern of 0.5 micrograms of lead per day, a conservative threshold set well below levels known to cause harm, and sorted products into those it was comfortable with daily, those it said were fine occasionally, and those to avoid.
+          </p>
+
+          <p>
+            Orgain Organic Plant-Based Protein Powder came in at about 143% of that level of concern per serving and was placed in the occasional group, alongside products such as Vega Premium Sport and Equip Prime Protein. In plain terms, one serving delivered a little more lead than CR thinks is ideal for a whole day. Having it a few times a week keeps your weekly average under CR's threshold; having it twice a day does not.
+          </p>
+
+          <p>
+            Context matters. CR's level of concern is deliberately cautious, protein powder is not the only dietary source of lead, and a single lab test reflects the lots CR bought, not every tub ever made. Lead in plant proteins comes mostly from soil, not from careless manufacturing, which is why rice, pea and cacao-based powders tend to score worse across the whole category. Still, the result is real and it applies to Orgain's best-selling powder.
+          </p>
+
+          <p>
+            Our practical advice: if Orgain plant protein is your occasional smoothie powder, keep using it. If you rely on protein shakes daily, use a dairy protein or a plant powder that publishes heavy-metal results as your main source, and keep Orgain for variety. Pregnant readers and children are the groups CR's thresholds exist to protect, so talk to your doctor or a registered dietitian before making any plant protein a daily habit. For the bigger picture, see our guide on <a href="/is-protein-powder-safe/">whether protein powder is safe</a>.
+          </p>
+        </div>
+
+        <div id="sweeteners" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            8. Sweeteners, Fiber and Digestion
+          </h2>
+
+          <p>
+            Orgain's flavored powders are sweetened mainly with organic stevia extract, listed as Reb A on recent labels. Several retailer ingredient lists for the plant tub and the whey also include organic erythritol, a sugar alcohol, while a newer vanilla bean listing for the plant tub is marketed as erythritol free. Orgain has told customers that erythritol will always be listed in the ingredients when present, so read the panel on the tub you actually buy.
+          </p>
+
+          <p>
+            That matters for two reasons. Some people find erythritol causes gas or loose stools in larger amounts, and some readers prefer to avoid it after a 2023 study linked high blood erythritol levels to cardiovascular events. That research is observational and debated, and it does not prove a scoop of protein is harmful, but it is a fair reason to pick an erythritol-free flavor if you care.
+          </p>
+
+          <p>
+            Fiber is the other digestive variable. The plant tub's 4 to 7 g per serving comes partly from organic acacia and, in some flavors, agave inulin. Inulin feeds gut bacteria, which is good for most people, but it is a common trigger for bloating in people with IBS or a sensitivity to FODMAPs. If plant protein shakes leave you bloated, the inulin and the sugar alcohol are the first suspects, not the pea protein.
+          </p>
+
+          <p>
+            On taste, buyer feedback is broadly positive for a plant powder: reviewers describe Orgain as creamy and less chalky than plain pea isolates, with chocolate fudge and vanilla bean the most popular flavors. The common complaint is a stevia aftertaste, which is why Simple, with coconut sugar instead, exists. Iced coffee flavor contains about 60 mg of caffeine per serving per the label, so skip it in the evening.
+          </p>
+        </div>
+
+        <div id="who-should-skip" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            9. Who Should Skip It
+          </h2>
+
+          <p>
+            Skip Orgain if you are a drug-tested athlete. We could not confirm an NSF Certified for Sport or Informed Sport listing for any Orgain powder, and a protein powder without banned-substance certification is a risk you do not need to take. A certified organic plant protein such as Garden of Life Sport, which the brand says is NSF Certified for Sport, solves that; our <a href="/garden-of-life-protein-powder-review/">Garden of Life review</a> covers it in depth.
+          </p>
+
+          <p>
+            Skip the plant tub as a primary protein if you drink two or more shakes a day, for the lead reasons above. At that volume your daily lead intake from protein alone would sit well above Consumer Reports' level of concern. Rotating in a dairy protein, or a plant protein with published heavy-metal testing, is the simple fix.
+          </p>
+
+          <p>
+            Skip Orgain if you want the most protein per calorie. At about 21 g for 150 calories, the flagship gives roughly 14 g of protein per 100 calories; a good whey isolate gives 22 to 25 g per 100 calories. If you are dieting and counting every calorie, an isolate stretches further. If you are bulking, the extra calories are not a problem, but you will want the 30 g powder or two servings.
+          </p>
+
+          <p>
+            Finally, skip Simple if you have a peanut or tree nut allergy, and skip any flavor with erythritol or inulin if those ingredients upset your stomach. Readers with kidney disease, or anyone on a protein-restricted diet, should get a target from their doctor before adding any protein powder. Other plant-first brands worth comparing are covered in our <a href="/vega-protein-powder-review/">Vega review</a> and <a href="/truvani-protein-powder-review/">Truvani review</a>.
+          </p>
+        </div>
+
+        <div id="how-to-use" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            10. Matching the Tub to Your Goal
+          </h2>
+
+          <p>
+            <strong>For smoothies and general health:</strong> the 21 g Organic Protein Plant-Based is the default. Blend one serving with frozen fruit, a handful of spinach and milk or a plant milk, and the fiber and creamer base give you a thick shake that keeps you full. If you add a dairy milk, you will push the protein past 25 g without needing a second scoop.
+          </p>
+
+          <p>
+            <strong>For building muscle on a vegan diet:</strong> the 30 g organic vegan powder is the better Orgain pick, because a single serving clears the protein dose most research uses for post-workout recovery. It costs more calories, about 200 to 210 per serving, so it suits lifters and active people more than dieters. Pair it with a daily protein target rather than relying on shakes alone.
+          </p>
+
+          <p>
+            <strong>For lean protein if you eat dairy:</strong> the Grass-Fed Whey. It gives the same 21 g as the plant tub for fewer calories, it digests fast after training, and dairy proteins have tested lower for lead than plant proteins across the category. If lactose bothers you, move to a whey isolate instead.
+          </p>
+
+          <p>
+            <strong>For short labels and no stevia:</strong> Orgain Simple, as long as you are fine with about 5 g of added coconut sugar and have no nut allergy. Whichever tub you choose, use it as a top-up to real food, not a replacement. Most adults hit their protein target more cheaply from eggs, dairy, beans, fish and meat, with a shake filling the gap on busy days.
+          </p>
+        </div>
+
+        <!-- Common Mistakes -->
+        <div id="mistakes" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            11. Common Mistakes to Avoid
+          </h2>
+
+          <div class="space-y-6 my-8">
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Counting scoops instead of grams</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Orgain's flagship serving is two scoops and about 21 g of protein, not 25 g. If you are dosing for muscle repair after training, you need a little more than one serving, and a tub lasts fewer shakes than the label count suggests. Plan your intake in grams of protein, then work back to scoops.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Drinking the plant tub twice a day</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Consumer Reports measured the Orgain plant powder at about 143% of its daily lead level of concern per serving. One shake a few times a week stays within its weekly guidance; two shakes daily does not. Heavy users should rotate in a dairy protein or a plant powder with published heavy-metal results.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Assuming organic means tested</h3>
+              <p class="text-gray-700 text-sm m-0">
+                USDA Organic certifies how ingredients are grown and handled. It says nothing about banned substances, and it does not cap heavy metals, which come from soil. If you compete in a tested sport, look for NSF Certified for Sport or Informed Sport instead, which Orgain powders do not carry as far as we could confirm.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Ignoring the sweetener panel</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Orgain uses stevia across most flavors, and erythritol appears in some flavors and not others. Inulin fiber shows up in some plant tubs too. If shakes bloat you or give you gas, compare ingredient panels between flavors before blaming the protein itself, and try an erythritol-free flavor first.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Buying Simple with a nut allergy</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Orgain Simple's current blend includes peanut flour and almond protein, and its label lists peanuts and tree nuts as allergens. It sits next to the nut-free flagship on the shelf in similar packaging. If anyone in the house has a nut allergy, check the allergen line every time you buy.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ -->
+        <div id="faq" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            12. Frequently Asked Questions
+          </h2>
+
+          <div class="space-y-6">
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is Orgain protein powder good for you?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                For most healthy adults, yes, in moderation. The flagship gives about 21 g of organic plant protein for roughly 150 calories with under 1 g of sugar and useful fiber. The caveat is lead: Consumer Reports' 2025 testing put it above its daily level of concern per serving, so we suggest using it a few times a week rather than as a twice-daily staple.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Does Orgain protein powder have lead?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Consumer Reports' October 2025 investigation measured Orgain Organic Plant-Based Protein Powder at about 143% of its 0.5 microgram daily level of concern for lead per serving and listed it as fine to have occasionally through the week. Lead in plant protein comes mainly from soil. Pregnant readers and parents should talk to a doctor before daily use.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">How much protein is in Orgain protein powder?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                The flagship Organic Protein Plant-Based and the Grass-Fed Whey each give about 21 g of protein per two-scoop serving, per the label. Orgain Simple gives about 20 g, and the organic vegan 30g powder, sold as Orgain Sport at some stores, gives about 30 g. Figures vary slightly by flavor, so check the panel on your tub.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is Orgain protein good for building muscle?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                It can help, but the 21 g serving is on the low side for a post-workout dose, and plant protein has less leucine per gram than whey. Lifters should choose the 30 g vegan powder, the Grass-Fed Whey with a little extra milk, or a higher-dose whey isolate. Total daily protein matters more than any single shake.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Does Orgain protein powder contain erythritol?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Some flavors do. Retail ingredient lists for several plant-based flavors and the Grass-Fed Whey include organic erythritol alongside stevia, while a newer vanilla bean plant listing is marketed as erythritol free. Orgain says erythritol is always listed when present, so the ingredient panel on the specific tub you buy is the reliable answer.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is Orgain third-party tested?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Orgain's organic and plant-based claims are verified by third parties, and the organic tubs carry the USDA Organic seal. We could not confirm NSF Certified for Sport or Informed Sport status for any Orgain powder at the time of writing, so drug-tested athletes should choose a powder that appears in one of those certification databases.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Who owns Orgain?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Orgain was founded by physician Dr. Andrew Abraham. In February 2022 Nestl&eacute; Health Science agreed to buy a majority stake from Dr. Abraham and investment firm Butterfly Equity, who kept minority stakes, with Dr. Abraham remaining chief executive. Nestl&eacute; Health Science also owns Garden of Life and Vital Proteins, among other nutrition brands.
+              </p>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Related Guides -->
+        <div class="mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">Related Organic Protein Guides</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <a href="/best-organic-protein-powder/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#FF4500] font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Organic Protein Powder</h3>
+              <p class="text-gray-500 text-sm mt-2">Our ranking of USDA Organic whey and plant powders on dose, testing and cost per 25 g.</p>
+            </a>
+            <a href="/garden-of-life-protein-powder-review/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#38BDF8] font-black text-xs uppercase tracking-widest mb-2">Brand Review</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Garden of Life Protein Powder Review</h3>
+              <p class="text-gray-500 text-sm mt-2">The certified organic plant alternative, checked flavor by flavor.</p>
+            </a>
+            <a href="/best-plant-based-protein-powder/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#FF4500] font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Plant-Based Protein Powder</h3>
+              <p class="text-gray-500 text-sm mt-2">Vegan powders compared on amino acids, taste and heavy-metal testing.</p>
+            </a>
+          </div>
+        </div>
+
+        <!-- Closing -->
+        <div class="mt-16 bg-gray-900 text-white rounded-2xl p-8">
+          <h2 class="text-2xl font-black text-white mb-4">The Bottom Line</h2>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            Orgain earns its place on the shelf as an affordable, organic, good-tasting plant protein. The 21 g Organic Protein Plant-Based is the right tub for occasional smoothies, the Grass-Fed Whey is the better daily protein if you eat dairy, the 30 g vegan powder suits lifters who want plant protein, and Simple suits people who cannot stand stevia.
+          </p>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            Where Orgain falls short is certification and contaminant data. With no banned-substance seal and a Consumer Reports lead result above its daily level of concern, the flagship works best as one protein in your rotation rather than the only one. If you want a certified organic option, start with our <a href="/best-organic-protein-powder/">best organic protein powder</a> ranking.
+          </p>
+        </div>
+
+        <MoreInCategory category="Brand Reviews" links={moreInCategory} />
+
+        <AuthorBio />
+      </div>
+    </div>
+  </article>
+</Layout>

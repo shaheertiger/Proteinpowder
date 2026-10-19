@@ -1,0 +1,903 @@
+---
+import Layout from "../layouts/Layout.astro";
+import MoreInCategory from "../components/MoreInCategory.astro";
+import { AUTHORS, DEFAULT_AUTHOR, authorSchema } from "../data/authors";
+import { SITE_NAME, SITE_URL } from "../data/site";
+import AuthorAvatar from "../components/AuthorAvatar.astro";
+import QuickPicks from "../components/QuickPicks.astro";
+import AuthorBio from "../components/AuthorBio.astro";
+import { amazonLink } from "../data/affiliate";
+import TrustBadge from "../components/TrustBadge.astro";
+import SocialProof from "../components/SocialProof.astro";
+import SpecGrid from "../components/SpecGrid.astro";
+import productImages from "../data/product-images.json";
+import { pageDates } from "../data/dates";
+
+const moreInCategory = [
+  {
+    "title": "Best Plant-Based Protein Powder",
+    "url": "/best-plant-based-protein-powder/"
+  },
+  {
+    "title": "Orgain Protein Powder Review",
+    "url": "/orgain-protein-powder-review/"
+  },
+  {
+    "title": "Whey vs Plant Protein",
+    "url": "/whey-vs-plant-protein/"
+  }
+];
+const author = AUTHORS[DEFAULT_AUTHOR];
+const dates = pageDates(Astro.url.pathname, { published: "2026-10-19", modified: "2026-10-19" });
+const title = "Ka'Chava Protein Powder Review: Meal Shake or Overpriced Protein?";
+const description =
+  "Our Ka'Chava review reads the label, not the hype: 25 g of plant protein, 240 calories, about $4 to $4.70 a shake, and who should buy cheaper protein instead.";
+
+const PRODUCTS: {
+  id: string;
+  name: string;
+  brand?: string;
+  badge: string;
+  category: string;
+  description: string;
+  pros: string[];
+  cons: string[];
+  bottomLine: string;
+  specs?: Record<string, string>;
+  rating?: number;
+  reviewCount?: number;
+  amazonUrl?: string;
+}[] = [
+  {
+    "id": "kachava-chocolate",
+    "name": "Ka'Chava Whole Body Meal Shake, Chocolate (15 Servings)",
+    "brand": "Ka'Chava",
+    "badge": "Flagship Pick",
+    "category": "Plant-based meal shake",
+    "description": "Chocolate is Ka'Chava's best-selling flavor and the one buyers most consistently rate highly. Per the label at the time of writing, two scoops give about 240 calories and 25 g of plant protein from a pea-led blend with brown rice, amaranth, quinoa and sacha inchi, plus around 6 g of fiber and a vitamin and mineral premix. It is sweetened with coconut flower nectar and monk fruit. As a breakfast replacement it is convenient and filling; as a pure protein source it is expensive.",
+    "pros": [
+      "25 g of vegan protein with about 6 g of fiber per serving",
+      "Broad vitamin and mineral premix covers a patchy breakfast",
+      "The flavor buyers most often say they enjoy",
+      "No sucralose, aspartame or stevia"
+    ],
+    "cons": [
+      "Roughly $4 to $4.70 per 25 g of protein, several times a plain protein",
+      "Superfoods and adaptogens sit in proprietary blends",
+      "Cacao adds to heavy-metal exposure for daily drinkers"
+    ],
+    "bottomLine": "The Ka'Chava to buy first if you want a filling vegan breakfast shake and can live with the price.",
+    "specs": {
+      "Protein per serving": "About 25 g (label)",
+      "Calories": "About 240",
+      "Third-party testing": "Brand lab plus outside labs; no NSF/Informed",
+      "Best for": "Breakfast replacement"
+    },
+    "amazonUrl": "https://www.amazon.com/dp/B071NR9YLW"
+  },
+  {
+    "id": "kachava-vanilla",
+    "name": "Ka'Chava Whole Body Meal Shake, Vanilla (15 Servings)",
+    "brand": "Ka'Chava",
+    "badge": "Best for Smoothies",
+    "category": "Plant-based meal shake",
+    "description": "Vanilla has the same core numbers as chocolate, about 240 calories and 25 g of plant protein per two-scoop serving per the label, with a slightly different serving weight. Its milder flavor makes it the better base for blending with frozen fruit, spinach or nut butter, and because it has no cacao it is the more conservative choice for anyone drinking a plant shake every day who wants to limit cadmium and lead exposure.",
+    "pros": [
+      "Neutral base that blends well with fruit and greens",
+      "No cacao, which keeps heavy-metal exposure lower",
+      "Same 25 g protein and fiber as the flagship"
+    ],
+    "cons": [
+      "Same high cost per serving as every Ka'Chava flavor",
+      "Buyers describe the texture as thick and slightly earthy"
+    ],
+    "bottomLine": "The smarter daily-drinker flavor, especially if you blend your shake rather than shake it.",
+    "specs": {
+      "Protein per serving": "About 25 g (label)",
+      "Calories": "About 240",
+      "Third-party testing": "Brand lab plus outside labs; no NSF/Informed",
+      "Best for": "Smoothies, daily use"
+    },
+    "amazonUrl": "https://www.amazon.com/dp/B072HS77TG"
+  },
+  {
+    "id": "kachava-strawberry",
+    "name": "Ka'Chava All-In-One Nutrition Shake, Strawberry (15 Servings)",
+    "brand": "Ka'Chava",
+    "badge": "Best Fruit Flavor",
+    "category": "Plant-based meal shake",
+    "description": "Strawberry launched in 2025 as Ka'Chava's first new flavor in three years and is made with freeze-dried organic strawberries, per the brand. It shares the same base formula, 25 g of plant protein and the 85-plus ingredient list, per the label at the time of writing. It suits people who find chocolate shakes too heavy in the morning, but it is a newer flavor with less buyer history, so it is better as a second bag than a first.",
+    "pros": [
+      "A lighter, fruit-forward alternative to chocolate",
+      "Same 25 g of plant protein per serving",
+      "Real freeze-dried strawberry in the formula, per the brand"
+    ],
+    "cons": [
+      "Less buyer feedback than the core flavors",
+      "Same premium price per serving"
+    ],
+    "bottomLine": "A good second bag once you know you like the Ka'Chava texture.",
+    "specs": {
+      "Protein per serving": "About 25 g (label)",
+      "Calories": "About 240 (check flavor label)",
+      "Third-party testing": "Brand lab plus outside labs; no NSF/Informed",
+      "Best for": "Variety, fruit-flavor fans"
+    },
+    "amazonUrl": "https://www.amazon.com/dp/B0FJQCF64N"
+  },
+  {
+    "id": "huel-black-edition",
+    "name": "Huel Black Edition",
+    "brand": "Huel",
+    "badge": "Alternative: Bigger Meal Shake",
+    "category": "High-protein plant-based meal shake",
+    "description": "Huel Black Edition is the meal shake to choose if Ka'Chava feels too light. Per Huel's label, a 90 g serving provides about 400 calories and 40 g of plant protein with around 6 g of fiber and 27 vitamins and minerals. That is 15 g more protein per serving than Ka'Chava, with a simpler ingredient list and fewer headline superfoods. Check the current price per serving, since Huel's pricing varies by retailer and subscription.",
+    "pros": [
+      "About 40 g of plant protein per serving",
+      "Closer to a true meal at about 400 calories",
+      "Simpler, fully functional ingredient list"
+    ],
+    "cons": [
+      "Fewer adaptogens and superfoods, if those matter to you",
+      "Too many calories for a light breakfast or a cut"
+    ],
+    "bottomLine": "The better meal shake for people who want lunch in a glass, not a light breakfast.",
+    "specs": {
+      "Protein per serving": "About 40 g (label)",
+      "Calories": "About 400",
+      "Third-party testing": "No sport certification confirmed",
+      "Best for": "Full meal replacement"
+    }
+  },
+  {
+    "id": "orgain-organic-protein-plant-based",
+    "name": "Orgain Organic Protein Plant-Based Protein Powder",
+    "brand": "Orgain",
+    "badge": "Alternative: Cheaper Protein",
+    "category": "Organic plant protein powder",
+    "description": "If you came for protein rather than a meal, Orgain is the cheaper way to get it. Per the label at the time of writing, two scoops give about 21 g of protein from organic pea, brown rice and chia seed in roughly 150 calories, sweetened with organic erythritol and stevia. It is widely sold, including on Amazon and at warehouse clubs, and its cost per gram of protein is typically a fraction of Ka'Chava's.",
+    "pros": [
+      "Much lower cost per 25 g of protein than Ka'Chava",
+      "USDA Organic plant protein",
+      "Easy to find on Amazon and in stores"
+    ],
+    "cons": [
+      "21 g per serving is a modest dose",
+      "No fiber-and-multivitamin meal profile"
+    ],
+    "bottomLine": "Buy this instead if protein, not a full meal, is what you actually want.",
+    "specs": {
+      "Protein per serving": "About 21 g (label)",
+      "Calories": "About 150",
+      "Third-party testing": "No sport certification confirmed",
+      "Best for": "Budget vegan protein"
+    }
+  }
+];
+
+const schema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Home",
+          item: `${SITE_URL}/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Best Lists",
+          item: `${SITE_URL}/best-of/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 3,
+          name: "Ka'Chava Review",
+          item: `${SITE_URL}/kachava-review/`,
+        },
+      ],
+    },
+    {
+      "@type": "FAQPage",
+      mainEntity: [
+        {
+          "@type": "Question",
+          "name": "Is Ka'Chava a protein powder?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Not exactly. Ka'Chava is a meal shake that contains protein. Each two-scoop serving gives about 25 g of plant protein in roughly 240 calories, per the label at the time of writing, alongside fiber, fats, carbohydrates and a vitamin and mineral premix. A dedicated protein powder delivers similar protein in about half the calories and at a much lower cost per gram."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How much protein is in Ka'Chava?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "About 25 g per two-scoop serving, per the label at the time of writing, from a blend of yellow pea protein, organic brown rice protein, amaranth, quinoa and sacha inchi. The blend is proprietary, so the brand does not publish how much comes from each source or a full amino acid profile, which means leucine per serving cannot be confirmed from the label."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is Ka'Chava good for weight loss?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It can help if it replaces a higher-calorie breakfast, because 240 calories with 25 g of protein and about 6 g of fiber is reasonably filling. It is not a weight-loss product on its own, and replacing several meals a day can push calories too low. For structured weight loss, a doctor or registered dietitian can help you plan meals safely."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does Ka'Chava contain sugar?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, a little. Expect roughly 8 g of total sugar per serving, with about 4 to 6 g added from organic coconut flower nectar depending on flavor, per the label at the time of writing. It is also sweetened with monk fruit extract and contains no sucralose, aspartame or stevia, per the brand and retailer listings."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is Ka'Chava third-party tested?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Ka'Chava says it tests in an ISO 17025-accredited in-house lab and sends ingredients to outside labs for heavy metals, pesticides and microbes. We could not find NSF Certified for Sport, Informed Choice or Informed Sport listings for it. Athletes in drug-tested sports should choose a product listed in one of those public databases instead."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can you buy Ka'Chava on Amazon?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Ka'Chava is sold on Amazon in the US, including 2 lb, 15-serving bags in chocolate and vanilla, a strawberry bag, single-serve sachets and variety bundles. Check that the seller is Ka'Chava or Amazon, compare the serving count on the listing, and use Subscribe and Save only after you know you like the taste and texture."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is a cheaper alternative to Ka'Chava?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "If you want protein, a plain plant protein such as Orgain or a single-ingredient pea isolate costs far less per 25 g. If you want a meal shake, Huel Black Edition gives about 40 g of protein and 400 calories per serving, so compare its current price per serving against Ka'Chava's before you buy. A homemade smoothie with protein powder, chia and fruit is cheapest of all."
+          }
+        }
+      ],
+    },
+    {
+      "@type": "Article",
+      headline: title,
+      author: authorSchema(),
+      datePublished: dates.published,
+      dateModified: dates.modified,
+      publisher: { "@type": "Organization", name: SITE_NAME, url: SITE_URL },
+    },
+    {
+      "@type": "ItemList",
+      name: title,
+      numberOfItems: PRODUCTS.length,
+      itemListElement: PRODUCTS.map((product, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name: product.name,
+        url: new URL(`#${product.id}`, Astro.url).toString(),
+      })),
+    },
+    ...PRODUCTS.map((product) => ({
+      "@type": "Product",
+      name: product.name,
+      description: product.description,
+      brand: {
+        "@type": "Brand",
+        name: product.brand ?? product.name.split(" ")[0],
+      },
+    })),
+  ],
+};
+---
+
+<Layout
+  title={title}
+  description={description}
+  ogType="article"
+  article={{
+    publishedTime: dates.published,
+    modifiedTime: dates.modified,
+    author: author.name,
+    section: "Brand Reviews",
+    tags: [
+      "kachava protein powder",
+      "ka'chava",
+      "kachava review",
+      "kachava meal shake"
+    ],
+  }}
+  jsonLd={schema}
+  stickyCta={{
+    text: "See Our Top Plant Protein Picks",
+    link: "/best-plant-based-protein-powder/",
+  }}
+>
+  <article class="relative overflow-hidden">
+    <!-- Hero Section -->
+    <div class="bg-gray-900 py-16 lg:py-24 relative overflow-hidden">
+      <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(circle at 20% 20%, #38BDF8 0, transparent 45%), radial-gradient(circle at 80% 60%, #FF4500 0, transparent 40%);"></div>
+      <div class="max-w-4xl mx-auto px-4 relative z-10 text-center">
+        <div class="flex justify-center mb-6">
+          <TrustBadge />
+        </div>
+        <div class="flex justify-center gap-3 mb-6">
+          <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#FF4500]/20 text-[#FF4500] text-xs font-black uppercase tracking-widest border border-[#FF4500]/30">
+            Brand Review
+          </span>
+          <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-green-500/10 text-green-400 text-xs font-bold uppercase tracking-widest border border-green-500/20">
+            Label-Checked
+          </span>
+        </div>
+        <h1 class="text-4xl lg:text-6xl font-black text-white leading-tight mb-8">
+          Ka'Chava Review: <span class="text-[#38BDF8]">Meal Shake or Protein Powder?</span>
+        </h1>
+        <p class="text-xl text-gray-300 leading-relaxed mb-8 max-w-3xl mx-auto">
+          Ka'Chava sells a 240-calorie superfood meal shake with 25 g of plant protein. We read the label, priced it per 25 g of protein and compared it with plain protein powders and rival meal shakes.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a
+            href="#kachava-chocolate"
+            class="px-8 py-4 bg-[#FF4500] hover:bg-[#E63E00] text-white font-black rounded-xl shadow-lg transition-all no-underline"
+          >
+            See Our #1 Pick
+          </a>
+          <a
+            href="#label"
+            class="px-8 py-4 bg-white/10 hover:bg-white/20 text-white font-bold rounded-xl border border-white/10 no-underline"
+          >
+            Read the Label Breakdown
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Author & Meta -->
+    <div class="max-w-3xl mx-auto px-4 pt-12">
+      <div class="flex items-center gap-6 border-b border-gray-100 pb-8">
+        <div class="flex items-center gap-3">
+          <AuthorAvatar size={48} />
+          <div>
+            <p class="text-sm font-bold text-gray-900">{author.name}</p>
+            <p class="text-xs text-gray-500 uppercase tracking-widest">{author.role}</p>
+          </div>
+        </div>
+        <div class="h-10 w-px bg-gray-200 hidden sm:block"></div>
+        <div class="hidden sm:block">
+          <p class="text-sm font-bold text-gray-900">Last Updated</p>
+          <p class="text-xs text-gray-500">{dates.display}</p>
+        </div>
+        <div class="hidden sm:block ml-auto">
+          <SocialProof />
+        </div>
+      </div>
+    </div>
+
+    <!-- Table of Contents -->
+    <div class="max-w-3xl mx-auto px-4 py-10">
+      <div class="bg-gray-50 border border-gray-200 rounded-2xl p-6 lg:p-8">
+        <h2 class="text-lg font-black text-gray-900 mb-4 flex items-center gap-2">
+          In This Guide
+        </h2>
+        <nav class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <a href="#verdict" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">1. The Short Verdict</a>
+          <a href="#what-it-is" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">2. What Ka'Chava Actually Is</a>
+          <a href="#top-picks" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">3. Flavors and Alternatives</a>
+          <a href="#label" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">4. The Label, Line by Line</a>
+          <a href="#cost" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">5. Cost per 25 g of Protein</a>
+          <a href="#vs-protein" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">6. Ka'Chava vs Plain Protein</a>
+          <a href="#vs-meal-shakes" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">7. Ka'Chava vs Huel</a>
+          <a href="#testing" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">8. Testing and Safety</a>
+          <a href="#who" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">9. Who Should Skip It</a>
+          <a href="#where-to-buy" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">10. Where to Buy</a>
+          <a href="#mistakes" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">11. Common Mistakes</a>
+          <a href="#faq" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">12. FAQ</a>
+        </nav>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="max-w-3xl mx-auto px-4 pb-16 lg:pb-24">
+      <div class="prose prose-lg prose-blue max-w-none text-gray-700 leading-relaxed">
+        <p class="text-2xl font-medium text-gray-900 mb-8 italic">
+          Ka'Chava is a good meal shake and an expensive protein powder. If you want a vegan breakfast in a glass with fiber, greens and a multivitamin built in, it does that job well. If you just want 25 g of protein after the gym, you are paying roughly three times what a plain plant protein costs for the same protein.
+        </p>
+
+        <QuickPicks products={PRODUCTS} />
+
+        <div id="verdict" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            1. The Short Verdict
+          </h2>
+
+          <p>
+            Ka'Chava is worth buying if you will use it to replace a meal you currently skip or eat badly. One serving of two scoops gives about 240 calories, 25 g of plant protein, around 6 g of fiber and a long list of vitamins, minerals, greens, adaptogens, probiotics and digestive enzymes, per the label at the time of writing. That is a reasonable breakfast for a lot of people, and it is far better than a pastry and a latte.
+          </p>
+
+          <p>
+            It is not worth buying as a protein supplement. At around $70 for a 15-serving bag bought one at a time, or about $60 on subscription, you pay roughly $4 to $4.70 for each 25 g of protein. A plain pea or pea-and-rice protein typically delivers the same 25 g for well under half of that. If protein is the only reason you are reading this, you can stop here and go straight to our <a href="/best-plant-based-protein-powder/">best plant-based protein powder</a> picks.
+          </p>
+
+          <p>
+            The middle ground is where most buyers actually sit: people who want a convenient, filling vegan shake and like the idea of greens and superfoods without buying five separate tubs. For that buyer, Ka'Chava is a defensible luxury. Its weaknesses are the price, the proprietary blends that hide how much of each superfood you actually get, a few grams of added sugar from coconut nectar, and no NSF or Informed Choice certification that we could find.
+          </p>
+
+          <p>
+            Our ranking of the range is simple. Chocolate is the flagship and the flavor buyers most consistently rate highly, so it is the safe first bag. Vanilla is the most flexible base for blending with fruit. The newer fruit and dessert flavors are fun but are better bought as a second bag once you know you like the texture, which buyers often describe as thicker and more earthy than a whey shake.
+          </p>
+        </div>
+
+        <div id="what-it-is" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            2. What Ka'Chava Actually Is
+          </h2>
+
+          <p>
+            Ka'Chava is made by Tribal Nutrition, a company founded by Simon Malone, and it is marketed as an all-in-one nutrition shake rather than a protein powder. The distinction matters. A protein powder is designed to deliver as much protein as possible for as few calories as possible. A meal shake is designed to stand in for food, so it carries carbohydrates, fat, fiber and micronutrients along with the protein.
+          </p>
+
+          <p>
+            That is why the numbers look the way they do. A typical whey isolate gives about 25 g of protein in roughly 110 to 120 calories. Ka'Chava gives the same 25 g in about 240 calories, because the other half of the calories come from coconut milk, oats, chia, flax, fruit powders and a little coconut flower nectar. Judged as a protein powder that is inefficient. Judged as a meal, 240 calories is on the light side, and many people add a banana, nut butter or oat milk to make it a full breakfast.
+          </p>
+
+          <p>
+            The brand describes the formula as containing more than 85 superfoods and nutrients, grouped into blends: a plant protein blend, an adaptogen and mushroom blend, a super-fruit antioxidant blend, an omega and fiber blend, a greens blend, digestive enzymes, and a probiotic and prebiotic blend, plus a vitamin and mineral premix. It is vegan and made without dairy, gluten or soy, per the brand, though it does contain coconut, so anyone with a coconut allergy should skip it.
+          </p>
+
+          <p>
+            The flavor range has grown. The long-running core flavors are chocolate and vanilla, with chai, coconut acai and matcha alongside them. Strawberry arrived in 2025 as the brand's first new flavor in three years, followed by a decaffeinated coffee flavor in March 2026 and cinnamon French toast in August 2026, with salted caramel and seasonal limited editions such as chocolate mint in between. Availability of individual flavors changes, so check the current list before you subscribe.
+          </p>
+        </div>
+
+        <!-- Picks -->
+        <div id="top-picks" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            3. Ka'Chava Flavors and Alternatives Worth Buying
+          </h2>
+
+          <p>
+            Ka'Chava sells one formula in many flavors, so choosing a Ka'Chava product is really choosing a flavor and a bag size. Below are the three flavors we would start with, based on the label and on consistent buyer feedback, plus two clearly labelled alternatives from other brands for readers who want more protein per meal or a much lower cost per gram. Nutrition figures are per the label at the time of writing and vary slightly by flavor.
+          </p>
+
+          {PRODUCTS.map((product, index) => (
+            <div id={product.id} class="scroll-mt-24 mt-12 first:mt-8">
+              <div class="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                <div class="bg-gray-900 px-6 py-4 flex items-center justify-between">
+                  <div class="flex items-center gap-3">
+                    <span class="bg-[#FF4500] text-white w-8 h-8 rounded-full flex items-center justify-center text-sm font-black">
+                      {index + 1}
+                    </span>
+                    {productImages[product.id] && (
+                      <img
+                        src={productImages[product.id]}
+                        alt={product.name}
+                        loading="lazy"
+                        width="40"
+                        height="40"
+                        class="w-10 h-10 rounded-lg bg-white object-contain p-1 shrink-0"
+                      />
+                    )}
+                    <div>
+                      <p class="text-white font-black text-lg">{product.name}</p>
+                      <p class="text-gray-400 text-xs">{product.category}</p>
+                    </div>
+                  </div>
+                  <span class="bg-[#38BDF8]/20 text-[#38BDF8] px-3 py-1 rounded-full text-xs font-bold hidden sm:block">
+                    {product.badge}
+                  </span>
+                </div>
+                <div class="p-6">
+                  {product.rating && (
+                  <div class="flex items-center gap-2 mb-4">
+                    <div class="flex text-yellow-400">
+                      {[...Array(5)].map((_, i) => (
+                        <svg
+                          class={`w-4 h-4 ${i < Math.floor(product.rating) ? "fill-current" : "text-gray-200"}`}
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                        >
+                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        </svg>
+                      ))}
+                    </div>
+                    <span class="text-gray-500 text-sm font-bold">{product.rating}</span>
+                    {product.reviewCount && <span class="text-gray-400 text-xs">({product.reviewCount.toLocaleString()} retailer reviews)</span>}
+                  </div>
+                  )}
+
+                  <SpecGrid specs={product.specs} />
+
+                  <p class="text-gray-700 leading-relaxed mb-6">{product.description}</p>
+
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                    <div class="bg-green-50 rounded-xl p-4">
+                      <p class="text-xs font-black uppercase tracking-widest text-green-700 mb-3">Pros</p>
+                      <ul class="space-y-2">
+                        {product.pros.map((pro) => (
+                          <li class="flex items-start gap-2 text-sm text-green-800">
+                            <svg class="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            {pro}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div class="bg-red-50 rounded-xl p-4">
+                      <p class="text-xs font-black uppercase tracking-widest text-red-700 mb-3">Cons</p>
+                      <ul class="space-y-2">
+                        {product.cons.map((con) => (
+                          <li class="flex items-start gap-2 text-sm text-red-800">
+                            <svg class="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                            {con}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+
+                  <div class="bg-gray-50 rounded-xl p-4 border border-gray-100">
+                    <p class="text-xs font-black uppercase tracking-widest text-gray-500 mb-1">The Bottom Line</p>
+                    <p class="text-gray-900 font-bold">{product.bottomLine}</p>
+                  </div>
+
+                  <a
+                    href={amazonLink(product.amazonUrl, product.name, product.id)}
+                    target="_blank"
+                    rel="sponsored nofollow noopener"
+                    class="mt-6 block bg-[#FF4500] hover:bg-[#E63E00] text-white text-center py-4 rounded-xl font-black no-underline transition-colors uppercase tracking-widest text-sm"
+                  >
+                    Check Price &rarr;
+                  </a>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div id="label" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            4. The Label, Line by Line
+          </h2>
+
+          <p>
+            Start with the protein. The plant protein blend lists yellow pea protein, organic brown rice protein, organic amaranth, organic quinoa and organic sacha inchi, per the label at the time of writing. Pea and rice together give a reasonably complete amino acid profile, and that pairing is the backbone of most good vegan proteins. Amaranth, quinoa and sacha inchi are nutritious, but in practice they contribute relatively little protein next to the pea and rice.
+          </p>
+
+          <p>
+            The catch is that the blend is proprietary. Ka'Chava publishes the total protein, 25 g per serving, but not how much of it comes from each source, and reviewers have noted that the brand does not publish a full amino acid breakdown. That makes it impossible to calculate leucine per serving, the amino acid most closely tied to muscle protein synthesis. Pea-and-rice blends at 25 g usually land around 2 g of leucine, which is adequate, but we cannot confirm Ka'Chava's figure.
+          </p>
+
+          <p>
+            The same problem applies to the headline superfoods. The adaptogen blend of maca, reishi, shiitake, maitake, cordyceps and ginger totals about 1,020 mg across all six ingredients, per one detailed label review. Studies on adaptogens typically use doses of individual ingredients that are larger than what a 1 g blend of six can contain, so treat these as flavor and marketing rather than a functional dose. The probiotic strains are named, but the CFU count is not disclosed.
+          </p>
+
+          <p>
+            On sugar, expect about 8 g of total sugar per serving, of which roughly 4 to 6 g is added, varying by flavor. The added sugar comes from organic coconut flower nectar, and the formula is also sweetened with lo han, better known as monk fruit extract. There is no sucralose, aspartame or stevia, per the brand and retailer listings. Fiber runs around 6 g per serving, which is genuinely useful: most adults fall well short of their daily fiber target, and 6 g in a breakfast shake is a meaningful contribution.
+          </p>
+
+          <div class="bg-gray-900 text-white rounded-2xl p-6 lg:p-8 my-8">
+            <p class="text-xs font-black uppercase tracking-widest text-[#38BDF8] mb-3">THE LABEL IN ONE LINE</p>
+            <p class="text-xl font-bold text-white mb-3">25 g protein, 240 calories, 6 g fiber, 4-6 g added sugar</p>
+            <p class="text-gray-300 leading-relaxed m-0">Per the label at the time of writing, varying by flavor. The protein is a pea-led plant blend; the superfoods sit in proprietary blends without individual doses; and sweetness comes from coconut flower nectar and monk fruit.</p>
+          </div>
+
+          <p>
+            The vitamin and mineral premix is broad, which is part of the appeal for people who would otherwise take a multivitamin. If you already take one, or you drink two Ka'Chava shakes a day, check the totals for vitamin A, iron and zinc against your other supplements, and if you are pregnant, take medication or have a medical condition, run the label past your doctor or a registered dietitian first. This is general information, not medical advice.
+          </p>
+        </div>
+
+        <div id="cost" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            5. Cost per 25 g of Protein
+          </h2>
+
+          <p>
+            The cleanest way to compare a meal shake with a protein powder is cost per 25 g of protein, because that is roughly what one good shake should deliver. Ka'Chava makes this easy: one serving is 25 g of protein. A 15-serving bag on the brand's own site has listed at around $70 bought once, or about $60 on subscription, which works out to roughly $4.65 and $4.00 per 25 g respectively. Prices change, so treat these as approximate.
+          </p>
+
+          <p>
+            Retail sizes complicate the comparison. Target and other stores sell a smaller bag of about 15.3 oz, or roughly seven servings, and in 2026 Ka'Chava began selling a 20-serving chocolate bag at selected Costco warehouses in the Los Angeles area. Single-serve sachets are available for trying flavors. Always divide the price by the number of servings on the label rather than comparing bag prices, because the bags are not the same size.
+          </p>
+
+          <div class="overflow-hidden border border-gray-200 rounded-2xl my-8">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Product</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Protein per serving</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Calories</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Approx. cost per 25 g protein</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Ka'Chava (15-serving bag)</td>
+                    <td class="px-4 py-4 text-gray-700">25 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 240</td>
+                    <td class="px-4 py-4 text-gray-700">About $4.00-$4.70</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Huel Black Edition</td>
+                    <td class="px-4 py-4 text-gray-700">40 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 400</td>
+                    <td class="px-4 py-4 text-gray-700">Varies; check current price</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Orgain Organic Plant Protein</td>
+                    <td class="px-4 py-4 text-gray-700">21 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 150</td>
+                    <td class="px-4 py-4 text-gray-700">Typically well under half of Ka'Chava</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Typical pea-rice protein</td>
+                    <td class="px-4 py-4 text-gray-700">20-25 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 110-130</td>
+                    <td class="px-4 py-4 text-gray-700">Typically $1.00-$2.00</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <p>
+            That gap is the whole argument of this review. If you put a scoop of plain pea protein, a tablespoon of chia, a handful of spinach and a banana in a blender, you will get similar protein and more fiber for less than half the cost, though you lose the convenience and the multivitamin. Whether the convenience is worth an extra $2 to $3 per shake every day is a personal call, but it adds up to roughly $700 to $1,000 a year for a daily drinker.
+          </p>
+
+          <p>
+            The fair counterpoint is that Ka'Chava is not trying to be a cheap protein. If it replaces a $9 coffee-shop breakfast, it saves money. If it replaces a $1.50 scoop of protein you were already drinking, it costs money. Decide which of those two shakes you are actually replacing before you subscribe.
+          </p>
+        </div>
+
+        <div id="vs-protein" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            6. Ka'Chava vs a Plain Plant Protein
+          </h2>
+
+          <p>
+            Most people searching for a Ka'Chava protein powder are really choosing between Ka'Chava and a straightforward vegan protein like Orgain, Garden of Life Sport or a single-ingredient pea isolate. The difference is what comes along with the protein. A plain plant protein gives you 20 to 30 g of protein in 110 to 170 calories and very little else. Ka'Chava gives you 25 g plus about 120 extra calories of fats, carbohydrates and fiber, and a multivitamin.
+          </p>
+
+          <p>
+            For lifters and anyone counting calories during a cut, the plain protein wins outright. You want the most protein for the fewest calories and the lowest price, and Ka'Chava loses on all three. Garden of Life Sport, for example, lists about 30 g of protein per serving and carries NSF Certified for Sport status, per the brand at the time of writing, which matters if you compete in a tested sport. Ka'Chava does not carry that certification.
+          </p>
+
+          <p>
+            For people who struggle to eat breakfast at all, the meal shake wins. A 240-calorie shake with fiber and fat keeps most people fuller than a 120-calorie protein shake, and the vitamin premix covers some gaps in a patchy diet. Buyer feedback on Ka'Chava frequently mentions that it holds them over until lunch, which a scoop of isolate in water rarely does.
+          </p>
+
+          <p>
+            The middle option is to buy a plain plant protein and build your own meal shake. That gives you control over sugar, calories and fiber and is cheaper, but it takes two minutes and four ingredients instead of one. Our <a href="/best-protein-powder-for-smoothies/">best protein powder for smoothies</a> guide covers the powders that blend best for that approach.
+          </p>
+        </div>
+
+        <div id="vs-meal-shakes" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            7. Ka'Chava vs Huel and Other Meal Shakes
+          </h2>
+
+          <p>
+            If you have decided you want a meal shake rather than a protein powder, the obvious rival is Huel. Huel Black Edition is the closest comparison: per Huel's label, a 90 g serving gives about 400 calories and 40 g of plant protein with around 6 g of fiber and 27 vitamins and minerals. That is more protein and more calories per serving, so it is a fuller meal, and it suits people who want a shake to actually replace lunch rather than a light breakfast.
+          </p>
+
+          <p>
+            Ka'Chava's selling point against Huel is the superfood list and the taste profile. Huel's formulas lean on a simpler, more functional ingredient list, while Ka'Chava emphasizes adaptogens, mushrooms, fruit powders and greens. Whether those extras make a measurable difference at the doses in the blend is doubtful, as covered above, but buyers who like the idea of them will prefer Ka'Chava, and many describe its chocolate as more dessert-like.
+          </p>
+
+          <p>
+            On protein per serving Huel clearly comes out ahead, with 40 g against 25 g. Compare current prices per serving before you decide on value, because both brands run subscription discounts and Huel's prices vary by product and region. For a more detailed look at Huel's range, including its plain protein products, see our sibling <a href="/huel-protein-powder-review/">Huel protein powder review</a>.
+          </p>
+
+          <p>
+            Ready-to-drink shakes such as OWYN and Orgain bottles are the other alternative. They are convenient but usually carry less fiber and fewer micronutrients than Ka'Chava, and they are bulky to store. If you mostly want something to drink at your desk, a bottle can make sense. If you want a nutrient-dense breakfast at home, a powder like Ka'Chava or Huel gives you more for the money.
+          </p>
+        </div>
+
+        <div id="testing" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            8. Testing, Heavy Metals and Safety
+          </h2>
+
+          <p>
+            Plant proteins attract more attention for heavy metals than whey, because rice, pea and cacao can take up lead and cadmium from soil. That is not a reason to avoid plant protein, but it is a reason to care about testing. Ka'Chava states that it uses an in-house laboratory accredited to ISO 17025 and also sends ingredients to outside labs for testing for heavy metals, pesticides and microbes, per the company's published statements as reported by reviewers.
+          </p>
+
+          <p>
+            What Ka'Chava does not carry, as far as we could find, is a consumer-facing certification such as NSF Certified for Sport, Informed Choice or Informed Sport. Those programs test finished products against published standards and list them in public databases, which is easier to verify than a brand's own description of its testing. If you compete in a drug-tested sport, choose a certified product instead.
+          </p>
+
+          <p>
+            Chocolate flavors of any plant protein tend to carry more lead and cadmium than vanilla, because cacao itself is a source. If you drink Ka'Chava daily and heavy metals are a concern, vanilla is the more conservative choice. Our guide to whether <a href="/is-protein-powder-safe/">protein powder is safe</a> covers how to read testing claims and what independent studies have found across the category.
+          </p>
+
+          <p>
+            Finally, a note on digestion. Ka'Chava includes digestive enzymes, inulin and around 6 g of fiber, and some buyers report bloating in the first week, which is common when fiber intake rises quickly. Starting with one scoop instead of two for a few days is a sensible approach. Anyone with a medical condition, a history of digestive problems, pregnancy or a long medication list should check with a doctor or registered dietitian before using any meal replacement daily.
+          </p>
+        </div>
+
+        <div id="who" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            9. Who Should Buy Ka'Chava and Who Should Skip It
+          </h2>
+
+          <p>
+            Buy Ka'Chava if you skip breakfast or eat it on the run, you want a vegan option, you value convenience over cost, and you like the idea of a single shake that covers protein, fiber and a multivitamin. It is also a sensible choice for travel, when a sachet in a bag beats an airport breakfast, and for people who dislike the thin, sweet taste of many protein shakes.
+          </p>
+
+          <p>
+            Skip Ka'Chava if protein is your goal. Lifters chasing a daily protein target, people on a tight budget and anyone who already eats a balanced breakfast will get more from a plain protein powder. Skip it as well if you compete in a tested sport, because there is no sport certification, or if you are avoiding added sugar entirely, since there are a few grams of coconut nectar in each serving.
+          </p>
+
+          <p>
+            Skip it, or at least speak to a professional first, if you plan to replace several meals a day for weight loss. Ka'Chava at 240 calories is light for a meal, and drinking several in place of food can push calories too low. Weight-loss meal replacement plans work best when they are structured, and our <a href="/best-protein-powder-for-weight-loss/">best protein powder for weight loss</a> guide explains how to use protein shakes without cutting food quality.
+          </p>
+
+          <p>
+            If you are on the fence, buy a variety pack or a few single-serve sachets first. The texture is the main reason people stop drinking it, and it is cheaper to find that out with five sachets than with a 15-serving bag and a subscription you forget to cancel.
+          </p>
+        </div>
+
+        <div id="where-to-buy" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            10. Where to Buy: Amazon, Target, Costco and Direct
+          </h2>
+
+          <p>
+            Ka'Chava is sold on Amazon in the US, including the full 2 lb, 15-serving bags in chocolate and vanilla, a strawberry bag, single-serve sachet boxes and variety bundles. Buying on Amazon lets you use Subscribe and Save and compare prices quickly, but check that the seller is Ka'Chava or Amazon itself, and that the listing is the 15-serving bag rather than the smaller retail size.
+          </p>
+
+          <p>
+            The brand's own site offers the widest flavor range and its own subscription discount, which has historically been about $10 off each bag. Target and other grocery chains stock the smaller 15.3 oz bag in core flavors, and Costco has carried a 20-serving chocolate bag in some locations. Retail prices and availability vary by store, so compare cost per serving rather than sticker price.
+          </p>
+
+          <p>
+            Whichever store you use, the formula is the same, so the decision comes down to price per serving, flavor choice and how easily you can pause or cancel a subscription. If you are not sure you will drink it every day, avoid subscriptions until you have finished your first bag.
+          </p>
+
+          <p>
+            If you decide Ka'Chava is not for you, our <a href="/best-plant-based-protein-powder/">plant-based protein powder rankings</a> list the vegan powders that give the most protein per dollar, and our <a href="/protein-powder-brands/">protein powder brands</a> overview compares the major names side by side.
+          </p>
+        </div>
+
+        <!-- Common Mistakes -->
+        <div id="mistakes" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            11. Common Mistakes to Avoid
+          </h2>
+
+          <div class="space-y-6 my-8">
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Buying Ka'Chava as a protein supplement</h3>
+              <p class="text-gray-700 text-sm m-0">
+                At roughly $4 to $4.70 per 25 g of protein, Ka'Chava is one of the most expensive ways to hit a protein target. If you already eat breakfast and just want a post-workout shake, a plain pea or pea-and-rice protein gives the same 25 g for well under half the cost.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Treating 240 calories as a full meal</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Ka'Chava is light for a meal replacement. Drinking it in place of lunch with nothing else can leave you hungry by mid-afternoon and push total calories too low. Blend it with a banana, oats or nut butter, or pair it with a piece of fruit, if it is replacing a real meal.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Assuming the superfoods are a therapeutic dose</h3>
+              <p class="text-gray-700 text-sm m-0">
+                The adaptogen blend totals about 1 g across six ingredients, and the probiotic count is not disclosed. That is not enough to expect the effects studied in research on individual adaptogens. Treat the extras as a bonus rather than a reason to pay a premium over a simpler shake.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Subscribing before trying the texture</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Ka'Chava is thicker and more earthy than a whey shake, and texture is the most common reason buyers stop. Start with sachets, a small retail bag or a single 15-serving bag, and only set up a subscription once you know you will drink it most days.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Comparing bag prices instead of serving costs</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Ka'Chava sells bags of roughly 7, 15 and 20 servings depending on the store, and retailers price them differently. Divide the price by the servings on the label before comparing, or you may pay more per shake for what looks like a cheaper bag.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ -->
+        <div id="faq" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            12. Frequently Asked Questions
+          </h2>
+
+          <div class="space-y-6">
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is Ka'Chava a protein powder?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Not exactly. Ka'Chava is a meal shake that contains protein. Each two-scoop serving gives about 25 g of plant protein in roughly 240 calories, per the label at the time of writing, alongside fiber, fats, carbohydrates and a vitamin and mineral premix. A dedicated protein powder delivers similar protein in about half the calories and at a much lower cost per gram.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">How much protein is in Ka'Chava?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                About 25 g per two-scoop serving, per the label at the time of writing, from a blend of yellow pea protein, organic brown rice protein, amaranth, quinoa and sacha inchi. The blend is proprietary, so the brand does not publish how much comes from each source or a full amino acid profile, which means leucine per serving cannot be confirmed from the label.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is Ka'Chava good for weight loss?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                It can help if it replaces a higher-calorie breakfast, because 240 calories with 25 g of protein and about 6 g of fiber is reasonably filling. It is not a weight-loss product on its own, and replacing several meals a day can push calories too low. For structured weight loss, a doctor or registered dietitian can help you plan meals safely.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Does Ka'Chava contain sugar?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Yes, a little. Expect roughly 8 g of total sugar per serving, with about 4 to 6 g added from organic coconut flower nectar depending on flavor, per the label at the time of writing. It is also sweetened with monk fruit extract and contains no sucralose, aspartame or stevia, per the brand and retailer listings.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is Ka'Chava third-party tested?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Ka'Chava says it tests in an ISO 17025-accredited in-house lab and sends ingredients to outside labs for heavy metals, pesticides and microbes. We could not find NSF Certified for Sport, Informed Choice or Informed Sport listings for it. Athletes in drug-tested sports should choose a product listed in one of those public databases instead.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Can you buy Ka'Chava on Amazon?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Yes. Ka'Chava is sold on Amazon in the US, including 2 lb, 15-serving bags in chocolate and vanilla, a strawberry bag, single-serve sachets and variety bundles. Check that the seller is Ka'Chava or Amazon, compare the serving count on the listing, and use Subscribe and Save only after you know you like the taste and texture.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">What is a cheaper alternative to Ka'Chava?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                If you want protein, a plain plant protein such as Orgain or a single-ingredient pea isolate costs far less per 25 g. If you want a meal shake, Huel Black Edition gives about 40 g of protein and 400 calories per serving, so compare its current price per serving against Ka'Chava's before you buy. A homemade smoothie with protein powder, chia and fruit is cheapest of all.
+              </p>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Related Guides -->
+        <div class="mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">Related Plant Protein Guides</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <a href="/best-plant-based-protein-powder/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#FF4500] font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Plant-Based Protein Powder</h3>
+              <p class="text-gray-500 text-sm mt-2">The vegan powders with the most protein per dollar and the best testing.</p>
+            </a>
+            <a href="/huel-protein-powder-review/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#38BDF8] font-black text-xs uppercase tracking-widest mb-2">Brand Review</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Huel Protein Powder Review</h3>
+              <p class="text-gray-500 text-sm mt-2">Huel's meal shakes and protein powders, priced and compared.</p>
+            </a>
+            <a href="/best-protein-powder-for-smoothies/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-green-600 font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Protein Powder for Smoothies</h3>
+              <p class="text-gray-500 text-sm mt-2">Build a cheaper meal shake at home with the powders that blend best.</p>
+            </a>
+          </div>
+        </div>
+
+        <!-- Closing -->
+        <div class="mt-16 bg-gray-900 text-white rounded-2xl p-8">
+          <h2 class="text-2xl font-black text-white mb-4">The Bottom Line</h2>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            Ka'Chava is a well-made vegan meal shake with a label that does most of what it promises: 25 g of plant protein, about 240 calories, useful fiber and a broad multivitamin in one scoop of convenience. Its weaknesses are the price, the proprietary blends and the lack of a sport certification. Buy chocolate first if you want it as breakfast, vanilla if you blend or drink it daily.
+          </p>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            If protein is the goal, skip it and buy a plain plant protein for a fraction of the cost per 25 g. If you want a heavier meal shake, Huel Black Edition gives more protein per serving. Either way, compare cost per serving, not bag price, and try the texture before you subscribe.
+          </p>
+        </div>
+
+        <MoreInCategory category="Brand Reviews" links={moreInCategory} />
+
+        <AuthorBio />
+      </div>
+    </div>
+  </article>
+</Layout>

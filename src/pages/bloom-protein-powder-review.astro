@@ -1,0 +1,913 @@
+---
+import Layout from "../layouts/Layout.astro";
+import MoreInCategory from "../components/MoreInCategory.astro";
+import { AUTHORS, DEFAULT_AUTHOR, authorSchema } from "../data/authors";
+import { SITE_NAME, SITE_URL } from "../data/site";
+import AuthorAvatar from "../components/AuthorAvatar.astro";
+import QuickPicks from "../components/QuickPicks.astro";
+import AuthorBio from "../components/AuthorBio.astro";
+import { amazonLink } from "../data/affiliate";
+import TrustBadge from "../components/TrustBadge.astro";
+import SocialProof from "../components/SocialProof.astro";
+import SpecGrid from "../components/SpecGrid.astro";
+import productImages from "../data/product-images.json";
+import { pageDates } from "../data/dates";
+
+const moreInCategory = [
+  {
+    "title": "Dymatize Protein Powder Review",
+    "url": "/dymatize-protein-powder-review/"
+  },
+  {
+    "title": "Ghost Protein Powder Review",
+    "url": "/ghost-protein-powder-review/"
+  },
+  {
+    "title": "Thorne Protein Powder Review",
+    "url": "/thorne-protein-powder-review/"
+  }
+];
+const author = AUTHORS[DEFAULT_AUTHOR];
+const dates = pageDates(Astro.url.pathname, { published: "2026-10-19", modified: "2026-10-19" });
+const title = "Bloom Protein Powder Review: Whey Isolate and Clear Protein, Label-Checked";
+const description =
+  "Bloom's Whey Isolate and new Clear Protein checked against the label: protein per scoop, the collagen catch, sweeteners, cost per 25 g and better-value picks.";
+
+const PRODUCTS: {
+  id: string;
+  name: string;
+  brand?: string;
+  badge: string;
+  category: string;
+  description: string;
+  pros: string[];
+  cons: string[];
+  bottomLine: string;
+  specs?: Record<string, string>;
+  rating?: number;
+  reviewCount?: number;
+  amazonUrl?: string;
+}[] = [
+  {
+    "id": "bloom-whey-isolate-protein",
+    "name": "Bloom Whey Isolate Protein",
+    "brand": "Bloom Nutrition",
+    "badge": "Bloom's Flagship",
+    "category": "Whey protein isolate, Iced Coffee or Vanilla",
+    "description": "Bloom's whey isolate lists about 22 g of protein per scoop, roughly 100 calories in database listings of the label, and a 100 mg DigeZyme enzyme blend, per labels at the time of writing; figures vary by flavor. The flavor we found uses sucralose and acesulfame potassium. Buyers praise the creamy texture and Iced Coffee flavor, while some find it too sweet.",
+    "pros": [
+      "About 22 g of protein from whey isolate",
+      "Digestive enzyme blend including lactase",
+      "Popular Iced Coffee flavor, mixes into coffee and smoothies"
+    ],
+    "cons": [
+      "No sport certification advertised",
+      "Sucralose and acesulfame potassium",
+      "Costs more per 25 g than mainstream isolates"
+    ],
+    "bottomLine": "A decent isolate for Bloom fans; not the best value per gram.",
+    "specs": {
+      "Protein per serving": "About 22 g (label)",
+      "Calories": "About 100",
+      "Third-party testing": "No sport certification advertised",
+      "Best for": "Coffee-flavor shakes, Bloom customers"
+    }
+  },
+  {
+    "id": "bloom-clear-protein",
+    "name": "Bloom Clear Protein",
+    "brand": "Bloom Nutrition",
+    "badge": "Juice-Style Option",
+    "category": "Clear whey isolate with collagen peptides",
+    "description": "Launched in 2026, Bloom Clear Protein lists 20 g of protein and about 90 calories per serving with zero sugar and fat, per Bloom's launch materials. Bloom states that 15 g comes from whey protein isolate and 5 g from grass-fed collagen peptides, so the complete protein dose is lower than the front label suggests. Flavors include Strawberry Watermelon, Raspberry Lemon and Crisp Apple.",
+    "pros": [
+      "Light, juice-like drink mixed with water",
+      "About 90 calories, zero sugar and fat",
+      "Sold at Target as well as Bloom's site"
+    ],
+    "cons": [
+      "5 g of the 20 g is collagen, an incomplete protein",
+      "No sport certification advertised",
+      "Servings per pouch not confirmed for comparison"
+    ],
+    "bottomLine": "A pleasant protein top-up; count it as about 15 g of whey.",
+    "specs": {
+      "Protein per serving": "20 g (15 g whey, 5 g collagen)",
+      "Calories": "About 90",
+      "Third-party testing": "No sport certification advertised",
+      "Best for": "Light between-meal protein"
+    }
+  },
+  {
+    "id": "dymatize-iso100-hydrolyzed",
+    "name": "Dymatize ISO100 Hydrolyzed Whey Isolate",
+    "brand": "Dymatize",
+    "badge": "Alternative: Better Value",
+    "category": "Hydrolyzed whey protein isolate",
+    "description": "ISO100 lists about 25 g of protein in roughly 110 to 120 calories per scoop, per Dymatize's labels at the time of writing, from hydrolyzed and regular whey isolate, and Dymatize states it carries Informed Choice certification. It is sold in a long list of flavors and large tub sizes, and it is usually cheaper per 25 g of protein than Bloom.",
+    "pros": [
+      "About 25 g of protein per scoop",
+      "Informed Choice certification, per Dymatize",
+      "Wide flavor range and large tub sizes",
+      "Usually lower cost per 25 g than Bloom"
+    ],
+    "cons": [
+      "Sucralose-sweetened in most flavors",
+      "Flavor quality varies across the range"
+    ],
+    "bottomLine": "More protein, a verifiable seal and a lower price per gram.",
+    "specs": {
+      "Protein per serving": "About 25 g (label)",
+      "Calories": "About 110-120",
+      "Third-party testing": "Informed Choice (brand)",
+      "Best for": "Value-focused isolate buyers"
+    }
+  },
+  {
+    "id": "myprotein-clear-whey-isolate",
+    "name": "Myprotein Clear Whey Isolate",
+    "brand": "Myprotein",
+    "badge": "Alternative: All-Whey Clear",
+    "category": "Clear whey protein isolate",
+    "description": "Myprotein Clear Whey Isolate is one of the products that made clear whey mainstream. A serving delivers about 20 g of protein from whey isolate alone, with very little fat or sugar, per the label at the time of writing, in a wide range of fruit and tea-style flavors that vary by market. Buyers praise the juice-like texture, while foam after shaking is the usual complaint.",
+    "pros": [
+      "All protein from whey isolate, no collagen",
+      "Many fruit and tea-style flavors",
+      "Frequently discounted"
+    ],
+    "cons": [
+      "Foams when shaken hard",
+      "Flavor lineup varies by country"
+    ],
+    "bottomLine": "The clear protein to buy if muscle building is the goal.",
+    "specs": {
+      "Protein per serving": "About 20 g (label)",
+      "Calories": "Check label",
+      "Third-party testing": "Check certifier database",
+      "Best for": "Clear whey for muscle"
+    }
+  }
+];
+
+const schema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Home",
+          item: `${SITE_URL}/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Best Lists",
+          item: `${SITE_URL}/best-of/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 3,
+          name: "Bloom Protein Powder Review",
+          item: `${SITE_URL}/bloom-protein-powder-review/`,
+        },
+      ],
+    },
+    {
+      "@type": "FAQPage",
+      mainEntity: [
+        {
+          "@type": "Question",
+          "name": "Is Bloom protein powder good?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It is a reasonable product with popular flavors, but it is not standout. The Whey Isolate lists about 22 g of protein per scoop with a digestive enzyme blend, which is solid. It costs more per 25 g than mainstream isolates and carries no advertised sport certification, so it is best for people who specifically like Bloom's flavors and branding."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How much protein is in Bloom Whey Isolate?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "About 22 g of protein per scoop, with the scoop weighing roughly 27.5 to 31 g depending on flavor, per labels at the time of writing. Calories are around 100 per scoop in nutrition-database listings of the label. Check the tub you buy, because sodium and exact macros vary from flavor to flavor."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does Bloom Clear Protein contain collagen?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Bloom states each serving contains 15 g of whey protein isolate and 5 g of grass-fed collagen peptides, for 20 g of protein in total. Collagen is an incomplete protein that is low in leucine, so for muscle building the drink behaves more like a 15 g whey serving than a 20 g one."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What sweetener is in Bloom protein?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The Bloom Whey Isolate label we found for Iced Coffee lists sucralose and acesulfame potassium, and some reviewers also report stevia in the formula. Sweeteners can differ by flavor and formula version, so check the ingredient list on the tub. If you avoid artificial sweeteners, a stevia-only or unflavored isolate is the better choice."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is Bloom protein third-party tested?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Bloom does not advertise NSF Certified for Sport, Informed Choice or Informed Sport status for its protein at the time of writing. That does not mean it is unsafe, but there is no public certification to verify. Drug-tested athletes should choose a certified product and confirm the exact flavor in the certifier's database."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I buy Bloom protein on Amazon?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Bloom's greens and energy products are widely sold on Amazon, but its protein is mainly sold through Bloom's own site and, for Clear Protein, Target. If you find Bloom whey on Amazon, check that the seller is Bloom Nutrition or Amazon, and compare the price with Bloom's site, because some resale listings cost noticeably more."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is a better alternative to Bloom protein?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "For more protein per dollar, Dymatize ISO100 lists about 25 g of protein per scoop, states Informed Choice certification, and is usually cheaper per 25 g. For a clear protein without collagen, Myprotein Clear Whey Isolate delivers about 20 g from whey isolate alone. Our whey isolate rankings list further options at different prices."
+          }
+        }
+      ],
+    },
+    {
+      "@type": "Article",
+      headline: title,
+      author: authorSchema(),
+      datePublished: dates.published,
+      dateModified: dates.modified,
+      publisher: { "@type": "Organization", name: SITE_NAME, url: SITE_URL },
+    },
+    {
+      "@type": "ItemList",
+      name: title,
+      numberOfItems: PRODUCTS.length,
+      itemListElement: PRODUCTS.map((product, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name: product.name,
+        url: new URL(`#${product.id}`, Astro.url).toString(),
+      })),
+    },
+    ...PRODUCTS.map((product) => ({
+      "@type": "Product",
+      name: product.name,
+      description: product.description,
+      brand: {
+        "@type": "Brand",
+        name: product.brand ?? product.name.split(" ")[0],
+      },
+    })),
+  ],
+};
+---
+
+<Layout
+  title={title}
+  description={description}
+  ogType="article"
+  article={{
+    publishedTime: dates.published,
+    modifiedTime: dates.modified,
+    author: author.name,
+    section: "Brand Reviews",
+    tags: [
+      "bloom protein powder",
+      "bloom nutrition protein",
+      "bloom whey isolate",
+      "bloom protein review"
+    ],
+  }}
+  jsonLd={schema}
+  stickyCta={{
+    text: "See Our Top Whey Isolate Picks",
+    link: "/best-whey-protein-isolate/",
+  }}
+>
+  <article class="relative overflow-hidden">
+    <!-- Hero Section -->
+    <div class="bg-gray-900 py-16 lg:py-24 relative overflow-hidden">
+      <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(circle at 20% 20%, #38BDF8 0, transparent 45%), radial-gradient(circle at 80% 60%, #FF4500 0, transparent 40%);"></div>
+      <div class="max-w-4xl mx-auto px-4 relative z-10 text-center">
+        <div class="flex justify-center mb-6">
+          <TrustBadge />
+        </div>
+        <div class="flex justify-center gap-3 mb-6">
+          <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#FF4500]/20 text-[#FF4500] text-xs font-black uppercase tracking-widest border border-[#FF4500]/30">
+            Brand Review
+          </span>
+          <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-green-500/10 text-green-400 text-xs font-bold uppercase tracking-widest border border-green-500/20">
+            Label-Checked
+          </span>
+        </div>
+        <h1 class="text-4xl lg:text-6xl font-black text-white leading-tight mb-8">
+          Bloom Protein Powder: <span class="text-[#38BDF8]">Any Good?</span>
+        </h1>
+        <p class="text-xl text-gray-300 leading-relaxed mb-8 max-w-3xl mx-auto">
+          Bloom built its name on greens powder and energy drinks, then moved into protein. Here is what its Whey Isolate and Clear Protein actually deliver per scoop, what they cost per 25 g, and when another tub is the smarter buy.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a
+            href="#bloom-whey-isolate-protein"
+            class="px-8 py-4 bg-[#FF4500] hover:bg-[#E63E00] text-white font-black rounded-xl shadow-lg transition-all no-underline"
+          >
+            See Our #1 Pick
+          </a>
+          <a
+            href="#whey-label"
+            class="px-8 py-4 bg-white/10 hover:bg-white/20 text-white font-bold rounded-xl border border-white/10 no-underline"
+          >
+            Read the Label Breakdown
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Author & Meta -->
+    <div class="max-w-3xl mx-auto px-4 pt-12">
+      <div class="flex items-center gap-6 border-b border-gray-100 pb-8">
+        <div class="flex items-center gap-3">
+          <AuthorAvatar size={48} />
+          <div>
+            <p class="text-sm font-bold text-gray-900">{author.name}</p>
+            <p class="text-xs text-gray-500 uppercase tracking-widest">{author.role}</p>
+          </div>
+        </div>
+        <div class="h-10 w-px bg-gray-200 hidden sm:block"></div>
+        <div class="hidden sm:block">
+          <p class="text-sm font-bold text-gray-900">Last Updated</p>
+          <p class="text-xs text-gray-500">{dates.display}</p>
+        </div>
+        <div class="hidden sm:block ml-auto">
+          <SocialProof />
+        </div>
+      </div>
+    </div>
+
+    <!-- Table of Contents -->
+    <div class="max-w-3xl mx-auto px-4 py-10">
+      <div class="bg-gray-50 border border-gray-200 rounded-2xl p-6 lg:p-8">
+        <h2 class="text-lg font-black text-gray-900 mb-4 flex items-center gap-2">
+          In This Guide
+        </h2>
+        <nav class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <a href="#verdict" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">1. The Short Verdict</a>
+          <a href="#who-is-bloom" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">2. Who Bloom Is</a>
+          <a href="#top-picks" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">3. Our Top Picks</a>
+          <a href="#whey-label" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">4. The Whey Isolate Label</a>
+          <a href="#clear-protein" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">5. Clear Protein and Collagen</a>
+          <a href="#testing" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">6. Testing and Transparency</a>
+          <a href="#taste" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">7. Taste and Mixing</a>
+          <a href="#cost" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">8. Cost per 25 g</a>
+          <a href="#vs-rivals" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">9. Bloom vs. Alternatives</a>
+          <a href="#who-should-skip" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">10. Who Should Skip Bloom</a>
+          <a href="#mistakes" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">11. Common Mistakes</a>
+          <a href="#faq" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">12. FAQ</a>
+        </nav>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="max-w-3xl mx-auto px-4 pb-16 lg:pb-24">
+      <div class="prose prose-lg prose-blue max-w-none text-gray-700 leading-relaxed">
+        <p class="text-2xl font-medium text-gray-900 mb-8 italic">
+          Bloom's protein is fine, not special. The Whey Isolate delivers about 22 g of protein per scoop with a digestive enzyme blend and coffee-shop flavors, at a price that sits above mainstream isolates. The newer Clear Protein is the one to read closely: a quarter of its 20 g of protein comes from collagen, not whey. If you love the flavors, buy it knowingly. If you want the most muscle-building protein for your money, there are better tubs.
+        </p>
+
+        <QuickPicks products={PRODUCTS} />
+
+        <div id="verdict" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            1. The Short Verdict
+          </h2>
+
+          <p>
+            <strong>Bloom Whey Isolate Protein</strong> is a competent, mid-dose isolate with good flavor marketing behind it. Each scoop lists about 22 g of protein, with roughly 100 calories by nutrition-database listings of the label, plus a 100 mg digestive enzyme blend. At Bloom's list price of about $55 for 30 scoops, it works out to roughly $1.80 to $2.10 per 25 g of protein, depending on where you buy it. That is neither cheap nor outrageous.
+          </p>
+
+          <p>
+            <strong>Bloom Clear Protein</strong>, launched in early 2026, is a juice-style drink with 20 g of protein and about 90 calories per serving, per Bloom's launch materials. The catch is the source: 15 g comes from whey protein isolate and 5 g from collagen peptides. Collagen is an incomplete protein, so for muscle building this behaves more like a 15 g whey drink than a 20 g one.
+          </p>
+
+          <p>
+            Neither product advertises a sport certification such as NSF Certified for Sport or Informed Choice, which matters if you are drug-tested. And neither is the best value in its category. A mainstream isolate such as Dymatize ISO100 gives you more protein per scoop for similar or less money, and a straight clear whey isolate gives you all its protein from whey.
+          </p>
+
+          <div class="bg-gray-900 text-white rounded-2xl p-6 lg:p-8 my-8">
+            <p class="text-xs font-black uppercase tracking-widest text-[#38BDF8] mb-3">THE VERDICT</p>
+            <p class="text-xl font-bold text-white mb-3">Buy Bloom for the flavors, not the numbers.</p>
+            <p class="text-gray-300 leading-relaxed m-0">If Iced Coffee or a fruity clear protein is what gets you to drink a shake every day, Bloom is a reasonable choice. If you are optimizing protein per dollar or need a certified product, the alternatives below are the better buy.</p>
+          </div>
+
+          <p>
+            The rest of this review breaks down both labels, explains the collagen issue in plain numbers, reports what buyers say about taste and digestion, and compares Bloom with the isolates we rank in our <a href="/best-whey-protein-isolate/">best whey protein isolate</a> guide. If you are deciding between Bloom and a more clinical brand, our <a href="/thorne-protein-powder-review/">Thorne protein powder review</a> covers the opposite end of the market.
+          </p>
+        </div>
+
+        <div id="who-is-bloom" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            2. Who Bloom Is, and Where It Sells Protein
+          </h2>
+
+          <p>
+            Bloom Nutrition, co-founded by fitness creator Mari Llewellyn, grew through social media rather than the gym-supplement aisle. Its breakout product was a flavored greens and superfoods powder, followed by energy drinks, pre-workout and hydration sticks, all with bright packaging and flavors aimed squarely at a lifestyle audience. Protein is a newer and smaller part of the business, and that shows in how few protein products the brand sells.
+          </p>
+
+          <p>
+            At the time of writing, Bloom's protein collection lists just two products. Whey Isolate Protein is sold on Bloom's own site in Iced Coffee and Vanilla, with older flavors such as Banana Cream and Caramel Macchiato still turning up in nutrition databases and resale listings. Clear Protein comes in fruit flavors including Strawberry Watermelon, Raspberry Lemon and Crisp Apple, and launched through Target and Bloom's website.
+          </p>
+
+          <p>
+            Amazon availability is patchier. Bloom's greens and energy products are easy to find there, but its protein is primarily sold direct and, for Clear Protein, at Target. If you do find Bloom whey on Amazon, check that the seller is Bloom Nutrition or Amazon itself, because resale listings on marketplaces have shown prices well above Bloom's own. The buy buttons on this page run a tagged Amazon search, so you see whatever is genuinely in stock.
+          </p>
+
+          <p>
+            One detail worth knowing if you avoid dairy: Bloom's Daily Hydration Sticks list 5 g of whey protein per stick, per the product page. That is a small amount, but it surprises some buyers who assume an electrolyte drink is dairy-free. It is a reminder to read the full label on any lifestyle supplement, not just the front of the pack.
+          </p>
+        </div>
+
+        <!-- Picks -->
+        <div id="top-picks" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            3. Bloom's Protein Range, Plus Two Better-Value Alternatives
+          </h2>
+
+          <p>
+            Bloom currently sells two protein powders: Whey Isolate Protein and Clear Protein. Both are below, followed by two clearly labeled alternatives from other brands for readers who want more protein per dollar or a clear whey without collagen. Figures come from Bloom's product pages, retailer listings and nutrition databases at the time of writing and vary by flavor, so check the label on the pouch or tub you buy. We ranked on label analysis and approximate cost per 25 g of protein, not our own lab or taste tests.
+          </p>
+
+          {PRODUCTS.map((product, index) => (
+            <div id={product.id} class="scroll-mt-24 mt-12 first:mt-8">
+              <div class="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                <div class="bg-gray-900 px-6 py-4 flex items-center justify-between">
+                  <div class="flex items-center gap-3">
+                    <span class="bg-[#FF4500] text-white w-8 h-8 rounded-full flex items-center justify-center text-sm font-black">
+                      {index + 1}
+                    </span>
+                    {productImages[product.id] && (
+                      <img
+                        src={productImages[product.id]}
+                        alt={product.name}
+                        loading="lazy"
+                        width="40"
+                        height="40"
+                        class="w-10 h-10 rounded-lg bg-white object-contain p-1 shrink-0"
+                      />
+                    )}
+                    <div>
+                      <p class="text-white font-black text-lg">{product.name}</p>
+                      <p class="text-gray-400 text-xs">{product.category}</p>
+                    </div>
+                  </div>
+                  <span class="bg-[#38BDF8]/20 text-[#38BDF8] px-3 py-1 rounded-full text-xs font-bold hidden sm:block">
+                    {product.badge}
+                  </span>
+                </div>
+                <div class="p-6">
+                  {product.rating && (
+                  <div class="flex items-center gap-2 mb-4">
+                    <div class="flex text-yellow-400">
+                      {[...Array(5)].map((_, i) => (
+                        <svg
+                          class={`w-4 h-4 ${i < Math.floor(product.rating) ? "fill-current" : "text-gray-200"}`}
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                        >
+                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        </svg>
+                      ))}
+                    </div>
+                    <span class="text-gray-500 text-sm font-bold">{product.rating}</span>
+                    {product.reviewCount && <span class="text-gray-400 text-xs">({product.reviewCount.toLocaleString()} retailer reviews)</span>}
+                  </div>
+                  )}
+
+                  <SpecGrid specs={product.specs} />
+
+                  <p class="text-gray-700 leading-relaxed mb-6">{product.description}</p>
+
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                    <div class="bg-green-50 rounded-xl p-4">
+                      <p class="text-xs font-black uppercase tracking-widest text-green-700 mb-3">Pros</p>
+                      <ul class="space-y-2">
+                        {product.pros.map((pro) => (
+                          <li class="flex items-start gap-2 text-sm text-green-800">
+                            <svg class="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            {pro}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div class="bg-red-50 rounded-xl p-4">
+                      <p class="text-xs font-black uppercase tracking-widest text-red-700 mb-3">Cons</p>
+                      <ul class="space-y-2">
+                        {product.cons.map((con) => (
+                          <li class="flex items-start gap-2 text-sm text-red-800">
+                            <svg class="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                            {con}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+
+                  <div class="bg-gray-50 rounded-xl p-4 border border-gray-100">
+                    <p class="text-xs font-black uppercase tracking-widest text-gray-500 mb-1">The Bottom Line</p>
+                    <p class="text-gray-900 font-bold">{product.bottomLine}</p>
+                  </div>
+
+                  <a
+                    href={amazonLink(product.amazonUrl, product.name, product.id)}
+                    target="_blank"
+                    rel="sponsored nofollow noopener"
+                    class="mt-6 block bg-[#FF4500] hover:bg-[#E63E00] text-white text-center py-4 rounded-xl font-black no-underline transition-colors uppercase tracking-widest text-sm"
+                  >
+                    Check Price &rarr;
+                  </a>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div id="whey-label" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            4. The Whey Isolate Label, Line by Line
+          </h2>
+
+          <p>
+            Bloom Whey Isolate Protein lists about 22 g of protein per scoop, with the scoop itself weighing roughly 27.5 to 31 g depending on flavor. That is about 75 to 80 percent protein by weight, which is respectable but below the 85 to 90 percent a plain isolate can reach; the difference is flavoring, thickeners, sweeteners and the enzyme blend. Calories land around 100 per scoop in database listings of the label.
+          </p>
+
+          <p>
+            The Iced Coffee label we found lists about 130 mg of sodium, 110 mg of calcium and 200 mg of potassium, with coffee powder, natural and artificial flavors, salt, guar gum, xanthan gum and silica as the other ingredients. Sodium varies more than you might expect between flavors: one older Caramel Macchiato listing showed about 270 mg. Carbohydrates are low, around 2 g per scoop, and fat is close to zero.
+          </p>
+
+          <p>
+            Sweetening is sucralose and acesulfame potassium on the Iced Coffee label, and some reviewers also report stevia in the formula. If you avoid artificial sweeteners, Bloom is not for you; a stevia-only isolate such as those in our <a href="/best-clean-protein-powder/">best clean protein powder</a> guide is the better fit. If sucralose does not bother you, this is a standard flavored-isolate sweetener system.
+          </p>
+
+          <div class="overflow-hidden border border-gray-200 rounded-2xl my-8">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Label item</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Bloom Whey Isolate (per scoop)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Protein</td>
+                    <td class="px-4 py-4 text-gray-700">About 22 g</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Scoop size</td>
+                    <td class="px-4 py-4 text-gray-700">About 27.5-31 g, varies by flavor</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Calories</td>
+                    <td class="px-4 py-4 text-gray-700">About 100 (database listings)</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Sweeteners</td>
+                    <td class="px-4 py-4 text-gray-700">Sucralose, acesulfame potassium</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Enzymes</td>
+                    <td class="px-4 py-4 text-gray-700">DigeZyme blend, 100 mg</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Servings</td>
+                    <td class="px-4 py-4 text-gray-700">30 per tub</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <p>
+            The enzyme blend is DigeZyme, a branded mix of neutral protease, alpha-amylase, lactase, cellulase and lipase at 100 mg total. Bloom does not disclose how much of each enzyme is in the blend, which is common but limits how much you can read into it. The lactase may help people who are mildly sensitive to the small amount of lactose left in an isolate, though isolate is already low in lactose to begin with.
+          </p>
+        </div>
+
+        <div id="clear-protein" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            5. Clear Protein: The Collagen Question
+          </h2>
+
+          <p>
+            Clear protein is whey isolate processed and acidified so it mixes with water into a thin, juice-like drink rather than a creamy shake. Bloom's version, launched in January 2026, lists 20 g of protein and about 90 calories per serving, with zero sugar, zero fat, no artificial colors and digestive enzymes, per its launch announcement. On paper that looks like a typical clear whey. The detail is in how the 20 g is built.
+          </p>
+
+          <p>
+            Bloom states that each serving contains 15 g of ultra-filtered whey protein isolate and 5 g of grass-fed collagen peptides. Collagen counts toward the protein figure on a nutrition panel, but it is not a complete protein: it contains essentially no tryptophan and is low in leucine, the amino acid most closely tied to switching on muscle protein synthesis. Gram for gram, it does much less for muscle than whey.
+          </p>
+
+          <p>
+            In practice, that means Bloom Clear Protein delivers roughly the muscle-building value of a 15 g whey drink, plus some collagen. A 15 g dose of whey isolate supplies a little over 1.5 g of leucine, below the 2 to 3 g per meal that research associates with a maximal response in most adults. If you drink it as a light protein top-up between meals, that is fine. If it is your main post-workout shake, it is on the small side.
+          </p>
+
+          <div class="bg-gray-900 text-white rounded-2xl p-6 lg:p-8 my-8">
+            <p class="text-xs font-black uppercase tracking-widest text-[#38BDF8] mb-3">THE MATH</p>
+            <p class="text-xl font-bold text-white mb-3">20 g on the label, about 15 g of whey in the drink.</p>
+            <p class="text-gray-300 leading-relaxed m-0">Bloom's Clear Protein gets 5 g of its 20 g from collagen peptides. For muscle building, count it as roughly a 15 g whey isolate serving. A clear whey that is all isolate gives you the full 20 g of complete protein.</p>
+          </div>
+
+          <p>
+            Bloom pitches the collagen for beauty benefits, and its launch copy marks those claims with an asterisk rather than citing evidence. Collagen research on skin is mixed and mostly industry-funded, so treat it as a maybe. If clear protein is what you want, our <a href="/best-clear-protein-powder/">best clear protein powder</a> guide covers options that use whey isolate alone.
+          </p>
+        </div>
+
+        <div id="testing" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            6. Testing and Transparency
+          </h2>
+
+          <p>
+            Bloom does not advertise NSF Certified for Sport, Informed Choice or Informed Sport status for either protein at the time of writing. That does not mean the products are contaminated or mislabeled; it means there is no independent banned-substance program behind them that you can check in a public database. For drug-tested athletes, that alone rules Bloom out.
+          </p>
+
+          <p>
+            For everyone else, third-party certification is a useful tiebreaker rather than a requirement. It confirms that the protein figure is accurate and that the product has been screened for contaminants and banned substances. Plenty of good powders are uncertified, but when two products are close on price and taste, the certified one gives you more assurance for the same money.
+          </p>
+
+          <p>
+            Bloom's labels are otherwise reasonably transparent. There is no proprietary protein blend, the protein source is plainly whey isolate, and the Clear Protein split between whey and collagen is stated outright in Bloom's own materials, which is to the brand's credit. The weak spot is the undisclosed enzyme amounts, which is a common industry practice rather than a Bloom-specific problem.
+          </p>
+
+          <p>
+            If certification is important to you, the isolates we rank highest in our whey isolate guide include NSF and Informed Choice options. Thorne Whey Protein Isolate, for example, is NSF Certified for Sport, while Dymatize states ISO100 carries Informed Choice certification. Both cost more or less than Bloom depending on the deal, but both come with a seal you can verify.
+          </p>
+        </div>
+
+        <div id="taste" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            7. Taste and Mixing: What Buyers Report
+          </h2>
+
+          <p>
+            We did not taste Bloom's protein ourselves, so this section summarizes buyer feedback. On Bloom's own site, the Whey Isolate showed an average around 4.5 out of 5 from well over a thousand reviews at the time of writing, with buyers frequently praising the creamy texture and how easily it blends into smoothies, coffee and oats. Iced Coffee is the flavor reviewers mention most often.
+          </p>
+
+          <p>
+            The most common complaint is sweetness. Independent reviewers and some buyers describe the flavors as very sweet or artificial-tasting, and a minority report a bitter aftertaste with certain flavors. That is typical of sucralose-sweetened powders and is very much a matter of personal taste, but if you already find mainstream protein too sweet, Bloom is unlikely to change your mind.
+          </p>
+
+          <p>
+            A smaller group of buyers report stomach upset. That can happen with any whey product, especially with sweeteners and gums in the mix, and the enzyme blend will not fix it for everyone. Some independent reviewers have also flagged longer-than-expected shipping times when ordering direct, which is worth knowing if you are close to running out.
+          </p>
+
+          <p>
+            Clear Protein feedback is still thin because the product is new. As with any clear whey, expect foam if you shake it hard; letting it settle for a minute or stirring rather than shaking usually helps. If you are new to clear protein, a single pouch is a sensible first purchase before you commit to a multi-pack.
+          </p>
+        </div>
+
+        <div id="cost" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            8. Cost per 25 g: How Bloom Compares
+          </h2>
+
+          <p>
+            Cost per 25 g of protein is the fairest way to compare powders with different scoop sizes. Bloom Whey Isolate lists at about $55 for 30 scoops of roughly 22 g each on Bloom's site, with some retailers showing it closer to $48. That puts it at roughly $1.80 to $2.10 per 25 g. Prices change and Bloom runs promotions, so treat these figures as approximate.
+          </p>
+
+          <div class="overflow-hidden border border-gray-200 rounded-2xl my-8">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Product</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Protein per serving</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Approx. cost per 25 g</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Bloom Whey Isolate</td>
+                    <td class="px-4 py-4 text-gray-700">About 22 g</td>
+                    <td class="px-4 py-4 text-gray-700">About $1.80-2.10</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Bloom Clear Protein</td>
+                    <td class="px-4 py-4 text-gray-700">About 20 g (15 g whey + 5 g collagen)</td>
+                    <td class="px-4 py-4 text-gray-700">Check servings per pouch</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Dymatize ISO100</td>
+                    <td class="px-4 py-4 text-gray-700">About 25 g</td>
+                    <td class="px-4 py-4 text-gray-700">Often about $1.30-1.70</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Myprotein Clear Whey Isolate</td>
+                    <td class="px-4 py-4 text-gray-700">About 20 g</td>
+                    <td class="px-4 py-4 text-gray-700">Varies by size and sale</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <p>
+            Bloom lists Clear Protein at about $30 per pouch, with discounts on two- and three-pouch bundles. We could not confirm the number of servings per pouch from Bloom's materials at the time of writing, so check the label before you compare it with other clear proteins. Whatever the servings count, remember that you are paying for 20 g of protein of which 15 g is whey.
+          </p>
+
+          <p>
+            For comparison, a large tub of a mainstream isolate bought on sale often lands around $1.30 to $1.70 per 25 g. A one-shake-a-day habit with Bloom therefore costs roughly $5 to $15 a month more than the cheaper option. That is not a dealbreaker if you love the flavor, but it is real money over a year, and it buys you no extra certification.
+          </p>
+
+          <p>
+            Bloom's bundles and subscriptions can narrow the gap. If you are going to buy it anyway, buying a multi-pack or subscribing is the cheapest way in. If you are on a tight budget, our <a href="/best-cheap-protein-powder/">best cheap protein powder</a> guide lists the tubs with the lowest cost per 25 g.
+          </p>
+        </div>
+
+        <div id="vs-rivals" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            9. Bloom vs. the Alternatives
+          </h2>
+
+          <p>
+            Against <strong>Dymatize ISO100</strong>, Bloom loses on numbers. ISO100 lists about 25 g of protein per scoop from hydrolyzed whey isolate, Dymatize states it carries Informed Choice certification, and it is usually cheaper per 25 g, with a far wider flavor range. Bloom wins only on its specific flavors and branding. Our <a href="/dymatize-protein-powder-review/">Dymatize protein powder review</a> covers the ISO100 range in more detail.
+          </p>
+
+          <p>
+            Against <strong>Myprotein Clear Whey Isolate</strong>, Bloom Clear Protein loses on protein quality. Myprotein's clear whey delivers about 20 g of protein from whey isolate alone, per its label, rather than splitting the dose with collagen. It is widely available, comes in many fruit and tea-style flavors, and is often discounted. If you want clear protein for muscle, it is the more efficient drink.
+          </p>
+
+          <p>
+            Against flavor-focused brands, Bloom is closer to the pack. Brands such as Ghost and PEScience have also built followings on dessert and coffee flavors, and they typically match or beat Bloom's protein per scoop. Our <a href="/ghost-protein-powder-review/">Ghost protein powder review</a> is a good next read if branding and flavor are what draw you to Bloom in the first place.
+          </p>
+
+          <p>
+            Where Bloom does have an edge is convenience for existing Bloom customers. If you already buy its greens or energy products direct, adding a tub of protein to the same order is easy, and the brand's flavors are designed to sit together. That is a legitimate reason to buy, as long as you know you are paying a little extra for it.
+          </p>
+        </div>
+
+        <div id="who-should-skip" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            10. Who Should Skip Bloom
+          </h2>
+
+          <p>
+            Skip Bloom if you are a drug-tested athlete. With no NSF Certified for Sport or Informed Sport status advertised, there is no public database to confirm the product has been screened for banned substances. Choose a certified isolate instead and confirm the exact product and flavor in the certifier's database before you buy.
+          </p>
+
+          <p>
+            Skip it if you avoid artificial sweeteners. The Whey Isolate label we found uses sucralose and acesulfame potassium, and buyers who are sensitive to sweetness often say the flavors are too strong. A stevia-sweetened or unflavored isolate gives you more control over taste and fewer additives.
+          </p>
+
+          <p>
+            Skip Clear Protein as your main post-workout shake if muscle gain is your priority. With 5 g of its 20 g coming from collagen, the complete protein dose is about 15 g, which is light for most adults after training. Use it as a between-meal top-up instead, or choose a clear whey that is all isolate.
+          </p>
+
+          <p>
+            And skip both if you have a milk allergy. Whey isolate is low in lactose but is still milk protein. Anyone with a diagnosed allergy, kidney disease, a pregnancy or a medical condition that affects protein intake should talk to a doctor or registered dietitian before using any protein powder. Nothing in this review is medical advice.
+          </p>
+        </div>
+
+        <!-- Common Mistakes -->
+        <div id="mistakes" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            11. Common Mistakes to Avoid
+          </h2>
+
+          <div class="space-y-6 my-8">
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Reading 20 g as 20 g of whey</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Bloom Clear Protein lists 20 g of protein, but Bloom states 5 g of that comes from collagen peptides. Collagen lacks tryptophan and is low in leucine, so it does far less for muscle than whey. For training purposes, count each serving as roughly 15 g of whey isolate, not 20 g.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Assuming a lifestyle brand is certified</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Bloom does not advertise NSF Certified for Sport or Informed Sport status on its protein. That is fine for most people, but drug-tested athletes need a certified product. Always confirm the exact product and flavor in the certifier's public database rather than trusting a brand's popularity or packaging.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Paying resale prices</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Bloom's protein is sold mainly direct and, for Clear Protein, at Target. Some marketplace listings have shown Bloom whey well above Bloom's own list price. Check the seller and compare with Bloom's site before buying, and use cost per 25 g of protein, not price per tub, to judge the deal.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Ignoring the sweetener</h3>
+              <p class="text-gray-700 text-sm m-0">
+                The Bloom whey flavor we checked is sweetened with sucralose and acesulfame potassium, and many buyers describe it as very sweet. If you dislike artificial sweeteners or find most protein too sweet, try a sample or a single tub first, or choose a stevia-sweetened or unflavored isolate instead.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Using a light drink as a full meal shake</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Clear Protein's 90 calories and roughly 15 g of whey make it a snack, not a meal replacement. Using it to replace a meal can leave you short on calories, fiber and protein. Pair it with food, or use a full-dose whey isolate shake after training.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ -->
+        <div id="faq" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            12. Frequently Asked Questions
+          </h2>
+
+          <div class="space-y-6">
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is Bloom protein powder good?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                It is a reasonable product with popular flavors, but it is not standout. The Whey Isolate lists about 22 g of protein per scoop with a digestive enzyme blend, which is solid. It costs more per 25 g than mainstream isolates and carries no advertised sport certification, so it is best for people who specifically like Bloom's flavors and branding.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">How much protein is in Bloom Whey Isolate?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                About 22 g of protein per scoop, with the scoop weighing roughly 27.5 to 31 g depending on flavor, per labels at the time of writing. Calories are around 100 per scoop in nutrition-database listings of the label. Check the tub you buy, because sodium and exact macros vary from flavor to flavor.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Does Bloom Clear Protein contain collagen?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Yes. Bloom states each serving contains 15 g of whey protein isolate and 5 g of grass-fed collagen peptides, for 20 g of protein in total. Collagen is an incomplete protein that is low in leucine, so for muscle building the drink behaves more like a 15 g whey serving than a 20 g one.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">What sweetener is in Bloom protein?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                The Bloom Whey Isolate label we found for Iced Coffee lists sucralose and acesulfame potassium, and some reviewers also report stevia in the formula. Sweeteners can differ by flavor and formula version, so check the ingredient list on the tub. If you avoid artificial sweeteners, a stevia-only or unflavored isolate is the better choice.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is Bloom protein third-party tested?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Bloom does not advertise NSF Certified for Sport, Informed Choice or Informed Sport status for its protein at the time of writing. That does not mean it is unsafe, but there is no public certification to verify. Drug-tested athletes should choose a certified product and confirm the exact flavor in the certifier's database.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Can I buy Bloom protein on Amazon?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Bloom's greens and energy products are widely sold on Amazon, but its protein is mainly sold through Bloom's own site and, for Clear Protein, Target. If you find Bloom whey on Amazon, check that the seller is Bloom Nutrition or Amazon, and compare the price with Bloom's site, because some resale listings cost noticeably more.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">What is a better alternative to Bloom protein?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                For more protein per dollar, Dymatize ISO100 lists about 25 g of protein per scoop, states Informed Choice certification, and is usually cheaper per 25 g. For a clear protein without collagen, Myprotein Clear Whey Isolate delivers about 20 g from whey isolate alone. Our whey isolate rankings list further options at different prices.
+              </p>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Related Guides -->
+        <div class="mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">Related Whey Isolate Guides</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <a href="/best-whey-protein-isolate/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#FF4500] font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Whey Protein Isolate</h3>
+              <p class="text-gray-500 text-sm mt-2">Every major isolate ranked on label, certification and cost per 25 g.</p>
+            </a>
+            <a href="/best-clear-protein-powder/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#1E90FF] font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Clear Protein Powder</h3>
+              <p class="text-gray-500 text-sm mt-2">Juice-style whey isolates compared, with and without collagen.</p>
+            </a>
+            <a href="/thorne-protein-powder-review/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#38BDF8] font-black text-xs uppercase tracking-widest mb-2">Brand Review</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Thorne Protein Powder Review</h3>
+              <p class="text-gray-500 text-sm mt-2">The NSF-certified isolate, and whether the premium is worth it.</p>
+            </a>
+          </div>
+        </div>
+
+        <!-- Closing -->
+        <div class="mt-16 bg-gray-900 text-white rounded-2xl p-8">
+          <h2 class="text-2xl font-black text-white mb-4">The Bottom Line</h2>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            Bloom's protein does what it says: a flavored whey isolate with about 22 g of protein per scoop and an enzyme blend, and a light clear drink that splits its 20 g between whey and collagen. Neither is a bad product, but neither is the best value, and neither carries a sport certification you can check.
+          </p>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            Buy Bloom if its flavors are what keep you consistent, because consistency matters more than a few cents per scoop. If you are optimizing for protein per dollar, certification or muscle-building efficiency, start with the alternatives above and our whey isolate rankings instead.
+          </p>
+        </div>
+
+        <MoreInCategory category="Brand Reviews" links={moreInCategory} />
+
+        <AuthorBio />
+      </div>
+    </div>
+  </article>
+</Layout>

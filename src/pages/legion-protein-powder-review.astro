@@ -1,0 +1,1037 @@
+---
+import Layout from "../layouts/Layout.astro";
+import MoreInCategory from "../components/MoreInCategory.astro";
+import { AUTHORS, DEFAULT_AUTHOR, authorSchema } from "../data/authors";
+import { SITE_NAME, SITE_URL } from "../data/site";
+import AuthorAvatar from "../components/AuthorAvatar.astro";
+import QuickPicks from "../components/QuickPicks.astro";
+import AuthorBio from "../components/AuthorBio.astro";
+import { amazonLink } from "../data/affiliate";
+import TrustBadge from "../components/TrustBadge.astro";
+import SocialProof from "../components/SocialProof.astro";
+import SpecGrid from "../components/SpecGrid.astro";
+import productImages from "../data/product-images.json";
+import { pageDates } from "../data/dates";
+
+const moreInCategory = [
+  {
+    "title": "Momentous Protein Powder Review",
+    "url": "/momentous-protein-powder-review/"
+  },
+  {
+    "title": "Best Casein Protein Powder",
+    "url": "/best-casein-protein-powder/"
+  },
+  {
+    "title": "Whey vs Whey Isolate",
+    "url": "/whey-vs-whey-isolate/"
+  }
+];
+const author = AUTHORS[DEFAULT_AUTHOR];
+const dates = pageDates(Astro.url.pathname, { published: "2026-10-19", modified: "2026-10-19" });
+const title = "Legion Protein Powder Review: Whey+, Casein+ and Plant+ Checked Against the Label";
+const description =
+  "Legion Whey+, Casein+, Plant+ and whey concentrate compared on protein per scoop, Labdoor testing and cost per 25 g of protein, and who should shop elsewhere.";
+
+const PRODUCTS: {
+  id: string;
+  name: string;
+  brand?: string;
+  badge: string;
+  category: string;
+  description: string;
+  pros: string[];
+  cons: string[];
+  bottomLine: string;
+  specs?: Record<string, string>;
+  rating?: number;
+  reviewCount?: number;
+  amazonUrl?: string;
+}[] = [
+  {
+    "id": "legion-whey-plus",
+    "name": "Legion Whey+ Grass-Fed Whey Isolate",
+    "brand": "Legion",
+    "badge": "Best Overall",
+    "category": "Grass-fed whey protein isolate",
+    "description": "Legion's flagship is whey isolate from Irish dairy farms, which Legion describes as Truly Grass Fed certified, sweetened only with stevia. A French Vanilla panel lists 22 g of protein in about 100 calories per 27.2 g scoop, with 2 g of carbohydrate and no fat, per the label at the time of writing; some flavors run slightly higher. It is Labdoor-tested per the brand but not NSF Certified for Sport, and costs roughly $2.50 per 25 g of protein at typical prices.",
+    "pros": [
+      "22 g of protein in about 100 calories",
+      "Irish grass-fed whey isolate with stevia, no sucralose",
+      "Money-back guarantee with no return required, per Legion"
+    ],
+    "cons": [
+      "No NSF Certified for Sport or Informed Sport certification",
+      "Roughly $2.50 per 25 g of protein",
+      "Some buyers report clumping in a shaker"
+    ],
+    "bottomLine": "A clean, well-sourced isolate for recreational lifters who want natural sweeteners and will pay for them.",
+    "specs": {
+      "Protein per serving": "22 g (label; varies by flavor)",
+      "Calories": "About 100",
+      "Third-party testing": "Labdoor-certified brand (per Legion)",
+      "Best for": "Stevia-only isolate buyers"
+    }
+  },
+  {
+    "id": "legion-plant-plus",
+    "name": "Legion Plant+ Vegan Protein",
+    "brand": "Legion",
+    "badge": "Best Vegan",
+    "category": "Pea and brown rice protein blend",
+    "description": "Plant+ pairs PURIS pea protein with organic brown rice protein for 24 g of protein in about 130 to 140 calories per serving, per Legion at the time of writing, which is a full leucine-matched dose for most adults. It is sweetened with stevia and monk fruit or allulose depending on flavor. Expect roughly $2.60 per 25 g of protein at the brand's list price.",
+    "pros": [
+      "24 g of protein per serving, high for a plant powder",
+      "Complementary pea and rice blend with glyphosate-free certified peas, per Legion",
+      "No artificial sweeteners"
+    ],
+    "cons": [
+      "Not certified for sport",
+      "Mid-premium cost per 25 g of protein"
+    ],
+    "bottomLine": "A strong-dose vegan powder for recreational lifters who want Legion's clean-label approach.",
+    "specs": {
+      "Protein per serving": "24 g (label)",
+      "Calories": "About 130-140 (by flavor)",
+      "Third-party testing": "Labdoor-certified brand (per Legion)",
+      "Best for": "Vegans and dairy-free lifters"
+    }
+  },
+  {
+    "id": "legion-whey-protein-concentrate",
+    "name": "Legion Whey Protein (Concentrate)",
+    "brand": "Legion",
+    "badge": "Budget Pick",
+    "category": "Whey protein concentrate",
+    "description": "Legion's cheaper whey uses Avonlac 282 whey protein concentrate from cows never treated with rBST, according to the brand, for 20 g of protein in about 120 calories per serving. It keeps the house stevia-family sweeteners. At typical retail prices it lands around $2 per 25 g of protein, the lowest in the Legion range but still above mainstream blends.",
+    "pros": [
+      "Lowest cost per gram in the Legion range",
+      "rBST-free concentrate with natural sweeteners",
+      "Same brand testing and guarantee as Whey+"
+    ],
+    "cons": [
+      "Only 20 g of protein per serving",
+      "More lactose than an isolate",
+      "Still pricier than big-brand whey blends"
+    ],
+    "bottomLine": "The way into Legion on a smaller budget, if you tolerate concentrate well.",
+    "specs": {
+      "Protein per serving": "20 g (brand)",
+      "Calories": "About 120",
+      "Third-party testing": "Labdoor-certified brand (per Legion)",
+      "Best for": "Legion fans on a budget"
+    }
+  },
+  {
+    "id": "legion-casein-plus",
+    "name": "Legion Casein+ Micellar Casein",
+    "brand": "Legion",
+    "badge": "Bedtime Protein",
+    "category": "Micellar casein",
+    "description": "Casein+ is micellar casein from Irish grass-fed milk, sweetened with Reb M and including a little MCT powder. A Dutch Chocolate panel lists 21 g of protein in 100 calories per 28 g scoop at the time of writing, alongside a line for 25 g of micellar casein ingredient, so the true protein dose is lower than the 25 g some sources quote. At about $3.30 per 25 g of protein it is expensive casein.",
+    "pros": [
+      "Grass-fed Irish micellar casein with no artificial sweeteners",
+      "Slow-digesting protein suited to evenings",
+      "About 100 calories per scoop"
+    ],
+    "cons": [
+      "21 g of protein on the supplement panel, not 25 g",
+      "Roughly $3.30 per 25 g of protein"
+    ],
+    "bottomLine": "Clean, but buy it only if Irish grass-fed casein matters more to you than dose or price.",
+    "specs": {
+      "Protein per serving": "21 g (label panel)",
+      "Calories": "About 100",
+      "Third-party testing": "Labdoor-certified brand (per Legion)",
+      "Best for": "Evening protein, clean-label buyers"
+    }
+  },
+  {
+    "id": "transparent-labs-grass-fed-whey-protein-isolate",
+    "name": "Transparent Labs 100% Grass-Fed Whey Protein Isolate",
+    "brand": "Transparent Labs",
+    "badge": "Alternative: Better Value",
+    "category": "Grass-fed whey protein isolate",
+    "description": "The same clean-label idea as Whey+ with a bigger dose: about 28 g of protein per scoop from American grass-fed whey isolate, stevia sweetening, and Informed Choice certification according to Transparent Labs, which also publishes batch lab results. That brings cost per 25 g of protein to roughly $2.10 at list price, a little under Legion Whey+.",
+    "pros": [
+      "About 28 g of protein per scoop",
+      "Informed Choice certified, per the brand",
+      "Batch lab results published"
+    ],
+    "cons": [
+      "Large scoop means fewer servings per tub",
+      "Not NSF Certified for Sport"
+    ],
+    "bottomLine": "For most Legion shoppers, the better-value clean isolate.",
+    "specs": {
+      "Protein per serving": "About 28 g (label)",
+      "Calories": "About 120 (by flavor)",
+      "Third-party testing": "Informed Choice (per brand)",
+      "Best for": "Clean isolate, more protein per dollar"
+    }
+  },
+  {
+    "id": "optimum-nutrition-gold-standard-100-whey",
+    "name": "Optimum Nutrition Gold Standard 100% Whey",
+    "brand": "Optimum Nutrition",
+    "badge": "Alternative: Budget",
+    "category": "Whey isolate and concentrate blend",
+    "description": "If cost per gram matters more than the sweetener, Gold Standard delivers about 24 g of protein per scoop for roughly 120 calories, per the label at the time of writing, at a fraction of Legion's cost per 25 g. Optimum Nutrition states it is Informed Choice certified. Most flavors use artificial sweeteners, which is the trade-off.",
+    "pros": [
+      "About 24 g of protein per scoop",
+      "Much lower cost per 25 g of protein",
+      "Very wide flavor range and availability"
+    ],
+    "cons": [
+      "Most flavors use sucralose",
+      "Blend includes concentrate, so a little more lactose"
+    ],
+    "bottomLine": "The value benchmark Legion is priced against; buy it if natural sweeteners are not a priority.",
+    "specs": {
+      "Protein per serving": "About 24 g (varies by flavor)",
+      "Calories": "About 120",
+      "Third-party testing": "Informed Choice (confirm flavor)",
+      "Best for": "Budget buyers"
+    }
+  }
+];
+
+const schema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Home",
+          item: `${SITE_URL}/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Best Lists",
+          item: `${SITE_URL}/best-of/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 3,
+          name: "Legion Protein Powder Review",
+          item: `${SITE_URL}/legion-protein-powder-review/`,
+        },
+      ],
+    },
+    {
+      "@type": "FAQPage",
+      mainEntity: [
+        {
+          "@type": "Question",
+          "name": "Is Legion protein powder good?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, for recreational lifters who want natural sweeteners. Legion Whey+ provides 22 g of Irish grass-fed whey isolate protein in about 100 calories with stevia instead of sucralose. It is not NSF Certified for Sport, and at about $2.50 per 25 g of protein it costs more than mainstream wheys and slightly more than Transparent Labs."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How much protein is in Legion Whey+?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "A French Vanilla supplement-facts panel lists 22 g of protein per 27.2 g scoop, with about 100 calories, 2 g of carbohydrate and no fat, at the time of writing. Legion and some retailers describe 22 to 23 g depending on flavor, so check the panel on the tub you buy."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is Legion Whey+ third-party tested?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Legion says its products are independently certified by Labdoor, publishes certificates of analysis, and states they are made in NSF-certified facilities. Whey+ is not listed as NSF Certified for Sport or Informed Sport at the time of writing, so drug-tested athletes should choose a product that appears in those databases."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How much protein is in Legion Casein+?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Retailer supplement-facts panels list 21 g of protein per scoop of about 27 to 28 g, with roughly 100 calories, at the time of writing. A separate line lists 25 g of micellar casein, which is the ingredient weight rather than the protein dose, so expect about 21 g per scoop."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What sweetener does Legion use?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Legion uses stevia across its proteins. Whey+ lists stevia leaf extract and a stevia extract on dextrin, Casein+ uses Reb M, and Plant+ and the whey concentrate add monk fruit or allulose in some flavors per Legion. None of the protein powders use sucralose or acesulfame potassium, per the labels at the time of writing."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is Legion protein sold on Amazon?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Legion's proteins are sold on Amazon as well as on Legion's own site and at retailers such as Vitacost, iHerb, GNC and Kohl's. Prices and stock vary by channel and flavor, and Legion's own site often has bundle discounts, so compare before buying a multi-tub order."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is Legion Whey+ better than Optimum Nutrition Gold Standard?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It has a cleaner label, with Irish grass-fed whey isolate and stevia instead of sucralose, but Gold Standard gives slightly more protein per scoop for far less money and states Informed Choice certification. Choose Legion if natural sweeteners matter to you; choose Gold Standard if cost per gram matters more."
+          }
+        }
+      ],
+    },
+    {
+      "@type": "Article",
+      headline: title,
+      author: authorSchema(),
+      datePublished: dates.published,
+      dateModified: dates.modified,
+      publisher: { "@type": "Organization", name: SITE_NAME, url: SITE_URL },
+    },
+    {
+      "@type": "ItemList",
+      name: title,
+      numberOfItems: PRODUCTS.length,
+      itemListElement: PRODUCTS.map((product, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name: product.name,
+        url: new URL(`#${product.id}`, Astro.url).toString(),
+      })),
+    },
+    ...PRODUCTS.map((product) => ({
+      "@type": "Product",
+      name: product.name,
+      description: product.description,
+      brand: {
+        "@type": "Brand",
+        name: product.brand ?? product.name.split(" ")[0],
+      },
+    })),
+  ],
+};
+---
+
+<Layout
+  title={title}
+  description={description}
+  ogType="article"
+  article={{
+    publishedTime: dates.published,
+    modifiedTime: dates.modified,
+    author: author.name,
+    section: "Brand Reviews",
+    tags: [
+      "legion protein powder",
+      "legion whey+",
+      "legion whey review",
+      "legion casein+"
+    ],
+  }}
+  jsonLd={schema}
+  stickyCta={{
+    text: "See Our Top Whey Isolate Picks",
+    link: "/best-whey-protein-isolate/",
+  }}
+>
+  <article class="relative overflow-hidden">
+    <!-- Hero Section -->
+    <div class="bg-gray-900 py-16 lg:py-24 relative overflow-hidden">
+      <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(circle at 20% 20%, #38BDF8 0, transparent 45%), radial-gradient(circle at 80% 60%, #FF4500 0, transparent 40%);"></div>
+      <div class="max-w-4xl mx-auto px-4 relative z-10 text-center">
+        <div class="flex justify-center mb-6">
+          <TrustBadge />
+        </div>
+        <div class="flex justify-center gap-3 mb-6">
+          <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#FF4500]/20 text-[#FF4500] text-xs font-black uppercase tracking-widest border border-[#FF4500]/30">
+            Brand Review
+          </span>
+          <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-green-500/10 text-green-400 text-xs font-bold uppercase tracking-widest border border-green-500/20">
+            Label-Checked
+          </span>
+        </div>
+        <h1 class="text-4xl lg:text-6xl font-black text-white leading-tight mb-8">
+          Legion Protein Powder: <span class="text-[#38BDF8]">Clean, Not Cheap</span>
+        </h1>
+        <p class="text-xl text-gray-300 leading-relaxed mb-8 max-w-3xl mx-auto">
+          Legion built its name on natural sweeteners and evidence-based marketing. Here is what Whey+, Casein+ and Plant+ actually deliver per scoop, what Labdoor testing does and does not cover, and which tub is worth your money.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a
+            href="#legion-whey-plus"
+            class="px-8 py-4 bg-[#FF4500] hover:bg-[#E63E00] text-white font-black rounded-xl shadow-lg transition-all no-underline"
+          >
+            See Our #1 Pick
+          </a>
+          <a
+            href="#whey-label"
+            class="px-8 py-4 bg-white/10 hover:bg-white/20 text-white font-bold rounded-xl border border-white/10 no-underline"
+          >
+            Read the Label Breakdown
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Author & Meta -->
+    <div class="max-w-3xl mx-auto px-4 pt-12">
+      <div class="flex items-center gap-6 border-b border-gray-100 pb-8">
+        <div class="flex items-center gap-3">
+          <AuthorAvatar size={48} />
+          <div>
+            <p class="text-sm font-bold text-gray-900">{author.name}</p>
+            <p class="text-xs text-gray-500 uppercase tracking-widest">{author.role}</p>
+          </div>
+        </div>
+        <div class="h-10 w-px bg-gray-200 hidden sm:block"></div>
+        <div class="hidden sm:block">
+          <p class="text-sm font-bold text-gray-900">Last Updated</p>
+          <p class="text-xs text-gray-500">{dates.display}</p>
+        </div>
+        <div class="hidden sm:block ml-auto">
+          <SocialProof />
+        </div>
+      </div>
+    </div>
+
+    <!-- Table of Contents -->
+    <div class="max-w-3xl mx-auto px-4 py-10">
+      <div class="bg-gray-50 border border-gray-200 rounded-2xl p-6 lg:p-8">
+        <h2 class="text-lg font-black text-gray-900 mb-4 flex items-center gap-2">
+          In This Guide
+        </h2>
+        <nav class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <a href="#verdict" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">1. The Short Verdict</a>
+          <a href="#who-makes-it" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">2. Who Makes Legion</a>
+          <a href="#top-picks" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">3. Our Top Picks</a>
+          <a href="#whey-label" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">4. The Whey+ Label</a>
+          <a href="#testing" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">5. Labdoor vs NSF</a>
+          <a href="#casein" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">6. Casein+: Read the Panel</a>
+          <a href="#plant-concentrate" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">7. Plant+ and Whey Concentrate</a>
+          <a href="#cost" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">8. Cost per 25 g of Protein</a>
+          <a href="#vs" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">9. Legion vs the Alternatives</a>
+          <a href="#skip" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">10. Who Should Skip It</a>
+          <a href="#mistakes" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">11. Common Mistakes</a>
+          <a href="#faq" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">12. FAQ</a>
+        </nav>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="max-w-3xl mx-auto px-4 pb-16 lg:pb-24">
+      <div class="prose prose-lg prose-blue max-w-none text-gray-700 leading-relaxed">
+        <p class="text-2xl font-medium text-gray-900 mb-8 italic">
+          Legion Whey+ is a good grass-fed whey isolate: 22 g of protein in about 100 calories, Irish dairy, stevia instead of sucralose, and a no-return money-back guarantee. It is not a certified sport product, and it costs roughly $2.50 per 25 g of protein, so it suits the recreational lifter who wants a clean label more than the drug-tested athlete or the bargain hunter. The rest of the range is uneven, and Casein+ in particular has less protein per scoop than its marketing suggests.
+        </p>
+
+        <QuickPicks products={PRODUCTS} />
+
+        <div id="verdict" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            1. The Short Verdict
+          </h2>
+
+          <p>
+            Buy <strong>Legion Whey+</strong> if you want a straightforward grass-fed whey isolate with no artificial sweeteners and you are not subject to drug testing. One scoop delivers 22 g of protein in about 100 calories, with roughly 2 g of carbohydrate and almost no fat, per a retailer supplement-facts panel at the time of writing. The whey comes from Irish dairy farms and Legion describes it as Truly Grass Fed certified. It is a credible pick on our <a href="/best-whey-protein-isolate/">best whey protein isolate</a> list for buyers who prioritize a stevia-sweetened label.
+          </p>
+
+          <p>
+            It is not cheap. At typical retail prices of about $65 to $70 for a 30-serving tub, Whey+ costs roughly $2.50 per 25 g of protein. That is around 70 percent more than a mainstream whey blend, and slightly more than a higher-dose certified isolate such as Transparent Labs. You are paying for the sourcing and the natural sweetener system rather than for extra protein.
+          </p>
+
+          <p>
+            Legion's testing story is also weaker than its marketing language suggests. The brand says its products are independently certified by Labdoor and made in NSF-certified facilities. Neither of those is the same as NSF Certified for Sport or Informed Sport product certification, which is what drug-tested athletes need. If that matters to you, look elsewhere.
+          </p>
+
+          <p>
+            The rest of the range: <strong>Plant+</strong> is a solid pea and rice blend with 24 g of protein per serving. The plain <strong>whey concentrate</strong> is Legion's budget option at 20 g. <strong>Casein+</strong> lists 21 g of protein on its supplement-facts panel, fewer than the 25 g headline figure that appears in some places, which is the single most important thing to know before buying it.
+          </p>
+
+          <div class="bg-gray-900 text-white rounded-2xl p-6 lg:p-8 my-8">
+            <p class="text-xs font-black uppercase tracking-widest text-[#38BDF8] mb-4">Legion Whey+ at a Glance</p>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+              <div>
+                <p class="text-3xl font-black text-white">22 g</p>
+                <p class="text-gray-400 text-xs mt-1">Protein per scoop (label)</p>
+              </div>
+              <div>
+                <p class="text-3xl font-black text-[#38BDF8]">100</p>
+                <p class="text-gray-400 text-xs mt-1">Calories per scoop</p>
+              </div>
+              <div>
+                <p class="text-3xl font-black text-white">Stevia</p>
+                <p class="text-gray-400 text-xs mt-1">Sweetener; no sucralose</p>
+              </div>
+              <div>
+                <p class="text-3xl font-black text-[#38BDF8]">~$2.50</p>
+                <p class="text-gray-400 text-xs mt-1">Per 25 g protein, approx.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="who-makes-it" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            2. Who Makes Legion
+          </h2>
+
+          <p>
+            Legion Athletics was founded by Mike Matthews, a fitness author best known for the book Bigger Leaner Stronger, who used the success of his books to launch the supplement company and remains its chief executive. The brand's identity is evidence-based marketing: product pages lean on study citations and long explanations of why each ingredient is there, and the company has long promoted itself as using only natural sweeteners and flavors.
+          </p>
+
+          <p>
+            That positioning shows up on the labels. Every Legion protein is sweetened with stevia, often alongside monk fruit or allulose, rather than sucralose or acesulfame potassium. Flavors come from natural flavoring, and the protein sources are named specifically: Irish grass-fed whey isolate in Whey+, micellar casein from Irish grass-fed milk in Casein+, PURIS pea and organic brown rice in Plant+.
+          </p>
+
+          <p>
+            Legion also offers a money-back guarantee that does not require you to return the product, according to its product pages. That lowers the risk of trying a flavor you might dislike, which matters more than usual here because stevia-sweetened powders divide buyers. Some people find stevia's aftertaste noticeable; others prefer it to sucralose.
+          </p>
+
+          <p>
+            Legion sells primarily through its own website, but its proteins are also stocked by large retailers including Vitacost, iHerb, GNC and Kohl's, and by Amazon. Pricing and availability vary a lot between these channels, and several flavors were listed as temporarily unavailable at major retailers at the time of writing, so it pays to compare before ordering.
+          </p>
+        </div>
+
+        <!-- Picks -->
+        <div id="top-picks" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            3. The Legion Protein Range, Ranked
+          </h2>
+
+          <p>
+            Legion sells four protein powders at the time of writing: Whey+, a cheaper whey concentrate, Casein+ and Plant+. They are ranked below for the job of hitting a daily protein target, followed by two alternatives from other brands. Figures come from Legion's product pages and retailer supplement-facts panels at the time of writing and vary by flavor, so check the tub you buy. The ranking is built on label analysis, testing status and approximate cost per 25 g of protein, not on our own lab or taste tests.
+          </p>
+
+          {PRODUCTS.map((product, index) => (
+            <div id={product.id} class="scroll-mt-24 mt-12 first:mt-8">
+              <div class="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                <div class="bg-gray-900 px-6 py-4 flex items-center justify-between">
+                  <div class="flex items-center gap-3">
+                    <span class="bg-[#FF4500] text-white w-8 h-8 rounded-full flex items-center justify-center text-sm font-black">
+                      {index + 1}
+                    </span>
+                    {productImages[product.id] && (
+                      <img
+                        src={productImages[product.id]}
+                        alt={product.name}
+                        loading="lazy"
+                        width="40"
+                        height="40"
+                        class="w-10 h-10 rounded-lg bg-white object-contain p-1 shrink-0"
+                      />
+                    )}
+                    <div>
+                      <p class="text-white font-black text-lg">{product.name}</p>
+                      <p class="text-gray-400 text-xs">{product.category}</p>
+                    </div>
+                  </div>
+                  <span class="bg-[#38BDF8]/20 text-[#38BDF8] px-3 py-1 rounded-full text-xs font-bold hidden sm:block">
+                    {product.badge}
+                  </span>
+                </div>
+                <div class="p-6">
+                  {product.rating && (
+                  <div class="flex items-center gap-2 mb-4">
+                    <div class="flex text-yellow-400">
+                      {[...Array(5)].map((_, i) => (
+                        <svg
+                          class={`w-4 h-4 ${i < Math.floor(product.rating) ? "fill-current" : "text-gray-200"}`}
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                        >
+                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        </svg>
+                      ))}
+                    </div>
+                    <span class="text-gray-500 text-sm font-bold">{product.rating}</span>
+                    {product.reviewCount && <span class="text-gray-400 text-xs">({product.reviewCount.toLocaleString()} retailer reviews)</span>}
+                  </div>
+                  )}
+
+                  <SpecGrid specs={product.specs} />
+
+                  <p class="text-gray-700 leading-relaxed mb-6">{product.description}</p>
+
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                    <div class="bg-green-50 rounded-xl p-4">
+                      <p class="text-xs font-black uppercase tracking-widest text-green-700 mb-3">Pros</p>
+                      <ul class="space-y-2">
+                        {product.pros.map((pro) => (
+                          <li class="flex items-start gap-2 text-sm text-green-800">
+                            <svg class="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            {pro}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div class="bg-red-50 rounded-xl p-4">
+                      <p class="text-xs font-black uppercase tracking-widest text-red-700 mb-3">Cons</p>
+                      <ul class="space-y-2">
+                        {product.cons.map((con) => (
+                          <li class="flex items-start gap-2 text-sm text-red-800">
+                            <svg class="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                            {con}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+
+                  <div class="bg-gray-50 rounded-xl p-4 border border-gray-100">
+                    <p class="text-xs font-black uppercase tracking-widest text-gray-500 mb-1">The Bottom Line</p>
+                    <p class="text-gray-900 font-bold">{product.bottomLine}</p>
+                  </div>
+
+                  <a
+                    href={amazonLink(product.amazonUrl, product.name, product.id)}
+                    target="_blank"
+                    rel="sponsored nofollow noopener"
+                    class="mt-6 block bg-[#FF4500] hover:bg-[#E63E00] text-white text-center py-4 rounded-xl font-black no-underline transition-colors uppercase tracking-widest text-sm"
+                  >
+                    Check Price &rarr;
+                  </a>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div id="whey-label" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            4. The Whey+ Label, Line by Line
+          </h2>
+
+          <p>
+            A French Vanilla supplement-facts panel at a large retailer lists a 27.2 g scoop, 22 g of protein, 100 calories, 2 g of carbohydrate, 1 g of sugar with no added sugar, and zero fat, with about 30 servings in a 1.8 lb tub, at the time of writing. That is roughly 81 percent protein by weight, which is normal for a flavored isolate. Other flavors run slightly heavier per scoop; Legion and some retailers describe the protein as 22 to 23 g depending on flavor.
+          </p>
+
+          <p>
+            The ingredient list is short: whey protein isolate, natural flavors, xanthan gum, sunflower lecithin, salt and stevia. The same panel also lists a small amount of maltodextrin, about 1 g, and a stevia extract carried on dextrin. Neither matters nutritionally, but buyers who expect a pure isolate with nothing added should know they are there.
+          </p>
+
+          <p>
+            Twenty-two grams of whey isolate supplies roughly 2.2 to 2.4 g of leucine, since whey runs about 10 to 11 percent leucine. That clears the threshold usually cited for a full muscle-building response in a single serving for most adults. In other words, one scoop of Whey+ does the job; you do not need a scoop and a half as you might with a 20 g isolate.
+          </p>
+
+          <div class="overflow-hidden border border-gray-200 rounded-2xl my-8">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Label item</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Legion Whey+</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Typical mainstream whey</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Protein per scoop</td>
+                    <td class="px-4 py-4 text-gray-700">22 g</td>
+                    <td class="px-4 py-4 text-gray-700">24-25 g</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Calories</td>
+                    <td class="px-4 py-4 text-gray-700">About 100</td>
+                    <td class="px-4 py-4 text-gray-700">About 120</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Protein source</td>
+                    <td class="px-4 py-4 text-gray-700">Irish grass-fed whey isolate</td>
+                    <td class="px-4 py-4 text-gray-700">Whey concentrate and isolate blend</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Sweetener</td>
+                    <td class="px-4 py-4 text-gray-700">Stevia</td>
+                    <td class="px-4 py-4 text-gray-700">Often sucralose</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Testing</td>
+                    <td class="px-4 py-4 text-gray-700">Labdoor-certified brand (per Legion)</td>
+                    <td class="px-4 py-4 text-gray-700">Varies</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <p>
+            Buyer feedback on Whey+ is mostly positive about flavor, with the dessert-style options such as Cinnamon Cereal and Chocolate Peanut Butter drawing the most praise. The recurring complaint is mixing: some reviewers describe clumping in a shaker bottle, which a blender or a shaker with a whisk ball usually fixes. That is buyer feedback, not something we tested.
+          </p>
+        </div>
+
+        <div id="testing" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            5. Labdoor Testing vs NSF Certification
+          </h2>
+
+          <p>
+            Legion's pages describe the brand as independently certified by Labdoor, a company that buys supplements and tests them for label accuracy and contaminants, and say its products are made in NSF-certified, FDA-inspected facilities. Both statements are worth something. Neither is the same as a product sport certification.
+          </p>
+
+          <p>
+            A facility that is NSF certified for good manufacturing practice has passed audits of its processes. That is a baseline for any reputable supplement factory. It does not mean the specific Legion product has been tested for substances banned in sport. NSF Certified for Sport and Informed Sport are separate programs that test finished product lots for banned substances and are what anti-doping guidance tells athletes to look for.
+          </p>
+
+          <div class="bg-gray-900 text-white rounded-2xl p-6 lg:p-8 my-8">
+            <p class="text-xs font-black uppercase tracking-widest text-[#38BDF8] mb-3">The Rule</p>
+            <p class="text-xl font-bold text-white mb-3">Certified facility is not a certified product.</p>
+            <p class="text-gray-300 leading-relaxed m-0">If you compete in a drug-tested sport, search the exact product in the NSF Certified for Sport or Informed Sport databases. If it is not listed, it is not certified for your purposes, no matter what the facility holds.</p>
+          </div>
+
+          <p>
+            For a recreational lifter, Labdoor testing plus certificates of analysis covers the most important question, which is whether the protein on the label is in the tub. Legion publishes certificates of analysis on its product pages, which is better than many brands. It simply does not give you the banned-substance assurance that Momentous or Thorne provide.
+          </p>
+
+          <p>
+            Some retailer listings for Legion proteins also carry a California Proposition 65 warning about lead. That warning is a disclosure triggered at a very low threshold and appears on many cocoa-flavored and plant-based powders; it is not proof of an unsafe dose. If heavy metals concern you, the brand's certificates of analysis are the place to look, and our <a href="/is-protein-powder-safe/">protein powder safety guide</a> explains what the numbers mean.
+          </p>
+        </div>
+
+        <div id="casein" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            6. Casein+: Read the Supplement Panel
+          </h2>
+
+          <p>
+            Casein+ is micellar casein from Irish grass-fed milk, sweetened with Reb M, a purified stevia compound, and including a small amount of MCT powder. Micellar casein digests slowly, which is why people take it before bed. On paper, it is a well-built product with a clean label.
+          </p>
+
+          <p>
+            The number to watch is protein per scoop. A Dutch Chocolate supplement-facts panel at a major retailer lists a 28 g scoop with 100 calories and <strong>21 g of protein</strong>, alongside a line reading 25 g of micellar casein protein, at the time of writing. The 25 g figure is the weight of the casein ingredient; the 21 g figure is the protein it actually provides. Some reviews and parts of Legion's own page quote 25 or 26 g, which overstates the dose.
+          </p>
+
+          <p>
+            At around $70 for roughly 25 servings, that works out to about $3.30 per 25 g of protein, which is expensive for casein. Mainstream micellar caseins with 24 g of protein per scoop typically cost much less, and Legion's own comparison table on the Casein+ page lists competitors at about $1.30 to $1.45 per serving.
+          </p>
+
+          <p>
+            If you want casein specifically from grass-fed Irish milk with no artificial sweetener, Casein+ is one of very few options, and it is a fine product. If you just want a slow protein before bed, compare it with the picks in our <a href="/best-casein-protein-powder/">best casein protein powder</a> guide, where larger doses cost less per gram. Research on bedtime casein often uses 30 to 40 g, so with Casein+ you would need close to two scoops.
+          </p>
+        </div>
+
+        <div id="plant-concentrate" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            7. Plant+ and the Whey Concentrate
+          </h2>
+
+          <h3 class="text-2xl font-bold text-gray-900 mt-10 mb-4">Plant+</h3>
+
+          <p>
+            Plant+ combines PURIS pea protein with organic brown rice protein, which Legion lists as 17.6 g and 6.4 g respectively, for 24 g of protein per serving in about 130 to 140 calories depending on flavor. Legion says the peas are grown in North America and certified glyphosate-free. Sweetening comes from stevia, with monk fruit and allulose in some flavors.
+          </p>
+
+          <p>
+            That is a strong plant dose: 24 g of pea and rice protein supplies enough leucine for most adults in one serving, which many 20 g plant powders do not. At about $50 for 20 servings direct, Plant+ costs roughly $2.60 per 25 g of protein, mid-premium for a vegan powder. Like Whey+, it is Labdoor-tested per Legion but not NSF Certified for Sport. Our <a href="/best-plant-based-protein-powder/">best plant-based protein powder</a> guide has certified and cheaper alternatives.
+          </p>
+
+          <h3 class="text-2xl font-bold text-gray-900 mt-10 mb-4">Whey Protein (Concentrate)</h3>
+
+          <p>
+            Legion's newer, cheaper whey uses Avonlac 282 whey protein concentrate from cows never treated with rBST, according to the brand, and delivers 20 g of protein in about 120 calories per serving. Sweetening follows the house formula of stevia-family sweeteners and natural flavors.
+          </p>
+
+          <p>
+            Concentrate carries a little more lactose, fat and carbohydrate than isolate, which matters only if dairy sugar upsets your stomach. At around $45 per tub at retail, it lands at roughly $2 per 25 g of protein, though serving counts vary by flavor. That makes it Legion's value option, but it is still more expensive than mainstream whey blends with bigger scoops. Choose it if you want the Legion label and sweetener system for less money; otherwise a big-brand whey costs less.
+          </p>
+        </div>
+
+        <div id="cost" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            8. Cost per 25 g of Protein
+          </h2>
+
+          <p>
+            Scoop sizes in the Legion range run from 20 g to 24 g of protein, so price per tub tells you little. The fair comparison is cost per 25 g of protein. These are approximate figures at typical prices at the time of writing; Legion runs frequent sales and offers discounts for bundles and subscriptions, which can cut the cost by a fifth or more.
+          </p>
+
+          <div class="overflow-hidden border border-gray-200 rounded-2xl my-8">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Product</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Protein per serving</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Approx. cost per 25 g</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Legion Whey+</td>
+                    <td class="px-4 py-4 text-gray-700">22 g</td>
+                    <td class="px-4 py-4 text-gray-700">About $2.50</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Legion Plant+</td>
+                    <td class="px-4 py-4 text-gray-700">24 g</td>
+                    <td class="px-4 py-4 text-gray-700">About $2.60</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Legion Whey (concentrate)</td>
+                    <td class="px-4 py-4 text-gray-700">20 g</td>
+                    <td class="px-4 py-4 text-gray-700">About $2</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Legion Casein+</td>
+                    <td class="px-4 py-4 text-gray-700">21 g</td>
+                    <td class="px-4 py-4 text-gray-700">About $3.30</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Transparent Labs Grass-Fed Isolate</td>
+                    <td class="px-4 py-4 text-gray-700">28 g</td>
+                    <td class="px-4 py-4 text-gray-700">About $2.10</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Optimum Nutrition Gold Standard</td>
+                    <td class="px-4 py-4 text-gray-700">24 g</td>
+                    <td class="px-4 py-4 text-gray-700">Often $1.40-1.60</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <p>
+            Two things stand out. First, Whey+ is not the cheapest clean isolate. Transparent Labs puts 28 g of protein in a scoop and costs slightly less per 25 g at list price, with an Informed Choice certification the brand states on its page. Second, Casein+ is the worst value in the range, because its real protein figure is lower than the headline.
+          </p>
+
+          <p>
+            Legion's own comparison tables, which list Optimum Nutrition Gold Standard at about $1.38 per serving, make the budget gap clear. If cost per gram is your main concern, a mainstream whey wins easily. If a stevia-only label and Irish grass-fed sourcing matter to you, Whey+ on sale or in a bundle is a reasonable premium.
+          </p>
+
+          <p>
+            For a lifter taking one shake a day, the difference between Whey+ and a budget whey is roughly $25 to $30 a month at full price. Use our <a href="/how-much-protein-do-i-need/">protein needs guide</a> to work out whether you need one shake or two before deciding how much the premium is worth.
+          </p>
+        </div>
+
+        <div id="vs" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            9. Legion vs Transparent Labs, Momentous and Optimum Nutrition
+          </h2>
+
+          <p>
+            <strong>Transparent Labs Grass-Fed Whey Protein Isolate</strong> is the closest match in philosophy: grass-fed whey, stevia sweetening, no artificial colors, published lab results. It delivers about 28 g of protein per scoop versus 22 g for Whey+, and Transparent Labs states that it carries Informed Choice certification. For most buyers choosing between the two, Transparent Labs is the better value. Our <a href="/transparent-labs-protein-powder-review/">Transparent Labs review</a> covers the range.
+          </p>
+
+          <p>
+            <strong>Momentous Whey Protein Isolate</strong> is the pick for drug-tested athletes. It is NSF Certified for Sport, with 20 g of protein per scoop, and costs more per gram than Whey+. If you need a sport certification, Momentous or Thorne beat Legion; if you do not, Legion gives you more protein per scoop for less. See our <a href="/momentous-protein-powder-review/">Momentous review</a>.
+          </p>
+
+          <p>
+            <strong>Optimum Nutrition Gold Standard 100% Whey</strong> is the budget benchmark: about 24 g of protein per scoop from a whey blend led by isolate, with Informed Choice certification according to the brand, at a fraction of Legion's cost per gram. It uses artificial sweeteners in most flavors, which is the main reason Legion buyers avoid it. Read our <a href="/optimum-nutrition-protein-powder-review/">Optimum Nutrition review</a> for the full picture.
+          </p>
+
+          <div class="overflow-hidden border border-gray-200 rounded-2xl my-8">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Powder</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Protein per scoop</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Sweetener</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Testing</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Legion Whey+</td>
+                    <td class="px-4 py-4 text-gray-700">22 g</td>
+                    <td class="px-4 py-4 text-gray-700">Stevia</td>
+                    <td class="px-4 py-4 text-gray-700">Labdoor-certified brand (per Legion)</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Transparent Labs Isolate</td>
+                    <td class="px-4 py-4 text-gray-700">About 28 g</td>
+                    <td class="px-4 py-4 text-gray-700">Stevia</td>
+                    <td class="px-4 py-4 text-gray-700">Informed Choice (per brand)</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Momentous Isolate</td>
+                    <td class="px-4 py-4 text-gray-700">20 g</td>
+                    <td class="px-4 py-4 text-gray-700">Monk fruit and stevia</td>
+                    <td class="px-4 py-4 text-gray-700">NSF Certified for Sport</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">ON Gold Standard</td>
+                    <td class="px-4 py-4 text-gray-700">About 24 g</td>
+                    <td class="px-4 py-4 text-gray-700">Mostly sucralose</td>
+                    <td class="px-4 py-4 text-gray-700">Informed Choice (per brand)</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <p>
+            Put simply, Legion sits in a middle position: cleaner than the mainstream giants, less certified than the sport-focused brands, and slightly outgunned on value by Transparent Labs. It is a good product that is rarely the single best choice for any one buyer.
+          </p>
+        </div>
+
+        <div id="skip" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            10. Who Should Skip Legion
+          </h2>
+
+          <p>
+            <strong>Drug-tested athletes.</strong> Labdoor testing and NSF-registered facilities do not equal NSF Certified for Sport or Informed Sport product certification. Choose a product that appears in those databases instead, such as Momentous or Thorne.
+          </p>
+
+          <p>
+            <strong>Budget buyers.</strong> At about $2.50 per 25 g of protein for Whey+, Legion costs far more than mainstream wheys that deliver as much or more protein per scoop. If you are fine with sucralose, the savings are substantial. Our <a href="/best-whey-protein-powder/">best whey protein powder</a> guide lists the value leaders.
+          </p>
+
+          <p>
+            <strong>Anyone who dislikes stevia.</strong> Every Legion protein uses stevia or a stevia-derived sweetener. If its aftertaste bothers you, no Legion flavor will fix that. The no-return guarantee makes a trial low-risk, but go in knowing the sweetener system.
+          </p>
+
+          <p>
+            <strong>Casein buyers chasing a big dose.</strong> With 21 g of protein per scoop on the supplement panel and a high price, Casein+ is an expensive way to get bedtime protein. A mainstream micellar casein delivers more per scoop for less.
+          </p>
+
+          <p>
+            <strong>People with medical conditions.</strong> If you have kidney disease, are pregnant, have a milk allergy or take medication, check with your doctor or a registered dietitian before adding concentrated protein. Nothing here is medical advice.
+          </p>
+        </div>
+
+        <!-- Common Mistakes -->
+        <div id="mistakes" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            11. Common Mistakes to Avoid
+          </h2>
+
+          <div class="space-y-6 my-8">
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Reading the casein line instead of the protein line</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Casein+ panels list 25 g of micellar casein but 21 g of protein. The ingredient weight is not the protein dose. Always read the Protein row of the supplement-facts panel when comparing powders, especially when a review or ad quotes a rounder, bigger number. The gap here is about 4 g per scoop.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Treating an NSF-certified facility as a certified product</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Legion says its products are made in NSF-certified facilities. That is a manufacturing audit, not banned-substance testing of the product. Drug-tested athletes need the exact product listed in the NSF Certified for Sport or Informed Sport database, which Legion's proteins are not at the time of writing.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Paying full price</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Legion runs frequent sales, bundle discounts and subscription pricing on its own site, and retailer prices vary widely. Buying a single tub at full list price can cost a fifth more than a sale or multi-pack. Compare the brand site, Amazon and large retailers before ordering, and stock up only when the discount is real.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Assuming natural sweeteners taste neutral</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Stevia has a distinctive aftertaste that some people notice strongly. If you have disliked stevia-sweetened drinks before, try a small size or a single flavor first rather than a multi-tub bundle, and use the guarantee if it does not work for you. Mixing it into milk or a smoothie often softens the aftertaste.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Ignoring cheaper isolates with bigger scoops</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Whey+ is good, but Transparent Labs delivers about 28 g of protein per scoop with a similar clean label and slightly lower cost per 25 g. Compare cost per gram of protein across clean-label isolates before settling on the one with the best marketing or the most familiar name.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ -->
+        <div id="faq" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            12. Frequently Asked Questions
+          </h2>
+
+          <div class="space-y-6">
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is Legion protein powder good?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Yes, for recreational lifters who want natural sweeteners. Legion Whey+ provides 22 g of Irish grass-fed whey isolate protein in about 100 calories with stevia instead of sucralose. It is not NSF Certified for Sport, and at about $2.50 per 25 g of protein it costs more than mainstream wheys and slightly more than Transparent Labs.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">How much protein is in Legion Whey+?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                A French Vanilla supplement-facts panel lists 22 g of protein per 27.2 g scoop, with about 100 calories, 2 g of carbohydrate and no fat, at the time of writing. Legion and some retailers describe 22 to 23 g depending on flavor, so check the panel on the tub you buy.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is Legion Whey+ third-party tested?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Legion says its products are independently certified by Labdoor, publishes certificates of analysis, and states they are made in NSF-certified facilities. Whey+ is not listed as NSF Certified for Sport or Informed Sport at the time of writing, so drug-tested athletes should choose a product that appears in those databases.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">How much protein is in Legion Casein+?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Retailer supplement-facts panels list 21 g of protein per scoop of about 27 to 28 g, with roughly 100 calories, at the time of writing. A separate line lists 25 g of micellar casein, which is the ingredient weight rather than the protein dose, so expect about 21 g per scoop.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">What sweetener does Legion use?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Legion uses stevia across its proteins. Whey+ lists stevia leaf extract and a stevia extract on dextrin, Casein+ uses Reb M, and Plant+ and the whey concentrate add monk fruit or allulose in some flavors per Legion. None of the protein powders use sucralose or acesulfame potassium, per the labels at the time of writing.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is Legion protein sold on Amazon?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Yes. Legion's proteins are sold on Amazon as well as on Legion's own site and at retailers such as Vitacost, iHerb, GNC and Kohl's. Prices and stock vary by channel and flavor, and Legion's own site often has bundle discounts, so compare before buying a multi-tub order.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is Legion Whey+ better than Optimum Nutrition Gold Standard?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                It has a cleaner label, with Irish grass-fed whey isolate and stevia instead of sucralose, but Gold Standard gives slightly more protein per scoop for far less money and states Informed Choice certification. Choose Legion if natural sweeteners matter to you; choose Gold Standard if cost per gram matters more.
+              </p>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Related Guides -->
+        <div class="mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">Related Whey Isolate Guides</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <a href="/best-whey-protein-isolate/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#FF4500] font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Whey Protein Isolate</h3>
+              <p class="text-gray-500 text-sm mt-2">Legion Whey+ ranked against every major isolate on dose, testing and cost.</p>
+            </a>
+            <a href="/momentous-protein-powder-review/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#1E90FF] font-black text-xs uppercase tracking-widest mb-2">Brand Review</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Momentous Protein Powder Review</h3>
+              <p class="text-gray-500 text-sm mt-2">The NSF-certified isolate for drug-tested athletes, checked line by line.</p>
+            </a>
+            <a href="/transparent-labs-protein-powder-review/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#38BDF8] font-black text-xs uppercase tracking-widest mb-2">Brand Review</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Transparent Labs Protein Powder Review</h3>
+              <p class="text-gray-500 text-sm mt-2">A bigger-scoop grass-fed isolate with stevia and published lab results.</p>
+            </a>
+          </div>
+        </div>
+
+        <!-- Closing -->
+        <div class="mt-16 bg-gray-900 text-white rounded-2xl p-8">
+          <h2 class="text-2xl font-black text-white mb-4">The Bottom Line</h2>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            Legion makes clean, honestly sweetened protein with well-chosen sources, and Whey+ is a genuinely good grass-fed isolate: 22 g of protein in about 100 calories, stevia instead of sucralose, and a guarantee that removes most of the risk of trying it. What it lacks is a sport certification and a price edge, at roughly $2.50 per 25 g of protein.
+          </p>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            Buy Whey+ on sale if a stevia-only label matters to you. If you compete in a tested sport, buy an NSF or Informed Sport product instead. If you want the best value among clean isolates, compare it with Transparent Labs first. And if you are considering Casein+, read the protein line on the panel, not the headline.
+          </p>
+        </div>
+
+        <MoreInCategory category="Brand Reviews" links={moreInCategory} />
+
+        <AuthorBio />
+      </div>
+    </div>
+  </article>
+</Layout>

@@ -1,0 +1,916 @@
+---
+import Layout from "../layouts/Layout.astro";
+import MoreInCategory from "../components/MoreInCategory.astro";
+import { AUTHORS, DEFAULT_AUTHOR, authorSchema } from "../data/authors";
+import { SITE_NAME, SITE_URL } from "../data/site";
+import AuthorAvatar from "../components/AuthorAvatar.astro";
+import QuickPicks from "../components/QuickPicks.astro";
+import AuthorBio from "../components/AuthorBio.astro";
+import { amazonLink } from "../data/affiliate";
+import TrustBadge from "../components/TrustBadge.astro";
+import SocialProof from "../components/SocialProof.astro";
+import SpecGrid from "../components/SpecGrid.astro";
+import productImages from "../data/product-images.json";
+import { pageDates } from "../data/dates";
+
+const moreInCategory = [
+  {
+    "title": "Best Tasting Protein Powder",
+    "url": "/best-tasting-protein-powder/"
+  },
+  {
+    "title": "Best Chocolate Protein Powder",
+    "url": "/best-chocolate-protein-powder/"
+  },
+  {
+    "title": "Best Whey Protein Isolate",
+    "url": "/best-whey-protein-isolate/"
+  }
+];
+const author = AUTHORS[DEFAULT_AUTHOR];
+const dates = pageDates(Astro.url.pathname, { published: "2026-10-19", modified: "2026-10-19" });
+const title = "Fruity Pebbles Protein Powder: Every Pebbles Tub, Label-Checked";
+const description =
+  "Who makes Fruity Pebbles protein powder, what is on the ISO100 label, which Pebbles tub to buy, cost per 25 g of protein, and the cereal flavors that rival it.";
+
+const PRODUCTS: {
+  id: string;
+  name: string;
+  brand?: string;
+  badge: string;
+  category: string;
+  description: string;
+  pros: string[];
+  cons: string[];
+  bottomLine: string;
+  specs?: Record<string, string>;
+  rating?: number;
+  reviewCount?: number;
+  amazonUrl?: string;
+}[] = [
+  {
+    "id": "dymatize-iso100-fruity-pebbles",
+    "name": "Dymatize ISO100 Fruity Pebbles",
+    "brand": "Dymatize",
+    "badge": "Best Overall",
+    "category": "Hydrolyzed whey isolate + whey isolate",
+    "description": "The original licensed Fruity Pebbles powder. Per Dymatize's label at the time of writing, one 30 g scoop delivers 25 g of protein, about 120 calories, 2 g of carbohydrate and 1 g of sugar, with 5.5 g of BCAAs and about 2.6 g of leucine. It is sweetened with sucralose and stevia and sold in 20-serving, 3 lb and 5 lb tubs. Dymatize notes the formula is transitioning away from Red No. 3, so ingredient statements may vary.",
+    "pros": [
+      "25 g of protein in about 120 calories per scoop, per the label",
+      "Isolate base with very little lactose, fat or carbohydrate",
+      "Over 2.5 g of leucine in a single scoop",
+      "Widely sold, from Amazon to grocery chains"
+    ],
+    "cons": [
+      "Very sweet, with sucralose, stevia and artificial flavors",
+      "Premium isolate pricing per 25 g of protein",
+      "Contains milk and soy (lecithin)"
+    ],
+    "bottomLine": "The Pebbles product to buy: a genuinely lean isolate that happens to taste like cereal milk.",
+    "specs": {
+      "Protein per serving": "25 g per 30 g scoop (label)",
+      "Calories": "About 110-120",
+      "Third-party testing": "Banned-substance tested, per brand",
+      "Best for": "Most people, cutting"
+    },
+    "amazonUrl": "https://www.amazon.com/dp/B0855R418S"
+  },
+  {
+    "id": "dymatize-iso100-cocoa-pebbles",
+    "name": "Dymatize ISO100 Cocoa Pebbles",
+    "brand": "Dymatize",
+    "badge": "Best Chocolate Cereal",
+    "category": "Hydrolyzed whey isolate + whey isolate",
+    "description": "The chocolate sibling of Fruity Pebbles, built on the same isolate base. Dymatize lists 25 g of protein, 120 calories, 2 g of carbohydrate and 1 g of sugar per scoop, sweetened with sucralose and stevia, in 20-serving, 3 lb and 5 lb sizes. It pairs more easily with coffee, banana and peanut butter than the fruity version, which makes it the more flexible Pebbles flavor for recipes.",
+    "pros": [
+      "Same 25 g protein and low-sugar macros as Fruity Pebbles",
+      "Chocolate cereal flavor works in more recipes",
+      "Available in large 5 lb tubs on Amazon"
+    ],
+    "cons": [
+      "Same sweetener-heavy profile as the fruity version",
+      "Premium cost per 25 g compared with whey blends"
+    ],
+    "bottomLine": "Choose it over Fruity Pebbles if you would rather your shake taste like chocolate cereal milk.",
+    "specs": {
+      "Protein per serving": "25 g per scoop (label)",
+      "Calories": "About 120",
+      "Third-party testing": "Banned-substance tested, per brand",
+      "Best for": "Chocolate fans, recipes"
+    },
+    "amazonUrl": "https://www.amazon.com/dp/B0855BL69Y"
+  },
+  {
+    "id": "dymatize-iso100-pebbles-birthday-cake",
+    "name": "Dymatize ISO100 Pebbles Birthday Cake",
+    "brand": "Dymatize",
+    "badge": "Best Dessert Flavor",
+    "category": "Hydrolyzed whey isolate + whey isolate",
+    "description": "The third Pebbles flavor in the ISO100 line, aimed at people who like frosting and cake-batter flavors. Per Dymatize's label, a 30 g scoop gives 25 g of protein, 120 calories, 2 g of carbohydrate and 1 g of total sugar with 0 g added, sweetened with sucralose and stevia. Nutritionally it is the same product as Fruity Pebbles, so pick it on flavor alone.",
+    "pros": [
+      "Identical lean macros to the other ISO100 Pebbles flavors",
+      "Dessert-style flavor that suits yogurt bowls and baking",
+      "0 g of added sugar, per the label"
+    ],
+    "cons": [
+      "Fewer sizes and sellers than Fruity or Cocoa Pebbles",
+      "Sweet enough that some buyers prefer it mixed with milk"
+    ],
+    "bottomLine": "A fun rotation flavor with the same strong label, if you can find it in stock.",
+    "specs": {
+      "Protein per serving": "25 g per 30 g scoop (label)",
+      "Calories": "About 120",
+      "Third-party testing": "Banned-substance tested, per brand",
+      "Best for": "Dessert-flavor fans"
+    }
+  },
+  {
+    "id": "dymatize-super-mass-gainer-fruity-pebbles",
+    "name": "Dymatize Super Mass Gainer Fruity Pebbles",
+    "brand": "Dymatize",
+    "badge": "Best for Weight Gain",
+    "category": "Mass gainer (multi-source milk protein + carbohydrate)",
+    "description": "A high-calorie gainer, not a protein powder in the usual sense. Per Dymatize's label, one serving is 2.5 cups (333 g) and delivers about 1,280 calories, 52 g of protein, 245 g of carbohydrate and 10 g of fat, with 23 g of sugar. Protein comes from whey concentrate, milk protein isolate, whey isolate, hydrolyzed whey and micellar casein, and the main carbohydrate is maltodextrin. It is sold in a 6 lb bag.",
+    "pros": [
+      "About 1,280 calories and 52 g of protein per serving, per the label",
+      "Multi-source protein, including slower casein",
+      "Useful for hard gainers who struggle to eat enough"
+    ],
+    "cons": [
+      "Only about eight servings in a 6 lb bag",
+      "245 g of carbohydrate per serving is far too much for most people",
+      "Expensive per 25 g of protein"
+    ],
+    "bottomLine": "Only for people who genuinely need extra calories; everyone else should buy ISO100.",
+    "specs": {
+      "Protein per serving": "About 52 g per 333 g (label)",
+      "Calories": "About 1,280",
+      "Third-party testing": "Check brand and certifier",
+      "Best for": "Hard gainers only"
+    }
+  },
+  {
+    "id": "ghost-whey-trix-cereal-milk",
+    "name": "GHOST Whey Protein Trix Cereal Milk",
+    "brand": "Ghost",
+    "badge": "Alternative: Fruity Cereal Rival",
+    "category": "Whey isolate, concentrate and hydrolyzed isolate blend",
+    "description": "Launched in March 2026 as part of Ghost's licensed General Mills Cereal Milk line, alongside Lucky Charms and Cocoa Puffs. A GNC listing shows 25 g of protein and about 130 calories per 33.5 g scoop, with roughly 1 g of sugar and around 27 servings per tub. The base is a whey blend with added digestive enzymes and gums, sweetened with sucralose, so it is creamier and slightly higher in calories than ISO100.",
+    "pros": [
+      "25 g of protein per scoop, per retailer listings",
+      "Creamier whey blend for people who find isolate too thin",
+      "Licensed Trix flavor, a direct fruity-cereal rival"
+    ],
+    "cons": [
+      "Slightly more calories and fat than an isolate",
+      "Usually costs more per 25 g than ISO100 in large tubs"
+    ],
+    "bottomLine": "The best alternative if you want a fruity cereal shake that is thicker than ISO100.",
+    "specs": {
+      "Protein per serving": "25 g per 33.5 g scoop (listing)",
+      "Calories": "About 130",
+      "Third-party testing": "Check certifier databases",
+      "Best for": "Creamy-shake fans"
+    }
+  }
+];
+
+const schema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Home",
+          item: `${SITE_URL}/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Best Lists",
+          item: `${SITE_URL}/best-of/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 3,
+          name: "Fruity Pebbles Protein Powder",
+          item: `${SITE_URL}/fruity-pebbles-protein-powder/`,
+        },
+      ],
+    },
+    {
+      "@type": "FAQPage",
+      mainEntity: [
+        {
+          "@type": "Question",
+          "name": "Who makes Fruity Pebbles protein powder?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Dymatize makes it under license from Post Consumer Brands, which owns the Pebbles cereals. The flavor appears in Dymatize ISO100 whey isolate, Super Mass Gainer and the Performance Protein Shake. Dymatize is owned by BellRing Brands, the company behind Premier Protein, which was spun out of Post Holdings and completed its separation in 2022. Other brands sell cereal flavors, but not the Pebbles license."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How much protein is in Fruity Pebbles protein powder?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "ISO100 Fruity Pebbles lists 25 g of protein per 30 g scoop, with about 120 calories, 2 g of carbohydrate and 1 g of sugar, per Dymatize's label at the time of writing. Some retailer listings show 110 calories for the same product. The mass gainer version is very different, at about 52 g of protein and 1,280 calories per 333 g serving."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is Fruity Pebbles protein powder healthy?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The ISO100 version has a strong nutrition profile: mostly protein, very little sugar or fat, and over 2.5 g of leucine per scoop. It does contain sucralose, stevia, artificial flavors and color additives, which some people prefer to avoid. For most healthy adults it is a reasonable supplement. Anyone with a medical condition, pregnancy or kidney disease should ask a doctor or dietitian first."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does Fruity Pebbles protein powder contain Red 3?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It has historically used color additives, and Dymatize's product page says ingredient statements may vary while it transitions to a formula without Red No. 3. The FDA revoked Red No. 3 for food in January 2025 and gave manufacturers until January 2027 to reformulate. If this matters to you, check the ingredient list on the tub you receive."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is Fruity Pebbles protein good for weight loss?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "ISO100 Fruity Pebbles suits a calorie deficit well because it delivers 25 g of protein for about 120 calories and roughly 1 g of sugar, which helps you hit a protein target without many extra calories. The mass gainer does the opposite and should be avoided when cutting. Protein powder supports weight loss only as part of an overall calorie deficit."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I bake with Fruity Pebbles protein powder?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. It works in pancakes, muffins, mug cakes, yogurt bowls and no-bake bites. Because whey isolate dries out quickly, replace only part of the flour, add extra liquid or yogurt, and shorten the bake slightly. Heat can mute the flavor and change the texture, but cooking does not reduce the protein's nutritional value in any way that matters."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What tastes most like Fruity Pebbles if I cannot find it?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The closest current alternative is Ghost Whey Trix Cereal Milk, launched with General Mills in March 2026, which lists 25 g of protein per scoop. Optimum Nutrition has released a limited-edition Gold Standard Fruity Cereal flavor with 24 g of protein, but availability varies. ISO100 Pebbles Birthday Cake is another option with the same macros as Fruity Pebbles."
+          }
+        }
+      ],
+    },
+    {
+      "@type": "Article",
+      headline: title,
+      author: authorSchema(),
+      datePublished: dates.published,
+      dateModified: dates.modified,
+      publisher: { "@type": "Organization", name: SITE_NAME, url: SITE_URL },
+    },
+    {
+      "@type": "ItemList",
+      name: title,
+      numberOfItems: PRODUCTS.length,
+      itemListElement: PRODUCTS.map((product, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name: product.name,
+        url: new URL(`#${product.id}`, Astro.url).toString(),
+      })),
+    },
+    ...PRODUCTS.map((product) => ({
+      "@type": "Product",
+      name: product.name,
+      description: product.description,
+      brand: {
+        "@type": "Brand",
+        name: product.brand ?? product.name.split(" ")[0],
+      },
+    })),
+  ],
+};
+---
+
+<Layout
+  title={title}
+  description={description}
+  ogType="article"
+  article={{
+    publishedTime: dates.published,
+    modifiedTime: dates.modified,
+    author: author.name,
+    section: "Protein Powder",
+    tags: [
+      "fruity pebbles protein powder",
+      "fruity pebble protein powder",
+      "dymatize fruity pebbles",
+      "cereal flavored protein powder"
+    ],
+  }}
+  jsonLd={schema}
+  stickyCta={{
+    text: "See the Best-Tasting Protein Picks",
+    link: "/best-tasting-protein-powder/",
+  }}
+>
+  <article class="relative overflow-hidden">
+    <!-- Hero Section -->
+    <div class="bg-gray-900 py-16 lg:py-24 relative overflow-hidden">
+      <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(circle at 20% 20%, #38BDF8 0, transparent 45%), radial-gradient(circle at 80% 60%, #FF4500 0, transparent 40%);"></div>
+      <div class="max-w-4xl mx-auto px-4 relative z-10 text-center">
+        <div class="flex justify-center mb-6">
+          <TrustBadge />
+        </div>
+        <div class="flex justify-center gap-3 mb-6">
+          <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#FF4500]/20 text-[#FF4500] text-xs font-black uppercase tracking-widest border border-[#FF4500]/30">
+            Flavor Review
+          </span>
+          <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-green-500/10 text-green-400 text-xs font-bold uppercase tracking-widest border border-green-500/20">
+            Label-Checked
+          </span>
+        </div>
+        <h1 class="text-4xl lg:text-6xl font-black text-white leading-tight mb-8">
+          Fruity Pebbles <span class="text-[#38BDF8]">Protein Powder</span>
+        </h1>
+        <p class="text-xl text-gray-300 leading-relaxed mb-8 max-w-3xl mx-auto">
+          The licensed Fruity Pebbles powder comes from one company, Dymatize, and the flagship is a whey isolate with 25 g of protein in about 120 calories. Here is which Pebbles tub to buy, what it costs per 25 g, and who should pick something else.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a
+            href="#dymatize-iso100-fruity-pebbles"
+            class="px-8 py-4 bg-[#FF4500] hover:bg-[#E63E00] text-white font-black rounded-xl shadow-lg transition-all no-underline"
+          >
+            See Our #1 Pick
+          </a>
+          <a
+            href="#which-to-buy"
+            class="px-8 py-4 bg-white/10 hover:bg-white/20 text-white font-bold rounded-xl border border-white/10 no-underline"
+          >
+            Which One to Buy
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Author & Meta -->
+    <div class="max-w-3xl mx-auto px-4 pt-12">
+      <div class="flex items-center gap-6 border-b border-gray-100 pb-8">
+        <div class="flex items-center gap-3">
+          <AuthorAvatar size={48} />
+          <div>
+            <p class="text-sm font-bold text-gray-900">{author.name}</p>
+            <p class="text-xs text-gray-500 uppercase tracking-widest">{author.role}</p>
+          </div>
+        </div>
+        <div class="h-10 w-px bg-gray-200 hidden sm:block"></div>
+        <div class="hidden sm:block">
+          <p class="text-sm font-bold text-gray-900">Last Updated</p>
+          <p class="text-xs text-gray-500">{dates.display}</p>
+        </div>
+        <div class="hidden sm:block ml-auto">
+          <SocialProof />
+        </div>
+      </div>
+    </div>
+
+    <!-- Table of Contents -->
+    <div class="max-w-3xl mx-auto px-4 py-10">
+      <div class="bg-gray-50 border border-gray-200 rounded-2xl p-6 lg:p-8">
+        <h2 class="text-lg font-black text-gray-900 mb-4 flex items-center gap-2">
+          In This Guide
+        </h2>
+        <nav class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <a href="#who-makes-it" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">1. Who Makes It</a>
+          <a href="#label" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">2. The ISO100 Label</a>
+          <a href="#top-picks" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">3. The Pebbles Range</a>
+          <a href="#which-to-buy" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">4. Which One to Buy</a>
+          <a href="#cost" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">5. Cost per 25 g</a>
+          <a href="#colors-sweeteners" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">6. Colors and Sweeteners</a>
+          <a href="#other-cereal-flavors" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">7. Other Cereal Flavors</a>
+          <a href="#how-to-use" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">8. How to Use It</a>
+          <a href="#who-should-skip" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">9. Who Should Skip It</a>
+          <a href="#mistakes" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">10. Common Mistakes</a>
+          <a href="#faq" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">11. FAQ</a>
+        </nav>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="max-w-3xl mx-auto px-4 pb-16 lg:pb-24">
+      <div class="prose prose-lg prose-blue max-w-none text-gray-700 leading-relaxed">
+        <p class="text-2xl font-medium text-gray-900 mb-8 italic">
+          Fruity Pebbles protein powder is not a novelty tub from an unknown seller. It is Dymatize ISO100, one of the best-known whey isolates in the US, wearing a cereal license, and the label holds up: about 25 g of protein, roughly 1 g of sugar and around 120 calories per scoop. The real decisions are which Pebbles product fits your goal, whether the sweeteners and colors bother you, and how much you are paying for the flavor.
+        </p>
+
+        <QuickPicks products={PRODUCTS} />
+
+        <div id="who-makes-it" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            1. Who Actually Makes Fruity Pebbles Protein Powder
+          </h2>
+
+          <p>
+            The Fruity Pebbles protein powder you see in grocery aisles, at Target and on Amazon is made by <strong>Dymatize</strong>, under license from Post Consumer Brands, which owns the Pebbles cereal line. Dymatize sells the flavor across its ISO100 whey isolate and its Super Mass Gainer, and it also lists a Fruity Pebbles version of its ready-to-drink Performance Protein Shake. If a tub says Fruity Pebbles and protein powder on the front, it is almost certainly one of these.
+          </p>
+
+          <p>
+            The family connection explains the partnership. Dymatize is owned by BellRing Brands, the company that also owns Premier Protein. BellRing was spun out of Post Holdings, the parent of the Pebbles cereal business, with the main distribution to Post shareholders completed in March 2022 and Post selling its remaining BellRing shares later that year. The two companies are now separate, but the license has stayed in place and the Pebbles flavors remain on Dymatize's current product pages.
+          </p>
+
+          <p>
+            The Pebbles range is broader than most people realize. Alongside Fruity Pebbles, Dymatize's site lists ISO100 in <strong>Cocoa Pebbles</strong> and <strong>Pebbles Birthday Cake</strong>, all three built on the same hydrolyzed whey isolate base with near-identical macros. The flavor you pick changes the taste and color of the shake, not the nutrition, so the choice between them is purely about which cereal you liked as a kid.
+          </p>
+
+          <p>
+            One common mix-up is worth clearing up. Pure Protein, a different company, sells Fruity Pebbles and Cocoa Pebbles <em>protein bars</em> with about 20 g of protein each. Those are bars, not powder, and they come with more calories and a chewy coating. If you searched for the powder and landed on a bar listing, that is why. This page covers the powders and the shake.
+          </p>
+
+          <p>
+            Because the flagship is ISO100, everything you know about that product applies here. It is a hydrolyzed and regular whey isolate, which means very little lactose, fat or carbohydrate, and it mixes thin in water. For a full look at the rest of the Dymatize range, see our <a href="/dymatize-protein-powder-review/">Dymatize protein powder review</a>.
+          </p>
+        </div>
+
+        <div id="label" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            2. What Is on the ISO100 Fruity Pebbles Label
+          </h2>
+
+          <p>
+            Per Dymatize's own nutrition panel at the time of writing, one 30 g scoop of ISO100 Fruity Pebbles delivers <strong>25 g of protein, 120 calories, 2 g of carbohydrate, 1 g of total sugar with 0 g added, and 1 g of fat</strong>. Some US grocery listings show 110 calories for the same tub, which reflects rounding and label revisions rather than a different formula. Either way, about 83 percent of the scoop by weight is protein, which is excellent for a heavily flavored powder.
+          </p>
+
+          <div class="bg-gray-900 text-white rounded-2xl p-6 lg:p-8 my-8">
+            <p class="text-xs font-black uppercase tracking-widest text-[#38BDF8] mb-4">ISO100 Fruity Pebbles, per 30 g scoop (label)</p>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+              <div>
+                <p class="text-3xl font-black text-white">25 g</p>
+                <p class="text-gray-400 text-xs mt-1">Protein</p>
+              </div>
+              <div>
+                <p class="text-3xl font-black text-[#38BDF8]">120</p>
+                <p class="text-gray-400 text-xs mt-1">Calories</p>
+              </div>
+              <div>
+                <p class="text-3xl font-black text-white">1 g</p>
+                <p class="text-gray-400 text-xs mt-1">Total sugar</p>
+              </div>
+              <div>
+                <p class="text-3xl font-black text-[#38BDF8]">2.6 g</p>
+                <p class="text-gray-400 text-xs mt-1">Leucine</p>
+              </div>
+            </div>
+          </div>
+
+          <p>
+            The protein comes from hydrolyzed whey protein isolate and whey protein isolate. Dymatize lists 5.5 g of branched-chain amino acids per scoop, including about 2.6 g of leucine (one retailer listing rounds it to 2.7 g). That leucine figure matters because roughly 2.5 g per meal is the amount most often cited for maximally switching on muscle protein synthesis in younger adults, and one scoop clears it on its own.
+          </p>
+
+          <p>
+            The rest of the ingredient list is short: less than 2 percent of natural and artificial flavors, salt, soy lecithin, and two sweeteners, <strong>sucralose and steviol glycosides</strong> (stevia). The allergen statement lists milk and soy. The scoop also carries about 120 mg of sodium and 120 mg of calcium. There are no gums, no added creamer and no added sugar, which is why the calorie count stays so low.
+          </p>
+
+          <p>
+            On testing, Dymatize's Fruity Pebbles page describes the product as banned-substance tested but does not name the certifier on that page. If you compete in a tested sport, look up the exact flavor in the Informed Choice or Informed Sport database before you buy rather than assuming every ISO100 flavor and tub size is covered. For everyone else, the more useful point is that the label is clean and the protein figure is from isolate, not padded with added amino acids.
+          </p>
+        </div>
+
+        <!-- Picks -->
+        <div id="top-picks" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            3. The Pebbles Range, Ranked
+          </h2>
+
+          <p>
+            These are the Pebbles-licensed protein products Dymatize lists on its own site at the time of writing, ranked for most buyers, plus one cereal-flavored alternative from another brand. Label figures come from the brand and retailer listings and vary slightly by tub size and batch, so check the panel on the tub you receive.
+          </p>
+
+          {PRODUCTS.map((product, index) => (
+            <div id={product.id} class="scroll-mt-24 mt-12 first:mt-8">
+              <div class="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                <div class="bg-gray-900 px-6 py-4 flex items-center justify-between">
+                  <div class="flex items-center gap-3">
+                    <span class="bg-[#FF4500] text-white w-8 h-8 rounded-full flex items-center justify-center text-sm font-black">
+                      {index + 1}
+                    </span>
+                    {productImages[product.id] && (
+                      <img
+                        src={productImages[product.id]}
+                        alt={product.name}
+                        loading="lazy"
+                        width="40"
+                        height="40"
+                        class="w-10 h-10 rounded-lg bg-white object-contain p-1 shrink-0"
+                      />
+                    )}
+                    <div>
+                      <p class="text-white font-black text-lg">{product.name}</p>
+                      <p class="text-gray-400 text-xs">{product.category}</p>
+                    </div>
+                  </div>
+                  <span class="bg-[#38BDF8]/20 text-[#38BDF8] px-3 py-1 rounded-full text-xs font-bold hidden sm:block">
+                    {product.badge}
+                  </span>
+                </div>
+                <div class="p-6">
+                  {product.rating && (
+                  <div class="flex items-center gap-2 mb-4">
+                    <div class="flex text-yellow-400">
+                      {[...Array(5)].map((_, i) => (
+                        <svg
+                          class={`w-4 h-4 ${i < Math.floor(product.rating) ? "fill-current" : "text-gray-200"}`}
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                        >
+                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        </svg>
+                      ))}
+                    </div>
+                    <span class="text-gray-500 text-sm font-bold">{product.rating}</span>
+                    {product.reviewCount && <span class="text-gray-400 text-xs">({product.reviewCount.toLocaleString()} retailer reviews)</span>}
+                  </div>
+                  )}
+
+                  <SpecGrid specs={product.specs} />
+
+                  <p class="text-gray-700 leading-relaxed mb-6">{product.description}</p>
+
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                    <div class="bg-green-50 rounded-xl p-4">
+                      <p class="text-xs font-black uppercase tracking-widest text-green-700 mb-3">Pros</p>
+                      <ul class="space-y-2">
+                        {product.pros.map((pro) => (
+                          <li class="flex items-start gap-2 text-sm text-green-800">
+                            <svg class="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            {pro}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div class="bg-red-50 rounded-xl p-4">
+                      <p class="text-xs font-black uppercase tracking-widest text-red-700 mb-3">Cons</p>
+                      <ul class="space-y-2">
+                        {product.cons.map((con) => (
+                          <li class="flex items-start gap-2 text-sm text-red-800">
+                            <svg class="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                            {con}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+
+                  <div class="bg-gray-50 rounded-xl p-4 border border-gray-100">
+                    <p class="text-xs font-black uppercase tracking-widest text-gray-500 mb-1">The Bottom Line</p>
+                    <p class="text-gray-900 font-bold">{product.bottomLine}</p>
+                  </div>
+
+                  <a
+                    href={amazonLink(product.amazonUrl, product.name, product.id)}
+                    target="_blank"
+                    rel="sponsored nofollow noopener"
+                    class="mt-6 block bg-[#FF4500] hover:bg-[#E63E00] text-white text-center py-4 rounded-xl font-black no-underline transition-colors uppercase tracking-widest text-sm"
+                  >
+                    Check Price &rarr;
+                  </a>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div id="which-to-buy" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            4. Which Pebbles Product Should You Buy
+          </h2>
+
+          <p>
+            For nearly everyone, the answer is <strong>ISO100 Fruity Pebbles</strong>. It gives you 25 g of protein for about 120 calories, so it works in a cut, a maintenance phase or a lean bulk, and it is easy on most stomachs because isolate carries very little lactose. Buy the 20-serving tub first if you have never tried the flavor, then move to the 5 lb tub once you know you like it, because the larger size usually brings the cost per scoop down noticeably.
+          </p>
+
+          <p>
+            Pick <strong>ISO100 Cocoa Pebbles</strong> if you would rather have a chocolate shake that tastes like cereal milk than a fruity one. The macros are the same, with 25 g of protein and about 120 calories per scoop per the label, and the flavor is a little easier to pair with coffee, banana or peanut butter. Choose <strong>Pebbles Birthday Cake</strong> if you like frosting-style dessert flavors; it is the sweetest-sounding of the three but carries the same 1 g of sugar.
+          </p>
+
+          <p>
+            The <strong>Super Mass Gainer Fruity Pebbles</strong> is a completely different product and only suits a narrow group. One serving is 2.5 cups, or 333 g of powder, and delivers about 1,280 calories, 52 g of protein and 245 g of carbohydrate per Dymatize's label. That is useful for a hard gainer who cannot eat enough food, and a mistake for anyone else. If you are trying to gain weight, read our <a href="/best-protein-powder-for-weight-gain/">best protein powder for weight gain</a> guide before committing to a 6 lb bag.
+          </p>
+
+          <p>
+            The ready-to-drink <strong>Dymatize Performance Protein Shake in Fruity Pebbles</strong> is the grab-and-go option. Dymatize lists 30 g of protein, 160 calories and 1 g of sugar per 11.5 fl oz bottle, made from milk protein concentrate and calcium caseinate and sweetened with sucralose and acesulfame potassium. It costs more per gram of protein than the powder, but it is handy for a gym bag or a desk drawer, and it does not need a shaker.
+          </p>
+
+          <p>
+            If you specifically want a fruity cereal shake with a different base or brand, the main alternative right now is Ghost Whey in <strong>Trix Cereal Milk</strong>, launched with General Mills in March 2026. It is a whey blend rather than a pure isolate, so it is slightly creamier and slightly higher in calories. It is a reasonable swap if you find Dymatize too thin, and it appears as the alternative card in the picks above.
+          </p>
+        </div>
+
+        <div id="cost" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            5. What Fruity Pebbles Protein Costs per 25 g
+          </h2>
+
+          <p>
+            Cereal licensing does not add as much to the price as you might expect, because ISO100 already sits in the premium-isolate tier. A price tracker recorded the 20-serving Fruity Pebbles tub at about $28 on Amazon in mid-2026, which works out to roughly $1.40 per 25 g of protein. Larger tubs and sale prices usually bring that down toward $1.00 to $1.20 per 25 g. Prices move often, so treat these as approximate and check the listing on the day.
+          </p>
+
+          <div class="overflow-hidden border border-gray-200 rounded-2xl my-8">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Product</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Protein per serving</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Approx. cost per 25 g protein</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Notes</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">ISO100 Fruity Pebbles, 20 servings</td>
+                    <td class="px-4 py-4 text-gray-700">25 g</td>
+                    <td class="px-4 py-4 text-gray-700">About $1.30-1.50</td>
+                    <td class="px-4 py-4 text-gray-700">Best for trying the flavor</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">ISO100 Fruity Pebbles, 5 lb</td>
+                    <td class="px-4 py-4 text-gray-700">25 g</td>
+                    <td class="px-4 py-4 text-gray-700">About $1.00-1.30</td>
+                    <td class="px-4 py-4 text-gray-700">Best value per scoop</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">ISO100 Cocoa or Birthday Cake</td>
+                    <td class="px-4 py-4 text-gray-700">25 g</td>
+                    <td class="px-4 py-4 text-gray-700">Same tier as Fruity</td>
+                    <td class="px-4 py-4 text-gray-700">Same base and macros</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Ghost Whey Trix Cereal Milk</td>
+                    <td class="px-4 py-4 text-gray-700">25 g</td>
+                    <td class="px-4 py-4 text-gray-700">About $1.70-2.00</td>
+                    <td class="px-4 py-4 text-gray-700">Smaller tubs, whey blend</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Performance Protein Shake</td>
+                    <td class="px-4 py-4 text-gray-700">30 g per bottle</td>
+                    <td class="px-4 py-4 text-gray-700">Higher than powder</td>
+                    <td class="px-4 py-4 text-gray-700">Convenience price</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <p>
+            For context, a large tub of a mainstream whey blend such as Optimum Nutrition Gold Standard usually lands somewhere around $0.90 to $1.20 per 25 g at typical prices. So the Pebbles premium over a plain chocolate blend is real but modest, and part of it is the isolate itself rather than the license. Our <a href="/best-cheap-protein-powder/">best cheap protein powder</a> guide covers the options that cost meaningfully less.
+          </p>
+
+          <p>
+            The mass gainer is harder to compare because most of what you are buying is carbohydrate. A 6 lb bag holds only about eight 333 g servings, so even a modest price per bag translates to several dollars per serving. If your goal is calories, that may be fine. If your goal is protein, the gainer is the most expensive way on this page to buy 25 g of it.
+          </p>
+
+          <p>
+            Two habits keep the cost down. First, buy the 5 lb tub once you know you like the flavor, because the 20-serving size carries the highest price per scoop. Second, compare Amazon with warehouse clubs and grocery chains; Dymatize lists a 50-serving size through Costco, and Subscribe and Save discounts on Amazon can take a few percent off a tub you buy every month.
+          </p>
+        </div>
+
+        <div id="colors-sweeteners" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            6. Colors, Sweeteners and the Red No. 3 Question
+          </h2>
+
+          <p>
+            The cereal look comes partly from color additives, and that is where some buyers pause. In January 2025 the FDA revoked the authorization for FD&amp;C Red No. 3 in food, giving manufacturers until January 2027 to reformulate. Dymatize's Fruity Pebbles page notes that ingredient statements may vary while it transitions to a formula without Red No. 3, so read the label on the tub you receive rather than an old photo online.
+          </p>
+
+          <p>
+            In practice this means two versions may be on shelves at the same time, especially at third-party sellers with older stock. If avoiding Red No. 3 matters to you, check the ingredient panel or the photo of the actual lot before ordering, and favor listings sold or shipped by Amazon or a major retailer, which tend to turn stock faster. The protein, calories and sugar are not affected by the color change.
+          </p>
+
+          <p>
+            The sweeteners are the bigger day-to-day factor. ISO100 Pebbles flavors use sucralose plus steviol glycosides, a combination that keeps sugar near 1 g but makes the shake taste noticeably sweet. Most people are fine with both. A minority find stevia bitter or sucralose cloying, and some report digestive discomfort from high-intensity sweeteners in general. If you already know you dislike sucralose, no Pebbles product is going to change your mind.
+          </p>
+
+          <p>
+            There is also soy lecithin, a mixing agent used in tiny amounts, which is why the allergen line lists soy. Most people with a soy sensitivity tolerate lecithin, but anyone with a diagnosed soy allergy should talk to their doctor or allergist rather than rely on that general rule. The same applies to the milk allergen: isolate is low in lactose, but it is still milk protein, so it is not suitable for a milk allergy.
+          </p>
+
+          <div class="bg-gray-900 text-white rounded-2xl p-6 lg:p-8 my-8">
+            <p class="text-xs font-black uppercase tracking-widest text-[#38BDF8] mb-3">THE RULE</p>
+            <p class="text-xl font-bold text-white mb-3">Read the tub, not the listing photo.</p>
+            <p class="text-gray-300 leading-relaxed m-0">During a reformulation, the ingredient list on an older product photo may not match the tub that ships. If a specific color or sweetener matters to you, confirm it on the label you receive and return it if it does not match what you need.</p>
+          </div>
+        </div>
+
+        <div id="other-cereal-flavors" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            7. Fruity Pebbles vs Other Cereal-Flavored Protein
+          </h2>
+
+          <p>
+            Cereal flavors became one of the biggest trends in protein powder over the last decade, and Fruity Pebbles is the most recognizable licensed version. The closest rivals now come from <strong>Ghost</strong>, which in March 2026 launched three Ghost Whey Cereal Milk flavors with General Mills: Lucky Charms, Cocoa Puffs and Trix. Trix is the direct fruity competitor to Fruity Pebbles, while Cocoa Puffs lines up against Cocoa Pebbles.
+          </p>
+
+          <p>
+            The bases differ in a way you can read on the label. Ghost uses a blend of whey isolate, whey concentrate and hydrolyzed whey isolate with added digestive enzymes and gums, and a GNC listing for Trix shows 25 g of protein and about 130 calories per 33.5 g scoop. ISO100 is isolate-only, so it is a little leaner and thinner, while Ghost tends to be thicker. Neither is clearly better; it depends on whether you prefer a light or creamy shake. Our <a href="/ghost-protein-powder-review/">Ghost protein powder review</a> covers the rest of that range.
+          </p>
+
+          <p>
+            Ghost also sold its own unlicensed Fruity Cereal Milk flavor for years, with retailer listings showing about 25 g of protein and 120 calories per scoop. At least one product database now lists that flavor as off the market, so treat it as possibly discontinued and buy the current Trix Cereal Milk instead if you want Ghost's take on a fruity cereal.
+          </p>
+
+          <p>
+            Optimum Nutrition has also released a Fruity Cereal flavor of Gold Standard 100% Whey with 24 g of protein per serving, but it launched as a limited edition, so availability comes and goes. Reviews of it are mixed, and some review sites that compared the two point buyers back to ISO100 Fruity Pebbles as the more convincing cereal taste. As always, taste is personal, and that is reported feedback rather than our own testing.
+          </p>
+
+          <p>
+            If you like dessert and cereal flavors generally, our <a href="/best-tasting-protein-powder/">best-tasting protein powder</a> roundup ranks the wider field, and our <a href="/best-vanilla-protein-powder/">best vanilla protein powder</a> guide covers the plainer flavor that works best as a base for recipes. Many people keep one fun flavor and one neutral flavor in the cupboard, which avoids flavor fatigue over a long tub.
+          </p>
+        </div>
+
+        <div id="how-to-use" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            8. How to Use Fruity Pebbles Protein Powder
+          </h2>
+
+          <p>
+            The simplest use is the one on the tub: one scoop in water or milk. Water keeps the shake at roughly 120 calories and makes it taste lighter and fruitier. Milk adds calories and protein and pushes it toward actual cereal milk, which is the effect many buyers are after. Dymatize suggests mixing a scoop with liquid; starting with about 8 to 10 oz and adjusting to taste is a sensible way to find your ratio.
+          </p>
+
+          <p>
+            Because ISO100 is so low in fat and carbohydrate, it is a flexible ingredient. Stirred into Greek yogurt, it turns plain yogurt into a sweet cereal-flavored bowl with well over 35 g of protein. Mixed into overnight oats, it adds flavor without extra sugar. Food bloggers have built whole recipe categories around it, from protein puppy chow coatings to no-bake bites and mug cakes, which is a fair sign of how well the flavor carries into food.
+          </p>
+
+          <p>
+            Baking with isolate needs one adjustment: it dries out faster than flour. In pancakes or muffins, replace only part of the flour with protein powder, add a little extra liquid or yogurt, and pull the bake a minute or two early. Cooking does not destroy the protein's nutritional value, although heat can change the texture and mute the flavor slightly.
+          </p>
+
+          <p>
+            Timing matters less than total intake. Whether you drink it after training, at breakfast or as an evening snack, the bigger lever is hitting your daily protein target. If you are not sure what that number is, our <a href="/how-much-protein-do-i-need/">how much protein do I need</a> guide walks through it, and our <a href="/when-to-take-protein-powder/">when to take protein powder</a> page covers timing for specific goals.
+          </p>
+        </div>
+
+        <div id="who-should-skip" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            9. Who Should Skip Fruity Pebbles Protein
+          </h2>
+
+          <p>
+            Skip it if you want a <strong>clean-label or unsweetened powder</strong>. ISO100 Pebbles flavors use artificial flavors alongside natural ones, two high-intensity sweeteners and color additives. That is not a safety problem at the levels used, but it is the opposite of a minimal ingredient list. If that is your priority, our <a href="/best-unflavored-protein-powder/">best unflavored protein powder</a> picks are the better place to start.
+          </p>
+
+          <p>
+            Skip it if you are <strong>dairy-free or vegan</strong>. Every Pebbles powder is built on milk protein, and the mass gainer adds casein and milk protein isolate on top of whey. A plant-based powder is the only real option here, and none of the major plant brands currently sells a licensed Pebbles flavor that we could confirm.
+          </p>
+
+          <p>
+            Skip the <strong>mass gainer</strong> unless you have a genuine calorie problem. At about 1,280 calories and 245 g of carbohydrate per serving, it can push most people well past their daily needs in one shake. If you just want more protein, two scoops of ISO100 give you 50 g of protein in about 240 calories.
+          </p>
+
+          <p>
+            Finally, talk to a doctor or registered dietitian before relying on any protein powder if you have kidney disease, are pregnant or breastfeeding, manage a medical condition with diet, or are buying it for a child or teenager. The bright cereal branding appeals to younger users, but protein supplements are intended for adults, and most teenagers can meet their protein needs from food. This page is general information, not medical advice.
+          </p>
+        </div>
+
+        <!-- Common Mistakes -->
+        <div id="mistakes" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            10. Common Mistakes to Avoid
+          </h2>
+
+          <div class="space-y-6 my-8">
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Buying the mass gainer by accident</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Super Mass Gainer Fruity Pebbles and ISO100 Fruity Pebbles share a flavor and a logo but not a purpose. The gainer delivers about 1,280 calories per serving against roughly 120 for ISO100. Check the product name and serving size before you order, especially on mobile listings where the titles get cut off.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Assuming every flavor is certified</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Dymatize describes ISO100 as banned-substance tested, but certification databases list specific products and flavors, not whole brands. If you are a drug-tested athlete, search the exact Pebbles flavor in the certifier's database before you rely on it. A certificate for one ISO100 flavor does not automatically cover every tub.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Trusting an old label photo</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Dymatize is transitioning the formula away from Red No. 3, so an older listing photo may show a different ingredient list from the tub that ships. If a specific color or ingredient matters to you, read the label on the product you receive and buy from sellers that turn stock quickly.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Starting with the biggest tub</h3>
+              <p class="text-gray-700 text-sm m-0">
+                The 5 lb tub is the best value per scoop, but only if you like the flavor. Fruity Pebbles is sweet and distinctive, and some people tire of it within a few weeks. Buy the 20-serving size first, then move up once you know you will finish the larger tub.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Confusing bars with powder</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Pure Protein sells Fruity Pebbles bars with about 20 g of protein each, and they often appear in the same search results as the powder. Bars carry more calories and are a different product from a different company. If you want the 25 g, low-sugar shake, look for Dymatize ISO100 specifically.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ -->
+        <div id="faq" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            11. Frequently Asked Questions
+          </h2>
+
+          <div class="space-y-6">
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Who makes Fruity Pebbles protein powder?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Dymatize makes it under license from Post Consumer Brands, which owns the Pebbles cereals. The flavor appears in Dymatize ISO100 whey isolate, Super Mass Gainer and the Performance Protein Shake. Dymatize is owned by BellRing Brands, the company behind Premier Protein, which was spun out of Post Holdings and completed its separation in 2022. Other brands sell cereal flavors, but not the Pebbles license.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">How much protein is in Fruity Pebbles protein powder?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                ISO100 Fruity Pebbles lists 25 g of protein per 30 g scoop, with about 120 calories, 2 g of carbohydrate and 1 g of sugar, per Dymatize's label at the time of writing. Some retailer listings show 110 calories for the same product. The mass gainer version is very different, at about 52 g of protein and 1,280 calories per 333 g serving.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is Fruity Pebbles protein powder healthy?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                The ISO100 version has a strong nutrition profile: mostly protein, very little sugar or fat, and over 2.5 g of leucine per scoop. It does contain sucralose, stevia, artificial flavors and color additives, which some people prefer to avoid. For most healthy adults it is a reasonable supplement. Anyone with a medical condition, pregnancy or kidney disease should ask a doctor or dietitian first.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Does Fruity Pebbles protein powder contain Red 3?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                It has historically used color additives, and Dymatize's product page says ingredient statements may vary while it transitions to a formula without Red No. 3. The FDA revoked Red No. 3 for food in January 2025 and gave manufacturers until January 2027 to reformulate. If this matters to you, check the ingredient list on the tub you receive.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is Fruity Pebbles protein good for weight loss?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                ISO100 Fruity Pebbles suits a calorie deficit well because it delivers 25 g of protein for about 120 calories and roughly 1 g of sugar, which helps you hit a protein target without many extra calories. The mass gainer does the opposite and should be avoided when cutting. Protein powder supports weight loss only as part of an overall calorie deficit.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Can I bake with Fruity Pebbles protein powder?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Yes. It works in pancakes, muffins, mug cakes, yogurt bowls and no-bake bites. Because whey isolate dries out quickly, replace only part of the flour, add extra liquid or yogurt, and shorten the bake slightly. Heat can mute the flavor and change the texture, but cooking does not reduce the protein's nutritional value in any way that matters.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">What tastes most like Fruity Pebbles if I cannot find it?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                The closest current alternative is Ghost Whey Trix Cereal Milk, launched with General Mills in March 2026, which lists 25 g of protein per scoop. Optimum Nutrition has released a limited-edition Gold Standard Fruity Cereal flavor with 24 g of protein, but availability varies. ISO100 Pebbles Birthday Cake is another option with the same macros as Fruity Pebbles.
+              </p>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Related Guides -->
+        <div class="mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">Related Protein Flavor Guides</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <a href="/best-tasting-protein-powder/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#FF4500] font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Tasting Protein Powder</h3>
+              <p class="text-gray-500 text-sm mt-2">The flavors buyers rate highest, from cereal milk to plain chocolate.</p>
+            </a>
+            <a href="/dymatize-protein-powder-review/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#38BDF8] font-black text-xs uppercase tracking-widest mb-2">Brand Review</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Dymatize Protein Powder Review</h3>
+              <p class="text-gray-500 text-sm mt-2">ISO100, the mass gainer and the rest of the Dymatize range, label-checked.</p>
+            </a>
+            <a href="/ghost-protein-powder-review/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#22C55E] font-black text-xs uppercase tracking-widest mb-2">Brand Review</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Ghost Protein Powder Review</h3>
+              <p class="text-gray-500 text-sm mt-2">Ghost Whey's licensed cereal and cookie flavors, and what is in the tub.</p>
+            </a>
+          </div>
+        </div>
+
+        <!-- Closing -->
+        <div class="mt-16 bg-gray-900 text-white rounded-2xl p-8">
+          <h2 class="text-2xl font-black text-white mb-4">The Bottom Line</h2>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            Fruity Pebbles protein powder is better than its branding suggests. The ISO100 version is a genuine whey isolate with 25 g of protein, about 120 calories and roughly 1 g of sugar per scoop, and the Cocoa Pebbles and Birthday Cake flavors share the same label. If you want a fun flavor that does not compromise your macros, it is one of the easiest recommendations on the shelf.
+          </p>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            Buy the 20-serving tub first, move to the 5 lb tub if you like it, and ignore the mass gainer unless you truly need the calories. If you want a creamier fruity cereal shake, Ghost Whey Trix Cereal Milk is the alternative, and if you would rather avoid sweeteners and colors altogether, an unflavored isolate is the better buy.
+          </p>
+        </div>
+
+        <MoreInCategory category="Protein Powder" links={moreInCategory} />
+
+        <AuthorBio />
+      </div>
+    </div>
+  </article>
+</Layout>

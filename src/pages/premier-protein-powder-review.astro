@@ -1,0 +1,903 @@
+---
+import Layout from "../layouts/Layout.astro";
+import MoreInCategory from "../components/MoreInCategory.astro";
+import { AUTHORS, DEFAULT_AUTHOR, authorSchema } from "../data/authors";
+import { SITE_NAME, SITE_URL } from "../data/site";
+import AuthorAvatar from "../components/AuthorAvatar.astro";
+import QuickPicks from "../components/QuickPicks.astro";
+import AuthorBio from "../components/AuthorBio.astro";
+import { amazonLink } from "../data/affiliate";
+import TrustBadge from "../components/TrustBadge.astro";
+import SocialProof from "../components/SocialProof.astro";
+import SpecGrid from "../components/SpecGrid.astro";
+import productImages from "../data/product-images.json";
+import { pageDates } from "../data/dates";
+
+const moreInCategory = [
+  {
+    "title": "Best Whey Protein Powder",
+    "url": "/best-whey-protein-powder/"
+  },
+  {
+    "title": "Ghost Protein Powder Review",
+    "url": "/ghost-protein-powder-review/"
+  },
+  {
+    "title": "Pure Protein Powder Review",
+    "url": "/pure-protein-powder-review/"
+  }
+];
+const author = AUTHORS[DEFAULT_AUTHOR];
+const dates = pageDates(Astro.url.pathname, { published: "2026-10-19", modified: "2026-10-19" });
+const title = "Premier Protein Powder Review: Is the 30 g Whey Worth Buying?";
+const description =
+  "Premier Protein powder gives 30 g of whey for about 150 calories per the label. We price it per 25 g, compare it with the shakes and say who should buy it.";
+
+const PRODUCTS: {
+  id: string;
+  name: string;
+  brand?: string;
+  badge: string;
+  category: string;
+  description: string;
+  pros: string[];
+  cons: string[];
+  bottomLine: string;
+  specs?: Record<string, string>;
+  rating?: number;
+  reviewCount?: number;
+  amazonUrl?: string;
+}[] = [
+  {
+    "id": "premier-protein-100-whey-chocolate-milkshake",
+    "name": "Premier Protein 100% Whey Protein Powder, Chocolate Milkshake",
+    "brand": "Premier Protein",
+    "badge": "Flagship Pick",
+    "category": "Whey isolate and concentrate blend",
+    "description": "Chocolate Milkshake is the powder version of the flavor that made Premier's shakes famous. Per the label at the time of writing, two scoops give 30 g of protein, about 150 calories and about 1 g of sugar, from an isolate-led blend of whey protein isolate and concentrate, sweetened with sucralose and acesulfame potassium. Each tub has about 17 servings, and at typical prices it is one of the cheaper ways to buy 25 g of whey from a mainstream brand.",
+    "pros": [
+      "30 g of protein for about 150 calories per serving",
+      "Isolate listed first in the protein blend",
+      "Roughly $1.20 to $1.70 per 25 g of protein at typical prices",
+      "Easy to find in supermarkets and on Amazon"
+    ],
+    "cons": [
+      "No NSF or Informed certification we could find",
+      "Uses sucralose, acesulfame potassium and artificial flavors",
+      "Two scoops per serving, so the tub empties faster than it looks"
+    ],
+    "bottomLine": "A cheap, lean, protein-dense whey that suits everyday use but not tested athletes.",
+    "specs": {
+      "Protein per serving": "30 g (label, 2 scoops)",
+      "Calories": "About 150",
+      "Third-party testing": "No sport certification found",
+      "Best for": "Budget everyday whey"
+    },
+    "amazonUrl": "https://www.amazon.com/dp/B06Y5ZG66K"
+  },
+  {
+    "id": "premier-protein-100-whey-cafe-latte",
+    "name": "Premier Protein 100% Whey Protein Powder, Cafe Latte",
+    "brand": "Premier Protein",
+    "badge": "Best Morning Shake",
+    "category": "Whey blend with caffeine",
+    "description": "Cafe Latte has the same base as the classic powder, 30 g of protein and about 150 calories per two-scoop serving per the label, with caffeine added. Its Amazon listing gives about 95 mg of caffeine per serving, roughly a small cup of coffee, which makes it a convenient protein coffee or pre-workout shake. Keep it to mornings: two servings plus your usual coffee add up quickly.",
+    "pros": [
+      "Protein and caffeine in one shake",
+      "Same 30 g protein and lean macros as the classic",
+      "Mixes into cold brew or iced coffee"
+    ],
+    "cons": [
+      "Caffeine makes it a poor evening shake",
+      "Not for anyone avoiding stimulants or pregnant"
+    ],
+    "bottomLine": "The tub to buy if your protein shake and your morning coffee are the same drink.",
+    "specs": {
+      "Protein per serving": "30 g (label, 2 scoops)",
+      "Calories": "About 150",
+      "Caffeine": "About 95 mg (per listing)",
+      "Best for": "Morning protein coffee"
+    },
+    "amazonUrl": "https://www.amazon.com/dp/B07W6BBGV6"
+  },
+  {
+    "id": "premier-protein-powder-plus-fiber",
+    "name": "Premier Protein Powder Plus Fiber, Vanilla",
+    "brand": "Premier Protein",
+    "badge": "Best for Fiber",
+    "category": "Whey protein with prebiotic fiber",
+    "description": "Protein Plus Fiber gives 25 g of whey protein, 7 g of prebiotic soluble fiber and 1 g of sugar per serving, with no added sugar, per Premier at the time of writing. That 7 g is roughly a quarter of a typical daily fiber target, so this is a sensible pick for people who struggle to eat enough vegetables and whole grains. It comes in vanilla and chocolate in 17-serving tubs and costs slightly more per gram of protein than the classic.",
+    "pros": [
+      "7 g of prebiotic fiber per serving",
+      "No added sugar, per the brand",
+      "A two-in-one that can replace a fiber supplement"
+    ],
+    "cons": [
+      "5 g less protein per serving than the classic powder",
+      "Extra fiber can cause bloating at first"
+    ],
+    "bottomLine": "Worth the small premium if you would otherwise buy a separate fiber supplement.",
+    "specs": {
+      "Protein per serving": "25 g (brand)",
+      "Fiber": "7 g prebiotic soluble fiber",
+      "Third-party testing": "No sport certification found",
+      "Best for": "Low-fiber diets"
+    },
+    "amazonUrl": "https://www.amazon.com/dp/B0F79XRN4F"
+  },
+  {
+    "id": "premier-protein-shake",
+    "name": "Premier Protein 30g Protein Shake",
+    "brand": "Premier Protein",
+    "badge": "Best Ready-to-Drink",
+    "category": "Ready-to-drink milk protein shake",
+    "description": "The bottled shake is the product most people know. Per the label at the time of writing, each 11 to 11.5 fl oz carton gives about 30 g of protein, 160 calories and 1 g of sugar, from milk protein concentrate and calcium caseinate, with 24 vitamins and minerals. It needs no shaker or cleanup, and bought by the case on sale it can come close to the powder's cost per gram, though single bottles cost far more.",
+    "pros": [
+      "Zero prep, ideal for work, travel and the car",
+      "30 g of casein-rich protein that many buyers find filling",
+      "24 vitamins and minerals per carton"
+    ],
+    "cons": [
+      "Bulky to store compared with a powder tub",
+      "Usually costs more per gram than the powder, especially in singles"
+    ],
+    "bottomLine": "Keep a case for busy days and use the powder at home.",
+    "specs": {
+      "Protein per serving": "About 30 g (label)",
+      "Calories": "About 160",
+      "Protein type": "Milk protein concentrate, caseinate",
+      "Best for": "On-the-go protein"
+    }
+  },
+  {
+    "id": "optimum-nutrition-gold-standard-100-whey",
+    "name": "Optimum Nutrition Gold Standard 100% Whey",
+    "brand": "Optimum Nutrition",
+    "badge": "Alternative: Tested and More Flavors",
+    "category": "Isolate-led whey blend",
+    "description": "If you want a similar price with more flavors and a testing claim, Gold Standard is the alternative. Per the label at the time of writing, one scoop gives about 24 g of protein in roughly 120 to 130 calories, with whey isolate listed first, and Optimum Nutrition describes it as banned-substance tested, with Informed Choice promoted on many flavors. It comes in more than 20 flavors and tubs up to about 10 lb.",
+    "pros": [
+      "More than 20 flavors",
+      "Banned-substance tested, per the brand",
+      "Very competitive cost per gram in the 5 lb tub"
+    ],
+    "cons": [
+      "24 g per scoop, less than Premier's 30 g serving",
+      "Confirm the certification for your exact flavor"
+    ],
+    "bottomLine": "Buy this instead of Premier if flavor range or a testing claim matters to you.",
+    "specs": {
+      "Protein per serving": "About 24 g (label)",
+      "Calories": "About 120-130",
+      "Third-party testing": "Banned-substance tested (brand)",
+      "Best for": "All-round whey"
+    }
+  }
+];
+
+const schema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Home",
+          item: `${SITE_URL}/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Best Lists",
+          item: `${SITE_URL}/best-of/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 3,
+          name: "Premier Protein Powder Review",
+          item: `${SITE_URL}/premier-protein-powder-review/`,
+        },
+      ],
+    },
+    {
+      "@type": "FAQPage",
+      mainEntity: [
+        {
+          "@type": "Question",
+          "name": "How much protein is in Premier Protein powder?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The classic Premier Protein 100% Whey lists 30 g of protein per two-scoop serving, with about 150 calories and 1 g of sugar, per the label at the time of writing. The Protein Plus Fiber version lists 25 g of whey protein with 7 g of prebiotic fiber per serving. Figures vary slightly by flavor, so check the label on your tub."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is Premier Protein powder whey isolate?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It is a blend. The label lists whey protein isolate and whey protein concentrate, with isolate first, which means it is the larger share by weight. That makes it lower in lactose than a concentrate-led whey, but not as low as a pure isolate. If you are very lactose-sensitive, a 100 percent isolate is the safer choice."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is Premier Protein powder the same as the shakes?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. The shakes use mainly milk protein concentrate and calcium caseinate and include 24 vitamins and minerals, at about 160 calories and 30 g of protein per carton. The powder is a whey isolate and concentrate blend at about 150 calories and 30 g of protein per two scoops, without the vitamin premix. Both taste similar, according to buyer feedback."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is Premier Protein powder good for weight loss?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It can help, because 30 g of protein in about 150 calories is a strong ratio and protein helps with fullness and muscle retention while dieting. It is not a weight-loss product on its own. Use it to replace a less protein-dense snack, and speak with a doctor or registered dietitian if you are planning a large calorie deficit."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is Premier Protein powder third-party tested?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "We could not find Premier Protein powders listed by NSF Certified for Sport, Informed Choice or Informed Sport at the time of writing. That does not mean the product is unsafe, but there is no published batch testing for banned substances. Drug-tested athletes should choose a certified whey and verify the exact flavor and lot."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What sweeteners are in Premier Protein powder?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The classic powder is sweetened with sucralose and acesulfame potassium, per the label at the time of writing, and contains natural and artificial flavors. Premier markets the Protein Plus Fiber powder as having no added sugar. If you avoid artificial sweeteners, look at an unsweetened or stevia-sweetened whey instead."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Where is Premier Protein powder cheapest?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Prices move constantly, but Amazon Subscribe and Save, multi-tub bundles, Walmart and warehouse clubs are usually the cheapest places. Compare cost per 25 g of protein rather than tub price. At typical prices the classic powder works out to roughly $1.20 to $1.70 per 25 g, which is competitive with the big gym brands."
+          }
+        }
+      ],
+    },
+    {
+      "@type": "Article",
+      headline: title,
+      author: authorSchema(),
+      datePublished: dates.published,
+      dateModified: dates.modified,
+      publisher: { "@type": "Organization", name: SITE_NAME, url: SITE_URL },
+    },
+    {
+      "@type": "ItemList",
+      name: title,
+      numberOfItems: PRODUCTS.length,
+      itemListElement: PRODUCTS.map((product, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name: product.name,
+        url: new URL(`#${product.id}`, Astro.url).toString(),
+      })),
+    },
+    ...PRODUCTS.map((product) => ({
+      "@type": "Product",
+      name: product.name,
+      description: product.description,
+      brand: {
+        "@type": "Brand",
+        name: product.brand ?? product.name.split(" ")[0],
+      },
+    })),
+  ],
+};
+---
+
+<Layout
+  title={title}
+  description={description}
+  ogType="article"
+  article={{
+    publishedTime: dates.published,
+    modifiedTime: dates.modified,
+    author: author.name,
+    section: "Brand Reviews",
+    tags: [
+      "premier protein powder",
+      "premier protein powder review",
+      "premier protein 100% whey",
+      "premier protein shake vs powder"
+    ],
+  }}
+  jsonLd={schema}
+  stickyCta={{
+    text: "See Our Top Whey Protein Picks",
+    link: "/best-whey-protein-powder/",
+  }}
+>
+  <article class="relative overflow-hidden">
+    <!-- Hero Section -->
+    <div class="bg-gray-900 py-16 lg:py-24 relative overflow-hidden">
+      <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(circle at 20% 20%, #38BDF8 0, transparent 45%), radial-gradient(circle at 80% 60%, #FF4500 0, transparent 40%);"></div>
+      <div class="max-w-4xl mx-auto px-4 relative z-10 text-center">
+        <div class="flex justify-center mb-6">
+          <TrustBadge />
+        </div>
+        <div class="flex justify-center gap-3 mb-6">
+          <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#FF4500]/20 text-[#FF4500] text-xs font-black uppercase tracking-widest border border-[#FF4500]/30">
+            Brand Review
+          </span>
+          <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-green-500/10 text-green-400 text-xs font-bold uppercase tracking-widest border border-green-500/20">
+            Label-Checked
+          </span>
+        </div>
+        <h1 class="text-4xl lg:text-6xl font-black text-white leading-tight mb-8">
+          Premier Protein Powder: <span class="text-[#38BDF8]">The Review</span>
+        </h1>
+        <p class="text-xl text-gray-300 leading-relaxed mb-8 max-w-3xl mx-auto">
+          The brand behind the warehouse-club shake also sells a 30 g whey powder. We read the label, worked out the cost per 25 g of protein and compared it with the shakes and the big whey brands.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a
+            href="#premier-protein-100-whey-chocolate-milkshake"
+            class="px-8 py-4 bg-[#FF4500] hover:bg-[#E63E00] text-white font-black rounded-xl shadow-lg transition-all no-underline"
+          >
+            See Our #1 Pick
+          </a>
+          <a
+            href="#label"
+            class="px-8 py-4 bg-white/10 hover:bg-white/20 text-white font-bold rounded-xl border border-white/10 no-underline"
+          >
+            Read the Label Breakdown
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Author & Meta -->
+    <div class="max-w-3xl mx-auto px-4 pt-12">
+      <div class="flex items-center gap-6 border-b border-gray-100 pb-8">
+        <div class="flex items-center gap-3">
+          <AuthorAvatar size={48} />
+          <div>
+            <p class="text-sm font-bold text-gray-900">{author.name}</p>
+            <p class="text-xs text-gray-500 uppercase tracking-widest">{author.role}</p>
+          </div>
+        </div>
+        <div class="h-10 w-px bg-gray-200 hidden sm:block"></div>
+        <div class="hidden sm:block">
+          <p class="text-sm font-bold text-gray-900">Last Updated</p>
+          <p class="text-xs text-gray-500">{dates.display}</p>
+        </div>
+        <div class="hidden sm:block ml-auto">
+          <SocialProof />
+        </div>
+      </div>
+    </div>
+
+    <!-- Table of Contents -->
+    <div class="max-w-3xl mx-auto px-4 py-10">
+      <div class="bg-gray-50 border border-gray-200 rounded-2xl p-6 lg:p-8">
+        <h2 class="text-lg font-black text-gray-900 mb-4 flex items-center gap-2">
+          In This Guide
+        </h2>
+        <nav class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <a href="#verdict" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">1. The Short Verdict</a>
+          <a href="#range" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">2. The Premier Protein Range</a>
+          <a href="#top-picks" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">3. Which One to Buy</a>
+          <a href="#label" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">4. The Label, Line by Line</a>
+          <a href="#cost" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">5. Cost per 25 g of Protein</a>
+          <a href="#shake-vs-powder" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">6. Shake vs Powder</a>
+          <a href="#vs-rivals" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">7. Premier vs the Big Whey Brands</a>
+          <a href="#testing" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">8. Third-Party Testing</a>
+          <a href="#fiber-latte" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">9. Plus Fiber and Cafe Latte</a>
+          <a href="#who" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">10. Who Should Skip It</a>
+          <a href="#mistakes" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">11. Common Mistakes</a>
+          <a href="#faq" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">12. FAQ</a>
+        </nav>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="max-w-3xl mx-auto px-4 pb-16 lg:pb-24">
+      <div class="prose prose-lg prose-blue max-w-none text-gray-700 leading-relaxed">
+        <p class="text-2xl font-medium text-gray-900 mb-8 italic">
+          Premier Protein powder is a solid, cheap, supermarket whey: 30 g of protein for about 150 calories per two-scoop serving, per the label, at a cost per gram that undercuts most of the big gym brands. What it lacks is a third-party sport certification and much flavor choice. For everyday use that is a fair trade; for tested athletes it is a reason to buy something else.
+        </p>
+
+        <QuickPicks products={PRODUCTS} />
+
+        <div id="verdict" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            1. The Short Verdict
+          </h2>
+
+          <p>
+            Premier Protein 100% Whey is worth buying if you want a cheap, high-protein whey that you can pick up in a supermarket and mix with a spoon. Per the label at the time of writing, two scoops give 30 g of protein, about 150 calories and roughly 1 g of sugar, from a blend of whey protein isolate and whey protein concentrate. That is about 80 percent of calories from protein, which is a strong ratio for a blend at this price.
+          </p>
+
+          <p>
+            Its cost is the main attraction. A 17-serving tub has typically sold for somewhere in the mid-$20s to mid-$30s depending on the retailer and whether it is on sale, which works out to roughly $1.20 to $1.70 per 25 g of protein. That puts it in the same bracket as Optimum Nutrition Gold Standard in the big tub and well below premium brands like Ghost or the boutique grass-fed powders.
+          </p>
+
+          <p>
+            The weaknesses are just as clear. There are only three classic flavors, the sweetener system is sucralose plus acesulfame potassium, the formula includes natural and artificial flavors, and we could not find an NSF Certified for Sport, Informed Choice or Informed Sport listing for any Premier Protein powder. If you are a drug-tested athlete, buy a certified whey instead. If you just want an affordable shake, this is a good one.
+          </p>
+
+          <p>
+            Our ranking is Chocolate Milkshake first, because it is the flavor that most closely matches the bottled Premier shake people already like, Cafe Latte second for anyone who wants a protein coffee with caffeine built in, and Protein Plus Fiber third for people who struggle to hit a fiber target. For the full category, see our <a href="/best-whey-protein-powder/">best whey protein powder</a> rankings.
+          </p>
+        </div>
+
+        <div id="range" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            2. The Premier Protein Range
+          </h2>
+
+          <p>
+            Premier Protein is made by Premier Nutrition Company, part of BellRing Brands, which also owns Dymatize, and it is best known for its 30 g ready-to-drink protein shakes sold by the case at warehouse clubs, supermarkets and on Amazon. The brand's current range, per its own site, covers protein shakes, protein sodas, protein powders and breakfast products such as protein cereal and shakes made with oats.
+          </p>
+
+          <p>
+            The powder side is deliberately simple. The classic 100% Whey Protein Powder comes in three flavors, Chocolate Milkshake, Vanilla Milkshake and Cafe Latte, each listed at 30 g of protein and 150 calories per serving. Each tub holds about 17 servings. The Cafe Latte version adds caffeine, listed at about 95 mg per serving on its Amazon listing, roughly a small cup of coffee.
+          </p>
+
+          <p>
+            The newer Protein Plus Fiber powder trades a little protein for fiber. Per Premier's site it gives 25 g of whey protein, 7 g of prebiotic soluble fiber and 1 g of sugar per serving, with no added sugar, in chocolate and vanilla. It also comes in a 17-serving tub. Premier does not currently list a plant-based powder, so vegans should look elsewhere.
+          </p>
+
+          <p>
+            Because the range is small, buying Premier powder is mostly a question of flavor and whether you want the fiber version. There is no isolate-only product, no casein powder and no unflavored option, which is a limitation if you bake with protein or want a neutral base for smoothies. For unflavored options, see our <a href="/best-unflavored-protein-powder/">best unflavored protein powder</a> guide.
+          </p>
+        </div>
+
+        <!-- Picks -->
+        <div id="top-picks" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            3. Which Premier Protein Product to Buy
+          </h2>
+
+          <p>
+            Premier Protein's powder range is small: the classic 100% whey in Chocolate Milkshake, Vanilla Milkshake and Cafe Latte, and a newer Protein Plus Fiber powder in chocolate and vanilla. We have ranked the products by who they suit, included the ready-to-drink shake because it is what most people compare the powder with, and added one clearly labelled alternative for readers who need a certified whey. Nutrition figures are per the label at the time of writing and vary slightly by flavor.
+          </p>
+
+          {PRODUCTS.map((product, index) => (
+            <div id={product.id} class="scroll-mt-24 mt-12 first:mt-8">
+              <div class="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                <div class="bg-gray-900 px-6 py-4 flex items-center justify-between">
+                  <div class="flex items-center gap-3">
+                    <span class="bg-[#FF4500] text-white w-8 h-8 rounded-full flex items-center justify-center text-sm font-black">
+                      {index + 1}
+                    </span>
+                    {productImages[product.id] && (
+                      <img
+                        src={productImages[product.id]}
+                        alt={product.name}
+                        loading="lazy"
+                        width="40"
+                        height="40"
+                        class="w-10 h-10 rounded-lg bg-white object-contain p-1 shrink-0"
+                      />
+                    )}
+                    <div>
+                      <p class="text-white font-black text-lg">{product.name}</p>
+                      <p class="text-gray-400 text-xs">{product.category}</p>
+                    </div>
+                  </div>
+                  <span class="bg-[#38BDF8]/20 text-[#38BDF8] px-3 py-1 rounded-full text-xs font-bold hidden sm:block">
+                    {product.badge}
+                  </span>
+                </div>
+                <div class="p-6">
+                  {product.rating && (
+                  <div class="flex items-center gap-2 mb-4">
+                    <div class="flex text-yellow-400">
+                      {[...Array(5)].map((_, i) => (
+                        <svg
+                          class={`w-4 h-4 ${i < Math.floor(product.rating) ? "fill-current" : "text-gray-200"}`}
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                        >
+                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        </svg>
+                      ))}
+                    </div>
+                    <span class="text-gray-500 text-sm font-bold">{product.rating}</span>
+                    {product.reviewCount && <span class="text-gray-400 text-xs">({product.reviewCount.toLocaleString()} retailer reviews)</span>}
+                  </div>
+                  )}
+
+                  <SpecGrid specs={product.specs} />
+
+                  <p class="text-gray-700 leading-relaxed mb-6">{product.description}</p>
+
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                    <div class="bg-green-50 rounded-xl p-4">
+                      <p class="text-xs font-black uppercase tracking-widest text-green-700 mb-3">Pros</p>
+                      <ul class="space-y-2">
+                        {product.pros.map((pro) => (
+                          <li class="flex items-start gap-2 text-sm text-green-800">
+                            <svg class="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            {pro}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div class="bg-red-50 rounded-xl p-4">
+                      <p class="text-xs font-black uppercase tracking-widest text-red-700 mb-3">Cons</p>
+                      <ul class="space-y-2">
+                        {product.cons.map((con) => (
+                          <li class="flex items-start gap-2 text-sm text-red-800">
+                            <svg class="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                            {con}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+
+                  <div class="bg-gray-50 rounded-xl p-4 border border-gray-100">
+                    <p class="text-xs font-black uppercase tracking-widest text-gray-500 mb-1">The Bottom Line</p>
+                    <p class="text-gray-900 font-bold">{product.bottomLine}</p>
+                  </div>
+
+                  <a
+                    href={amazonLink(product.amazonUrl, product.name, product.id)}
+                    target="_blank"
+                    rel="sponsored nofollow noopener"
+                    class="mt-6 block bg-[#FF4500] hover:bg-[#E63E00] text-white text-center py-4 rounded-xl font-black no-underline transition-colors uppercase tracking-widest text-sm"
+                  >
+                    Check Price &rarr;
+                  </a>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div id="label" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            4. The Label, Line by Line
+          </h2>
+
+          <p>
+            The ingredient list on the classic powder starts with a protein blend of whey protein isolate and whey protein concentrate, per retailer listings of the label at the time of writing. Isolate is filtered to remove most lactose and fat, while concentrate keeps a little more of both and costs less. Listing isolate first means it is the larger share by weight, which is a good sign at this price point, though Premier does not publish the exact split.
+          </p>
+
+          <p>
+            The rest of the label is typical of a mass-market whey: natural and artificial flavors, sunflower lecithin to help it mix, xanthan gum for body, salt, and less than 2 percent soluble corn fiber. Sweetness comes from sucralose and acesulfame potassium. The chocolate flavor adds cocoa processed with alkali, and the Cafe Latte adds caffeine. Every version contains milk, so it is not suitable for anyone with a dairy allergy.
+          </p>
+
+          <div class="bg-gray-900 text-white rounded-2xl p-6 lg:p-8 my-8">
+            <p class="text-xs font-black uppercase tracking-widest text-[#38BDF8] mb-3">THE LABEL IN ONE LINE</p>
+            <p class="text-xl font-bold text-white mb-3">30 g protein, about 150 calories, about 1 g sugar</p>
+            <p class="text-gray-300 leading-relaxed m-0">Per the label at the time of writing, for the classic 100% whey in a two-scoop serving. The protein is an isolate-led whey blend, sweetened with sucralose and acesulfame potassium.</p>
+          </div>
+
+          <p>
+            The macros are lean. The vanilla label lists about 2 g of fat, 3 g of carbohydrate, 1 g of sugar and around 170 mg of sodium per serving, with the chocolate version a touch higher in carbohydrate and fiber because of the cocoa. That makes it easy to fit into a cutting diet, where the goal is maximum protein for the fewest calories. A double serving gives 60 g of protein for about 300 calories.
+          </p>
+
+          <p>
+            Serving size is the one thing to watch. Premier's 30 g figure is for two scoops, not one, and some buyers who are used to one-scoop whey powders initially underdose. If you use a single scoop, you are getting about 15 g of protein, which is below the roughly 20 to 40 g per sitting that research on muscle protein synthesis typically uses. Read the scoop count, not just the front of the tub.
+          </p>
+
+          <p>
+            Whey is one of the best-studied protein sources, rich in leucine and quickly digested, and an isolate-led blend like this is a perfectly good choice for most healthy adults. If you have kidney disease, are pregnant, take medication or have been told to limit protein, check with your doctor or a registered dietitian before adding a 30 g shake to your day. This is general information, not medical advice.
+          </p>
+        </div>
+
+        <div id="cost" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            5. Cost per 25 g of Protein
+          </h2>
+
+          <p>
+            Cost per 25 g of protein is the fairest way to compare protein products, because serving sizes vary so much. Premier's classic powder makes the maths easy: about 17 servings of 30 g each, or roughly 510 g of protein per tub. At a typical shelf price somewhere between the mid-$20s and mid-$30s, that is roughly $1.20 to $1.70 per 25 g. Prices change constantly, so treat these as approximate and check the current listing.
+          </p>
+
+          <div class="overflow-hidden border border-gray-200 rounded-2xl my-8">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Product</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Protein per serving</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Servings per tub</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Approx. cost per 25 g</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Premier 100% Whey (classic)</td>
+                    <td class="px-4 py-4 text-gray-700">30 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 17</td>
+                    <td class="px-4 py-4 text-gray-700">About $1.20-$1.70</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Premier Protein Plus Fiber</td>
+                    <td class="px-4 py-4 text-gray-700">25 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 17</td>
+                    <td class="px-4 py-4 text-gray-700">About $1.35-$2.05</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Optimum Nutrition Gold Standard (5 lb)</td>
+                    <td class="px-4 py-4 text-gray-700">24 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 74</td>
+                    <td class="px-4 py-4 text-gray-700">About $1.30-$1.50</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Ghost Whey (2 lb)</td>
+                    <td class="px-4 py-4 text-gray-700">25 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 26</td>
+                    <td class="px-4 py-4 text-gray-700">About $1.60-$2.10</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <p>
+            The Plus Fiber version costs a little more per gram of protein because each serving carries 25 g rather than 30 g, but you also get 7 g of fiber per scoop, which would cost money as a separate supplement. Whether that is good value depends on whether you would otherwise buy a fiber product.
+          </p>
+
+          <p>
+            Where you buy matters. Premier powder is sold at Walmart, Target, grocery chains, warehouse clubs and on Amazon, often with Subscribe and Save. Multi-tub bundles on Amazon, such as chocolate paired with Cafe Latte or vanilla, can bring the per-tub price down. As always, divide by servings and grams of protein rather than comparing tub prices, because tub weights differ slightly by flavor.
+          </p>
+
+          <p>
+            For comparison, budget whey concentrates sometimes come in cheaper per gram, especially in 5 lb tubs, but often with less protein per scoop and a higher share of concentrate. If budget decides everything, our <a href="/best-cheap-protein-powder/">best cheap protein powder</a> guide lists the lowest-cost options we would still drink.
+          </p>
+        </div>
+
+        <div id="shake-vs-powder" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            6. Premier Protein Shake vs Powder
+          </h2>
+
+          <p>
+            Most people come to Premier powder from the shakes, so the comparison is worth spelling out. The ready-to-drink shake lists about 30 g of protein, 160 calories and 1 g of sugar per carton of 11 to 11.5 fl oz, depending on the pack, with 24 vitamins and minerals, per the label at the time of writing. The powder lists the same 30 g with 150 calories, but without the vitamin and mineral premix.
+          </p>
+
+          <p>
+            The protein sources differ. The shakes are built mainly on milk protein concentrate and calcium caseinate, which means they are casein-heavy and digest more slowly. The powder is whey isolate and concentrate, which digests faster. For most people the difference is minor, but casein-rich shakes tend to feel more filling, while whey is the classic post-workout choice.
+          </p>
+
+          <p>
+            Cost is closer than you might expect. Bought by the case on sale at a warehouse club, Premier shakes can come surprisingly close to the powder's cost per gram, while single bottles at a convenience store cost far more. The powder usually wins on price per 25 g, and it wins clearly on storage, because a 17-serving tub takes up a fraction of the space of two 12-packs.
+          </p>
+
+          <p>
+            The practical answer is to use both. Keep the powder at home for post-workout shakes, smoothies and protein oats, and keep a few cartons for work, travel or the car. If you only drink shakes on the go, the bottle is worth the premium. Our <a href="/best-protein-drink/">best protein drink</a> guide compares Premier shakes with Fairlife, Orgain and other ready-to-drink options.
+          </p>
+        </div>
+
+        <div id="vs-rivals" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            7. Premier vs Optimum Nutrition and Other Big Whey Brands
+          </h2>
+
+          <p>
+            The obvious rival is Optimum Nutrition Gold Standard 100% Whey, the best-selling whey in the US for many years. Per its label, Gold Standard gives about 24 g of protein in roughly 120 to 130 calories per scoop, with isolate listed first, and it comes in more than 20 flavors and in tubs up to about 10 lb. Premier gives more protein per serving, 30 g, but in two scoops and only three flavors.
+          </p>
+
+          <p>
+            On cost per gram the two are close, with Gold Standard usually winning in the 5 lb tub and Premier competitive against Gold Standard's smaller 2 lb size. On testing, Gold Standard is described by its maker as banned-substance tested, and Optimum Nutrition has promoted Informed Choice certification on many flavors, which Premier does not offer. Our sibling <a href="/optimum-nutrition-protein-powder-review/">Optimum Nutrition protein powder review</a> covers that range in detail.
+          </p>
+
+          <p>
+            Against flavor-led brands like Ghost, Premier is the value pick. Ghost charges more per gram and offers licensed cereal and cookie flavors that buyers rate very highly; Premier offers fewer flavors but a cheaper, more protein-dense serving. See our <a href="/ghost-protein-powder-review/">Ghost protein powder review</a> if flavor is what keeps you consistent.
+          </p>
+
+          <p>
+            Against other supermarket brands, such as Pure Protein and Muscle Milk, the useful test is the same: protein per serving, which whey is listed first and cost per 25 g. Premier's 30 g per serving and isolate-led blend set a high bar at this price. We review those brands in our <a href="/pure-protein-powder-review/">Pure Protein powder review</a> and <a href="/muscle-milk-protein-powder-review/">Muscle Milk protein powder review</a>.
+          </p>
+        </div>
+
+        <div id="testing" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            8. Third-Party Testing and Who Should Care
+          </h2>
+
+          <p>
+            We could not find Premier Protein powders listed in the public databases for NSF Certified for Sport, Informed Choice or Informed Sport at the time of writing. That does not mean the products are unsafe or mislabeled. It means there is no independent, published check of each batch for banned substances, which matters most to athletes who are drug tested.
+          </p>
+
+          <p>
+            If you compete in a tested sport, a certified product is the only sensible choice, because an athlete is responsible for anything found in their sample, whatever the source. Certified wheys such as Dymatize ISO100 and some Optimum Nutrition flavors carry these marks, per their brands, and can be checked by lot number in the certifiers' databases.
+          </p>
+
+          <p>
+            For everyone else, the more relevant question is whether a product contains what it says. Large brands sold through major retailers have strong commercial reasons to keep labels accurate, and whey is less prone to heavy-metal contamination than many plant proteins. Our guide to whether <a href="/is-protein-powder-safe/">protein powder is safe</a> covers what the independent testing literature has found across the category.
+          </p>
+
+          <p>
+            Buy from the brand's authorized sellers, check that the tub is sealed, and look for the lot number and best-by date. On Amazon, the safest listings are sold by Amazon or by the brand's official store. Counterfeits are rare for mainstream brands, but third-party sellers can occasionally ship old or poorly stored stock.
+          </p>
+        </div>
+
+        <div id="fiber-latte" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            9. Protein Plus Fiber and Cafe Latte: Are They Worth It?
+          </h2>
+
+          <p>
+            Protein Plus Fiber is the more interesting product in the range. Per Premier's site it gives 25 g of whey protein with 7 g of prebiotic soluble fiber and 1 g of sugar per serving, with no added sugar. Most adults fall well short of recommended daily fiber intake, and 7 g in a shake is about a quarter of a typical target. If you would otherwise buy a separate fiber supplement, this is a neat two-in-one.
+          </p>
+
+          <p>
+            The trade-offs are 5 g less protein per serving than the classic powder and a slightly higher cost per gram of protein. Some people also find that a sudden jump in soluble fiber causes gas or bloating for the first week or two, so start with one serving a day and drink plenty of water. If you have a digestive condition, ask your doctor or dietitian whether added fiber is appropriate.
+          </p>
+
+          <p>
+            Cafe Latte is the other specialty option. It is the classic 30 g whey with caffeine added, about 95 mg per serving per its Amazon listing, so it works as a protein coffee in the morning or a pre-workout shake. The risk is easy to miss: two servings a day plus your normal coffee can add up quickly, and caffeine late in the day can hurt sleep, which matters more for recovery than any protein shake.
+          </p>
+
+          <p>
+            Our suggestion is to keep Cafe Latte as a morning-only tub and use Chocolate Milkshake or Vanilla Milkshake for evening shakes. If you are sensitive to caffeine, pregnant or on medication that interacts with stimulants, choose a caffeine-free flavor.
+          </p>
+        </div>
+
+        <div id="who" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            10. Who Should Buy Premier Protein Powder and Who Should Skip It
+          </h2>
+
+          <p>
+            Buy Premier Protein powder if you want an affordable, protein-dense whey that you can find in almost any supermarket, you like the taste of the bottled shakes, and you are not a drug-tested athlete. It suits beginners, busy people who want a simple post-workout or breakfast shake, and anyone cutting calories who wants 30 g of protein in about 150 calories.
+          </p>
+
+          <p>
+            Skip it if you compete in a tested sport and need NSF Certified for Sport or Informed Sport status, if you avoid artificial sweeteners and flavors, if you want a wide flavor range, or if you need an unflavored powder for cooking. Skip it as well if you are vegan or dairy-allergic, because every Premier powder is whey-based.
+          </p>
+
+          <p>
+            People who are very lactose-sensitive may also want a pure isolate. Premier's blend is isolate-led, but the concentrate portion carries some lactose. Our comparison of <a href="/whey-vs-whey-isolate/">whey vs whey isolate</a> explains when the extra cost of a pure isolate is worth it.
+          </p>
+
+          <p>
+            For most other buyers, Premier is one of the better value wheys in mainstream retail. Buy Chocolate Milkshake first, add the Plus Fiber version if fiber is a gap in your diet, and keep a case of shakes for the days you will not make one yourself.
+          </p>
+        </div>
+
+        <!-- Common Mistakes -->
+        <div id="mistakes" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            11. Common Mistakes to Avoid
+          </h2>
+
+          <div class="space-y-6 my-8">
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Using one scoop and expecting 30 g</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Premier's 30 g figure is for a two-scoop serving. One scoop gives about 15 g of protein, below the 20 to 40 g per sitting most muscle research uses. Check the scoop count on the label, especially if you are switching from a one-scoop brand like Optimum Nutrition.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Assuming it is certified for sport</h3>
+              <p class="text-gray-700 text-sm m-0">
+                We could not find Premier powders in the NSF Certified for Sport, Informed Choice or Informed Sport databases. If you are a drug-tested athlete, that matters more than price. Choose a certified whey and check your exact flavor and lot number in the certifier's database.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Drinking Cafe Latte in the evening</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Cafe Latte carries about 95 mg of caffeine per serving, per its Amazon listing. A late shake can disrupt sleep, which hurts recovery more than a missed protein serving. Keep it for mornings or pre-workout, and use a caffeine-free flavor after mid-afternoon.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Comparing tub prices instead of protein</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Premier tubs, bundles and multipacks vary in weight and servings by flavor. Divide the price by servings and protein per serving to get a cost per 25 g. That is the only fair way to compare it with 5 lb tubs from other brands.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Paying single-bottle prices for shakes</h3>
+              <p class="text-gray-700 text-sm m-0">
+                A single Premier shake from a convenience store costs far more per gram than the same shake bought by the case, and far more than the powder. If you drink them regularly, buy cases on sale or switch to powder for home and keep cartons for travel.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ -->
+        <div id="faq" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            12. Frequently Asked Questions
+          </h2>
+
+          <div class="space-y-6">
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">How much protein is in Premier Protein powder?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                The classic Premier Protein 100% Whey lists 30 g of protein per two-scoop serving, with about 150 calories and 1 g of sugar, per the label at the time of writing. The Protein Plus Fiber version lists 25 g of whey protein with 7 g of prebiotic fiber per serving. Figures vary slightly by flavor, so check the label on your tub.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is Premier Protein powder whey isolate?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                It is a blend. The label lists whey protein isolate and whey protein concentrate, with isolate first, which means it is the larger share by weight. That makes it lower in lactose than a concentrate-led whey, but not as low as a pure isolate. If you are very lactose-sensitive, a 100 percent isolate is the safer choice.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is Premier Protein powder the same as the shakes?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                No. The shakes use mainly milk protein concentrate and calcium caseinate and include 24 vitamins and minerals, at about 160 calories and 30 g of protein per carton. The powder is a whey isolate and concentrate blend at about 150 calories and 30 g of protein per two scoops, without the vitamin premix. Both taste similar, according to buyer feedback.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is Premier Protein powder good for weight loss?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                It can help, because 30 g of protein in about 150 calories is a strong ratio and protein helps with fullness and muscle retention while dieting. It is not a weight-loss product on its own. Use it to replace a less protein-dense snack, and speak with a doctor or registered dietitian if you are planning a large calorie deficit.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is Premier Protein powder third-party tested?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                We could not find Premier Protein powders listed by NSF Certified for Sport, Informed Choice or Informed Sport at the time of writing. That does not mean the product is unsafe, but there is no published batch testing for banned substances. Drug-tested athletes should choose a certified whey and verify the exact flavor and lot.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">What sweeteners are in Premier Protein powder?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                The classic powder is sweetened with sucralose and acesulfame potassium, per the label at the time of writing, and contains natural and artificial flavors. Premier markets the Protein Plus Fiber powder as having no added sugar. If you avoid artificial sweeteners, look at an unsweetened or stevia-sweetened whey instead.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Where is Premier Protein powder cheapest?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Prices move constantly, but Amazon Subscribe and Save, multi-tub bundles, Walmart and warehouse clubs are usually the cheapest places. Compare cost per 25 g of protein rather than tub price. At typical prices the classic powder works out to roughly $1.20 to $1.70 per 25 g, which is competitive with the big gym brands.
+              </p>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Related Guides -->
+        <div class="mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">Related Whey Protein Guides</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <a href="/best-whey-protein-powder/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#FF4500] font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Whey Protein Powder</h3>
+              <p class="text-gray-500 text-sm mt-2">The whey powders that give the best protein, testing and value.</p>
+            </a>
+            <a href="/optimum-nutrition-protein-powder-review/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#38BDF8] font-black text-xs uppercase tracking-widest mb-2">Brand Review</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Optimum Nutrition Review</h3>
+              <p class="text-gray-500 text-sm mt-2">Gold Standard, Isolate, Hydrowhey and Plant compared on cost per 25 g.</p>
+            </a>
+            <a href="/best-protein-drink/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-green-600 font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Protein Drink</h3>
+              <p class="text-gray-500 text-sm mt-2">Premier shakes against Fairlife and other ready-to-drink options.</p>
+            </a>
+          </div>
+        </div>
+
+        <!-- Closing -->
+        <div class="mt-16 bg-gray-900 text-white rounded-2xl p-8">
+          <h2 class="text-2xl font-black text-white mb-4">The Bottom Line</h2>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            Premier Protein powder is a good-value mainstream whey: 30 g of protein for about 150 calories per two-scoop serving, an isolate-led blend and a cost per 25 g that holds its own against the biggest gym brands. Chocolate Milkshake is the one to buy first, Cafe Latte suits morning shakes, and Protein Plus Fiber is worth it if you are short on fiber.
+          </p>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            Skip it if you are a drug-tested athlete, want to avoid artificial sweeteners or need more than three flavors. In those cases a certified whey such as Optimum Nutrition Gold Standard or one of the picks in our whey rankings is the better buy.
+          </p>
+        </div>
+
+        <MoreInCategory category="Brand Reviews" links={moreInCategory} />
+
+        <AuthorBio />
+      </div>
+    </div>
+  </article>
+</Layout>

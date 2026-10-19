@@ -1,0 +1,961 @@
+---
+import Layout from "../layouts/Layout.astro";
+import MoreInCategory from "../components/MoreInCategory.astro";
+import { AUTHORS, DEFAULT_AUTHOR, authorSchema } from "../data/authors";
+import { SITE_NAME, SITE_URL } from "../data/site";
+import AuthorAvatar from "../components/AuthorAvatar.astro";
+import QuickPicks from "../components/QuickPicks.astro";
+import AuthorBio from "../components/AuthorBio.astro";
+import { amazonLink } from "../data/affiliate";
+import TrustBadge from "../components/TrustBadge.astro";
+import SocialProof from "../components/SocialProof.astro";
+import SpecGrid from "../components/SpecGrid.astro";
+import productImages from "../data/product-images.json";
+import { pageDates } from "../data/dates";
+
+const moreInCategory = [
+  {
+    "title": "Naked Nutrition Protein Powder Review",
+    "url": "/naked-nutrition-protein-powder-review/"
+  },
+  {
+    "title": "Orgain Protein Powder Review",
+    "url": "/orgain-protein-powder-review/"
+  },
+  {
+    "title": "Whey vs Plant Protein",
+    "url": "/whey-vs-plant-protein/"
+  }
+];
+const author = AUTHORS[DEFAULT_AUTHOR];
+const dates = pageDates(Astro.url.pathname, { published: "2026-10-19", modified: "2026-10-19" });
+const title = "Vega Protein Powder Review: Which Tub to Buy After the Rename";
+const description =
+  "Vega protein powder reviewed by label: what Sport Premium became, which of the four tubs to buy, NSF status, sweeteners and real cost per 25 g of protein.";
+
+const PRODUCTS: {
+  id: string;
+  name: string;
+  brand?: string;
+  badge: string;
+  category: string;
+  description: string;
+  pros: string[];
+  cons: string[];
+  bottomLine: string;
+  specs?: Record<string, string>;
+  rating?: number;
+  reviewCount?: number;
+  amazonUrl?: string;
+}[] = [
+  {
+    "id": "vega-sport-premium-protein",
+    "name": "Vega Protein + Recovery (formerly Vega Sport Premium Protein)",
+    "brand": "Vega",
+    "badge": "Best Overall Vega",
+    "category": "Pea, pumpkin seed and sunflower seed protein blend",
+    "description": "This is the product most people still search for as Vega Sport. Vega renamed it Protein + Recovery and says the formula is unchanged. Per the label at the time of writing it gives 30 g of protein in a scoop of about 42-44 g, roughly 170-180 calories depending on flavor. It is sweetened with stevia, and it adds tart cherry and a Bacillus subtilis probiotic. It is NSF Certified for Sport, which makes it the strongest pick in the range for tested athletes.",
+    "pros": [
+      "30 g of protein per scoop, a full dose without doubling up",
+      "NSF Certified for Sport, per Vega (check your flavor on the NSF database)",
+      "Pea isolate plus seed proteins, with no added sugar",
+      "The XL tub brings cost per 25 g down sharply"
+    ],
+    "cons": [
+      "Premium cost per 25 g if you buy the standard 19-serving tub",
+      "Stevia aftertaste is a common complaint in buyer reviews"
+    ],
+    "bottomLine": "The Vega to buy if you train hard, get drug tested, or just want 30 g of plant protein in one scoop.",
+    "specs": {
+      "Protein / serving": "30 g (label, varies slightly by flavor)",
+      "Calories": "About 170-180",
+      "Third-party testing": "NSF Certified for Sport",
+      "Best for": "Athletes, post-workout"
+    },
+    "amazonUrl": "https://www.amazon.com/dp/B016D9IGRA"
+  },
+  {
+    "id": "vega-protein-creatine",
+    "name": "Vega Protein + Creatine",
+    "brand": "Vega",
+    "badge": "Best for Lifters",
+    "category": "Pea and organic brown rice protein with creatine",
+    "description": "Protein + Creatine puts 30 g of pea and brown rice protein and 3 g of creatine monohydrate in one scoop of about 48 g, per the label at the time of writing. That is roughly 190 calories. It carries Informed Choice certification, not NSF. Unlike the rest of the range it contains organic cane sugar alongside stevia, so check the sugar line if you are counting. It suits lifters who would otherwise buy creatine separately.",
+    "pros": [
+      "30 g of protein plus a standard 3 g creatine dose",
+      "Informed Choice certified, per Vega",
+      "Cheaper per 25 g of protein than Protein + Recovery's standard tub"
+    ],
+    "cons": [
+      "Contains organic cane sugar as well as stevia",
+      "Doubling servings also doubles the creatine, so it is a poor second shake"
+    ],
+    "bottomLine": "Good value if you already take creatine daily. Pointless if you do not.",
+    "specs": {
+      "Protein / serving": "30 g (label)",
+      "Calories": "About 190",
+      "Third-party testing": "Informed Choice",
+      "Best for": "Lifters who take creatine"
+    },
+    "amazonUrl": "https://www.amazon.com/dp/B0DWV9BD4R"
+  },
+  {
+    "id": "vega-essential-protein",
+    "name": "Vega Essential Protein",
+    "brand": "Vega",
+    "badge": "Best Value Vega",
+    "category": "Pea protein, flavored",
+    "description": "Essential Protein is Vega's everyday, lower-cost tub. Per the label at the time of writing, a two-scoop serving of about 46 g gives 25 g of pea protein and roughly 170 calories, with no added sugar and a few grams of fiber. It is sweetened with stevia. It drops the sport certification, the probiotic and the recovery extras, and it is the cheapest way to get Vega's flavor system per gram of protein.",
+    "pros": [
+      "Lowest cost per 25 g in the Vega range at typical prices",
+      "25 g of protein with 0 g of sugar, per the label",
+      "Widely sold on Amazon and in grocery stores"
+    ],
+    "cons": [
+      "No NSF or Informed certification",
+      "Two scoops per serving, so a tub goes quicker than it looks"
+    ],
+    "bottomLine": "The smart buy for daily smoothies if you do not need a sport certification.",
+    "specs": {
+      "Protein / serving": "25 g (label)",
+      "Calories": "About 170",
+      "Third-party testing": "No sport certification",
+      "Best for": "Everyday shakes, budget"
+    },
+    "amazonUrl": "https://www.amazon.com/dp/B0BRMHJK9R"
+  },
+  {
+    "id": "vega-protein-supergreens",
+    "name": "Vega Protein + Supergreens",
+    "brand": "Vega",
+    "badge": "Best Breakfast Shake",
+    "category": "Plant protein with kale, alfalfa, broccoli and spinach",
+    "description": "Formerly sold as Protein and Greens, this version gives 25 g of plant protein and about 4 g of fiber in a scoop of about 46 g, per retailer labels at the time of writing, which list roughly 180 calories. The greens are kale, alfalfa, broccoli and spinach. It is a breakfast shake rather than a training product, and the greens are a small amount, not a substitute for eating vegetables.",
+    "pros": [
+      "25 g of protein plus some fiber in one scoop",
+      "No added sugar, per Vega",
+      "Small tubs make it easy to try"
+    ],
+    "cons": [
+      "Small 11-13 serving tubs push cost per 25 g up",
+      "No sport certification"
+    ],
+    "bottomLine": "A pleasant morning shake, but you are paying extra for a modest amount of greens.",
+    "specs": {
+      "Protein / serving": "25 g (label)",
+      "Calories": "About 180",
+      "Third-party testing": "No sport certification",
+      "Best for": "Breakfast, meal add-on"
+    }
+  },
+  {
+    "id": "naked-nutrition-naked-pea",
+    "name": "Naked Pea Protein",
+    "brand": "Naked Nutrition",
+    "badge": "Alternative: Cheapest Plant Gram",
+    "category": "Single-ingredient yellow pea protein",
+    "description": "If what you like about Vega is just the pea protein, Naked Pea is the cheaper way to get it. It has one ingredient, yellow pea protein from US and Canadian farms, and the brand lists 27 g of protein and about 120 calories per two-scoop serving. Naked says the unflavored version is NSF Contents Certified and third-party tested for heavy metals. It tastes earthy on its own, so it suits smoothies, not a water shaker.",
+    "pros": [
+      "Under a dollar per 25 g of protein in the 5 lb bag at list price",
+      "One ingredient, no sweeteners or gums",
+      "27 g of protein in about 120 calories, per the brand"
+    ],
+    "cons": [
+      "Earthy and thick in plain water, as buyers commonly report",
+      "No NSF Certified for Sport or Informed certification"
+    ],
+    "bottomLine": "Buy this instead of Vega if you blend your shakes and care most about cost per gram.",
+    "specs": {
+      "Protein / serving": "27 g (brand)",
+      "Calories": "About 120",
+      "Third-party testing": "NSF Contents Certified (brand)",
+      "Best for": "Smoothies, baking, budget"
+    },
+    "amazonUrl": "https://www.amazon.com/dp/B00NBIUGA2"
+  }
+];
+
+const schema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Home",
+          item: `${SITE_URL}/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Best Lists",
+          item: `${SITE_URL}/best-of/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 3,
+          name: "Vega Protein Powder Review",
+          item: `${SITE_URL}/vega-protein-powder-review/`,
+        },
+      ],
+    },
+    {
+      "@type": "FAQPage",
+      mainEntity: [
+        {
+          "@type": "Question",
+          "name": "Is Vega Sport Premium Protein discontinued?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Not exactly. Vega renamed it Protein + Recovery and says the formula is unchanged: 30 g of protein from pea, pumpkin seed and sunflower seed, with tart cherry and a probiotic. Retailers sometimes still list it under the old name. The label at the time of writing still shows NSF Certified for Sport, but check the flavor in NSF's database."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How much protein is in Vega protein powder?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It depends on the tub. Protein + Recovery and Protein + Creatine have 30 g per scoop. Essential Protein and Protein + Supergreens have 25 g per serving, and Essential takes two scoops to get there. All-in-One Nutrition has 20 g. These figures come from the label at the time of writing and vary slightly by flavor."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What sweetener does Vega use?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The flagship Protein + Recovery, Essential Protein and Supergreens are sweetened with stevia leaf extract and have no added sugar, per Vega. Protein + Creatine is different: its label lists organic cane sugar as well as stevia. None of the range uses sucralose, aspartame or acesulfame potassium, according to the ingredient lists at the time of writing."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is Vega protein good for building muscle?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, if you take enough. A 30 g scoop of Protein + Recovery provides a dose that research suggests is enough to stimulate muscle protein synthesis in most adults, and the blend has a complete amino acid profile. Muscle growth still depends mostly on training and total daily protein. The powder just makes your daily target easier to hit."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does Vega protein contain heavy metals?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "All plant proteins contain trace heavy metals from soil, and Vega does not publish batch results on its product pages. Protein + Recovery's NSF Certified for Sport status includes contaminant screening, which is the best assurance in the range. If heavy metals are your priority, choose the certified product and check the flavor in NSF's database before you buy."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is Vega protein good for weight loss?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It can help, as any protein powder can, because protein is filling and a 170-190 calorie shake can replace a less filling snack. Essential Protein is the most sensible choice for this at about 170 calories for 25 g. No powder causes weight loss by itself. Your overall calorie intake and diet quality decide that."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Who owns Vega now?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Vega was founded in Canada, bought by WhiteWave Foods in 2015, and became part of Danone when Danone acquired WhiteWave. In June 2021 Danone sold Vega to funds managed by the US private equity firm WM Partners, and terms were not disclosed. The core products continued, with some renamed in later years."
+          }
+        }
+      ],
+    },
+    {
+      "@type": "Article",
+      headline: title,
+      author: authorSchema(),
+      datePublished: dates.published,
+      dateModified: dates.modified,
+      publisher: { "@type": "Organization", name: SITE_NAME, url: SITE_URL },
+    },
+    {
+      "@type": "ItemList",
+      name: title,
+      numberOfItems: PRODUCTS.length,
+      itemListElement: PRODUCTS.map((product, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name: product.name,
+        url: new URL(`#${product.id}`, Astro.url).toString(),
+      })),
+    },
+    ...PRODUCTS.map((product) => ({
+      "@type": "Product",
+      name: product.name,
+      description: product.description,
+      brand: {
+        "@type": "Brand",
+        name: product.brand ?? product.name.split(" ")[0],
+      },
+    })),
+  ],
+};
+---
+
+<Layout
+  title={title}
+  description={description}
+  ogType="article"
+  article={{
+    publishedTime: dates.published,
+    modifiedTime: dates.modified,
+    author: author.name,
+    section: "Brand Reviews",
+    tags: [
+      "vega protein powder",
+      "vega sport protein",
+      "vega protein review",
+      "vega premium sport"
+    ],
+  }}
+  jsonLd={schema}
+  stickyCta={{
+    text: "See Our Top Plant Protein Picks",
+    link: "/best-plant-based-protein-powder/",
+  }}
+>
+  <article class="relative overflow-hidden">
+    <!-- Hero Section -->
+    <div class="bg-gray-900 py-16 lg:py-24 relative overflow-hidden">
+      <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(circle at 20% 20%, #38BDF8 0, transparent 45%), radial-gradient(circle at 80% 60%, #FF4500 0, transparent 40%);"></div>
+      <div class="max-w-4xl mx-auto px-4 relative z-10 text-center">
+        <div class="flex justify-center mb-6">
+          <TrustBadge />
+        </div>
+        <div class="flex justify-center gap-3 mb-6">
+          <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#FF4500]/20 text-[#FF4500] text-xs font-black uppercase tracking-widest border border-[#FF4500]/30">
+            Brand Review
+          </span>
+          <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-green-500/10 text-green-400 text-xs font-bold uppercase tracking-widest border border-green-500/20">
+            Label-Checked
+          </span>
+        </div>
+        <h1 class="text-4xl lg:text-6xl font-black text-white leading-tight mb-8">
+          Vega Protein Powder <span class="text-[#38BDF8]">Review</span>
+        </h1>
+        <p class="text-xl text-gray-300 leading-relaxed mb-8 max-w-3xl mx-auto">
+          Vega Sport Premium is now Protein + Recovery. Here is what changed, what did not, and which of Vega's four protein tubs is actually worth the money.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a
+            href="#vega-sport-premium-protein"
+            class="px-8 py-4 bg-[#FF4500] hover:bg-[#E63E00] text-white font-black rounded-xl shadow-lg transition-all no-underline"
+          >
+            See Our #1 Pick
+          </a>
+          <a
+            href="#label"
+            class="px-8 py-4 bg-white/10 hover:bg-white/20 text-white font-bold rounded-xl border border-white/10 no-underline"
+          >
+            Compare the Range
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Author & Meta -->
+    <div class="max-w-3xl mx-auto px-4 pt-12">
+      <div class="flex items-center gap-6 border-b border-gray-100 pb-8">
+        <div class="flex items-center gap-3">
+          <AuthorAvatar size={48} />
+          <div>
+            <p class="text-sm font-bold text-gray-900">{author.name}</p>
+            <p class="text-xs text-gray-500 uppercase tracking-widest">{author.role}</p>
+          </div>
+        </div>
+        <div class="h-10 w-px bg-gray-200 hidden sm:block"></div>
+        <div class="hidden sm:block">
+          <p class="text-sm font-bold text-gray-900">Last Updated</p>
+          <p class="text-xs text-gray-500">{dates.display}</p>
+        </div>
+        <div class="hidden sm:block ml-auto">
+          <SocialProof />
+        </div>
+      </div>
+    </div>
+
+    <!-- Table of Contents -->
+    <div class="max-w-3xl mx-auto px-4 py-10">
+      <div class="bg-gray-50 border border-gray-200 rounded-2xl p-6 lg:p-8">
+        <h2 class="text-lg font-black text-gray-900 mb-4 flex items-center gap-2">
+          In This Guide
+        </h2>
+        <nav class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <a href="#verdict" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">1. The Short Verdict</a>
+          <a href="#lineup" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">2. The Vega Range</a>
+          <a href="#top-picks" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">3. Our Top Picks</a>
+          <a href="#label" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">4. What Is in the Tub</a>
+          <a href="#cost" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">5. Cost per 25 g</a>
+          <a href="#testing" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">6. Certifications</a>
+          <a href="#taste" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">7. Taste and Mixing</a>
+          <a href="#compare" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">8. Vega vs Other Brands</a>
+          <a href="#who" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">9. Who Should Buy It</a>
+          <a href="#use" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">10. How to Use It</a>
+          <a href="#mistakes" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">11. Common Mistakes</a>
+          <a href="#faq" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">12. FAQ</a>
+        </nav>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="max-w-3xl mx-auto px-4 pb-16 lg:pb-24">
+      <div class="prose prose-lg prose-blue max-w-none text-gray-700 leading-relaxed">
+        <p class="text-2xl font-medium text-gray-900 mb-8 italic">
+          Vega is a good plant protein brand with a confusing lineup. The product most people mean by Vega Sport is now Protein + Recovery. It is still the best tub Vega sells, and it still costs more than it needs to unless you buy the big one.
+        </p>
+
+        <QuickPicks products={PRODUCTS} />
+
+        <div id="verdict" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            1. The Short Verdict on Vega
+          </h2>
+
+          <p>
+            Vega is still one of the better plant protein brands you can buy in a regular store. But the range has been renamed and reshuffled, and most of the confusion people bring to search comes from that. The product almost everyone means by Vega Sport is now sold as <strong>Vega Protein + Recovery</strong>. Vega says it is the same formula under a new name: 30 g of protein from pea, pumpkin seed and sunflower seed, NSF Certified for Sport, and sweetened with stevia.
+          </p>
+
+          <p>
+            Our ranking is simple. Protein + Recovery is the flagship and the one to buy if you train seriously or are tested. Protein + Creatine is good value for lifters who already take creatine. Essential Protein is the budget daily tub. Protein + Supergreens is a breakfast product you can skip unless you like the idea of a few greens in your shake. We rank them on the label, certification status and cost per 25 g of protein. We have not tasted them, so where we mention taste we are reporting buyer feedback.
+          </p>
+
+          <p>
+            The weak spot is price. A standard 19-serving tub of Protein + Recovery lists at roughly $65 on Vega's own store, which works out to almost $3 per 25 g of protein. The 44-serving XL tub cuts that to about $1.70, and Amazon and grocery prices often undercut the brand store. If you pay list price for small tubs, Vega is one of the more expensive plant proteins you can buy.
+          </p>
+
+          <p>
+            If cost per gram is all you care about, a single-ingredient pea isolate will beat any Vega product by a wide margin. What Vega gives you for the extra money is flavor, a thinner and more drinkable shake according to buyer reports, and, on the flagship, a sport certification. Our full ranking of the category is in the <a href="/best-plant-based-protein-powder/">best plant-based protein powders</a> guide. This page covers which Vega tub to pick, if any.
+          </p>
+        </div>
+
+        <div id="lineup" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            2. The Vega Range, Explained
+          </h2>
+
+          <p>
+            Vega currently sells four main protein powders on its US store, plus an All-in-One meal-style shake. The naming has changed in the last couple of years, which is why search results and older reviews disagree. <strong>Protein + Recovery</strong> is the old Sport Premium Protein. <strong>Protein + Supergreens</strong> is the old Protein and Greens, which Vega says now has more protein and fiber. <strong>Essential Protein</strong> and <strong>Protein + Creatine</strong> make up the rest of the protein lineup.
+          </p>
+
+          <p>
+            The four tubs are built for different jobs. Protein + Recovery is the performance product: 30 g of protein, about 12 g of essential amino acids according to Vega, tart cherry, and a heat-stable probiotic. Protein + Creatine has the same 30 g of protein from a pea and brown rice blend, plus 3 g of creatine monohydrate. Essential Protein is the plain everyday tub at 25 g. Supergreens adds a small greens blend to 25 g of protein.
+          </p>
+
+          <p>
+            All-in-One Nutrition is the odd one out. It gives 20 g of organic plant protein along with vitamins, minerals, probiotics, fiber and greens, and it is priced like a meal replacement. A large 18-serving bag lists at about $70 on Vega's store, which comes to nearly $5 per 25 g of protein. If you want a protein powder, it is the wrong product. If you want a meal shake, compare it with our <a href="/kachava-review/">Ka'Chava review</a> before you buy.
+          </p>
+
+          <p>
+            A brief note on who owns Vega, since buyers ask. Vega started as a Canadian brand. WhiteWave Foods bought it in 2015 in a deal widely reported at around $550 million, and Danone took it over when it acquired WhiteWave. In June 2021 Danone sold Vega to funds managed by the US private equity firm WM Partners. Owners have changed, but the core product has stayed recognizably the same pea-led formula.
+          </p>
+
+          <div class="overflow-hidden border border-gray-200 rounded-2xl my-8">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Product</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Protein</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Calories</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Certification</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Sweetener</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Protein + Recovery</td>
+                    <td class="px-4 py-4 text-gray-700">30 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 170-180</td>
+                    <td class="px-4 py-4 text-gray-700">NSF Certified for Sport</td>
+                    <td class="px-4 py-4 text-gray-700">Stevia</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Protein + Creatine</td>
+                    <td class="px-4 py-4 text-gray-700">30 g + 3 g creatine</td>
+                    <td class="px-4 py-4 text-gray-700">About 190</td>
+                    <td class="px-4 py-4 text-gray-700">Informed Choice</td>
+                    <td class="px-4 py-4 text-gray-700">Cane sugar + stevia</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Essential Protein</td>
+                    <td class="px-4 py-4 text-gray-700">25 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 170</td>
+                    <td class="px-4 py-4 text-gray-700">None</td>
+                    <td class="px-4 py-4 text-gray-700">Stevia</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Protein + Supergreens</td>
+                    <td class="px-4 py-4 text-gray-700">25 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 180</td>
+                    <td class="px-4 py-4 text-gray-700">None</td>
+                    <td class="px-4 py-4 text-gray-700">No added sugar</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">All-in-One Nutrition</td>
+                    <td class="px-4 py-4 text-gray-700">20 g</td>
+                    <td class="px-4 py-4 text-gray-700">Meal-style</td>
+                    <td class="px-4 py-4 text-gray-700">None</td>
+                    <td class="px-4 py-4 text-gray-700">Check label</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <p>
+            Every figure in that table comes from the label or Vega's product page at the time of writing, and the numbers vary by flavor. Vega also changes formulas when it renames products, so check the panel on the tub you actually buy. It matters most for Protein + Creatine, the only one with cane sugar on the ingredient list.
+          </p>
+        </div>
+
+        <!-- Picks -->
+        <div id="top-picks" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            3. The Vega Powders Worth Considering
+          </h2>
+
+          <p>
+            Four Vega products, flagship first, plus one cheaper alternative for buyers who only want the pea protein. Label figures are per the label or brand page at the time of writing and vary by flavor. We have not tasted these products, and any taste notes are buyer feedback.
+          </p>
+
+          {PRODUCTS.map((product, index) => (
+            <div id={product.id} class="scroll-mt-24 mt-12 first:mt-8">
+              <div class="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                <div class="bg-gray-900 px-6 py-4 flex items-center justify-between">
+                  <div class="flex items-center gap-3">
+                    <span class="bg-[#FF4500] text-white w-8 h-8 rounded-full flex items-center justify-center text-sm font-black">
+                      {index + 1}
+                    </span>
+                    {productImages[product.id] && (
+                      <img
+                        src={productImages[product.id]}
+                        alt={product.name}
+                        loading="lazy"
+                        width="40"
+                        height="40"
+                        class="w-10 h-10 rounded-lg bg-white object-contain p-1 shrink-0"
+                      />
+                    )}
+                    <div>
+                      <p class="text-white font-black text-lg">{product.name}</p>
+                      <p class="text-gray-400 text-xs">{product.category}</p>
+                    </div>
+                  </div>
+                  <span class="bg-[#38BDF8]/20 text-[#38BDF8] px-3 py-1 rounded-full text-xs font-bold hidden sm:block">
+                    {product.badge}
+                  </span>
+                </div>
+                <div class="p-6">
+                  {product.rating && (
+                  <div class="flex items-center gap-2 mb-4">
+                    <div class="flex text-yellow-400">
+                      {[...Array(5)].map((_, i) => (
+                        <svg
+                          class={`w-4 h-4 ${i < Math.floor(product.rating) ? "fill-current" : "text-gray-200"}`}
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                        >
+                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        </svg>
+                      ))}
+                    </div>
+                    <span class="text-gray-500 text-sm font-bold">{product.rating}</span>
+                    {product.reviewCount && <span class="text-gray-400 text-xs">({product.reviewCount.toLocaleString()} retailer reviews)</span>}
+                  </div>
+                  )}
+
+                  <SpecGrid specs={product.specs} />
+
+                  <p class="text-gray-700 leading-relaxed mb-6">{product.description}</p>
+
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                    <div class="bg-green-50 rounded-xl p-4">
+                      <p class="text-xs font-black uppercase tracking-widest text-green-700 mb-3">Pros</p>
+                      <ul class="space-y-2">
+                        {product.pros.map((pro) => (
+                          <li class="flex items-start gap-2 text-sm text-green-800">
+                            <svg class="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            {pro}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div class="bg-red-50 rounded-xl p-4">
+                      <p class="text-xs font-black uppercase tracking-widest text-red-700 mb-3">Cons</p>
+                      <ul class="space-y-2">
+                        {product.cons.map((con) => (
+                          <li class="flex items-start gap-2 text-sm text-red-800">
+                            <svg class="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                            {con}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+
+                  <div class="bg-gray-50 rounded-xl p-4 border border-gray-100">
+                    <p class="text-xs font-black uppercase tracking-widest text-gray-500 mb-1">The Bottom Line</p>
+                    <p class="text-gray-900 font-bold">{product.bottomLine}</p>
+                  </div>
+
+                  <a
+                    href={amazonLink(product.amazonUrl, product.name, product.id)}
+                    target="_blank"
+                    rel="sponsored nofollow noopener"
+                    class="mt-6 block bg-[#FF4500] hover:bg-[#E63E00] text-white text-center py-4 rounded-xl font-black no-underline transition-colors uppercase tracking-widest text-sm"
+                  >
+                    Check Price &rarr;
+                  </a>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div id="label" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            4. What Is Actually in the Tub
+          </h2>
+
+          <p>
+            Start with the protein. On Protein + Recovery the blend is pea protein, pumpkin seed protein and organic sunflower seed protein. Vega's FAQ says the pea is an isolate and the two seed proteins are concentrates. Pea gives the blend its leucine and lysine. The seed proteins add methionine, which pea is low in. Together they make a more complete amino acid profile than pea alone, though at 30 g a serving the gap barely matters.
+          </p>
+
+          <p>
+            The rest of the ingredient list is short. The chocolate version lists cocoa, natural flavors, stevia leaf extract, sea salt and xanthan gum. The vanilla, mocha, berry and peanut butter versions follow the same pattern. Berry adds strawberry powder and beet root for color, and peanut butter adds peanut flour. There is no added sugar, no sugar alcohol and no artificial sweetener. Stevia does the sweetening, and that is the main thing buyers either love or put up with.
+          </p>
+
+          <p>
+            Protein + Creatine reads differently. Its blend is pea protein and organic brown rice protein, and the label also lists organic cane sugar, a sunflower oil creamer made with maltodextrin and modified starch, natural flavors and stevia. That is not a dealbreaker, but it is a different product philosophy from the flagship, and it explains the slightly higher calories. If you chose Vega because the flagship has no added sugar, read this label before switching.
+          </p>
+
+          <p>
+            Essential Protein is pea protein with acacia gum, coconut oil powder, stevia, natural flavors, sea salt, xanthan gum and rosemary extract, per retailer labels at the time of writing. The acacia gum is where the fiber comes from. The coconut oil powder is there for creaminess. Neither is a concern, but they do make the serving larger than the protein alone would be, which is why it takes two scoops to reach 25 g.
+          </p>
+
+          <div class="bg-gray-900 text-white rounded-2xl p-6 lg:p-8 my-8">
+            <p class="text-xs font-black uppercase tracking-widest text-[#38BDF8] mb-3">ALLERGEN NOTE</p>
+            <p class="text-xl font-bold text-white mb-3">Made in a shared facility</p>
+            <p class="text-gray-300 leading-relaxed m-0">Vega states that its powders are made in a facility that also processes milk, soy, peanuts, eggs, tree nuts and sesame, and may contain traces of soy. That is normal for the category, but if you have a severe allergy, it matters more than the vegan label. Talk to your doctor or an allergist before relying on any shared-facility powder.</p>
+          </div>
+        </div>
+
+        <div id="cost" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            5. Cost per 25 g of Protein
+          </h2>
+
+          <p>
+            Price per tub tells you very little because Vega's servings, scoop sizes and tub sizes all differ. The fair comparison is cost per 25 g of protein. The table below uses Vega's own list prices at the time of writing, which are usually the highest you will pay. Amazon, Subscribe and Save, and grocery promotions often run 15-30% lower, so treat these as approximate ceilings, not quotes.
+          </p>
+
+          <div class="overflow-hidden border border-gray-200 rounded-2xl my-8">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Product and size</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">List price (approx.)</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Cost per 25 g protein (approx.)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Protein + Recovery, 19 servings</td>
+                    <td class="px-4 py-4 text-gray-700">About $65</td>
+                    <td class="px-4 py-4 text-gray-700">About $2.85</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Protein + Recovery, XL 44 servings</td>
+                    <td class="px-4 py-4 text-gray-700">About $90</td>
+                    <td class="px-4 py-4 text-gray-700">About $1.70</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Protein + Creatine, 20 servings</td>
+                    <td class="px-4 py-4 text-gray-700">About $50</td>
+                    <td class="px-4 py-4 text-gray-700">About $2.10</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Essential Protein, 20 servings</td>
+                    <td class="px-4 py-4 text-gray-700">About $27</td>
+                    <td class="px-4 py-4 text-gray-700">About $1.35</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Protein + Supergreens, 13 servings</td>
+                    <td class="px-4 py-4 text-gray-700">About $35</td>
+                    <td class="px-4 py-4 text-gray-700">About $2.70</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Naked Pea, 5 lb (alternative)</td>
+                    <td class="px-4 py-4 text-gray-700">About $58</td>
+                    <td class="px-4 py-4 text-gray-700">About $0.70</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <p>
+            Two things stand out. First, tub size matters enormously on the flagship: the XL tub of Protein + Recovery costs about 40% less per gram of protein than the standard tub. If you have tried it and know you like it, buying small is just paying extra. Second, Essential Protein is roughly half the cost per gram of the flagship's standard tub, because you are not paying for the certification, the probiotic or the tart cherry.
+          </p>
+
+          <p>
+            Single-ingredient pea isolates are in a different price bracket altogether. Naked Pea in its largest bag works out to well under a dollar per 25 g at list price, a third of what you pay for Vega's flagship in a standard tub. You give up flavor, the seed protein blend and NSF Certified for Sport, and in return you save a lot of money over a year of daily shakes. Our <a href="/best-pea-protein-powder/">pea protein guide</a> covers that trade-off in more detail.
+          </p>
+
+          <p>
+            A daily shake makes the gap concrete. At one serving a day, the standard Protein + Recovery tub costs about $100 a month at list price. The XL tub costs about $60, Essential about $40, and an unflavored pea isolate about $25. None of those numbers is outrageous for a protein source, but they are different enough that you should know which column you are buying from.
+          </p>
+        </div>
+
+        <div id="testing" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            6. Certifications and Testing
+          </h2>
+
+          <p>
+            Certification is the clearest reason to pay Vega prices. Protein + Recovery carries <strong>NSF Certified for Sport</strong>. According to Vega's product page, that program screens for more than 270 substances banned in sport, checks that the label matches the contents, and audits the manufacturing facility twice a year. If you compete in a tested sport, a certified product is the only sensible choice, and few plant proteins this widely available carry it.
+          </p>
+
+          <p>
+            Protein + Creatine is certified under <strong>Informed Choice</strong>, a different but also credible program run by LGC that tests for substances on the World Anti-Doping Agency list. Essential Protein and Protein + Supergreens show no sport certification on Vega's site. They are labelled vegan, gluten-free and non-GMO, which tells you about sourcing, not about contaminant or banned-substance testing.
+          </p>
+
+          <p>
+            Heavy metals are the question plant protein buyers ask most, and it is a fair one. Plants take up lead, cadmium and arsenic from soil, so pea, rice and seed proteins tend to test higher than whey. NSF's program includes contaminant screening, which is part of why the certified flagship is worth more than the uncertified tubs. For the wider picture, our guide on <a href="/is-protein-powder-safe/">whether protein powder is safe</a> explains what the testing does and does not cover.
+          </p>
+
+          <p>
+            One practical rule: certification is granted per product and sometimes per flavor, not per brand. Before you rely on it, search the product and flavor on the NSF Certified for Sport or Informed Choice database. That takes a minute, and it is the only way to be sure the tub in your cart is the version that was tested. The same rule applies to every brand on this site.
+          </p>
+        </div>
+
+        <div id="taste" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            7. Taste, Texture and Mixing: What Buyers Report
+          </h2>
+
+          <p>
+            We have not tasted these products, so this section summarizes what buyers and retailer reviews consistently say. The common theme is that Vega mixes thinner and less gritty than many plant proteins, particularly in a shaker with cold water. That is the main reason people pay more for it than for an unflavored pea isolate, which most buyers describe as thick and earthy unless it goes into a blender.
+          </p>
+
+          <p>
+            The most common complaint is stevia. A share of reviewers find the aftertaste strong in water, especially in vanilla, and say it improves a lot in almond or oat milk, or blended with fruit. Some long-time Sport Premium buyers also say the flavor changed at some point. Vega says the renamed Protein + Recovery is the same product, so treat those reports as anecdotal, but they are worth knowing if you are rebuying from memory.
+          </p>
+
+          <p>
+            Chocolate and mocha are generally the safest flavors in buyer feedback, because cocoa masks the earthy edge plant protein can have. Berry splits opinion more. Essential Protein is usually described as creamier than the Sport line, which fits its ingredient list: coconut oil powder and acacia gum are there for mouthfeel. Supergreens draws mixed reviews. Some buyers like it in smoothies, while others find the greens noticeable in water.
+          </p>
+
+          <p>
+            For a better shake from any of them, use 12 oz of very cold liquid, shake longer than you would with whey, and let it sit for a minute so the gums can hydrate. If you plan to blend with frozen fruit, the cheaper Essential tub tends to make more sense, because fruit covers most flavor differences. Our <a href="/best-protein-powder-for-smoothies/">smoothie protein guide</a> has more on what blends well.
+          </p>
+        </div>
+
+        <div id="compare" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            8. Vega vs Other Plant Protein Brands
+          </h2>
+
+          <p>
+            Against <strong>Garden of Life Sport</strong>, Vega is closer than most comparisons. Both put about 30 g of protein in a certified sport product. Garden of Life adds organic certification, while Vega tends to win on availability and buyer-reported drinkability. Our <a href="/garden-of-life-protein-powder-review/">Garden of Life protein review</a> goes through that line in detail. If USDA Organic matters to you, Garden of Life gets the nod. If you want the easiest shake to drink in water, buyer feedback tends to favor Vega.
+          </p>
+
+          <p>
+            Against <strong>Orgain</strong>, Vega is the more serious training product. Orgain's plant powder is cheaper per tub, but its standard serving has about 21 g of protein, so the real cost per 25 g is closer than it looks. Orgain also sweetens with erythritol and stevia, and erythritol bothers some stomachs. Our <a href="/orgain-protein-powder-review/">Orgain review</a> covers it. Vega's flagship wins on protein per scoop and certification. Orgain wins on grocery-store price.
+          </p>
+
+          <p>
+            Against <strong>OWYN</strong> and <strong>Sunwarrior</strong>, the deciding factor is usually allergens and diet. OWYN is built around being free of the top allergens, and Sunwarrior leans on fermented and raw-food positioning. See our <a href="/owyn-protein-powder-review/">OWYN review</a> and <a href="/sunwarrior-protein-powder-review/">Sunwarrior review</a>. Vega's shared-facility statement means OWYN is the safer pick for someone with serious food allergies.
+          </p>
+
+          <p>
+            Against plain pea isolate, the trade is flavor and certification against cost. If you blend every shake with fruit and milk, the flavor advantage mostly disappears and an unflavored isolate saves you a lot. If you drink your protein from a shaker at the gym and need it tested, Vega's flagship is the better buy. That is the honest reason it remains one of the default recommendations in our <a href="/best-plant-based-protein-powder/">best plant-based protein powders</a> roundup.
+          </p>
+        </div>
+
+        <div id="who" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            9. Who Should Buy Vega, and Who Should Skip It
+          </h2>
+
+          <p>
+            <strong>Buy Protein + Recovery</strong> if you are a tested athlete, a lifter who wants 30 g of plant protein in one scoop, or someone who needs a shaker-friendly vegan shake for the gym bag. Buy the XL tub once you know you like the flavor. It is the version of Vega with the clearest reason to cost more than the competition, and it is the one we would put in a cart first.
+          </p>
+
+          <p>
+            <strong>Buy Protein + Creatine</strong> only if you already take 3-5 g of creatine a day and want to simplify. It replaces two products with one and is cheaper per gram of protein than the flagship's standard tub. Skip it if you want a second shake later in the day, because doubling the protein doubles the creatine. That is not dangerous for most healthy adults, but it is wasteful.
+          </p>
+
+          <p>
+            <strong>Buy Essential Protein</strong> if you want Vega's flavor in daily smoothies or oats and do not need certification. It is the best value in the range, with no added sugar and a modest ingredient list. <strong>Skip Protein + Supergreens</strong> unless you specifically like the idea. The greens are a small dose and the tubs are small, so you pay a premium for something a handful of spinach does better.
+          </p>
+
+          <p>
+            <strong>Skip Vega entirely</strong> if you are on a tight budget and happy to blend, if you have a severe soy, peanut or tree nut allergy, or if stevia gives you a headache or an aftertaste you hate. If you have kidney disease, are pregnant, or take medication that affects protein or creatine use, check with your doctor or a registered dietitian before adding any protein powder. This page is not medical advice.
+          </p>
+        </div>
+
+        <div id="use" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            10. How to Get the Most From a Vega Shake
+          </h2>
+
+          <p>
+            Dose by protein, not by scoop. Research on muscle protein synthesis suggests that most adults get the most out of a serving of roughly 20-40 g of protein, with plant proteins sitting toward the higher end because they have slightly less leucine than whey. That is why the 30 g Protein + Recovery scoop is well judged and why a 20 g serving of any plant powder is better paired with other protein in the same meal.
+          </p>
+
+          <p>
+            Timing matters less than total intake. A shake within a couple of hours of training is convenient, but your total daily protein does most of the work. Our <a href="/how-much-protein-do-i-need/">protein calculator guide</a> shows how to work out a daily target, and our guide on <a href="/when-to-take-protein-powder/">when to take protein powder</a> covers timing. For most people, one Vega shake a day closes the gap between what they eat and what they need.
+          </p>
+
+          <p>
+            Store it properly. Plant powders with probiotics and seed proteins keep best sealed, cool and dry. Vega says the Bacillus subtilis strain it uses is heat-stable, but that is a reason not to worry about shipping, not permission to leave the tub open next to the stove. Use the scoop that comes in the tub, as scoop sizes differ between Vega products and borrowing another brand's scoop throws your numbers off.
+          </p>
+
+          <p>
+            If you are switching from whey, give it a couple of weeks. Some people notice more fullness or a change in digestion when they move to pea-based protein, partly because of the fiber in blends like Essential and Supergreens. If one product does not suit you, try the flagship before you write off plant protein. Its ingredient list is the shortest in the range. For how whey and plant proteins compare overall, see our <a href="/whey-vs-plant-protein/">whey vs plant protein</a> breakdown.
+          </p>
+        </div>
+
+        <!-- Common Mistakes -->
+        <div id="mistakes" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            11. Common Mistakes to Avoid
+          </h2>
+
+          <div class="space-y-6 my-8">
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Buying the standard tub of the flagship forever</h3>
+              <p class="text-gray-700 text-sm m-0">
+                The 44-serving XL tub of Protein + Recovery costs roughly 40% less per gram of protein than the 19-serving tub at Vega's list prices. Small tubs make sense for a first try. After that, paying the small-tub premium every month adds up to a meaningful sum over a year.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Assuming every Vega tub is NSF certified</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Only Protein + Recovery carries NSF Certified for Sport, and Protein + Creatine uses Informed Choice instead. Essential and Supergreens show no sport certification on Vega's site. If you are drug tested, check the exact product and flavor in the certifier's database before you buy, rather than trusting the brand name.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Missing the sugar in Protein + Creatine</h3>
+              <p class="text-gray-700 text-sm m-0">
+                The flagship has no added sugar, so it is easy to assume the creatine version matches it. It does not. Protein + Creatine lists organic cane sugar along with stevia. It is not a large amount, but anyone tracking sugar or switching for a clean label should read the panel first.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Treating Supergreens as a vegetable serving</h3>
+              <p class="text-gray-700 text-sm m-0">
+                The greens in Protein + Supergreens are a small blend added to a protein shake. They do not replace eating vegetables, and you pay a noticeable premium per gram of protein for them. If you want greens, add a handful of spinach to a cheaper tub in the blender.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Shaking it like whey</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Plant blends with xanthan or acacia gum need more liquid and more shaking than whey. Use about 12 oz of very cold liquid, shake well, and let the shake rest for a minute. Buyers who mix it in 6 oz of warm water are the ones who report a gritty, chalky drink.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ -->
+        <div id="faq" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            12. Frequently Asked Questions
+          </h2>
+
+          <div class="space-y-6">
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is Vega Sport Premium Protein discontinued?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Not exactly. Vega renamed it Protein + Recovery and says the formula is unchanged: 30 g of protein from pea, pumpkin seed and sunflower seed, with tart cherry and a probiotic. Retailers sometimes still list it under the old name. The label at the time of writing still shows NSF Certified for Sport, but check the flavor in NSF's database.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">How much protein is in Vega protein powder?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                It depends on the tub. Protein + Recovery and Protein + Creatine have 30 g per scoop. Essential Protein and Protein + Supergreens have 25 g per serving, and Essential takes two scoops to get there. All-in-One Nutrition has 20 g. These figures come from the label at the time of writing and vary slightly by flavor.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">What sweetener does Vega use?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                The flagship Protein + Recovery, Essential Protein and Supergreens are sweetened with stevia leaf extract and have no added sugar, per Vega. Protein + Creatine is different: its label lists organic cane sugar as well as stevia. None of the range uses sucralose, aspartame or acesulfame potassium, according to the ingredient lists at the time of writing.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is Vega protein good for building muscle?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Yes, if you take enough. A 30 g scoop of Protein + Recovery provides a dose that research suggests is enough to stimulate muscle protein synthesis in most adults, and the blend has a complete amino acid profile. Muscle growth still depends mostly on training and total daily protein. The powder just makes your daily target easier to hit.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Does Vega protein contain heavy metals?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                All plant proteins contain trace heavy metals from soil, and Vega does not publish batch results on its product pages. Protein + Recovery's NSF Certified for Sport status includes contaminant screening, which is the best assurance in the range. If heavy metals are your priority, choose the certified product and check the flavor in NSF's database before you buy.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is Vega protein good for weight loss?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                It can help, as any protein powder can, because protein is filling and a 170-190 calorie shake can replace a less filling snack. Essential Protein is the most sensible choice for this at about 170 calories for 25 g. No powder causes weight loss by itself. Your overall calorie intake and diet quality decide that.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Who owns Vega now?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Vega was founded in Canada, bought by WhiteWave Foods in 2015, and became part of Danone when Danone acquired WhiteWave. In June 2021 Danone sold Vega to funds managed by the US private equity firm WM Partners, and terms were not disclosed. The core products continued, with some renamed in later years.
+              </p>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Related Guides -->
+        <div class="mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">Related Plant Protein Guides</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <a href="/best-plant-based-protein-powder/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#FF4500] font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Plant-Based Protein Powder</h3>
+              <p class="text-gray-500 text-sm mt-2">The full plant protein ranking, Vega included, on label, testing and cost per 25 g.</p>
+            </a>
+            <a href="/best-pea-protein-powder/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#38BDF8] font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Pea Protein Powder</h3>
+              <p class="text-gray-500 text-sm mt-2">Single-ingredient pea isolates that undercut Vega on cost per gram.</p>
+            </a>
+            <a href="/garden-of-life-protein-powder-review/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-green-600 font-black text-xs uppercase tracking-widest mb-2">Brand Review</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Garden of Life Protein Review</h3>
+              <p class="text-gray-500 text-sm mt-2">Vega's closest certified, 30 g rival, with USDA Organic on top.</p>
+            </a>
+          </div>
+        </div>
+
+        <!-- Closing -->
+        <div class="mt-16 bg-gray-900 text-white rounded-2xl p-8">
+          <h2 class="text-2xl font-black text-white mb-4">The Bottom Line</h2>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            Vega is worth buying, but only one tub is worth paying full price for. Protein + Recovery, the renamed Sport Premium, gives 30 g of plant protein with NSF Certified for Sport status and no added sugar. Buy it in the XL size once you know you like it. Essential Protein is the value choice for everyday smoothies.
+          </p>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            If you only want pea protein and you blend every shake, a single-ingredient isolate like Naked Pea costs a fraction as much per gram. For every plant option ranked side by side, see our <a href="/best-plant-based-protein-powder/">best plant-based protein powder</a> guide.
+          </p>
+        </div>
+
+        <MoreInCategory category="Brand Reviews" links={moreInCategory} />
+
+        <AuthorBio />
+      </div>
+    </div>
+  </article>
+</Layout>
