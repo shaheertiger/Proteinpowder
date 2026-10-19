@@ -7,4 +7,4 @@ export const SITE_NAME = 'Best Protein Powder';
 
 // IndexNow key. public/<key>.txt must contain exactly this value so search
 // engines can verify ownership. Overridable with the INDEXNOW_KEY env var.
-export const INDEXNOW_KEY = '0f4b3b0525e94b5f88755b89f9a69d52';
+export const INDEXNOW_KEY = 'fa19d991837f488e96681c6939b4f0dd';
