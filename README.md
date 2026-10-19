@@ -60,7 +60,9 @@ npm run gsc        # opportunity report from Search Console exports in content/s
 
 ## IndexNow
 
-The key file is `public/0f4b3b0525e94b5f88755b89f9a69d52.txt`. After every Vercel
+The key is set in `site.config.mjs` and its key file is
+`public/fa19d991837f488e96681c6939b4f0dd.txt` (the older `0f4b3b05…` key file is kept so
+earlier verification keeps working). After every Vercel
 **production** build, the `postbuild` hook submits every sitemap URL to IndexNow
 automatically (local and preview builds are skipped). To submit by hand:
 
