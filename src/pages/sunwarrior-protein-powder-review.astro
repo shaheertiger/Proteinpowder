@@ -1,0 +1,924 @@
+---
+import Layout from "../layouts/Layout.astro";
+import MoreInCategory from "../components/MoreInCategory.astro";
+import { AUTHORS, DEFAULT_AUTHOR, authorSchema } from "../data/authors";
+import { SITE_NAME, SITE_URL } from "../data/site";
+import AuthorAvatar from "../components/AuthorAvatar.astro";
+import QuickPicks from "../components/QuickPicks.astro";
+import AuthorBio from "../components/AuthorBio.astro";
+import { amazonLink } from "../data/affiliate";
+import TrustBadge from "../components/TrustBadge.astro";
+import SocialProof from "../components/SocialProof.astro";
+import SpecGrid from "../components/SpecGrid.astro";
+import productImages from "../data/product-images.json";
+import { pageDates } from "../data/dates";
+
+const moreInCategory = [
+  {
+    "title": "Garden of Life Protein Powder Review",
+    "url": "/garden-of-life-protein-powder-review/"
+  },
+  {
+    "title": "Orgain Protein Powder Review",
+    "url": "/orgain-protein-powder-review/"
+  },
+  {
+    "title": "OWYN Protein Powder Review",
+    "url": "/owyn-protein-powder-review/"
+  }
+];
+const author = AUTHORS[DEFAULT_AUTHOR];
+const dates = pageDates(Astro.url.pathname, { published: "2026-10-19", modified: "2026-10-19" });
+const title = "Sunwarrior Protein Powder Review: Warrior Blend, Active or Classic, and What Each Gram Costs";
+const description =
+  "Sunwarrior protein powder reviewed from the label: Warrior Blend, Active, Classic and Classic Plus compared on protein per scoop, organic status, testing and cost per 25 g.";
+
+const PRODUCTS: {
+  id: string;
+  name: string;
+  brand?: string;
+  badge: string;
+  category: string;
+  description: string;
+  pros: string[];
+  cons: string[];
+  bottomLine: string;
+  specs?: Record<string, string>;
+  rating?: number;
+  reviewCount?: number;
+  amazonUrl?: string;
+}[] = [
+  {
+    "id": "sunwarrior-active-protein",
+    "name": "Sunwarrior Sport Organic Active Protein",
+    "brand": "Sunwarrior",
+    "badge": "Best Sunwarrior for Training",
+    "category": "Organic pea, brown rice and pumpkin seed blend",
+    "description": "Active is Sunwarrior's training protein and the one that solves the brand's small-scoop problem. Per the label at the time of writing, a two-scoop serving of about 50 g gives roughly 30 g of protein from organic pea, brown rice and pumpkin seed, at about 190 to 200 calories. Chocolate peanut butter lists slightly less, about 27 g. A 2.2 lb tub holds about 20 servings, so cost per 25 g lands around $2.00 to $2.50.",
+    "pros": [
+      "About 30 g protein per serving, per the label",
+      "Pea and rice blend for a balanced amino profile",
+      "Organic ingredients"
+    ],
+    "cons": [
+      "Higher cost per 25 g than whey",
+      "No NSF or Informed Choice certification",
+      "Two-scoop, roughly 200-calorie serving"
+    ],
+    "bottomLine": "The Sunwarrior to buy if you want a full post-workout dose in one shake.",
+    "specs": {
+      "Protein per serving": "About 30 g (2 scoops)",
+      "Calories": "About 190-200",
+      "Third-party testing": "No sport certification",
+      "Best for": "Vegan lifters"
+    }
+  },
+  {
+    "id": "sunwarrior-warrior-blend",
+    "name": "Sunwarrior Warrior Blend Organic Plant Protein",
+    "brand": "Sunwarrior",
+    "badge": "Best Everyday Sunwarrior",
+    "category": "Organic pea and hemp blend",
+    "description": "Warrior Blend is the brand's flagship. Per the label at the time of writing, a 25 g scoop gives about 16 to 18 g of protein depending on flavor, at roughly 90 to 100 calories, from organic pea protein, hemp seed protein and goji berry. MCT oil helps it blend, and stevia sweetens it. It is USDA Organic and Non-GMO Project Verified, per the brand. Expect about one and a half scoops for a 25 g dose.",
+    "pros": [
+      "USDA Organic and Non-GMO Project Verified, per the brand",
+      "Stevia-sweetened with zero sugar",
+      "Low calorie, smooth for a plant powder per buyers"
+    ],
+    "cons": [
+      "Only about 16-18 g protein per scoop",
+      "Around $2.10-2.40 per 25 g",
+      "No sport certification"
+    ],
+    "bottomLine": "A clean, organic everyday shake if you accept a smaller scoop or take one and a half.",
+    "specs": {
+      "Protein per serving": "About 16-18 g (1 scoop)",
+      "Calories": "About 90-100",
+      "Third-party testing": "No sport certification",
+      "Best for": "Organic, stevia-only buyers"
+    }
+  },
+  {
+    "id": "sunwarrior-classic-plus-protein",
+    "name": "Sunwarrior Classic Plus Protein",
+    "brand": "Sunwarrior",
+    "badge": "Best Multi-Source Blend",
+    "category": "Pea, brown rice, quinoa, chia and amaranth",
+    "description": "Classic Plus blends organic pea, brown rice, quinoa, chia and amaranth, sweetened with stevia, per the ingredient list at the time of writing. Labels list about 17 to 18 g of protein per scoop at roughly 90 to 100 calories. The five-source blend rounds out the amino profile better than rice alone, which makes it the better of the two Classic products. It costs about the same per gram as Warrior Blend.",
+    "pros": [
+      "Five protein sources for a balanced profile",
+      "Stevia-sweetened, low sugar",
+      "Legume and grain blend for buyers who dislike hemp"
+    ],
+    "cons": [
+      "About 17-18 g per scoop, not a full dose",
+      "No sport certification"
+    ],
+    "bottomLine": "A good alternative to Warrior Blend for anyone who wants a rice-and-pea base instead of hemp.",
+    "specs": {
+      "Protein per serving": "About 17-18 g (1 scoop)",
+      "Calories": "About 90-100",
+      "Third-party testing": "No sport certification",
+      "Best for": "Hemp-free plant blend"
+    }
+  },
+  {
+    "id": "sunwarrior-classic-protein",
+    "name": "Sunwarrior Classic Protein",
+    "brand": "Sunwarrior",
+    "badge": "Single-Source Rice Protein",
+    "category": "Fermented brown rice protein",
+    "description": "Classic is the brand's original product: fermented brown rice protein with flavor, gums, salt and stevia. Per the label at the time of writing, a 25 g scoop gives about 18 to 20 g of protein at about 100 calories, with chocolate at the lower end. It is a sensible choice for people avoiding legumes, but rice alone is lower in lysine and rice can carry more arsenic, so it is not our first pick.",
+    "pros": [
+      "Single-source, legume-free protein",
+      "Up to about 20 g protein per scoop, per the label",
+      "Unflavored version with no sweetener"
+    ],
+    "cons": [
+      "Rice-only amino profile is lower in lysine",
+      "Rice protein raises more heavy-metal questions",
+      "No sport certification"
+    ],
+    "bottomLine": "Buy it only if you specifically want rice protein without pea or hemp.",
+    "specs": {
+      "Protein per serving": "About 18-20 g (1 scoop)",
+      "Calories": "About 100",
+      "Third-party testing": "No sport certification",
+      "Best for": "Legume-free diets"
+    }
+  },
+  {
+    "id": "garden-of-life-sport-organic-plant-protein",
+    "name": "Garden of Life Sport Organic Plant-Based Protein, Chocolate",
+    "brand": "Garden of Life",
+    "badge": "Alternative: Certified Plant Protein",
+    "category": "Organic pea-led plant protein blend",
+    "description": "If you need a plant protein with a sport certification, this is the alternative to Sunwarrior. Per the brand at the time of writing, a two-scoop serving gives about 30 g of protein with NSF Certified for Sport and USDA Organic status, at around 170 to 180 calories depending on label version, sweetened with stevia. It matches Sunwarrior Active on dose and adds the certification Sunwarrior does not have.",
+    "pros": [
+      "About 30 g protein per serving",
+      "NSF Certified for Sport and USDA Organic, per the brand",
+      "Dairy-free and soy-free"
+    ],
+    "cons": [
+      "Thicker, earthier shake than whey, per buyer reviews",
+      "Two-scoop serving and similar cost per 25 g"
+    ],
+    "bottomLine": "The plant protein to choose over Sunwarrior if you are drug-tested or want a certification.",
+    "specs": {
+      "Protein per serving": "About 30 g (2 scoops)",
+      "Calories": "About 170-180",
+      "Third-party testing": "NSF Certified for Sport (brand)",
+      "Best for": "Drug-tested vegan athletes"
+    }
+  }
+];
+
+const schema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Home",
+          item: `${SITE_URL}/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Best Lists",
+          item: `${SITE_URL}/best-of/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 3,
+          name: "Sunwarrior Protein Powder Review",
+          item: `${SITE_URL}/sunwarrior-protein-powder-review/`,
+        },
+      ],
+    },
+    {
+      "@type": "FAQPage",
+      mainEntity: [
+        {
+          "@type": "Question",
+          "name": "Is Sunwarrior a good protein powder?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, within its niche. Sunwarrior makes organic, stevia-sweetened vegan powders with clean ingredient lists and broadly positive buyer reviews. The weaknesses are a small scoop on Warrior Blend and Classic, a higher cost per gram than whey, and no sport certification. For training, Active is the strongest product because it gives about 30 g of protein per serving."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How much protein is in a scoop of Sunwarrior Warrior Blend?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Per the labels we checked, a 25 g scoop of Warrior Blend gives roughly 16 to 18 g of protein depending on flavor, at about 90 to 100 calories. Sunwarrior has changed labels and scoop sizes over the years, and some retailer listings show different figures, so read the panel on your tub. Most people need about one and a half scoops for 25 g."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is Sunwarrior protein organic?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Warrior Blend is USDA Organic and Non-GMO Project Verified, per the brand, and Active is sold as an organic protein. The brand describes its line as using many organic ingredients. Check the seal on the specific tub and flavor you buy, because certification can vary across products and older stock."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does Sunwarrior protein have heavy metals?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "All plant proteins can contain trace heavy metals absorbed from soil, and rice protein can carry more arsenic. Sunwarrior says it tests through an outside laboratory and complies with Proposition 65. We could not find published batch results or a third-party purity seal, so we cannot rank its levels against rivals. One serving a day is a sensible ceiling."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is Sunwarrior NSF certified?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Sunwarrior states that its products are not tested by sport certification programs such as NSF Certified for Sport, Informed Choice or BSCG. That does not mean the products are unsafe, but drug-tested athletes should choose a plant protein that carries one of those seals, such as Garden of Life Sport, and verify it in the certifier's database."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What sweetener does Sunwarrior use?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The flavored Warrior Blend, Classic and Classic Plus labels we checked use stevia, listed as stevia extract or steviol glycosides, with zero or near-zero sugar. Unflavored versions contain no sweetener, and we found no sucralose or acesulfame potassium on those labels. Check the Active panel for your flavor. Some buyers notice a stevia aftertaste, which is less obvious when the powder is blended into a smoothie."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Which is better, Warrior Blend or Classic?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "For most people, Warrior Blend. Its pea and hemp blend gives a more balanced amino profile than Classic's single-source brown rice, and pea is relatively high in leucine. Classic suits people who want to avoid legumes. If you like the Classic line, Classic Plus adds pea, quinoa, chia and amaranth and is the better of the two."
+          }
+        }
+      ],
+    },
+    {
+      "@type": "Article",
+      headline: title,
+      author: authorSchema(),
+      datePublished: dates.published,
+      dateModified: dates.modified,
+      publisher: { "@type": "Organization", name: SITE_NAME, url: SITE_URL },
+    },
+    {
+      "@type": "ItemList",
+      name: title,
+      numberOfItems: PRODUCTS.length,
+      itemListElement: PRODUCTS.map((product, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name: product.name,
+        url: new URL(`#${product.id}`, Astro.url).toString(),
+      })),
+    },
+    ...PRODUCTS.map((product) => ({
+      "@type": "Product",
+      name: product.name,
+      description: product.description,
+      brand: {
+        "@type": "Brand",
+        name: product.brand ?? product.name.split(" ")[0],
+      },
+    })),
+  ],
+};
+---
+
+<Layout
+  title={title}
+  description={description}
+  ogType="article"
+  article={{
+    publishedTime: dates.published,
+    modifiedTime: dates.modified,
+    author: author.name,
+    section: "Brand Reviews",
+    tags: [
+      "sunwarrior protein powder",
+      "sun warrior protein powder",
+      "sunwarrior warrior blend",
+      "sunwarrior review"
+    ],
+  }}
+  jsonLd={schema}
+  stickyCta={{
+    text: "See Our Top Plant-Based Picks",
+    link: "/best-plant-based-protein-powder/",
+  }}
+>
+  <article class="relative overflow-hidden">
+    <!-- Hero Section -->
+    <div class="bg-gray-900 py-16 lg:py-24 relative overflow-hidden">
+      <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(circle at 20% 20%, #38BDF8 0, transparent 45%), radial-gradient(circle at 80% 60%, #FF4500 0, transparent 40%);"></div>
+      <div class="max-w-4xl mx-auto px-4 relative z-10 text-center">
+        <div class="flex justify-center mb-6">
+          <TrustBadge />
+        </div>
+        <div class="flex justify-center gap-3 mb-6">
+          <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#FF4500]/20 text-[#FF4500] text-xs font-black uppercase tracking-widest border border-[#FF4500]/30">
+            Brand Review
+          </span>
+          <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-green-500/10 text-green-400 text-xs font-bold uppercase tracking-widest border border-green-500/20">
+            Label-Checked
+          </span>
+        </div>
+        <h1 class="text-4xl lg:text-6xl font-black text-white leading-tight mb-8">
+          Sunwarrior <span class="text-[#38BDF8]">Protein Powder</span> Review
+        </h1>
+        <p class="text-xl text-gray-300 leading-relaxed mb-8 max-w-3xl mx-auto">
+          Sunwarrior's four plant proteins read side by side: how much protein a scoop actually holds, which one is organic, how the brand handles heavy-metal testing, and what you pay for every 25 g.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a
+            href="#sunwarrior-active-protein"
+            class="px-8 py-4 bg-[#FF4500] hover:bg-[#E63E00] text-white font-black rounded-xl shadow-lg transition-all no-underline"
+          >
+            See Our #1 Pick
+          </a>
+          <a
+            href="#cost-per-25g"
+            class="px-8 py-4 bg-white/10 hover:bg-white/20 text-white font-bold rounded-xl border border-white/10 no-underline"
+          >
+            Compare the Range
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Author & Meta -->
+    <div class="max-w-3xl mx-auto px-4 pt-12">
+      <div class="flex items-center gap-6 border-b border-gray-100 pb-8">
+        <div class="flex items-center gap-3">
+          <AuthorAvatar size={48} />
+          <div>
+            <p class="text-sm font-bold text-gray-900">{author.name}</p>
+            <p class="text-xs text-gray-500 uppercase tracking-widest">{author.role}</p>
+          </div>
+        </div>
+        <div class="h-10 w-px bg-gray-200 hidden sm:block"></div>
+        <div class="hidden sm:block">
+          <p class="text-sm font-bold text-gray-900">Last Updated</p>
+          <p class="text-xs text-gray-500">{dates.display}</p>
+        </div>
+        <div class="hidden sm:block ml-auto">
+          <SocialProof />
+        </div>
+      </div>
+    </div>
+
+    <!-- Table of Contents -->
+    <div class="max-w-3xl mx-auto px-4 py-10">
+      <div class="bg-gray-50 border border-gray-200 rounded-2xl p-6 lg:p-8">
+        <h2 class="text-lg font-black text-gray-900 mb-4 flex items-center gap-2">
+          In This Guide
+        </h2>
+        <nav class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <a href="#verdict" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">1. The Short Verdict</a>
+          <a href="#the-brand" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">2. Who Makes Sunwarrior</a>
+          <a href="#range-compared" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">3. The Range Side by Side</a>
+          <a href="#top-picks" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">4. Our Top Picks</a>
+          <a href="#cost-per-25g" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">5. Cost per 25 g of Protein</a>
+          <a href="#protein-sources" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">6. Pea, Hemp, Rice and the Amino Profile</a>
+          <a href="#testing" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">7. Heavy Metals and Testing</a>
+          <a href="#taste-texture" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">8. Taste, Texture and Sweetener</a>
+          <a href="#who-should-skip" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">9. Who Should Skip It</a>
+          <a href="#how-to-use" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">10. How to Get a Full Dose</a>
+          <a href="#mistakes" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">11. Common Mistakes</a>
+          <a href="#faq" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">12. FAQ</a>
+        </nav>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="max-w-3xl mx-auto px-4 pb-16 lg:pb-24">
+      <div class="prose prose-lg prose-blue max-w-none text-gray-700 leading-relaxed">
+        <p class="text-2xl font-medium text-gray-900 mb-8 italic">
+          Sunwarrior makes a good vegan protein powder with a small scoop. Warrior Blend, the flagship, gives roughly 16 to 18 g of protein per 25 g scoop from organic pea and hemp, sweetened with stevia, at about 90 to 100 calories. That is a clean label, but you need about one and a half scoops to reach 25 g, which pushes the cost per gram above most whey and some rival plant powders. Active fixes the dose with 30 g per serving. Classic is the rice-protein original. None carry a sport certification.
+        </p>
+
+        <QuickPicks products={PRODUCTS} />
+
+        <div id="verdict" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            1. The Short Verdict
+          </h2>
+
+          <p>
+            <strong>Buy Sunwarrior Active</strong> if you want the brand's best product for training. A two-scoop serving gives about 30 g of protein from organic pea, brown rice and pumpkin seed, per the label at the time of writing, which is a full dose in one shake. It is the only Sunwarrior powder that competes with whey on protein per serving.
+          </p>
+
+          <p>
+            <strong>Buy Warrior Blend</strong> if you want the classic Sunwarrior shake: organic pea and hemp, stevia-sweetened, low in calories and widely stocked. Just know that a scoop holds roughly 16 to 18 g of protein, so a 25 g dose takes about one and a half scoops. Many buyers simply take one scoop and accept a smaller dose.
+          </p>
+
+          <p>
+            Buy <strong>Classic</strong> only if you specifically want a single-source brown rice protein, and treat <strong>Classic Plus</strong> as a middle option with a five-source blend. Both are fine, but neither has a clear advantage over Warrior Blend for most people, and rice protein brings its own heavy-metal questions, which we cover below.
+          </p>
+
+          <p>
+            Against the wider plant market, Sunwarrior sits in the middle: cleaner than many mainstream plant powders, more expensive per gram than budget pea isolates, and without the NSF or Informed Choice seals some rivals carry. For a ranking across brands, see our <a href="/best-plant-based-protein-powder/">best plant-based protein powder</a> guide.
+          </p>
+
+          <div class="bg-gray-900 text-white rounded-2xl p-6 lg:p-8 my-8">
+            <p class="text-xs font-black uppercase tracking-widest text-[#38BDF8] mb-3">THE VERDICT</p>
+            <p class="text-xl font-bold text-white mb-3">Active for training, Warrior Blend for everyday shakes.</p>
+            <p class="text-gray-300 leading-relaxed m-0">Active gives about 30 g per serving. Warrior Blend gives about 16 to 18 g per scoop, so most people need a scoop and a half for a full dose. Neither has a third-party sport certification.</p>
+          </div>
+        </div>
+
+        <div id="the-brand" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            2. Who Makes Sunwarrior
+          </h2>
+
+          <p>
+            Sunwarrior is a Utah-based plant nutrition company founded in the late 2000s by Denley Fowlke and Nick Stern. In a 2014 interview Fowlke described its first product as a sprouted, fermented brown rice protein, which became Classic, followed by the pea-based Warrior Blend. The company has since expanded into greens, collagen-support and other supplements.
+          </p>
+
+          <p>
+            The brand's identity is vegan, raw-food and clean-label. Its powders are dairy-free, gluten-free and soy-free, and the brand describes them as free of artificial ingredients. Warrior Blend carries USDA Organic and Non-GMO Project Verified status, per the brand and retailer listings at the time of writing. That positioning is closer to Garden of Life or Vega than to gym-floor brands.
+          </p>
+
+          <p>
+            Sunwarrior sells through its own site and through Amazon, Target, Walmart, Vitamin Shoppe and natural grocers. That wide distribution is useful: if you want to try a small tub before committing, the 375 g size is easy to find, and Amazon is usually the simplest place to compare flavors and sizes side by side.
+          </p>
+
+          <p>
+            One thing the brand is clear about is what it does not do. Its FAQ states that its products are not tested by sport certifiers such as NSF, Informed Choice or BSCG. That is an honest disclosure and an important one if you compete in a drug-tested sport. We come back to it in the testing section.
+          </p>
+        </div>
+
+        <div id="range-compared" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            3. The Range Side by Side
+          </h2>
+
+          <p>
+            Sunwarrior's protein line is easy to confuse because the tubs look alike and several have been renamed over the years. Here are the four main powders and what the labels we checked say. Use the table to pick the right product before you compare flavors.
+          </p>
+
+          <div class="overflow-hidden border border-gray-200 rounded-2xl my-8">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Powder</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Protein source</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Protein / serving</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Calories</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Serving</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Active</td>
+                    <td class="px-4 py-4 text-gray-700">Pea, brown rice, pumpkin seed</td>
+                    <td class="px-4 py-4 text-gray-700">About 30 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 190-200</td>
+                    <td class="px-4 py-4 text-gray-700">2 scoops (about 50 g)</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Warrior Blend</td>
+                    <td class="px-4 py-4 text-gray-700">Pea, hemp, goji</td>
+                    <td class="px-4 py-4 text-gray-700">About 16-18 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 90-100</td>
+                    <td class="px-4 py-4 text-gray-700">1 scoop (25 g)</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Classic</td>
+                    <td class="px-4 py-4 text-gray-700">Fermented brown rice</td>
+                    <td class="px-4 py-4 text-gray-700">About 18-20 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 100</td>
+                    <td class="px-4 py-4 text-gray-700">1 scoop (25 g)</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Classic Plus</td>
+                    <td class="px-4 py-4 text-gray-700">Pea, rice, quinoa, chia, amaranth</td>
+                    <td class="px-4 py-4 text-gray-700">About 17-18 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 90-100</td>
+                    <td class="px-4 py-4 text-gray-700">1 scoop</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <p>
+            The pattern is obvious once it is in a table. Warrior Blend, Classic and Classic Plus are all one-scoop products of about 25 g that land somewhere between 16 and 20 g of protein. Active is a two-scoop, 50 g serving built to deliver a full training dose. Per gram of powder, they are all roughly 65 to 80 percent protein.
+          </p>
+
+          <p>
+            That protein density is normal for a flavored plant powder. Pea and rice isolates start at around 80 percent protein, and flavor, MCT oil, salt and gums dilute that. Whey isolate, by comparison, often runs above 80 percent protein in flavored form, which is why a whey scoop of similar size gives more protein.
+          </p>
+
+          <p>
+            Flavor choice is wide. Warrior Blend has been sold in vanilla, chocolate, berry shortcake, unflavored and seasonal flavors such as gingerbread, while Active covers chocolate, vanilla, chocolate peanut butter and cake batter at the time of writing. Note that protein varies by flavor: the chocolate peanut butter Active lists about 27 g rather than 30 g.
+          </p>
+        </div>
+
+        <!-- Picks -->
+        <div id="top-picks" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            4. The Sunwarrior Powders, Ranked
+          </h2>
+
+          <p>
+            We ranked Sunwarrior's four main protein powders on protein per serving, cost per 25 g, ingredient quality and documentation, then added one clearly labelled alternative from another brand for readers who need a sport certification. Figures are per the label at the time of writing, they differ by flavor, and Sunwarrior has changed scoop sizes and labels over the years, so check the panel on the tub in front of you.
+          </p>
+
+          {PRODUCTS.map((product, index) => (
+            <div id={product.id} class="scroll-mt-24 mt-12 first:mt-8">
+              <div class="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                <div class="bg-gray-900 px-6 py-4 flex items-center justify-between">
+                  <div class="flex items-center gap-3">
+                    <span class="bg-[#FF4500] text-white w-8 h-8 rounded-full flex items-center justify-center text-sm font-black">
+                      {index + 1}
+                    </span>
+                    {productImages[product.id] && (
+                      <img
+                        src={productImages[product.id]}
+                        alt={product.name}
+                        loading="lazy"
+                        width="40"
+                        height="40"
+                        class="w-10 h-10 rounded-lg bg-white object-contain p-1 shrink-0"
+                      />
+                    )}
+                    <div>
+                      <p class="text-white font-black text-lg">{product.name}</p>
+                      <p class="text-gray-400 text-xs">{product.category}</p>
+                    </div>
+                  </div>
+                  <span class="bg-[#38BDF8]/20 text-[#38BDF8] px-3 py-1 rounded-full text-xs font-bold hidden sm:block">
+                    {product.badge}
+                  </span>
+                </div>
+                <div class="p-6">
+                  {product.rating && (
+                  <div class="flex items-center gap-2 mb-4">
+                    <div class="flex text-yellow-400">
+                      {[...Array(5)].map((_, i) => (
+                        <svg
+                          class={`w-4 h-4 ${i < Math.floor(product.rating) ? "fill-current" : "text-gray-200"}`}
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                        >
+                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        </svg>
+                      ))}
+                    </div>
+                    <span class="text-gray-500 text-sm font-bold">{product.rating}</span>
+                    {product.reviewCount && <span class="text-gray-400 text-xs">({product.reviewCount.toLocaleString()} retailer reviews)</span>}
+                  </div>
+                  )}
+
+                  <SpecGrid specs={product.specs} />
+
+                  <p class="text-gray-700 leading-relaxed mb-6">{product.description}</p>
+
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                    <div class="bg-green-50 rounded-xl p-4">
+                      <p class="text-xs font-black uppercase tracking-widest text-green-700 mb-3">Pros</p>
+                      <ul class="space-y-2">
+                        {product.pros.map((pro) => (
+                          <li class="flex items-start gap-2 text-sm text-green-800">
+                            <svg class="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            {pro}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div class="bg-red-50 rounded-xl p-4">
+                      <p class="text-xs font-black uppercase tracking-widest text-red-700 mb-3">Cons</p>
+                      <ul class="space-y-2">
+                        {product.cons.map((con) => (
+                          <li class="flex items-start gap-2 text-sm text-red-800">
+                            <svg class="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                            {con}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+
+                  <div class="bg-gray-50 rounded-xl p-4 border border-gray-100">
+                    <p class="text-xs font-black uppercase tracking-widest text-gray-500 mb-1">The Bottom Line</p>
+                    <p class="text-gray-900 font-bold">{product.bottomLine}</p>
+                  </div>
+
+                  <a
+                    href={amazonLink(product.amazonUrl, product.name, product.id)}
+                    target="_blank"
+                    rel="sponsored nofollow noopener"
+                    class="mt-6 block bg-[#FF4500] hover:bg-[#E63E00] text-white text-center py-4 rounded-xl font-black no-underline transition-colors uppercase tracking-widest text-sm"
+                  >
+                    Check Price &rarr;
+                  </a>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div id="cost-per-25g" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            5. Cost per 25 g of Protein
+          </h2>
+
+          <p>
+            Because Sunwarrior's scoops hold less than 25 g of protein, the cost per serving on the tub understates what you really pay. The fair comparison is price per 25 g of protein. Prices change often, so treat the ranges below as approximate, based on listings we checked rather than today's exact price.
+          </p>
+
+          <p>
+            Warrior Blend in the 30-serving 1.65 lb tub works out to roughly $1.50 per scoop at typical prices, which is about $2.10 to $2.40 per 25 g of protein. Subscribe and Save discounts can pull that under $2.00. Classic and Classic Plus land in a similar range. Active, at about 30 g per two-scoop serving in a 20-serving 2.2 lb tub, comes out at roughly $2.00 to $2.50 per 25 g.
+          </p>
+
+          <div class="bg-gray-900 text-white rounded-2xl p-6 lg:p-8 my-8">
+            <p class="text-xs font-black uppercase tracking-widest text-[#38BDF8] mb-4">Approximate cost per 25 g of protein</p>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+              <div>
+                <p class="text-3xl font-black text-white">$2.00-2.50</p>
+                <p class="text-gray-400 text-xs mt-1">Active</p>
+              </div>
+              <div>
+                <p class="text-3xl font-black text-[#38BDF8]">$2.10-2.40</p>
+                <p class="text-gray-400 text-xs mt-1">Warrior Blend</p>
+              </div>
+              <div>
+                <p class="text-3xl font-black text-white">$1.80-2.40</p>
+                <p class="text-gray-400 text-xs mt-1">Classic and Classic Plus</p>
+              </div>
+              <div>
+                <p class="text-3xl font-black text-[#38BDF8]">$1.20-1.80</p>
+                <p class="text-gray-400 text-xs mt-1">Typical whey blend</p>
+              </div>
+            </div>
+          </div>
+
+          <p>
+            For context, mainstream whey blends usually cost $1.20 to $1.80 per 25 g, and budget plant powders such as Orgain or bulk pea isolates can run lower than Sunwarrior too. Our <a href="/orgain-protein-powder-review/">Orgain review</a> covers one of the cheapest organic options, and our <a href="/best-pea-protein-powder/">best pea protein powder</a> guide covers plain pea isolates.
+          </p>
+
+          <p>
+            Sunwarrior is not overpriced for what it is, an organic, stevia-sweetened blend from a well-known brand. But it is not a value pick, and buyers who only care about grams per dollar should look elsewhere.
+          </p>
+        </div>
+
+        <div id="protein-sources" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            6. Pea, Hemp, Rice and the Amino Profile
+          </h2>
+
+          <p>
+            Plant protein quality comes down to two things: how much leucine you get per serving and whether the essential amino acids are balanced. Pea protein is relatively high in leucine and lysine but lower in methionine. Rice protein is the opposite, higher in methionine and lower in lysine. Blending the two is the standard fix, and it is what Active does.
+          </p>
+
+          <p>
+            Warrior Blend pairs pea with hemp. Hemp brings fiber, some healthy fats and a complete amino acid profile, but it is less protein-dense than pea, so it dilutes the scoop slightly. Goji berry appears in the blend in a small amount. Overall, the result is a reasonable amino profile, though at 16 to 18 g per scoop the leucine dose is lower than a full whey serving.
+          </p>
+
+          <p>
+            Research suggests about 2 to 3 g of leucine per meal is a useful target for stimulating muscle protein synthesis. A whey serving of 25 g usually clears that easily. A single plant scoop of 16 to 18 g may not, which is why we suggest a scoop and a half of Warrior Blend or a full serving of Active after training. Our <a href="/whey-vs-plant-protein/">whey versus plant protein</a> guide goes deeper.
+          </p>
+
+          <p>
+            Classic is single-source fermented brown rice. That is fine for people avoiding legumes, but rice alone is lower in lysine, so it is not the best choice as your only protein source. Classic Plus adds pea, quinoa, chia and amaranth to round the profile out, which makes it the better of the two Classic options for most people.
+          </p>
+        </div>
+
+        <div id="testing" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            7. Heavy Metals and Testing
+          </h2>
+
+          <p>
+            Heavy metals are the most-asked question about plant protein powders, and for good reason. Plants absorb lead, cadmium and arsenic from soil, and rice in particular tends to take up arsenic. Independent testing groups have repeatedly found higher average metal levels in plant powders than in whey, though results vary widely by brand and batch.
+          </p>
+
+          <p>
+            Sunwarrior says it tests its products for heavy metals through an outside laboratory and complies with California Proposition 65, per the brand at the time of writing. We could not find published batch results or a third-party purity seal such as the Clean Label Project's on the current range, so we cannot tell you how Sunwarrior's numbers compare with rivals.
+          </p>
+
+          <p>
+            Separately, Sunwarrior is not NSF Certified for Sport or Informed Choice certified, and the brand says so. That matters for drug-tested athletes, who should choose a plant protein with one of those seals. Garden of Life Sport, our alternative pick below, is the most common certified option. Our <a href="/garden-of-life-protein-powder-review/">Garden of Life review</a> covers its range.
+          </p>
+
+          <p>
+            A sensible approach for everyone else is moderation and rotation. One serving a day of any reputable plant powder is unlikely to be a problem for most healthy adults, but there is little reason to take three. Pregnant readers and parents buying for children should talk to a doctor or registered dietitian, and our <a href="/is-protein-powder-safe/">protein powder safety guide</a> explains the evidence.
+          </p>
+        </div>
+
+        <div id="taste-texture" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            8. Taste, Texture and Sweetener
+          </h2>
+
+          <p>
+            The flavored Warrior Blend, Classic and Classic Plus labels we checked are sweetened with stevia rather than sucralose or acesulfame potassium, and the unflavored versions have no sweetener at all. Sugar is zero or close to it. We could not confirm the sweetener on every Active flavor, so read that panel yourself. For buyers avoiding artificial sweeteners, stevia is one of the brand's strongest points.
+          </p>
+
+          <p>
+            Stevia has a recognizable aftertaste that some people dislike, and it is more noticeable in water than in a smoothie. Buyer feedback on Warrior Blend is broadly positive for chocolate and mocha and more mixed for vanilla and fruit flavors, with the most common complaint being a slightly earthy or gritty finish that hemp and pea both bring.
+          </p>
+
+          <p>
+            Warrior Blend includes MCT oil, which helps it blend smoother than a plain pea isolate, and buyers often describe it as one of the better-mixing plant powders. It is still thicker than whey. A blender or a shaker with a mixing ball works better than a spoon, and almond or oat milk masks the plant taste better than water.
+          </p>
+
+          <p>
+            If taste decides it for you, start with the smallest tub of chocolate Warrior Blend before buying the large size. Sunwarrior's 375 g tubs are about 15 servings, a cheap way to find out whether stevia and hemp work for you. Our <a href="/best-tasting-protein-powder/">best tasting protein powder</a> guide has options for picky drinkers.
+          </p>
+        </div>
+
+        <div id="who-should-skip" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            9. Who Should Skip It
+          </h2>
+
+          <p>
+            <strong>Skip Sunwarrior if you are a drug-tested athlete.</strong> The brand has no NSF Certified for Sport or Informed Choice seal, and it says so. Choose a plant protein with one of those certifications instead.
+          </p>
+
+          <p>
+            <strong>Skip it if cost per gram is your main concern.</strong> At roughly $2.00 to $2.50 per 25 g, Sunwarrior costs more than whey and more than budget plant powders. If you eat dairy and want the cheapest protein, our <a href="/best-cheap-protein-powder/">best cheap protein powder</a> guide is a better start.
+          </p>
+
+          <p>
+            <strong>Skip Warrior Blend if you want 25 g or more from a single scoop.</strong> It is a small-dose powder by design. Active is the better Sunwarrior pick if you want one serving to cover a full post-workout dose.
+          </p>
+
+          <p>
+            <strong>Skip Classic if you are worried about arsenic</strong> or want a complete amino profile from one source. Brown rice alone is not the strongest choice on either count. Classic Plus or Active, both blends, make more sense for daily use.
+          </p>
+        </div>
+
+        <div id="how-to-use" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            10. How to Get a Full Dose
+          </h2>
+
+          <p>
+            Most adults building muscle do well on about 1.6 g of protein per kg of body weight per day, spread across three or four meals. Each meal or shake should ideally provide 25 to 40 g. Our <a href="/how-much-protein-do-i-need/">protein needs guide</a> shows the maths for your weight and goal.
+          </p>
+
+          <p>
+            With Warrior Blend, that means one and a half scoops, about 25 to 27 g of protein, after training, or one scoop alongside a meal that already contains protein. With Active, one full two-scoop serving does the job. Classic and Classic Plus work like Warrior Blend.
+          </p>
+
+          <p>
+            Plant protein works best in smoothies. Blend a scoop of Warrior Blend with frozen banana, oat milk and a spoon of peanut butter and you get a 30-plus gram shake that hides any earthy taste. Soy milk adds about 7 to 8 g of extra protein per cup if you want to stretch a smaller scoop.
+          </p>
+
+          <p>
+            As always, a shake supplements food rather than replacing it. People with kidney disease, those who are pregnant, and anyone taking medication should check with a doctor or registered dietitian before adding a high-protein supplement. This review is label analysis, not medical advice.
+          </p>
+        </div>
+
+        <!-- Common Mistakes -->
+        <div id="mistakes" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            11. Common Mistakes to Avoid
+          </h2>
+
+          <div class="space-y-6 my-8">
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Treating one scoop as a full dose</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Warrior Blend, Classic and Classic Plus all give roughly 16 to 20 g of protein per scoop. That is useful, but it is below the 25 g most research uses after training. Take one and a half scoops, add soy milk, or pair the shake with a protein-rich meal to close the gap.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Comparing price per tub, not per gram</h3>
+              <p class="text-gray-700 text-sm m-0">
+                A Sunwarrior tub can look similar in price to a whey tub, but each scoop holds less protein. Divide the price by total grams of protein and multiply by 25. On that basis Sunwarrior usually costs $2.00 or more per 25 g, well above typical whey blends.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Assuming organic means tested for metals</h3>
+              <p class="text-gray-700 text-sm m-0">
+                USDA Organic covers how crops are grown, not what ends up in the tub. Organic plant powders can still contain lead or cadmium from soil. Sunwarrior says it tests through an outside lab, but it does not publish a third-party purity seal, so moderation still makes sense.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Buying it as a drug-tested athlete</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Sunwarrior states that its products are not tested by NSF, Informed Choice or BSCG. Any supplement carries some contamination risk, and the athlete bears it. If you are tested, choose a powder with one of those seals and check the exact product in the certifier's database first.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Mixing it like whey</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Plant powders are thicker and grittier than whey, and a quick stir in water shows that at its worst. Use a blender or a shaker ball, mix with plant milk, and give it a minute to hydrate. Buyers who switch to smoothies tend to rate the taste far higher.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ -->
+        <div id="faq" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            12. Frequently Asked Questions
+          </h2>
+
+          <div class="space-y-6">
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is Sunwarrior a good protein powder?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Yes, within its niche. Sunwarrior makes organic, stevia-sweetened vegan powders with clean ingredient lists and broadly positive buyer reviews. The weaknesses are a small scoop on Warrior Blend and Classic, a higher cost per gram than whey, and no sport certification. For training, Active is the strongest product because it gives about 30 g of protein per serving.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">How much protein is in a scoop of Sunwarrior Warrior Blend?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Per the labels we checked, a 25 g scoop of Warrior Blend gives roughly 16 to 18 g of protein depending on flavor, at about 90 to 100 calories. Sunwarrior has changed labels and scoop sizes over the years, and some retailer listings show different figures, so read the panel on your tub. Most people need about one and a half scoops for 25 g.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is Sunwarrior protein organic?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Warrior Blend is USDA Organic and Non-GMO Project Verified, per the brand, and Active is sold as an organic protein. The brand describes its line as using many organic ingredients. Check the seal on the specific tub and flavor you buy, because certification can vary across products and older stock.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Does Sunwarrior protein have heavy metals?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                All plant proteins can contain trace heavy metals absorbed from soil, and rice protein can carry more arsenic. Sunwarrior says it tests through an outside laboratory and complies with Proposition 65. We could not find published batch results or a third-party purity seal, so we cannot rank its levels against rivals. One serving a day is a sensible ceiling.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is Sunwarrior NSF certified?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                No. Sunwarrior states that its products are not tested by sport certification programs such as NSF Certified for Sport, Informed Choice or BSCG. That does not mean the products are unsafe, but drug-tested athletes should choose a plant protein that carries one of those seals, such as Garden of Life Sport, and verify it in the certifier's database.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">What sweetener does Sunwarrior use?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                The flavored Warrior Blend, Classic and Classic Plus labels we checked use stevia, listed as stevia extract or steviol glycosides, with zero or near-zero sugar. Unflavored versions contain no sweetener, and we found no sucralose or acesulfame potassium on those labels. Check the Active panel for your flavor. Some buyers notice a stevia aftertaste, which is less obvious when the powder is blended into a smoothie.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Which is better, Warrior Blend or Classic?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                For most people, Warrior Blend. Its pea and hemp blend gives a more balanced amino profile than Classic's single-source brown rice, and pea is relatively high in leucine. Classic suits people who want to avoid legumes. If you like the Classic line, Classic Plus adds pea, quinoa, chia and amaranth and is the better of the two.
+              </p>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Related Guides -->
+        <div class="mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">Related Plant Protein Guides</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <a href="/best-plant-based-protein-powder/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#FF4500] font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Plant-Based Protein Powder</h3>
+              <p class="text-gray-500 text-sm mt-2">Our full ranking of vegan powders on dose, testing and cost per 25 g.</p>
+            </a>
+            <a href="/vega-protein-powder-review/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#38BDF8] font-black text-xs uppercase tracking-widest mb-2">Brand Review</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Vega Protein Powder Review</h3>
+              <p class="text-gray-500 text-sm mt-2">Vega Sport and the rest of the range, read from the label.</p>
+            </a>
+            <a href="/best-pea-protein-powder/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-green-600 font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Pea Protein Powder</h3>
+              <p class="text-gray-500 text-sm mt-2">Single-source pea isolates ranked on amino profile and price.</p>
+            </a>
+          </div>
+        </div>
+
+        <!-- Closing -->
+        <div class="mt-16 bg-gray-900 text-white rounded-2xl p-8">
+          <h2 class="text-2xl font-black text-white mb-4">The Bottom Line</h2>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            Sunwarrior is a solid vegan brand with clean, stevia-sweetened labels and organic ingredients. Active is the product to buy for training, with about 30 g of protein per serving. Warrior Blend is a pleasant everyday shake as long as you remember a scoop holds roughly 16 to 18 g, not a full dose.
+          </p>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            Skip the brand if you are drug-tested, because it carries no sport certification, or if grams per dollar is what you care about most. For certified and cheaper plant options, our <a href="/best-plant-based-protein-powder/">plant-based protein rankings</a> compare Sunwarrior with every major rival.
+          </p>
+        </div>
+
+        <MoreInCategory category="Brand Reviews" links={moreInCategory} />
+
+        <AuthorBio />
+      </div>
+    </div>
+  </article>
+</Layout>

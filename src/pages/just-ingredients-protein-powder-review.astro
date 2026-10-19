@@ -1,0 +1,952 @@
+---
+import Layout from "../layouts/Layout.astro";
+import MoreInCategory from "../components/MoreInCategory.astro";
+import { AUTHORS, DEFAULT_AUTHOR, authorSchema } from "../data/authors";
+import { SITE_NAME, SITE_URL } from "../data/site";
+import AuthorAvatar from "../components/AuthorAvatar.astro";
+import QuickPicks from "../components/QuickPicks.astro";
+import AuthorBio from "../components/AuthorBio.astro";
+import { amazonLink } from "../data/affiliate";
+import TrustBadge from "../components/TrustBadge.astro";
+import SocialProof from "../components/SocialProof.astro";
+import SpecGrid from "../components/SpecGrid.astro";
+import productImages from "../data/product-images.json";
+import { pageDates } from "../data/dates";
+
+const moreInCategory = [
+  {
+    "title": "Best Clean Protein Powder",
+    "url": "/best-clean-protein-powder/"
+  },
+  {
+    "title": "Is Protein Powder Safe?",
+    "url": "/is-protein-powder-safe/"
+  },
+  {
+    "title": "Best Protein Powder for Women",
+    "url": "/best-protein-powder-for-women/"
+  }
+];
+const author = AUTHORS[DEFAULT_AUTHOR];
+const dates = pageDates(Astro.url.pathname, { published: "2026-10-19", modified: "2026-10-19" });
+const title = "Just Ingredients Protein Powder Review: What the Clean Label Gets You";
+const description =
+  "Just Ingredients protein powder reviewed on the label: 22 g from whey, pea, chia and collagen, stevia and monk fruit, heavy-metal questions and cost per 25 g.";
+
+const PRODUCTS: {
+  id: string;
+  name: string;
+  brand?: string;
+  badge: string;
+  category: string;
+  description: string;
+  pros: string[];
+  cons: string[];
+  bottomLine: string;
+  specs?: Record<string, string>;
+  rating?: number;
+  reviewCount?: number;
+  amazonUrl?: string;
+}[] = [
+  {
+    "id": "just-ingredients-protein-powder-vanilla",
+    "name": "Just Ingredients Vanilla Protein Powder",
+    "brand": "Just Ingredients",
+    "badge": "Best Overall",
+    "category": "Grass-fed whey, pea, collagen and chia blend",
+    "description": "The flagship flavor: about 22 g of protein per 33 g scoop from grass-fed, non-denatured whey, pea, grass-fed collagen and chia, with coconut milk, vanilla bean and cinnamon, sweetened with stevia and monk fruit, in about 140 calories, per the label at the time of writing. The most versatile flavor in the range.",
+    "pros": [
+      "Short label with no artificial sweeteners, sugar alcohols or gums",
+      "Creamy texture, per buyer feedback",
+      "Works in smoothies, oats and baking"
+    ],
+    "cons": [
+      "Part of the 22 g is collagen, a weaker protein for muscle",
+      "About 4.5 g saturated fat per scoop",
+      "High cost per 25 g of protein"
+    ],
+    "bottomLine": "The flavor to buy if you want a clean-label, naturally sweetened daily shake.",
+    "specs": {
+      "Protein per serving": "About 22 g (label)",
+      "Calories": "About 140",
+      "Third-party testing": "Brand claim; no NSF or Informed Choice confirmed",
+      "Best for": "Clean-label smoothies"
+    },
+    "amazonUrl": "https://www.amazon.com/dp/B0D1W2865C"
+  },
+  {
+    "id": "just-ingredients-protein-powder-chocolate",
+    "name": "Just Ingredients Chocolate Protein Powder",
+    "brand": "Just Ingredients",
+    "badge": "Best Chocolate",
+    "category": "Grass-fed whey and plant protein blend",
+    "description": "The chocolate version of the same formula, listed at about 22 g of protein per scoop, with whey, pea, pumpkin seed, chia and collagen, sweetened with stevia and monk fruit, per retailer listings at the time of writing. It is the pick for drinking straight or with milk. Chocolate proteins of any brand tend to test higher for heavy metals.",
+    "pros": [
+      "Rich chocolate flavor for shakes with milk",
+      "Same short, gum-free ingredient list",
+      "Multi-source blend with pumpkin seed protein"
+    ],
+    "cons": [
+      "Chocolate flavors generally carry more heavy metals",
+      "Same collagen and saturated-fat trade-offs as vanilla"
+    ],
+    "bottomLine": "A good chocolate shake; choose vanilla if heavy metals are your main concern.",
+    "specs": {
+      "Protein per serving": "About 22 g (label, varies by flavor)",
+      "Protein source": "Whey, pea, pumpkin seed, chia, collagen",
+      "Third-party testing": "Brand claim; no NSF or Informed Choice confirmed",
+      "Best for": "Shakes with milk"
+    },
+    "amazonUrl": "https://www.amazon.com/dp/B0D1VXZB6W"
+  },
+  {
+    "id": "just-ingredients-protein-powder-strawberry-cream",
+    "name": "Just Ingredients Strawberry Cream Protein Powder",
+    "brand": "Just Ingredients",
+    "badge": "Fruit Flavor Pick",
+    "category": "Grass-fed whey and plant protein blend",
+    "description": "A fruit-flavored version of the core formula, listed on Amazon as a 20-serving tub with about 22 g of protein per scoop at the time of writing. It suits buyers who like strawberry shakes and smoothies, but fruit flavors divide opinion more than vanilla, so buy one tub before committing.",
+    "pros": [
+      "Something different from vanilla and chocolate",
+      "Same naturally sweetened, gum-free formula",
+      "Pairs well with frozen berries and banana"
+    ],
+    "cons": [
+      "Less versatile than vanilla",
+      "Same high cost per 25 g of protein"
+    ],
+    "bottomLine": "A fun change of pace, best as a second tub rather than a first.",
+    "specs": {
+      "Protein per serving": "About 22 g (listing)",
+      "Servings": "20 per tub",
+      "Third-party testing": "Brand claim; no NSF or Informed Choice confirmed",
+      "Best for": "Fruit smoothies"
+    },
+    "amazonUrl": "https://www.amazon.com/dp/B0D1W1D2PV"
+  },
+  {
+    "id": "thorne-whey-protein-isolate",
+    "name": "Thorne Whey Protein Isolate",
+    "brand": "Thorne",
+    "badge": "Alternative: Certified",
+    "category": "Whey protein isolate",
+    "description": "If you want documented testing rather than a brand claim, Thorne's whey isolate carries NSF Certified for Sport status, per the brand and NSF at the time of writing, with about 21 g of protein per scoop from whey isolate and a short ingredient list. It is less creamy than Just Ingredients but far better verified.",
+    "pros": [
+      "NSF Certified for Sport (verify flavor)",
+      "All protein from whey isolate, no collagen dilution",
+      "Short ingredient list"
+    ],
+    "cons": [
+      "About 21 g per scoop",
+      "Less dessert-like and creamy"
+    ],
+    "bottomLine": "The clean-label pick for anyone who wants an independent seal on the tub.",
+    "specs": {
+      "Protein per serving": "About 21 g (label)",
+      "Protein source": "Whey protein isolate",
+      "Third-party testing": "NSF Certified for Sport (verify flavor)",
+      "Best for": "Tested athletes, daily use"
+    }
+  },
+  {
+    "id": "naked-nutrition-naked-whey",
+    "name": "Naked Whey",
+    "brand": "Naked Nutrition",
+    "badge": "Alternative: Simplest Label",
+    "category": "Single-ingredient grass-fed whey concentrate",
+    "description": "Naked Whey takes the clean-label idea to its limit: one ingredient, grass-fed whey concentrate, with about 25 g of protein in roughly 120 calories per the label. It is cheaper per 25 g than Just Ingredients and has no collagen dilution, but it is unsweetened, so you flavor it yourself.",
+    "pros": [
+      "One ingredient, no sweeteners",
+      "About 25 g of complete protein per serving",
+      "Lower cost per 25 g of protein"
+    ],
+    "cons": [
+      "Unflavored and plain on its own",
+      "No sport certification we could confirm"
+    ],
+    "bottomLine": "The better-value clean whey if you are happy to add your own flavor.",
+    "specs": {
+      "Protein per serving": "About 25 g (label)",
+      "Protein source": "Grass-fed whey concentrate",
+      "Third-party testing": "No sport certification confirmed",
+      "Best for": "Minimal-ingredient buyers"
+    }
+  }
+];
+
+const schema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Home",
+          item: `${SITE_URL}/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Best Lists",
+          item: `${SITE_URL}/best-of/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 3,
+          name: "Just Ingredients Protein Review",
+          item: `${SITE_URL}/just-ingredients-protein-powder-review/`,
+        },
+      ],
+    },
+    {
+      "@type": "FAQPage",
+      mainEntity: [
+        {
+          "@type": "Question",
+          "name": "Is Just Ingredients protein powder good?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It is a good-tasting, short-label protein. The vanilla gives about 22 g of protein from grass-fed whey, pea, collagen and chia in roughly 140 calories, sweetened with stevia and monk fruit, per the label. Its drawbacks are collagen in the protein total, about 4.5 g of saturated fat and a high cost per 25 g of protein."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How much protein is in Just Ingredients protein powder?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "About 22 g per 33 g scoop in the vanilla flavor, per the label at the time of writing, and the brand cites 22 to 24 g across flavors. Part of that protein comes from collagen, which is less effective for muscle building than whey. Each tub holds about 20 servings, so check the panel on your flavor."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is Just Ingredients protein whey or plant-based?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It is a blend led by grass-fed whey, with pea, chia and collagen, and pumpkin seed in the chocolate flavor. That makes it unsuitable for vegans and anyone with a milk allergy. The brand describes the whey as non-denatured and sourced from New Zealand. Dairy-free buyers should choose a plant protein instead."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What sweetener does Just Ingredients use?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Stevia leaf and monk fruit, with no added sugar, per the label at the time of writing. The brand says it uses no artificial sweeteners, sugar alcohols or gums. The vanilla flavor lists about 2 g of sugar per scoop, which comes from the ingredients rather than added sugar. Flavors may differ slightly, so check your tub."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does Just Ingredients protein have heavy metals?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The brand says each product is tested for heavy metals. An independent advocate published a 2024 lab report saying a chocolate sample tested positive for lead, cadmium and arsenic. Detection is not the same as an unsafe level, and chocolate proteins generally test higher. Choose vanilla, and ask your doctor if you are pregnant."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is Just Ingredients protein worth the price?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Only if you value the short label and taste. At about $50 for 20 servings, it costs roughly $2.85 per 25 g of protein, which is near the top of the market. Single-ingredient wheys cost less and deliver more complete protein per gram. Mixing half a scoop with unflavored whey cuts the cost per shake."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Where can I buy Just Ingredients protein powder?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Just Ingredients sells through its own site, Amazon, Whole Foods Market, Sprouts Farmers Market and Target, per the brand's announcements and retailer listings. Flavors vary by store. On Amazon we confirmed Vanilla, Chocolate and Strawberry Cream at the time of writing, each in a 20-serving tub."
+          }
+        }
+      ],
+    },
+    {
+      "@type": "Article",
+      headline: title,
+      author: authorSchema(),
+      datePublished: dates.published,
+      dateModified: dates.modified,
+      publisher: { "@type": "Organization", name: SITE_NAME, url: SITE_URL },
+    },
+    {
+      "@type": "ItemList",
+      name: title,
+      numberOfItems: PRODUCTS.length,
+      itemListElement: PRODUCTS.map((product, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name: product.name,
+        url: new URL(`#${product.id}`, Astro.url).toString(),
+      })),
+    },
+    ...PRODUCTS.map((product) => ({
+      "@type": "Product",
+      name: product.name,
+      description: product.description,
+      brand: {
+        "@type": "Brand",
+        name: product.brand ?? product.name.split(" ")[0],
+      },
+    })),
+  ],
+};
+---
+
+<Layout
+  title={title}
+  description={description}
+  ogType="article"
+  article={{
+    publishedTime: dates.published,
+    modifiedTime: dates.modified,
+    author: author.name,
+    section: "Brand Reviews",
+    tags: [
+      "just ingredients protein powder",
+      "just ingredients protein",
+      "just ingredients whey",
+      "just ingredients review"
+    ],
+  }}
+  jsonLd={schema}
+  stickyCta={{
+    text: "See Our Top Clean Protein Picks",
+    link: "/best-clean-protein-powder/",
+  }}
+>
+  <article class="relative overflow-hidden">
+    <!-- Hero Section -->
+    <div class="bg-gray-900 py-16 lg:py-24 relative overflow-hidden">
+      <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(circle at 20% 20%, #38BDF8 0, transparent 45%), radial-gradient(circle at 80% 60%, #FF4500 0, transparent 40%);"></div>
+      <div class="max-w-4xl mx-auto px-4 relative z-10 text-center">
+        <div class="flex justify-center mb-6">
+          <TrustBadge />
+        </div>
+        <div class="flex justify-center gap-3 mb-6">
+          <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#FF4500]/20 text-[#FF4500] text-xs font-black uppercase tracking-widest border border-[#FF4500]/30">
+            Brand Review
+          </span>
+          <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-green-500/10 text-green-400 text-xs font-bold uppercase tracking-widest border border-green-500/20">
+            Label-Checked
+          </span>
+        </div>
+        <h1 class="text-4xl lg:text-6xl font-black text-white leading-tight mb-8">
+          Just Ingredients Protein Powder: <span class="text-[#38BDF8]">Clean Label, Fair Price?</span>
+        </h1>
+        <p class="text-xl text-gray-300 leading-relaxed mb-8 max-w-3xl mx-auto">
+          A grass-fed whey blend with pea, chia and collagen, sweetened with stevia and monk fruit and sold at Whole Foods, Sprouts and Target. Here is what the label delivers, which flavor to buy and who should skip it.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a
+            href="#just-ingredients-protein-powder-vanilla"
+            class="px-8 py-4 bg-[#FF4500] hover:bg-[#E63E00] text-white font-black rounded-xl shadow-lg transition-all no-underline"
+          >
+            See Our #1 Pick
+          </a>
+          <a
+            href="#collagen"
+            class="px-8 py-4 bg-white/10 hover:bg-white/20 text-white font-bold rounded-xl border border-white/10 no-underline"
+          >
+            Read the Label Breakdown
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Author & Meta -->
+    <div class="max-w-3xl mx-auto px-4 pt-12">
+      <div class="flex items-center gap-6 border-b border-gray-100 pb-8">
+        <div class="flex items-center gap-3">
+          <AuthorAvatar size={48} />
+          <div>
+            <p class="text-sm font-bold text-gray-900">{author.name}</p>
+            <p class="text-xs text-gray-500 uppercase tracking-widest">{author.role}</p>
+          </div>
+        </div>
+        <div class="h-10 w-px bg-gray-200 hidden sm:block"></div>
+        <div class="hidden sm:block">
+          <p class="text-sm font-bold text-gray-900">Last Updated</p>
+          <p class="text-xs text-gray-500">{dates.display}</p>
+        </div>
+        <div class="hidden sm:block ml-auto">
+          <SocialProof />
+        </div>
+      </div>
+    </div>
+
+    <!-- Table of Contents -->
+    <div class="max-w-3xl mx-auto px-4 py-10">
+      <div class="bg-gray-50 border border-gray-200 rounded-2xl p-6 lg:p-8">
+        <h2 class="text-lg font-black text-gray-900 mb-4 flex items-center gap-2">
+          In This Guide
+        </h2>
+        <nav class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <a href="#verdict" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">1. The Short Verdict</a>
+          <a href="#label" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">2. What Is in the Powder</a>
+          <a href="#top-picks" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">3. The Lineup</a>
+          <a href="#collagen" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">4. The Collagen Question</a>
+          <a href="#which-one" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">5. Which Flavor to Buy</a>
+          <a href="#cost" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">6. Cost per 25 g of Protein</a>
+          <a href="#testing" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">7. Testing and Heavy Metals</a>
+          <a href="#who-skip" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">8. Who Should Skip It</a>
+          <a href="#compare" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">9. How It Compares</a>
+          <a href="#use" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">10. Using It Well</a>
+          <a href="#mistakes" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">11. Common Mistakes</a>
+          <a href="#faq" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">12. FAQ</a>
+        </nav>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="max-w-3xl mx-auto px-4 pb-16 lg:pb-24">
+      <div class="prose prose-lg prose-blue max-w-none text-gray-700 leading-relaxed">
+        <p class="text-2xl font-medium text-gray-900 mb-8 italic">
+          Just Ingredients makes a short-label, naturally sweetened whey blend that tastes like a treat to many buyers, but some of its 22 g of protein is collagen, it carries more saturated fat than a typical whey, and it costs a premium. It is a good fit for clean-label shoppers who want a creamy shake, not the most efficient protein you can buy.
+        </p>
+
+        <QuickPicks products={PRODUCTS} />
+
+        <div id="verdict" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            1. The Short Verdict
+          </h2>
+
+          <p>
+            Just Ingredients is a wellness brand founded by Karalynne Call, whom the company describes as a certified nutritionist and podcast host. It built its audience online with an ingredient-first message and then moved into retail: its protein powders arrived at select Whole Foods Market stores in 2024 and at Sprouts Farmers Market locations nationwide in 2025, per the company's press releases, and the brand also sells at Target.
+          </p>
+
+          <p>
+            The protein itself is a multi-source blend. The vanilla flavor lists about 22 g of protein in a 33 g scoop from grass-fed, non-denatured whey, pea protein, grass-fed collagen and chia seed protein, with coconut milk for creaminess, sweetened with stevia leaf and monk fruit, in roughly 140 calories, per the Whole Foods and Amazon listings at the time of writing. The brand says it uses no artificial sweeteners, sugar alcohols or gums.
+          </p>
+
+          <p>
+            That is a genuinely short, readable label, and buyers often praise the taste. The trade-offs are less obvious. Collagen is counted in the protein total but is a lower-quality protein for muscle, the coconut milk adds around 4.5 g of saturated fat per scoop, and the price per 25 g of protein is high. None of those are deal breakers, but they matter if you are buying protein for training rather than as a daily wellness shake.
+          </p>
+
+          <p>
+            Our verdict: Just Ingredients is a good choice for clean-label shoppers who want a creamy, naturally sweetened shake and do not mind paying for it. Lifters on a budget and anyone chasing maximum protein quality per scoop should look at the straight wheys in our <a href="/best-clean-protein-powder/">best clean protein powder</a> guide.
+          </p>
+
+          <div class="bg-gray-900 text-white rounded-2xl p-6 lg:p-8 my-8">
+            <p class="text-xs font-black uppercase tracking-widest text-[#38BDF8] mb-3">THE VERDICT</p>
+            <p class="text-xl font-bold text-white mb-3">A tasty, short-label blend that trades efficiency for creaminess</p>
+            <p class="text-gray-300 leading-relaxed m-0">About 22 g of protein from whey, pea, collagen and chia, 140 calories, stevia and monk fruit, no gums. Good for clean-label daily shakes. Skip it if you want the most muscle-building protein per dollar.</p>
+          </div>
+        </div>
+
+        <div id="label" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            2. What Is Actually in the Powder
+          </h2>
+
+          <p>
+            Per the vanilla label at the time of writing, one 33 g scoop gives about 22 g of protein, 140 calories, 6 g of fat with 4.5 g of it saturated, 5 g of carbohydrate including 2 g of fiber and 2 g of sugar, 40 mg of cholesterol and 170 mg of sodium. Each tub holds 20 servings. The brand's own materials describe 22 to 24 g of protein per serving across flavors, so check the panel on the flavor you buy.
+          </p>
+
+          <p>
+            The whey is described as grass-fed and non-denatured, and the company says it is sourced from New Zealand. Pea, chia and collagen round out the vanilla flavor, and the chocolate version lists pumpkin seed protein as well. Whey is the backbone here. It is the highest-quality protein in the blend, rich in leucine, the amino acid most associated with triggering muscle protein synthesis.
+          </p>
+
+          <p>
+            The fat number is the one most buyers do not expect. At about 6 g per scoop, Just Ingredients carries several times the fat of a typical whey isolate, mostly from the coconut milk powder, and most of that fat is saturated. It is what makes the shake creamy, and in a balanced diet it is not a problem, but if you are watching saturated fat for heart health, it is worth counting.
+          </p>
+
+          <p>
+            The sweeteners are stevia leaf and monk fruit, with vanilla extract, vanilla bean and cinnamon for flavor in the vanilla version, and the brand says there are no artificial sweeteners, sugar alcohols or gums. That makes it one of the cleaner sweetener systems on the market. The labels list dairy and coconut as allergens, so it is not suitable for anyone with a milk allergy.
+          </p>
+
+          <div class="overflow-hidden border border-gray-200 rounded-2xl my-8">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Label figure</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Vanilla (per scoop)</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">What it means</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Protein</td>
+                    <td class="px-4 py-4 text-gray-700">About 22 g</td>
+                    <td class="px-4 py-4 text-gray-700">Includes collagen</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Calories</td>
+                    <td class="px-4 py-4 text-gray-700">About 140</td>
+                    <td class="px-4 py-4 text-gray-700">Higher than a bare whey</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Fat</td>
+                    <td class="px-4 py-4 text-gray-700">About 6 g, 4.5 g saturated</td>
+                    <td class="px-4 py-4 text-gray-700">From coconut milk</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Sweeteners</td>
+                    <td class="px-4 py-4 text-gray-700">Stevia and monk fruit</td>
+                    <td class="px-4 py-4 text-gray-700">No artificial sweeteners</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Picks -->
+        <div id="top-picks" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            3. The Just Ingredients Protein Lineup
+          </h2>
+
+          <p>
+            Just Ingredients sells one protein formula in several flavors, so the cards below are the flavors we could confirm on Amazon at the time of writing, followed by two clearly labeled alternatives from other brands. Figures are per the label at the time of writing and vary by flavor.
+          </p>
+
+          {PRODUCTS.map((product, index) => (
+            <div id={product.id} class="scroll-mt-24 mt-12 first:mt-8">
+              <div class="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                <div class="bg-gray-900 px-6 py-4 flex items-center justify-between">
+                  <div class="flex items-center gap-3">
+                    <span class="bg-[#FF4500] text-white w-8 h-8 rounded-full flex items-center justify-center text-sm font-black">
+                      {index + 1}
+                    </span>
+                    {productImages[product.id] && (
+                      <img
+                        src={productImages[product.id]}
+                        alt={product.name}
+                        loading="lazy"
+                        width="40"
+                        height="40"
+                        class="w-10 h-10 rounded-lg bg-white object-contain p-1 shrink-0"
+                      />
+                    )}
+                    <div>
+                      <p class="text-white font-black text-lg">{product.name}</p>
+                      <p class="text-gray-400 text-xs">{product.category}</p>
+                    </div>
+                  </div>
+                  <span class="bg-[#38BDF8]/20 text-[#38BDF8] px-3 py-1 rounded-full text-xs font-bold hidden sm:block">
+                    {product.badge}
+                  </span>
+                </div>
+                <div class="p-6">
+                  {product.rating && (
+                  <div class="flex items-center gap-2 mb-4">
+                    <div class="flex text-yellow-400">
+                      {[...Array(5)].map((_, i) => (
+                        <svg
+                          class={`w-4 h-4 ${i < Math.floor(product.rating) ? "fill-current" : "text-gray-200"}`}
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                        >
+                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        </svg>
+                      ))}
+                    </div>
+                    <span class="text-gray-500 text-sm font-bold">{product.rating}</span>
+                    {product.reviewCount && <span class="text-gray-400 text-xs">({product.reviewCount.toLocaleString()} retailer reviews)</span>}
+                  </div>
+                  )}
+
+                  <SpecGrid specs={product.specs} />
+
+                  <p class="text-gray-700 leading-relaxed mb-6">{product.description}</p>
+
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                    <div class="bg-green-50 rounded-xl p-4">
+                      <p class="text-xs font-black uppercase tracking-widest text-green-700 mb-3">Pros</p>
+                      <ul class="space-y-2">
+                        {product.pros.map((pro) => (
+                          <li class="flex items-start gap-2 text-sm text-green-800">
+                            <svg class="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            {pro}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div class="bg-red-50 rounded-xl p-4">
+                      <p class="text-xs font-black uppercase tracking-widest text-red-700 mb-3">Cons</p>
+                      <ul class="space-y-2">
+                        {product.cons.map((con) => (
+                          <li class="flex items-start gap-2 text-sm text-red-800">
+                            <svg class="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                            {con}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+
+                  <div class="bg-gray-50 rounded-xl p-4 border border-gray-100">
+                    <p class="text-xs font-black uppercase tracking-widest text-gray-500 mb-1">The Bottom Line</p>
+                    <p class="text-gray-900 font-bold">{product.bottomLine}</p>
+                  </div>
+
+                  <a
+                    href={amazonLink(product.amazonUrl, product.name, product.id)}
+                    target="_blank"
+                    rel="sponsored nofollow noopener"
+                    class="mt-6 block bg-[#FF4500] hover:bg-[#E63E00] text-white text-center py-4 rounded-xl font-black no-underline transition-colors uppercase tracking-widest text-sm"
+                  >
+                    Check Price &rarr;
+                  </a>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div id="collagen" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            4. The Collagen Question
+          </h2>
+
+          <p>
+            Collagen peptides are a selling point on the front of the tub, and the brand markets them for skin, joint and connective tissue support. For muscle, though, collagen is a weak protein. It is missing tryptophan, an essential amino acid, and it is low in leucine, so the grams of protein that come from collagen do less for muscle building than the same grams from whey.
+          </p>
+
+          <p>
+            Just Ingredients does not disclose how much of each scoop's protein comes from each source, so we cannot say exactly how many of the 22 g are collagen. What we can say is that the effective muscle-building dose per scoop is somewhat lower than the headline number suggests. That is true of every protein blend with collagen in it, not just this one.
+          </p>
+
+          <p>
+            For many buyers this does not matter. If you are using a shake for convenience, satiety or general nutrition, and you get plenty of protein from food, the blend is fine. If you are trying to maximize muscle gain, a straight whey gives you more leucine per gram and per dollar. Our <a href="/best-collagen-protein-powder/">best collagen protein powder</a> guide covers collagen as its own category if the skin and joint angle is what interests you.
+          </p>
+
+          <p>
+            The practical fix is to dose up slightly. If you want an effective 25 g serving of high-quality protein after training, a scoop of Just Ingredients mixed with a cup of milk, which adds roughly 8 g of complete protein, gets you there. Or pair the shake with a whole-food protein such as Greek yogurt or eggs.
+          </p>
+        </div>
+
+        <div id="which-one" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            5. Which Flavor to Buy
+          </h2>
+
+          <p>
+            Just Ingredients sells one core protein formula in several flavors rather than a range of different products. On Amazon at the time of writing we could confirm Vanilla, Chocolate and Strawberry Cream listings, each a 20-serving tub at about 22 g of protein per scoop. Retail launches have also included flavors such as Creamy Peanut Butter Chocolate, Mint Chocolate and French Vanilla, depending on the store.
+          </p>
+
+          <p>
+            Vanilla is the safest first buy. It is the most versatile flavor for smoothies, oats and baking, and the vanilla bean and cinnamon give it a more natural profile than most vanilla wheys. If you mainly blend your protein with fruit, vanilla is the right choice, and our <a href="/best-vanilla-protein-powder/">best vanilla protein powder</a> guide compares it with other options.
+          </p>
+
+          <p>
+            Chocolate is the pick if you drink your protein on its own or with milk. Be aware that chocolate flavors of any protein tend to test higher for heavy metals than vanilla, because cacao absorbs lead and cadmium from soil. That is not unique to Just Ingredients, but it is worth knowing if you drink a shake every day.
+          </p>
+
+          <p>
+            Strawberry Cream is the outlier and the one to try only if you like fruit-flavored shakes. Buyer feedback on fruit flavors is more divided than on vanilla or chocolate, so buy a single tub before stocking up.
+          </p>
+        </div>
+
+        <div id="cost" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            6. Cost per 25 g of Protein
+          </h2>
+
+          <p>
+            At the roughly $50 list price we saw for a 20-serving tub, a scoop of Just Ingredients costs about $2.50. Because a scoop holds about 22 g of protein, that works out to roughly $2.85 per 25 g of protein. Prices move with promotions and retailers, so treat that as an approximate figure and check the current listing.
+          </p>
+
+          <p>
+            That puts Just Ingredients near the top of the market. Single-ingredient grass-fed wheys such as Naked Whey usually cost noticeably less per 25 g, and certified isolates such as Thorne's often land in a similar or lower range while carrying an NSF Certified for Sport seal. You are paying a premium for the multi-source blend, the coconut creaminess and the brand.
+          </p>
+
+          <p>
+            Some of the premium is invisible on the label. Because part of each scoop is collagen, the cost per 25 g of complete, leucine-rich protein is higher still than the headline figure, so the value case rests mostly on taste and ingredient philosophy. That is a legitimate reason to buy something, but it is a reason to be clear about.
+          </p>
+
+          <p>
+            If you like the taste but want to stretch the tub, mix half a scoop of Just Ingredients with half a scoop of an unflavored whey. You keep most of the flavor and sweetness and cut the cost per shake substantially. Our <a href="/best-unflavored-protein-powder/">best unflavored protein powder</a> guide lists bases that work for this.
+          </p>
+
+          <div class="bg-gray-900 text-white rounded-2xl p-6 lg:p-8 my-8">
+            <p class="text-xs font-black uppercase tracking-widest text-[#38BDF8] mb-4">By the Numbers (approximate)</p>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+              <div>
+                <p class="text-3xl font-black text-white">22 g</p>
+                <p class="text-gray-400 text-xs mt-1">Protein per scoop</p>
+              </div>
+              <div>
+                <p class="text-3xl font-black text-[#38BDF8]">140</p>
+                <p class="text-gray-400 text-xs mt-1">Calories, vanilla</p>
+              </div>
+              <div>
+                <p class="text-3xl font-black text-white">$2.85</p>
+                <p class="text-gray-400 text-xs mt-1">Per 25 g protein</p>
+              </div>
+              <div>
+                <p class="text-3xl font-black text-[#38BDF8]">20</p>
+                <p class="text-gray-400 text-xs mt-1">Servings per tub</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="testing" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            7. Testing and Heavy Metals
+          </h2>
+
+          <p>
+            Just Ingredients says its products are third-party tested and that each product is tested for heavy metals and other contaminants. We did not find an NSF Certified for Sport, Informed Choice or Clean Label Project certification for its protein at the time of writing, and we did not find published lot-by-lot results we could read.
+          </p>
+
+          <p>
+            There is also outside testing to weigh. Tamara Rubin, a lead-poisoning prevention advocate who commissions her own lab tests, published a 2024 report saying a Just Ingredients chocolate protein powder sample tested positive for lead, cadmium and arsenic. Her site also reports a later test of the Vanilla Bean flavor. Rubin is an advocate rather than a neutral lab, and detecting a metal is not the same as finding an unsafe level, but the report is public and worth knowing about.
+          </p>
+
+          <p>
+            Context matters here. Heavy metals turn up in many protein powders, especially chocolate flavors and plant-protein blends, because cacao, pea and seed proteins pick up metals from soil. A Clean Label Project study reported that a large share of the proteins it tested exceeded at least one state or federal guideline. Dairy proteins such as whey generally test lower than plant proteins, so a blend that mixes the two will tend to land in between.
+          </p>
+
+          <p>
+            If heavy metals are your top concern, choose vanilla over chocolate, ask the brand for recent certificates of analysis, or pick a product with a named certification. Our <a href="/is-protein-powder-safe/">is protein powder safe</a> guide explains what the certifications test, and pregnant buyers should check any protein powder with their doctor or midwife first.
+          </p>
+        </div>
+
+        <div id="who-skip" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            8. Who Should Skip Just Ingredients
+          </h2>
+
+          <p>
+            Skip it if you are training for muscle on a budget. You are paying about $2.85 per 25 g of protein for a blend that includes collagen, which does less for muscle than whey. A straight whey or whey isolate gives you more leucine per gram and more protein per dollar, which is what matters for strength and size.
+          </p>
+
+          <p>
+            Skip it if you are vegan or have a milk allergy, because whey is the main protein. Skip it if you are allergic to coconut, which the labels list. And skip it if you compete in a drug-tested sport, because we could not confirm NSF Certified for Sport or Informed Choice status.
+          </p>
+
+          <p>
+            Skip it, or count it carefully, if you are limiting saturated fat. At about 4.5 g of saturated fat per scoop, two shakes a day add up to a meaningful share of the daily limit many guidelines suggest. Anyone with heart disease, high cholesterol or a doctor's advice on fat intake should factor that in.
+          </p>
+
+          <p>
+            As always, if you are pregnant, have kidney disease, take medication or have a medical condition, check with a doctor or registered dietitian before adding a protein powder. This review is a label analysis, not medical advice.
+          </p>
+        </div>
+
+        <div id="compare" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            9. How It Compares With Other Clean-Label Proteins
+          </h2>
+
+          <p>
+            Against Naked Whey, the comparison is about philosophy. Naked Whey has one ingredient, grass-fed whey concentrate, with about 25 g of protein in roughly 120 calories per its label, and no sweetener at all. It is cheaper per 25 g and higher in protein quality, but you have to flavor it yourself. Just Ingredients is the ready-to-drink, sweetened version of the clean-label idea. Our sibling <a href="/naked-nutrition-protein-powder-review/">Naked Nutrition protein powder review</a> covers that range.
+          </p>
+
+          <p>
+            Against Thorne Whey Protein Isolate, Thorne wins on verification. It carries NSF Certified for Sport status, per the brand and NSF at the time of writing, with about 21 g of protein per scoop from whey isolate. It is less creamy and less dessert-like, but it is the one to buy if you want documented testing.
+          </p>
+
+          <p>
+            Against Truvani, another clean-label brand with a short ingredient list, Just Ingredients has the edge on protein quality because of its whey base, while Truvani's flagship is plant-based and USDA Organic. Our <a href="/truvani-protein-powder-review/">Truvani protein powder review</a> looks at that brand in detail.
+          </p>
+
+          <div class="overflow-hidden border border-gray-200 rounded-2xl my-8">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Product</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Protein per scoop</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Sweetener</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Certification</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Just Ingredients</td>
+                    <td class="px-4 py-4 text-gray-700">About 22 g (incl. collagen)</td>
+                    <td class="px-4 py-4 text-gray-700">Stevia and monk fruit</td>
+                    <td class="px-4 py-4 text-gray-700">Brand testing claim</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Naked Whey</td>
+                    <td class="px-4 py-4 text-gray-700">About 25 g</td>
+                    <td class="px-4 py-4 text-gray-700">None</td>
+                    <td class="px-4 py-4 text-gray-700">No sport certification confirmed</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Thorne Whey Isolate</td>
+                    <td class="px-4 py-4 text-gray-700">About 21 g</td>
+                    <td class="px-4 py-4 text-gray-700">Check flavor</td>
+                    <td class="px-4 py-4 text-gray-700">NSF Certified for Sport</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Truvani Plant Protein</td>
+                    <td class="px-4 py-4 text-gray-700">About 20 g</td>
+                    <td class="px-4 py-4 text-gray-700">Monk fruit</td>
+                    <td class="px-4 py-4 text-gray-700">USDA Organic</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div id="use" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            10. Using Just Ingredients Well
+          </h2>
+
+          <p>
+            The creamy texture is the product's best feature, so use it where creaminess helps. Blended with frozen banana, ice and almond milk, the vanilla makes a thick, milkshake-style drink without added sugar. Stirred into overnight oats or Greek yogurt, it adds sweetness and protein in one step.
+          </p>
+
+          <p>
+            Because there are no gums, the powder may settle more than a gum-thickened protein, so shake or blend well and drink it soon after mixing. That is a small price for a shorter ingredient list, but it is worth knowing if you are used to shakes that stay thick in the fridge. Our <a href="/best-protein-powder-for-smoothies/">best protein powder for smoothies</a> guide has more blending ideas.
+          </p>
+
+          <p>
+            If you are using it after training, aim for a total of around 25 to 40 g of high-quality protein in that meal. Because some of each scoop is collagen, pair it with milk or a whole-food protein rather than treating one scoop with water as a complete recovery serving.
+          </p>
+
+          <p>
+            Finally, count it as food. At about 140 calories and 6 g of fat, a Just Ingredients shake is closer to a light snack than a bare protein drink. That is useful for satiety, but on a cut it should replace something rather than sit on top of your usual meals. Our <a href="/how-much-protein-do-i-need/">how much protein do I need</a> guide helps you set the daily total.
+          </p>
+        </div>
+
+        <!-- Common Mistakes -->
+        <div id="mistakes" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            11. Common Mistakes to Avoid
+          </h2>
+
+          <div class="space-y-6 my-8">
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Counting all 22 g as muscle-building protein</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Some of each scoop is collagen, which lacks tryptophan and is low in leucine. The headline number overstates the muscle-building dose. After training, mix with milk or pair the shake with a whole-food protein so you get a full 25 g or more of complete protein.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Overlooking the saturated fat</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Coconut milk gives the shake its creaminess, and about 4.5 g of saturated fat per scoop. One shake is fine for most people, but two or three a day add up. If your doctor has told you to limit saturated fat, count it like you would any other food.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Assuming clean label means certified</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Just Ingredients says it tests every product, but we could not confirm NSF, Informed Choice or Clean Label Project certification. A short ingredient list says nothing about contaminants. If verified testing matters, ask for recent certificates of analysis or choose a certified product.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Choosing chocolate for daily heavy-metal peace of mind</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Chocolate proteins from every brand tend to test higher for lead and cadmium, because cacao absorbs them from soil. A public advocate's test found metals in a Just Ingredients chocolate sample. If you drink a shake every day and worry about metals, vanilla is the lower-risk flavor.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Comparing price per tub, not per gram</h3>
+              <p class="text-gray-700 text-sm m-0">
+                A 20-serving tub at about $50 looks similar to many wheys, but 22 g per scoop and 20 servings make it roughly $2.85 per 25 g. Compare every protein on cost per 25 g, and you will see where the premium sits before you subscribe.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ -->
+        <div id="faq" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            12. Frequently Asked Questions
+          </h2>
+
+          <div class="space-y-6">
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is Just Ingredients protein powder good?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                It is a good-tasting, short-label protein. The vanilla gives about 22 g of protein from grass-fed whey, pea, collagen and chia in roughly 140 calories, sweetened with stevia and monk fruit, per the label. Its drawbacks are collagen in the protein total, about 4.5 g of saturated fat and a high cost per 25 g of protein.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">How much protein is in Just Ingredients protein powder?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                About 22 g per 33 g scoop in the vanilla flavor, per the label at the time of writing, and the brand cites 22 to 24 g across flavors. Part of that protein comes from collagen, which is less effective for muscle building than whey. Each tub holds about 20 servings, so check the panel on your flavor.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is Just Ingredients protein whey or plant-based?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                It is a blend led by grass-fed whey, with pea, chia and collagen, and pumpkin seed in the chocolate flavor. That makes it unsuitable for vegans and anyone with a milk allergy. The brand describes the whey as non-denatured and sourced from New Zealand. Dairy-free buyers should choose a plant protein instead.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">What sweetener does Just Ingredients use?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Stevia leaf and monk fruit, with no added sugar, per the label at the time of writing. The brand says it uses no artificial sweeteners, sugar alcohols or gums. The vanilla flavor lists about 2 g of sugar per scoop, which comes from the ingredients rather than added sugar. Flavors may differ slightly, so check your tub.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Does Just Ingredients protein have heavy metals?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                The brand says each product is tested for heavy metals. An independent advocate published a 2024 lab report saying a chocolate sample tested positive for lead, cadmium and arsenic. Detection is not the same as an unsafe level, and chocolate proteins generally test higher. Choose vanilla, and ask your doctor if you are pregnant.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is Just Ingredients protein worth the price?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Only if you value the short label and taste. At about $50 for 20 servings, it costs roughly $2.85 per 25 g of protein, which is near the top of the market. Single-ingredient wheys cost less and deliver more complete protein per gram. Mixing half a scoop with unflavored whey cuts the cost per shake.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Where can I buy Just Ingredients protein powder?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Just Ingredients sells through its own site, Amazon, Whole Foods Market, Sprouts Farmers Market and Target, per the brand's announcements and retailer listings. Flavors vary by store. On Amazon we confirmed Vanilla, Chocolate and Strawberry Cream at the time of writing, each in a 20-serving tub.
+              </p>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Related Guides -->
+        <div class="mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">Related Clean Protein Guides</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <a href="/best-clean-protein-powder/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#FF4500] font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Clean Protein Powder</h3>
+              <p class="text-gray-500 text-sm mt-2">Clean-label proteins you can actually verify, ranked.</p>
+            </a>
+            <a href="/truvani-protein-powder-review/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#38BDF8] font-black text-xs uppercase tracking-widest mb-2">Brand Review</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Truvani Protein Powder Review</h3>
+              <p class="text-gray-500 text-sm mt-2">The organic, monk fruit-sweetened clean-label rival.</p>
+            </a>
+            <a href="/best-collagen-protein-powder/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#22C55E] font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Collagen Protein Powder</h3>
+              <p class="text-gray-500 text-sm mt-2">What collagen does and does not do, and which to buy.</p>
+            </a>
+          </div>
+        </div>
+
+        <!-- Closing -->
+        <div class="mt-16 bg-gray-900 text-white rounded-2xl p-8">
+          <h2 class="text-2xl font-black text-white mb-4">The Bottom Line</h2>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            Just Ingredients delivers what it promises on the front of the tub: a short, readable label, natural sweeteners, no gums and a creamy shake that many buyers enjoy. What the front of the tub does not tell you is that part of the 22 g is collagen, that the coconut milk brings real saturated fat, and that you are paying roughly $2.85 per 25 g of protein for the experience.
+          </p>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            Buy the vanilla if a clean-label, naturally sweetened daily shake is what you want and the price is comfortable. If you want verified testing or more muscle-building protein per dollar, the whey picks in our <a href="/best-clean-protein-powder/">best clean protein powder</a> guide are the better buy.
+          </p>
+        </div>
+
+        <MoreInCategory category="Brand Reviews" links={moreInCategory} />
+
+        <AuthorBio />
+      </div>
+    </div>
+  </article>
+</Layout>

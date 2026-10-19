@@ -1,0 +1,928 @@
+---
+import Layout from "../layouts/Layout.astro";
+import MoreInCategory from "../components/MoreInCategory.astro";
+import { AUTHORS, DEFAULT_AUTHOR, authorSchema } from "../data/authors";
+import { SITE_NAME, SITE_URL } from "../data/site";
+import AuthorAvatar from "../components/AuthorAvatar.astro";
+import QuickPicks from "../components/QuickPicks.astro";
+import AuthorBio from "../components/AuthorBio.astro";
+import { amazonLink } from "../data/affiliate";
+import TrustBadge from "../components/TrustBadge.astro";
+import SocialProof from "../components/SocialProof.astro";
+import SpecGrid from "../components/SpecGrid.astro";
+import productImages from "../data/product-images.json";
+import { pageDates } from "../data/dates";
+
+const moreInCategory = [
+  {
+    "title": "Optimum Nutrition Protein Powder Review",
+    "url": "/optimum-nutrition-protein-powder-review/"
+  },
+  {
+    "title": "Transparent Labs Protein Powder Review",
+    "url": "/transparent-labs-protein-powder-review/"
+  },
+  {
+    "title": "Muscle Milk Protein Powder Review",
+    "url": "/muscle-milk-protein-powder-review/"
+  }
+];
+const author = AUTHORS[DEFAULT_AUTHOR];
+const dates = pageDates(Astro.url.pathname, { published: "2026-10-19", modified: "2026-10-19" });
+const title = "Dymatize Protein Powder Review: ISO100 vs Elite Whey, and When the Isolate Is Worth Paying For";
+const description =
+  "Dymatize protein powder reviewed from the label: ISO100, Elite 100% Whey, Elite Casein and Super Mass Gainer compared on protein, calories, testing and cost per 25 g.";
+
+const PRODUCTS: {
+  id: string;
+  name: string;
+  brand?: string;
+  badge: string;
+  category: string;
+  description: string;
+  pros: string[];
+  cons: string[];
+  bottomLine: string;
+  specs?: Record<string, string>;
+  rating?: number;
+  reviewCount?: number;
+  amazonUrl?: string;
+}[] = [
+  {
+    "id": "dymatize-iso100-hydrolyzed",
+    "name": "Dymatize ISO100 Hydrolyzed Whey Isolate",
+    "brand": "Dymatize",
+    "badge": "Best Dymatize Overall",
+    "category": "Hydrolyzed whey isolate + whey isolate",
+    "description": "ISO100 is Dymatize's flagship and one of the best isolates you can buy. Per the label at the time of writing, a scoop of about 30 to 33 g gives roughly 25 g of protein at 110 to 120 calories, with around 1 g of fat and 1 to 2 g of carbohydrate depending on flavor. It carries the Informed Choice logo, mixes thin and clean per buyers, and comes in a wide flavor range including the Pebbles and Dunkin flavors.",
+    "pros": [
+      "About 25 g protein for 110-120 calories, per the label",
+      "Very low lactose, fat and carbohydrate",
+      "Informed Choice logo, per retailer listings",
+      "Mixes thin and clean, per buyer reviews"
+    ],
+    "cons": [
+      "Costs more per 25 g than Elite Whey",
+      "Sucralose in flavored versions"
+    ],
+    "bottomLine": "The Dymatize to buy if lactose or tight macros give you a reason to pay for an isolate.",
+    "specs": {
+      "Protein per serving": "About 25 g (1 scoop)",
+      "Calories": "About 110-120",
+      "Third-party testing": "Informed Choice (confirm flavor)",
+      "Best for": "Lactose-sensitive, cutting"
+    }
+  },
+  {
+    "id": "dymatize-elite-100-whey",
+    "name": "Dymatize Elite 100% Whey Protein",
+    "brand": "Dymatize",
+    "badge": "Best Value Dymatize",
+    "category": "Whey concentrate, isolate and peptides",
+    "description": "Elite 100% Whey gives the same 25 g of protein as ISO100 for less money. Per the label at the time of writing, a scoop of about 34 g lands around 140 calories, with whey concentrate, whey isolate and whey peptides and about 5.5 g of BCAAs. Retailer listings show the Informed Choice logo. It carries more lactose than ISO100, so it suits people who tolerate dairy, and it is usually one of the cheaper tested wheys per 25 g.",
+    "pros": [
+      "About 25 g protein per scoop, per the label",
+      "Usually 20-30 percent cheaper per 25 g than ISO100",
+      "Informed Choice logo, per retailer listings"
+    ],
+    "cons": [
+      "More lactose than an isolate",
+      "About 140 calories versus 110-120 for ISO100"
+    ],
+    "bottomLine": "The better-value Dymatize for anyone who does not need an isolate.",
+    "specs": {
+      "Protein per serving": "About 25 g (1 scoop)",
+      "Calories": "About 140",
+      "Third-party testing": "Informed Choice (confirm flavor)",
+      "Best for": "Everyday whey on a budget"
+    }
+  },
+  {
+    "id": "dymatize-elite-casein",
+    "name": "Dymatize Elite Casein",
+    "brand": "Dymatize",
+    "badge": "Best Bedtime Protein",
+    "category": "Micellar casein",
+    "description": "Elite Casein is Dymatize's slow-digesting protein, built on micellar casein. Per the label at the time of writing, a serving of about 33 to 36 g gives roughly 25 g of protein at 120 to 130 calories. Retailer listings show the Informed Choice logo. It thickens with less liquid, which buyers like for puddings and overnight oats, and it is a sensible choice for a shake before bed or a long gap between meals.",
+    "pros": [
+      "About 25 g of micellar casein per serving",
+      "Thick texture suits puddings and baking",
+      "Informed Choice logo, per retailer listings"
+    ],
+    "cons": [
+      "Thick in a shaker with water, per buyers",
+      "Timing benefits are modest next to total daily protein"
+    ],
+    "bottomLine": "Buy it for bedtime shakes and protein desserts, not as your only powder.",
+    "specs": {
+      "Protein per serving": "About 25 g",
+      "Calories": "About 120-130",
+      "Third-party testing": "Informed Choice (confirm flavor)",
+      "Best for": "Bedtime, puddings"
+    }
+  },
+  {
+    "id": "dymatize-super-mass-gainer",
+    "name": "Dymatize Super Mass Gainer",
+    "brand": "Dymatize",
+    "badge": "Best for Hard Gainers",
+    "category": "High-calorie mass gainer",
+    "description": "Super Mass Gainer is a calorie product. Per the label, a full serving gives roughly 1,200 to 1,300 calories and about 50 g of protein, with most of the rest coming from maltodextrin. Buyers often rate its flavors highly and describe it as smoother than many rival gainers. It suits people who genuinely struggle to eat enough. For anyone else, a regular whey plus more food is the better plan.",
+    "pros": [
+      "Roughly 1,200-1,300 calories per full serving, per the label",
+      "About 50 g protein per serving",
+      "Flavors buyers often rate highly"
+    ],
+    "cons": [
+      "Mostly maltodextrin by calories",
+      "Easy to gain fat as well as muscle"
+    ],
+    "bottomLine": "Only for hard gainers; most lifters should start with Elite Whey and more food.",
+    "specs": {
+      "Protein per serving": "About 50 g",
+      "Calories": "About 1,200-1,300",
+      "Third-party testing": "Check certifier database",
+      "Best for": "Hard gainers"
+    }
+  },
+  {
+    "id": "isopure-zero-carb",
+    "name": "Isopure Zero Carb Protein Powder",
+    "brand": "Isopure",
+    "badge": "Alternative: Leanest Isolate",
+    "category": "Whey protein isolate",
+    "description": "If ISO100's 1 to 2 g of carbohydrate still feels like too much, Isopure Zero Carb is the alternative. Per the label at the time of writing, a scoop gives about 25 g of protein for roughly 100 to 110 calories with essentially no carbohydrate. Buyer opinion on flavor is more mixed than for ISO100, and we could not confirm a sport certification, so tested athletes should stick with Dymatize.",
+    "pros": [
+      "About 25 g protein for roughly 100-110 calories",
+      "Zero or near-zero carbohydrate and sugar",
+      "Pure isolate, low in lactose"
+    ],
+    "cons": [
+      "Flavor reviews more mixed than ISO100",
+      "No sport certification we could confirm"
+    ],
+    "bottomLine": "The pick for strict low-carb diets; ISO100 for everyone who wants testing and taste.",
+    "specs": {
+      "Protein per serving": "About 25 g (1 scoop)",
+      "Calories": "About 100-110",
+      "Third-party testing": "Check certifier databases",
+      "Best for": "Strict low-carb diets"
+    }
+  }
+];
+
+const schema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Home",
+          item: `${SITE_URL}/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Best Lists",
+          item: `${SITE_URL}/best-of/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 3,
+          name: "Dymatize Protein Powder Review",
+          item: `${SITE_URL}/dymatize-protein-powder-review/`,
+        },
+      ],
+    },
+    {
+      "@type": "FAQPage",
+      mainEntity: [
+        {
+          "@type": "Question",
+          "name": "Is Dymatize a good protein brand?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Dymatize has a long track record, consistent label figures and Informed Choice testing on its main powders per retailer listings. ISO100 is one of the best-selling isolates on the market, and Elite Whey is a strong value whey. The main drawback is sucralose in flavored products. For most lifters, it is one of the safest brands to buy."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the difference between Dymatize ISO100 and Elite Whey?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Both give about 25 g of protein per scoop. ISO100 is all whey isolate, partly hydrolyzed, with very little lactose and about 110 to 120 calories. Elite Whey blends concentrate, isolate and peptides and runs about 140 calories with more lactose. Elite Whey usually costs 20 to 30 percent less per 25 g. Choose ISO100 for dairy sensitivity or strict cuts."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is Dymatize ISO100 lactose free?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Not technically, but it is very low in lactose. Whey isolate is filtered to remove most lactose, and ISO100 typically lists under 1 to 2 g of sugar per scoop. Many people who react to regular whey tolerate it well. People with a milk allergy, which is a reaction to milk protein rather than lactose, should avoid it entirely."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is Dymatize third-party tested?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Retailer listings show the Informed Choice logo on ISO100, Elite 100% Whey and Elite Casein at the time of writing. Informed Choice is run by the anti-doping lab LGC and tests certified products for banned substances. Drug-tested athletes should verify the specific product and flavor on the Informed Choice website before competing."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Who owns Dymatize?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Dymatize is owned by BellRing Brands, which also owns Premier Protein. Post Holdings bought Dymatize in 2014 and moved it into BellRing in 2019, and BellRing is now a separate public company. That connection is why Dymatize sells ISO100 in Post's Fruity Pebbles and Cocoa Pebbles flavors."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What sweetener does Dymatize use?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The ISO100 Gourmet Chocolate ingredient list we found includes sucralose and steviol glycosides, and sucralose is common across Dymatize's flavored powders. Sugar stays low as a result. If you avoid sucralose, Dymatize is not the right brand. Look for unflavored isolates or stevia-only brands instead, and check each flavor's label."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is Dymatize Elite Casein good before bed?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, that is its main job. Micellar casein digests slowly, so a 25 g serving before bed supplies amino acids over several hours. Studies of pre-sleep casein show modest benefits, mostly because it adds to total daily protein. If you already hit your protein target, the timing matters less than consistency. It also makes good pudding."
+          }
+        }
+      ],
+    },
+    {
+      "@type": "Article",
+      headline: title,
+      author: authorSchema(),
+      datePublished: dates.published,
+      dateModified: dates.modified,
+      publisher: { "@type": "Organization", name: SITE_NAME, url: SITE_URL },
+    },
+    {
+      "@type": "ItemList",
+      name: title,
+      numberOfItems: PRODUCTS.length,
+      itemListElement: PRODUCTS.map((product, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name: product.name,
+        url: new URL(`#${product.id}`, Astro.url).toString(),
+      })),
+    },
+    ...PRODUCTS.map((product) => ({
+      "@type": "Product",
+      name: product.name,
+      description: product.description,
+      brand: {
+        "@type": "Brand",
+        name: product.brand ?? product.name.split(" ")[0],
+      },
+    })),
+  ],
+};
+---
+
+<Layout
+  title={title}
+  description={description}
+  ogType="article"
+  article={{
+    publishedTime: dates.published,
+    modifiedTime: dates.modified,
+    author: author.name,
+    section: "Brand Reviews",
+    tags: [
+      "dymatize protein powder",
+      "dymatize iso100",
+      "dymatize elite whey",
+      "dymatize review"
+    ],
+  }}
+  jsonLd={schema}
+  stickyCta={{
+    text: "See Our Top Whey Isolate Picks",
+    link: "/best-whey-protein-isolate/",
+  }}
+>
+  <article class="relative overflow-hidden">
+    <!-- Hero Section -->
+    <div class="bg-gray-900 py-16 lg:py-24 relative overflow-hidden">
+      <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(circle at 20% 20%, #38BDF8 0, transparent 45%), radial-gradient(circle at 80% 60%, #FF4500 0, transparent 40%);"></div>
+      <div class="max-w-4xl mx-auto px-4 relative z-10 text-center">
+        <div class="flex justify-center mb-6">
+          <TrustBadge />
+        </div>
+        <div class="flex justify-center gap-3 mb-6">
+          <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#FF4500]/20 text-[#FF4500] text-xs font-black uppercase tracking-widest border border-[#FF4500]/30">
+            Brand Review
+          </span>
+          <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-green-500/10 text-green-400 text-xs font-bold uppercase tracking-widest border border-green-500/20">
+            Label-Checked
+          </span>
+        </div>
+        <h1 class="text-4xl lg:text-6xl font-black text-white leading-tight mb-8">
+          Dymatize <span class="text-[#38BDF8]">Protein Powder</span> Review
+        </h1>
+        <p class="text-xl text-gray-300 leading-relaxed mb-8 max-w-3xl mx-auto">
+          ISO100, Elite 100% Whey, Elite Casein and Super Mass Gainer, read off the label: what each scoop gives you, what the isolate premium buys, and which Dymatize tub fits your goal.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a
+            href="#dymatize-iso100-hydrolyzed"
+            class="px-8 py-4 bg-[#FF4500] hover:bg-[#E63E00] text-white font-black rounded-xl shadow-lg transition-all no-underline"
+          >
+            See Our #1 Pick
+          </a>
+          <a
+            href="#iso100-vs-elite"
+            class="px-8 py-4 bg-white/10 hover:bg-white/20 text-white font-bold rounded-xl border border-white/10 no-underline"
+          >
+            Compare the Range
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Author & Meta -->
+    <div class="max-w-3xl mx-auto px-4 pt-12">
+      <div class="flex items-center gap-6 border-b border-gray-100 pb-8">
+        <div class="flex items-center gap-3">
+          <AuthorAvatar size={48} />
+          <div>
+            <p class="text-sm font-bold text-gray-900">{author.name}</p>
+            <p class="text-xs text-gray-500 uppercase tracking-widest">{author.role}</p>
+          </div>
+        </div>
+        <div class="h-10 w-px bg-gray-200 hidden sm:block"></div>
+        <div class="hidden sm:block">
+          <p class="text-sm font-bold text-gray-900">Last Updated</p>
+          <p class="text-xs text-gray-500">{dates.display}</p>
+        </div>
+        <div class="hidden sm:block ml-auto">
+          <SocialProof />
+        </div>
+      </div>
+    </div>
+
+    <!-- Table of Contents -->
+    <div class="max-w-3xl mx-auto px-4 py-10">
+      <div class="bg-gray-50 border border-gray-200 rounded-2xl p-6 lg:p-8">
+        <h2 class="text-lg font-black text-gray-900 mb-4 flex items-center gap-2">
+          In This Guide
+        </h2>
+        <nav class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <a href="#verdict" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">1. The Short Verdict</a>
+          <a href="#the-brand" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">2. Who Makes Dymatize</a>
+          <a href="#range-compared" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">3. The Range Side by Side</a>
+          <a href="#top-picks" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">4. Our Top Picks</a>
+          <a href="#iso100-vs-elite" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">5. ISO100 vs Elite 100% Whey</a>
+          <a href="#cost-per-25g" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">6. Cost per 25 g of Protein</a>
+          <a href="#testing" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">7. Informed Choice Testing</a>
+          <a href="#flavors" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">8. Flavors, Sweeteners and Mixing</a>
+          <a href="#who-should-skip" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">9. Who Should Skip It</a>
+          <a href="#how-to-use" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">10. Matching the Tub to Your Goal</a>
+          <a href="#mistakes" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">11. Common Mistakes</a>
+          <a href="#faq" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">12. FAQ</a>
+        </nav>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="max-w-3xl mx-auto px-4 pb-16 lg:pb-24">
+      <div class="prose prose-lg prose-blue max-w-none text-gray-700 leading-relaxed">
+        <p class="text-2xl font-medium text-gray-900 mb-8 italic">
+          Dymatize is one of the few big protein brands where every product we checked is worth buying for someone. ISO100 is a top-tier whey isolate: about 25 g of protein for roughly 110 to 120 calories, very low lactose and Informed Choice tested. Elite 100% Whey gives the same 25 g for a little more fat and carbohydrate and usually costs noticeably less per gram. The real question is not whether Dymatize is good. It is whether you need to pay the isolate premium, and for most people the answer is no.
+        </p>
+
+        <QuickPicks products={PRODUCTS} />
+
+        <div id="verdict" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            1. The Short Verdict
+          </h2>
+
+          <p>
+            <strong>Buy ISO100</strong> if you are lactose sensitive, tracking macros closely or simply want the cleanest-mixing whey Dymatize makes. Per the label at the time of writing, a scoop gives about 25 g of protein from hydrolyzed whey isolate and whey isolate, with around 1 g of fat and 1 to 2 g of carbohydrate. It is one of the best isolates on the market and a fixture in our <a href="/best-whey-protein-isolate/">best whey protein isolate</a> rankings.
+          </p>
+
+          <p>
+            <strong>Buy Elite 100% Whey</strong> if dairy does not bother you and you want the same 25 g dose for less money. It blends concentrate, isolate and whey peptides, lands around 140 calories per scoop and usually costs 20 to 30 percent less per gram than ISO100. For most lifters that is the better deal.
+          </p>
+
+          <p>
+            <strong>Buy Elite Casein</strong> for a slow-digesting shake before bed or a thick protein pudding. <strong>Buy Super Mass Gainer</strong> only if you genuinely struggle to eat enough; at well over 1,000 calories per full serving it is a weight-gain tool, not a protein powder.
+          </p>
+
+          <p>
+            Across the range, the consistent strengths are third-party testing, a wide flavor list and reliable label figures. The consistent weakness is sweeteners: the flavored powders we checked use sucralose, with some flavors also listing stevia. If you avoid artificial sweeteners, look elsewhere.
+          </p>
+
+          <div class="bg-gray-900 text-white rounded-2xl p-6 lg:p-8 my-8">
+            <p class="text-xs font-black uppercase tracking-widest text-[#38BDF8] mb-3">THE VERDICT</p>
+            <p class="text-xl font-bold text-white mb-3">ISO100 if lactose or macros matter, Elite Whey for everyone else.</p>
+            <p class="text-gray-300 leading-relaxed m-0">Both give about 25 g of protein per scoop and both carry Informed Choice testing per retailer listings. Elite Whey usually costs noticeably less per 25 g, so only pay for ISO100 when you have a reason to.</p>
+          </div>
+        </div>
+
+        <div id="the-brand" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            2. Who Makes Dymatize
+          </h2>
+
+          <p>
+            Dymatize is a Texas-founded sports nutrition brand that has been making protein powders since the 1990s. Post Holdings acquired it in 2014, and in 2019 Post placed its active nutrition business, including Dymatize and Premier Protein, into BellRing Brands, which is now a separate public company. Dymatize is BellRing's gym-focused brand, while Premier Protein targets everyday shoppers.
+          </p>
+
+          <p>
+            That shared ownership explains a couple of things you see on the shelf. Dymatize sells ISO100 in Fruity Pebbles and Cocoa Pebbles flavors, a licensing tie to the Post cereal brands, and Dunkin flavors such as Mocha Latte and Cappuccino. If those flavors are why you are here, our <a href="/fruity-pebbles-protein-powder/">Fruity Pebbles protein powder</a> guide covers them in detail.
+          </p>
+
+          <p>
+            It also explains why Dymatize and Premier Protein feel so different despite the same parent. Premier Protein is a mass-market, ready-to-drink-first brand. Dymatize is built around powders for people who train. If you are deciding between the two, our <a href="/premier-protein-powder-review/">Premier Protein powder review</a> sets the label figures side by side.
+          </p>
+
+          <p>
+            Dymatize's reputation rests mostly on ISO100, which has been one of the best-selling isolates on Amazon for years. Elite 100% Whey and Elite Casein are older products that are less talked about but just as solid on label figures. Super Mass Gainer is a long-running staple of the gainer category.
+          </p>
+        </div>
+
+        <div id="range-compared" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            3. The Range Side by Side
+          </h2>
+
+          <p>
+            Here is how the four main Dymatize powders compare on the label figures we checked. Serving weights vary a few grams by flavor, and Dymatize has sold different tub sizes over the years, so use these as typical rather than exact numbers.
+          </p>
+
+          <div class="overflow-hidden border border-gray-200 rounded-2xl my-8">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Powder</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Protein / serving</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Serving</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Calories</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Protein type</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">ISO100</td>
+                    <td class="px-4 py-4 text-gray-700">About 25 g</td>
+                    <td class="px-4 py-4 text-gray-700">1 scoop (about 30-33 g)</td>
+                    <td class="px-4 py-4 text-gray-700">About 110-120</td>
+                    <td class="px-4 py-4 text-gray-700">Hydrolyzed isolate + isolate</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Elite 100% Whey</td>
+                    <td class="px-4 py-4 text-gray-700">About 25 g</td>
+                    <td class="px-4 py-4 text-gray-700">1 scoop (about 34 g)</td>
+                    <td class="px-4 py-4 text-gray-700">About 140</td>
+                    <td class="px-4 py-4 text-gray-700">Concentrate, isolate, peptides</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Elite Casein</td>
+                    <td class="px-4 py-4 text-gray-700">About 25 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 33-36 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 120-130</td>
+                    <td class="px-4 py-4 text-gray-700">Micellar casein</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Super Mass Gainer</td>
+                    <td class="px-4 py-4 text-gray-700">About 50 g</td>
+                    <td class="px-4 py-4 text-gray-700">Full serving, several scoops</td>
+                    <td class="px-4 py-4 text-gray-700">About 1,200-1,300</td>
+                    <td class="px-4 py-4 text-gray-700">Protein blend + maltodextrin</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <p>
+            The three protein powders are close on paper. All deliver about 25 g of protein per serving, and the difference between them is what comes with it and how fast it digests. ISO100 is the leanest, at roughly 80 percent protein by weight. Elite Whey carries a few more grams of fat and carbohydrate. Elite Casein is slow-digesting and thicker.
+          </p>
+
+          <p>
+            Super Mass Gainer is a different category. Its protein is a supporting act to a large dose of carbohydrate, mostly maltodextrin, that pushes a full serving well past 1,000 calories. Judging it on cost per 25 g of protein misses the point. Our <a href="/best-protein-powder-for-weight-gain/">best protein powder for weight gain</a> guide compares it with other gainers.
+          </p>
+
+          <p>
+            Elite Whey and ISO100 also differ on BCAAs, though less than the marketing suggests. Elite Whey lists about 5.5 g of BCAAs and 2.7 g of leucine per serving per retailer listings, and ISO100 lists a similar 5.5 g of BCAAs. For muscle building, both clear the roughly 2 to 3 g leucine threshold research associates with a strong muscle-building response.
+          </p>
+        </div>
+
+        <!-- Picks -->
+        <div id="top-picks" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            4. The Dymatize Powders, Ranked
+          </h2>
+
+          <p>
+            We ranked the four Dymatize powders most buyers choose between on protein per serving, cost per 25 g, testing and how well each fits its intended job, then added one clearly labelled alternative isolate from another brand. All figures are per the label at the time of writing and vary by flavor, so check the panel on your tub.
+          </p>
+
+          {PRODUCTS.map((product, index) => (
+            <div id={product.id} class="scroll-mt-24 mt-12 first:mt-8">
+              <div class="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                <div class="bg-gray-900 px-6 py-4 flex items-center justify-between">
+                  <div class="flex items-center gap-3">
+                    <span class="bg-[#FF4500] text-white w-8 h-8 rounded-full flex items-center justify-center text-sm font-black">
+                      {index + 1}
+                    </span>
+                    {productImages[product.id] && (
+                      <img
+                        src={productImages[product.id]}
+                        alt={product.name}
+                        loading="lazy"
+                        width="40"
+                        height="40"
+                        class="w-10 h-10 rounded-lg bg-white object-contain p-1 shrink-0"
+                      />
+                    )}
+                    <div>
+                      <p class="text-white font-black text-lg">{product.name}</p>
+                      <p class="text-gray-400 text-xs">{product.category}</p>
+                    </div>
+                  </div>
+                  <span class="bg-[#38BDF8]/20 text-[#38BDF8] px-3 py-1 rounded-full text-xs font-bold hidden sm:block">
+                    {product.badge}
+                  </span>
+                </div>
+                <div class="p-6">
+                  {product.rating && (
+                  <div class="flex items-center gap-2 mb-4">
+                    <div class="flex text-yellow-400">
+                      {[...Array(5)].map((_, i) => (
+                        <svg
+                          class={`w-4 h-4 ${i < Math.floor(product.rating) ? "fill-current" : "text-gray-200"}`}
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                        >
+                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        </svg>
+                      ))}
+                    </div>
+                    <span class="text-gray-500 text-sm font-bold">{product.rating}</span>
+                    {product.reviewCount && <span class="text-gray-400 text-xs">({product.reviewCount.toLocaleString()} retailer reviews)</span>}
+                  </div>
+                  )}
+
+                  <SpecGrid specs={product.specs} />
+
+                  <p class="text-gray-700 leading-relaxed mb-6">{product.description}</p>
+
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                    <div class="bg-green-50 rounded-xl p-4">
+                      <p class="text-xs font-black uppercase tracking-widest text-green-700 mb-3">Pros</p>
+                      <ul class="space-y-2">
+                        {product.pros.map((pro) => (
+                          <li class="flex items-start gap-2 text-sm text-green-800">
+                            <svg class="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            {pro}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div class="bg-red-50 rounded-xl p-4">
+                      <p class="text-xs font-black uppercase tracking-widest text-red-700 mb-3">Cons</p>
+                      <ul class="space-y-2">
+                        {product.cons.map((con) => (
+                          <li class="flex items-start gap-2 text-sm text-red-800">
+                            <svg class="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                            {con}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+
+                  <div class="bg-gray-50 rounded-xl p-4 border border-gray-100">
+                    <p class="text-xs font-black uppercase tracking-widest text-gray-500 mb-1">The Bottom Line</p>
+                    <p class="text-gray-900 font-bold">{product.bottomLine}</p>
+                  </div>
+
+                  <a
+                    href={amazonLink(product.amazonUrl, product.name, product.id)}
+                    target="_blank"
+                    rel="sponsored nofollow noopener"
+                    class="mt-6 block bg-[#FF4500] hover:bg-[#E63E00] text-white text-center py-4 rounded-xl font-black no-underline transition-colors uppercase tracking-widest text-sm"
+                  >
+                    Check Price &rarr;
+                  </a>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div id="iso100-vs-elite" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            5. ISO100 vs Elite 100% Whey
+          </h2>
+
+          <p>
+            This is the decision most Dymatize shoppers face, so it deserves its own section. Both powders give about 25 g of protein. The difference is that ISO100 is all isolate, partly hydrolyzed, while Elite Whey blends concentrate with isolate and peptides. That changes three things: lactose, calories and price.
+          </p>
+
+          <p>
+            Lactose is the big one. Whey isolate is filtered to remove most lactose and fat, so ISO100 usually sits under 1 g of sugar per scoop in plain flavors. Concentrate carries more lactose. If dairy gives you bloating or cramps, ISO100 is often the difference between a shake you tolerate and one you do not. Our <a href="/whey-vs-whey-isolate/">whey versus whey isolate</a> guide explains the filtering.
+          </p>
+
+          <p>
+            Calories are a smaller gap than people think. ISO100 runs about 110 to 120 calories per scoop and Elite Whey about 140, so you save 20 to 30 calories per shake. That matters on a strict cut, but for most people it is noise next to the rest of the day's food.
+          </p>
+
+          <p>
+            Hydrolysis is the least important difference. Partly pre-digesting whey makes it absorb slightly faster, but research has not shown that this produces more muscle over time than regular whey when total protein is matched. Pay for ISO100 for the lactose and macros, not the hydrolysis claim. If neither applies to you, Elite Whey is the smarter buy.
+          </p>
+
+          <div class="bg-gray-900 text-white rounded-2xl p-6 lg:p-8 my-8">
+            <p class="text-xs font-black uppercase tracking-widest text-[#38BDF8] mb-3">RULE OF THUMB</p>
+            <p class="text-xl font-bold text-white mb-3">Lactose problems or a tight cut? ISO100. Neither? Elite Whey.</p>
+            <p class="text-gray-300 leading-relaxed m-0">The protein dose is the same. You are paying for lower lactose and roughly 20 to 30 fewer calories per scoop.</p>
+          </div>
+        </div>
+
+        <div id="cost-per-25g" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            6. Cost per 25 g of Protein
+          </h2>
+
+          <p>
+            Because Dymatize's three protein powders all give about 25 g per scoop, the cost per serving and the cost per 25 g are close to the same thing, which makes comparison easy. Prices move often on Amazon and at retailers, so the ranges below are approximate, based on the large-tub listings we checked.
+          </p>
+
+          <div class="bg-gray-900 text-white rounded-2xl p-6 lg:p-8 my-8">
+            <p class="text-xs font-black uppercase tracking-widest text-[#38BDF8] mb-4">Approximate cost per 25 g of protein, large tubs</p>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+              <div>
+                <p class="text-3xl font-black text-white">$1.30-1.70</p>
+                <p class="text-gray-400 text-xs mt-1">ISO100</p>
+              </div>
+              <div>
+                <p class="text-3xl font-black text-[#38BDF8]">$1.00-1.25</p>
+                <p class="text-gray-400 text-xs mt-1">Elite 100% Whey</p>
+              </div>
+              <div>
+                <p class="text-3xl font-black text-white">$1.15-1.45</p>
+                <p class="text-gray-400 text-xs mt-1">Elite Casein</p>
+              </div>
+              <div>
+                <p class="text-3xl font-black text-[#38BDF8]">n/a</p>
+                <p class="text-gray-400 text-xs mt-1">Super Mass Gainer (a calorie product)</p>
+              </div>
+            </div>
+          </div>
+
+          <p>
+            ISO100 in the 5 lb tub, about 70 servings, typically works out to roughly $1.30 to $1.70 per 25 g. That is fair for a tested isolate. Most certified isolates land between $1.30 and $2.00, and premium grass-fed isolates often cost more. Small 1.3 lb tubs cost more per gram, so buy big once you know you like a flavor.
+          </p>
+
+          <p>
+            Elite 100% Whey usually lands at roughly $1.00 to $1.25 per 25 g in the 5 lb size, which puts it among the cheaper tested wheys on the market. Elite Casein, sold in 4 lb tubs, typically sits between the two. For the cheapest options overall, see our <a href="/best-cheap-protein-powder/">best cheap protein powder</a> guide.
+          </p>
+
+          <p>
+            Over a year of one shake a day, the gap between ISO100 and Elite Whey is often $100 or more. That is real money for a benefit, lower lactose, that many people do not need. Try Elite Whey first unless you already know dairy bothers you.
+          </p>
+        </div>
+
+        <div id="testing" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            7. Informed Choice Testing
+          </h2>
+
+          <p>
+            Dymatize powders carry the Informed Choice logo, per retailer listings for ISO100, Elite 100% Whey and Elite Casein at the time of writing. Informed Choice is run by LGC, a sports anti-doping laboratory, and certified products are regularly tested for substances banned in sport. Dymatize also says it manufactures in GMP and sport-certified facilities.
+          </p>
+
+          <p>
+            Informed Choice is the program behind the better-known Informed Sport, and the main difference is how often batches are tested. For most recreational lifters, Informed Choice is plenty. Elite athletes in strict anti-doping systems may prefer Informed Sport or NSF Certified for Sport, which test every batch before release.
+          </p>
+
+          <p>
+            Certification status is set per product and can change, so a drug-tested athlete should look up the exact product and flavor on the certifier's website before competing. Do not assume a new limited-edition flavor carries the same status as the original.
+          </p>
+
+          <p>
+            Banned-substance testing is not the same as testing for heavy metals or an ingredient-quality audit. Whey generally tests lower for heavy metals than plant proteins, but the Informed Choice logo tells you about doping risk, not about sweeteners or additives. For the full picture on safety, read our <a href="/is-protein-powder-safe/">protein powder safety guide</a>.
+          </p>
+        </div>
+
+        <div id="flavors" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            8. Flavors, Sweeteners and Mixing
+          </h2>
+
+          <p>
+            Flavor is a big part of why Dymatize sells. ISO100 comes in Gourmet Chocolate, Gourmet Vanilla, Fudge Brownie, Chocolate Peanut Butter, the Pebbles flavors, the Dunkin flavors and more at the time of writing. Buyer feedback on ISO100 is generally strong, especially for chocolate flavors and the cereal flavors.
+          </p>
+
+          <p>
+            On sweeteners, the ISO100 Gourmet Chocolate ingredient list we found includes sucralose and steviol glycosides, along with soy lecithin, salt and natural and artificial flavors. Other flavors vary. If you want to avoid sucralose entirely, Dymatize is not the brand for you; an unflavored isolate or a stevia-only brand is a better fit. Our <a href="/best-unflavored-protein-powder/">best unflavored protein powder</a> guide has options.
+          </p>
+
+          <p>
+            Mixability is where ISO100 really shines. Isolates dissolve thinner and cleaner than concentrates, and buyers consistently describe ISO100 as mixing with a few shakes in water with little foam or clumping. Elite Whey is a little thicker and creamier, which some people prefer in milk.
+          </p>
+
+          <p>
+            Elite Casein behaves differently. It thickens with less liquid, which makes it good for pudding, overnight oats and mug cakes. In a shaker with water, buyers say it can be thick and benefits from extra liquid. If you plan to bake or make dessert-style protein, casein is the best Dymatize product for the job.
+          </p>
+        </div>
+
+        <div id="who-should-skip" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            9. Who Should Skip It
+          </h2>
+
+          <p>
+            <strong>Skip Dymatize if you avoid artificial sweeteners.</strong> The flavored range relies on sucralose. Choose an unflavored or stevia-sweetened powder instead.
+          </p>
+
+          <p>
+            <strong>Skip it if you are vegan or have a milk allergy.</strong> Every product in this review is dairy-based and carries a milk allergen warning, and some flavors also list soy lecithin. Our <a href="/best-plant-based-protein-powder/">best plant-based protein powder</a> guide covers dairy-free options.
+          </p>
+
+          <p>
+            <strong>Skip ISO100 if you tolerate dairy and want value.</strong> You would be paying an isolate premium for a benefit you do not need. Elite Whey, or a cheaper mass-market whey, gets you the same 25 g for less.
+          </p>
+
+          <p>
+            <strong>Skip Super Mass Gainer unless you are truly underweight or struggle to eat.</strong> For most lifters, adding 1,200 calories of mostly maltodextrin will put on fat as well as muscle. A regular whey plus extra food usually does the job better.
+          </p>
+        </div>
+
+        <div id="how-to-use" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            10. Matching the Tub to Your Goal
+          </h2>
+
+          <p>
+            For building muscle, most adults do well on roughly 1.6 g of protein per kg of body weight per day, split across meals. One 25 g scoop of ISO100 or Elite Whey after training covers one of those meals. Our <a href="/how-much-protein-do-i-need/">protein needs guide</a> works out your daily target.
+          </p>
+
+          <p>
+            For cutting, ISO100 makes most sense. It gives the most protein per calorie in the range and is the least likely to cause digestive trouble. For a lean bulk or general fitness, Elite Whey does the same job for less. For a bedtime shake, Elite Casein's slower digestion is the reason to buy it, though total daily protein still matters more than timing.
+          </p>
+
+          <p>
+            For gaining weight, start with Elite Whey mixed in whole milk with oats and peanut butter. Move to Super Mass Gainer only if that is still not enough calories. Many people find half a serving of a gainer is plenty.
+          </p>
+
+          <p>
+            A shake is a supplement, not a replacement for meals. Readers with kidney disease, those who are pregnant, and anyone on medication should check with a doctor or registered dietitian before adding a high-protein supplement. This review is label analysis, not medical advice.
+          </p>
+        </div>
+
+        <!-- Common Mistakes -->
+        <div id="mistakes" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            11. Common Mistakes to Avoid
+          </h2>
+
+          <div class="space-y-6 my-8">
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Paying for ISO100 when you do not need it</h3>
+              <p class="text-gray-700 text-sm m-0">
+                ISO100 is excellent, but its main advantages are low lactose and slightly fewer calories. If dairy does not bother you and you are not on a strict cut, Elite 100% Whey gives the same 25 g of protein per scoop for noticeably less money. Over a year, that difference often tops $100.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Buying for the hydrolyzed label</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Hydrolyzed whey absorbs slightly faster, but research has not shown that this builds more muscle than regular whey when total daily protein is matched. Buy ISO100 for its lactose and macro profile, not because hydrolyzed sounds more advanced. Total protein per day is what drives results.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Using Super Mass Gainer as a protein powder</h3>
+              <p class="text-gray-700 text-sm m-0">
+                A full serving of Super Mass Gainer is well over 1,000 calories, mostly from maltodextrin. Used as a daily post-workout shake by someone who eats normally, it will add fat as well as muscle. Treat it as a calorie tool for hard gainers, and start with half a serving.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Assuming every flavor has the same certification</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Retailer listings show Informed Choice on ISO100, Elite Whey and Elite Casein, but certification is granted per product and can change. Limited-edition flavors are the most likely to differ. If you are drug-tested, look up the exact product and flavor on the certifier's site before competing.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Buying small tubs to save money</h3>
+              <p class="text-gray-700 text-sm m-0">
+                ISO100's smaller tubs cost noticeably more per 25 g than the 5 lb size. Once you have found a flavor you like, buying larger usually cuts the cost per shake substantially. Watch for Subscribe and Save on Amazon, which often brings the large tubs down further.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ -->
+        <div id="faq" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            12. Frequently Asked Questions
+          </h2>
+
+          <div class="space-y-6">
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is Dymatize a good protein brand?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Yes. Dymatize has a long track record, consistent label figures and Informed Choice testing on its main powders per retailer listings. ISO100 is one of the best-selling isolates on the market, and Elite Whey is a strong value whey. The main drawback is sucralose in flavored products. For most lifters, it is one of the safest brands to buy.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">What is the difference between Dymatize ISO100 and Elite Whey?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Both give about 25 g of protein per scoop. ISO100 is all whey isolate, partly hydrolyzed, with very little lactose and about 110 to 120 calories. Elite Whey blends concentrate, isolate and peptides and runs about 140 calories with more lactose. Elite Whey usually costs 20 to 30 percent less per 25 g. Choose ISO100 for dairy sensitivity or strict cuts.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is Dymatize ISO100 lactose free?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Not technically, but it is very low in lactose. Whey isolate is filtered to remove most lactose, and ISO100 typically lists under 1 to 2 g of sugar per scoop. Many people who react to regular whey tolerate it well. People with a milk allergy, which is a reaction to milk protein rather than lactose, should avoid it entirely.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is Dymatize third-party tested?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Retailer listings show the Informed Choice logo on ISO100, Elite 100% Whey and Elite Casein at the time of writing. Informed Choice is run by the anti-doping lab LGC and tests certified products for banned substances. Drug-tested athletes should verify the specific product and flavor on the Informed Choice website before competing.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Who owns Dymatize?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Dymatize is owned by BellRing Brands, which also owns Premier Protein. Post Holdings bought Dymatize in 2014 and moved it into BellRing in 2019, and BellRing is now a separate public company. That connection is why Dymatize sells ISO100 in Post's Fruity Pebbles and Cocoa Pebbles flavors.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">What sweetener does Dymatize use?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                The ISO100 Gourmet Chocolate ingredient list we found includes sucralose and steviol glycosides, and sucralose is common across Dymatize's flavored powders. Sugar stays low as a result. If you avoid sucralose, Dymatize is not the right brand. Look for unflavored isolates or stevia-only brands instead, and check each flavor's label.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is Dymatize Elite Casein good before bed?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Yes, that is its main job. Micellar casein digests slowly, so a 25 g serving before bed supplies amino acids over several hours. Studies of pre-sleep casein show modest benefits, mostly because it adds to total daily protein. If you already hit your protein target, the timing matters less than consistency. It also makes good pudding.
+              </p>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Related Guides -->
+        <div class="mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">Related Whey Protein Guides</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <a href="/best-whey-protein-isolate/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#FF4500] font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Whey Protein Isolate</h3>
+              <p class="text-gray-500 text-sm mt-2">Our full ranking of isolates on purity, testing and cost per 25 g.</p>
+            </a>
+            <a href="/isopure-protein-powder-review/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#38BDF8] font-black text-xs uppercase tracking-widest mb-2">Brand Review</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Isopure Protein Powder Review</h3>
+              <p class="text-gray-500 text-sm mt-2">Zero Carb and the rest of the Isopure range, read from the label.</p>
+            </a>
+            <a href="/fruity-pebbles-protein-powder/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-green-600 font-black text-xs uppercase tracking-widest mb-2">Flavor Review</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Fruity Pebbles Protein Powder</h3>
+              <p class="text-gray-500 text-sm mt-2">Which brands sell the cereal flavors and how they compare.</p>
+            </a>
+          </div>
+        </div>
+
+        <!-- Closing -->
+        <div class="mt-16 bg-gray-900 text-white rounded-2xl p-8">
+          <h2 class="text-2xl font-black text-white mb-4">The Bottom Line</h2>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            Dymatize is one of the most dependable protein brands on Amazon. ISO100 earns its reputation as a clean, low-lactose, Informed Choice tested isolate at about 25 g of protein per scoop, and Elite 100% Whey delivers the same dose for less money. Elite Casein and Super Mass Gainer each do one job well.
+          </p>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            Buy ISO100 when lactose or a tight cut gives you a reason, and Elite Whey when it does not. Skip the brand if you avoid sucralose or dairy. For the wider field of isolates, our <a href="/best-whey-protein-isolate/">whey isolate rankings</a> compare ISO100 with every major rival.
+          </p>
+        </div>
+
+        <MoreInCategory category="Brand Reviews" links={moreInCategory} />
+
+        <AuthorBio />
+      </div>
+    </div>
+  </article>
+</Layout>

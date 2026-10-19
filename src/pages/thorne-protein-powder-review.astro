@@ -1,0 +1,948 @@
+---
+import Layout from "../layouts/Layout.astro";
+import MoreInCategory from "../components/MoreInCategory.astro";
+import { AUTHORS, DEFAULT_AUTHOR, authorSchema } from "../data/authors";
+import { SITE_NAME, SITE_URL } from "../data/site";
+import AuthorAvatar from "../components/AuthorAvatar.astro";
+import QuickPicks from "../components/QuickPicks.astro";
+import AuthorBio from "../components/AuthorBio.astro";
+import { amazonLink } from "../data/affiliate";
+import TrustBadge from "../components/TrustBadge.astro";
+import SocialProof from "../components/SocialProof.astro";
+import SpecGrid from "../components/SpecGrid.astro";
+import productImages from "../data/product-images.json";
+import { pageDates } from "../data/dates";
+
+const moreInCategory = [
+  {
+    "title": "Dymatize Protein Powder Review",
+    "url": "/dymatize-protein-powder-review/"
+  },
+  {
+    "title": "Momentous Protein Powder Review",
+    "url": "/momentous-protein-powder-review/"
+  },
+  {
+    "title": "Transparent Labs Protein Powder Review",
+    "url": "/transparent-labs-protein-powder-review/"
+  }
+];
+const author = AUTHORS[DEFAULT_AUTHOR];
+const dates = pageDates(Astro.url.pathname, { published: "2026-10-19", modified: "2026-10-19" });
+const title = "Thorne Protein Powder Review: Is NSF Certification Worth the Premium?";
+const description =
+  "Thorne's whey isolate, plant protein, Collagen Fit and RecoveryPro checked label by label: what NSF certification buys, cost per 25 g, and who should skip it.";
+
+const PRODUCTS: {
+  id: string;
+  name: string;
+  brand?: string;
+  badge: string;
+  category: string;
+  description: string;
+  pros: string[];
+  cons: string[];
+  bottomLine: string;
+  specs?: Record<string, string>;
+  rating?: number;
+  reviewCount?: number;
+  amazonUrl?: string;
+}[] = [
+  {
+    "id": "thorne-whey-protein-isolate",
+    "name": "Thorne Whey Protein Isolate",
+    "brand": "Thorne",
+    "badge": "Best Overall",
+    "category": "Whey protein isolate, vanilla or chocolate",
+    "description": "Thorne's flagship delivers about 21 g of protein from whey isolate in roughly 100 calories per scoop, per Thorne's label at the time of writing, sweetened with a little cane juice sugar and stevia rather than sucralose. It carries NSF Certified for Sport status and adds a small bromelain and papain enzyme blend. It is the pick for drug-tested athletes and anyone who wants a short, documented label.",
+    "pros": [
+      "NSF Certified for Sport, per Thorne",
+      "Short ingredient list with no sucralose",
+      "No proprietary blends or added free amino acids",
+      "Single-serve travel packs available"
+    ],
+    "cons": [
+      "About 21 g per scoop, below many rival isolates",
+      "Premium cost per 25 g of protein",
+      "Only two flavors"
+    ],
+    "bottomLine": "The certified isolate to buy when the NSF seal genuinely matters to you.",
+    "specs": {
+      "Protein per serving": "About 21 g (label)",
+      "Calories": "About 100",
+      "Third-party testing": "NSF Certified for Sport",
+      "Best for": "Tested athletes, cautious buyers"
+    }
+  },
+  {
+    "id": "thorne-plant-protein",
+    "name": "Thorne Plant Protein",
+    "brand": "Thorne",
+    "badge": "Best Dairy-Free",
+    "category": "Pea, brown rice and chia protein blend",
+    "description": "Thorne Plant Protein blends pea, brown rice and chia protein for about 21 to 22 g of protein per two-scoop serving and roughly 130 to 140 calories, per retailer labels at the time of writing. It is free of dairy, soy and gluten and carries NSF Certified for Sport status, which is worth more on a plant protein because plant sources tend to carry more heavy metals.",
+    "pros": [
+      "NSF Certified for Sport, per Thorne",
+      "Dairy-free, soy-free and gluten-free",
+      "Three-source blend for a rounder amino profile"
+    ],
+    "cons": [
+      "Two scoops per serving",
+      "Costs slightly more per 25 g than Thorne's whey"
+    ],
+    "bottomLine": "One of the easiest certified vegan proteins to find, at a premium price.",
+    "specs": {
+      "Protein per serving": "About 21-22 g (2 scoops)",
+      "Calories": "About 130-140",
+      "Third-party testing": "NSF Certified for Sport",
+      "Best for": "Vegan or dairy-free athletes"
+    }
+  },
+  {
+    "id": "thorne-collagen-fit",
+    "name": "Thorne Collagen Fit",
+    "brand": "Thorne",
+    "badge": "For Joints, Not Muscle",
+    "category": "Unflavored bovine collagen peptides",
+    "description": "Collagen Fit pairs 15 g of bovine collagen peptides, listed by retailers as about 14 g of protein, with 125 mg of nicotinamide riboside per scoop, per labels at the time of writing. It is NSF Certified for Sport and unflavored, so it stirs into coffee or a shake. Collagen is an incomplete protein, so treat this as a connective tissue product rather than a whey replacement.",
+    "pros": [
+      "NSF Certified for Sport, per Thorne",
+      "Unflavored, mixes into hot or cold drinks",
+      "Simple single-scoop serving"
+    ],
+    "cons": [
+      "Incomplete protein, low in leucine",
+      "Expensive per 25 g if counted as protein"
+    ],
+    "bottomLine": "Buy it for joints and tendons; buy whey for muscle.",
+    "specs": {
+      "Protein per serving": "About 14 g (label)",
+      "Calories": "Check label",
+      "Third-party testing": "NSF Certified for Sport",
+      "Best for": "Connective tissue support"
+    }
+  },
+  {
+    "id": "thorne-recoverypro",
+    "name": "Thorne RecoveryPro",
+    "brand": "Thorne",
+    "badge": "Bedtime Formula",
+    "category": "Whey-based sleep and recovery drink, chocolate",
+    "description": "RecoveryPro combines hydrolyzed whey concentrate with L-tryptophan, magnesium bisglycinate and GABA in a chocolate drink meant for the evening. Thorne's copy cites 13 g of whey protein per serving, and a tub holds 12 servings. It is NSF Certified for Sport, but as a protein source it is very expensive, so buy it only if you want the sleep-support stack.",
+    "pros": [
+      "NSF Certified for Sport, per Thorne",
+      "Combines protein with magnesium and tryptophan",
+      "Hydrolyzed whey base, chocolate flavored"
+    ],
+    "cons": [
+      "Only about 13 g of whey per serving",
+      "12 servings per tub, very high cost per 25 g",
+      "One flavor"
+    ],
+    "bottomLine": "A niche recovery product; a casein shake is the cheaper bedtime protein.",
+    "specs": {
+      "Protein per serving": "About 13 g whey (brand)",
+      "Calories": "Check label",
+      "Third-party testing": "NSF Certified for Sport",
+      "Best for": "Evening recovery routines"
+    }
+  },
+  {
+    "id": "klean-athlete-klean-isolate",
+    "name": "Klean Athlete Klean Isolate",
+    "brand": "Klean Athlete",
+    "badge": "Alternative: Unflavored",
+    "category": "Whey protein isolate, unflavored",
+    "description": "Klean Isolate is the closest certified rival to Thorne: whey protein isolate plus a little sunflower lecithin, with no sweetener or flavoring, per the label at the time of writing, and NSF Certified for Sport status, per the brand. It delivers about 20 g of protein per scoop. Choose it over Thorne if you want to add protein to coffee, oats or smoothies without any sweetness.",
+    "pros": [
+      "NSF Certified for Sport, per the brand",
+      "No sweeteners or flavors",
+      "Very short ingredient list"
+    ],
+    "cons": [
+      "About 20 g per scoop",
+      "Premium cost per 25 g of protein"
+    ],
+    "bottomLine": "The unsweetened certified isolate for people who flavor their own food.",
+    "specs": {
+      "Protein per serving": "About 20 g (label)",
+      "Calories": "Check label",
+      "Third-party testing": "NSF Certified for Sport (brand)",
+      "Best for": "Mixing into coffee and oats"
+    }
+  }
+];
+
+const schema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Home",
+          item: `${SITE_URL}/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Best Lists",
+          item: `${SITE_URL}/best-of/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 3,
+          name: "Thorne Protein Powder Review",
+          item: `${SITE_URL}/thorne-protein-powder-review/`,
+        },
+      ],
+    },
+    {
+      "@type": "FAQPage",
+      mainEntity: [
+        {
+          "@type": "Question",
+          "name": "Is Thorne protein powder worth the money?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It is worth it if you need NSF Certified for Sport status or want one of the most documented labels available. At roughly $2.40 to $2.70 per 25 g of protein at list price, it costs far more than mainstream isolates. Recreational lifters without a testing requirement can get the same protein quality for much less from a cheaper certified isolate."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How much protein is in Thorne Whey Protein Isolate?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "About 21 g of protein per scoop, from 25 g of whey protein isolate, in roughly 100 calories, per Thorne's label at the time of writing. Figures vary slightly between vanilla and chocolate. That is a smaller dose than many rival isolates, which often list 25 g or more per scoop, so heavier lifters may need more than one scoop."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is Thorne whey NSF Certified for Sport?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Thorne lists its Whey Protein Isolate in both flavors as NSF Certified for Sport, along with its Plant Protein, Collagen Fit and RecoveryPro at the time of writing. Certification applies to specific products and flavors, so drug-tested athletes should confirm the exact item in NSF's certified products database before buying."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What sweetener does Thorne whey use?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Thorne sweetens its whey isolate with evaporated cane juice sugar and rebaudioside A, a purified stevia extract, rather than sucralose or acesulfame potassium. That leaves a few grams of sugar per scoop, roughly 2 to 3 g depending on the listing. For most people that is negligible, but strict zero-sugar dieters should know it is there."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is Thorne protein good for weight loss?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It can fit a calorie deficit well, because a scoop is about 100 calories for 21 g of protein and protein helps with fullness. It is not uniquely suited to weight loss, though; any lean isolate does the same job for less money. Our guide to the best protein powder for weight loss compares cheaper options with similar macros."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does Thorne make a vegan protein powder?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Thorne Plant Protein blends pea, brown rice and chia protein for about 21 to 22 g of protein per two-scoop serving, per retailer labels, and it is NSF Certified for Sport. It is free of dairy, soy and gluten. It costs slightly more per 25 g of protein than Thorne's whey isolate at list price."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Where is the safest place to buy Thorne?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Buy from Thorne's own site, Amazon listings sold by Thorne or Amazon, practitioner platforms such as Fullscript, or established retailers. We found lookalike sites listing Thorne products far below normal prices, which is a classic counterfeit sign. Check the seller, the seal and the printed lot number, and avoid deals that look too good to be real."
+          }
+        }
+      ],
+    },
+    {
+      "@type": "Article",
+      headline: title,
+      author: authorSchema(),
+      datePublished: dates.published,
+      dateModified: dates.modified,
+      publisher: { "@type": "Organization", name: SITE_NAME, url: SITE_URL },
+    },
+    {
+      "@type": "ItemList",
+      name: title,
+      numberOfItems: PRODUCTS.length,
+      itemListElement: PRODUCTS.map((product, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name: product.name,
+        url: new URL(`#${product.id}`, Astro.url).toString(),
+      })),
+    },
+    ...PRODUCTS.map((product) => ({
+      "@type": "Product",
+      name: product.name,
+      description: product.description,
+      brand: {
+        "@type": "Brand",
+        name: product.brand ?? product.name.split(" ")[0],
+      },
+    })),
+  ],
+};
+---
+
+<Layout
+  title={title}
+  description={description}
+  ogType="article"
+  article={{
+    publishedTime: dates.published,
+    modifiedTime: dates.modified,
+    author: author.name,
+    section: "Brand Reviews",
+    tags: [
+      "thorne protein powder",
+      "thorne whey protein isolate",
+      "thorne protein review",
+      "thorne nsf protein"
+    ],
+  }}
+  jsonLd={schema}
+  stickyCta={{
+    text: "See Our Top Whey Isolate Picks",
+    link: "/best-whey-protein-isolate/",
+  }}
+>
+  <article class="relative overflow-hidden">
+    <!-- Hero Section -->
+    <div class="bg-gray-900 py-16 lg:py-24 relative overflow-hidden">
+      <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(circle at 20% 20%, #38BDF8 0, transparent 45%), radial-gradient(circle at 80% 60%, #FF4500 0, transparent 40%);"></div>
+      <div class="max-w-4xl mx-auto px-4 relative z-10 text-center">
+        <div class="flex justify-center mb-6">
+          <TrustBadge />
+        </div>
+        <div class="flex justify-center gap-3 mb-6">
+          <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#FF4500]/20 text-[#FF4500] text-xs font-black uppercase tracking-widest border border-[#FF4500]/30">
+            Brand Review
+          </span>
+          <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-green-500/10 text-green-400 text-xs font-bold uppercase tracking-widest border border-green-500/20">
+            Label-Checked
+          </span>
+        </div>
+        <h1 class="text-4xl lg:text-6xl font-black text-white leading-tight mb-8">
+          Thorne Protein Powder: <span class="text-[#38BDF8]">Worth the Premium?</span>
+        </h1>
+        <p class="text-xl text-gray-300 leading-relaxed mb-8 max-w-3xl mx-auto">
+          Thorne sells one of the most trusted whey isolates in sport, and charges for it. Here is what the label and the NSF seal actually deliver, which Thorne powder to buy, and when a cheaper tub does the same job.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a
+            href="#thorne-whey-protein-isolate"
+            class="px-8 py-4 bg-[#FF4500] hover:bg-[#E63E00] text-white font-black rounded-xl shadow-lg transition-all no-underline"
+          >
+            See Our #1 Pick
+          </a>
+          <a
+            href="#whey-label"
+            class="px-8 py-4 bg-white/10 hover:bg-white/20 text-white font-bold rounded-xl border border-white/10 no-underline"
+          >
+            Read the Label Breakdown
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Author & Meta -->
+    <div class="max-w-3xl mx-auto px-4 pt-12">
+      <div class="flex items-center gap-6 border-b border-gray-100 pb-8">
+        <div class="flex items-center gap-3">
+          <AuthorAvatar size={48} />
+          <div>
+            <p class="text-sm font-bold text-gray-900">{author.name}</p>
+            <p class="text-xs text-gray-500 uppercase tracking-widest">{author.role}</p>
+          </div>
+        </div>
+        <div class="h-10 w-px bg-gray-200 hidden sm:block"></div>
+        <div class="hidden sm:block">
+          <p class="text-sm font-bold text-gray-900">Last Updated</p>
+          <p class="text-xs text-gray-500">{dates.display}</p>
+        </div>
+        <div class="hidden sm:block ml-auto">
+          <SocialProof />
+        </div>
+      </div>
+    </div>
+
+    <!-- Table of Contents -->
+    <div class="max-w-3xl mx-auto px-4 py-10">
+      <div class="bg-gray-50 border border-gray-200 rounded-2xl p-6 lg:p-8">
+        <h2 class="text-lg font-black text-gray-900 mb-4 flex items-center gap-2">
+          In This Guide
+        </h2>
+        <nav class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <a href="#verdict" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">1. The Short Verdict</a>
+          <a href="#who-is-thorne" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">2. Who Thorne Is</a>
+          <a href="#top-picks" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">3. Our Top Picks</a>
+          <a href="#whey-label" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">4. The Whey Isolate Label</a>
+          <a href="#nsf" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">5. What NSF Certification Covers</a>
+          <a href="#cost" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">6. Cost per 25 g</a>
+          <a href="#vs-rivals" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">7. Thorne vs. Other Certified Isolates</a>
+          <a href="#rest-of-range" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">8. Plant, Collagen and RecoveryPro</a>
+          <a href="#who-should-skip" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">9. Who Should Skip Thorne</a>
+          <a href="#where-to-buy" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">10. Where to Buy Safely</a>
+          <a href="#mistakes" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">11. Common Mistakes</a>
+          <a href="#faq" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">12. FAQ</a>
+        </nav>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="max-w-3xl mx-auto px-4 pb-16 lg:pb-24">
+      <div class="prose prose-lg prose-blue max-w-none text-gray-700 leading-relaxed">
+        <p class="text-2xl font-medium text-gray-900 mb-8 italic">
+          Thorne Whey Protein Isolate is a good protein powder with a narrow reason to exist: it is NSF Certified for Sport, short on ingredients, and made by a brand that clinicians and pro teams already trust. If you are a drug-tested athlete or you simply want the most documented scoop on the shelf, it earns its price. If you want the most protein per dollar, it does not, and this review shows exactly how much extra you pay.
+        </p>
+
+        <QuickPicks products={PRODUCTS} />
+
+        <div id="verdict" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            1. The Short Verdict
+          </h2>
+
+          <p>
+            Buy <strong>Thorne Whey Protein Isolate</strong> if certification is the thing you are paying for. Each scoop delivers about 21 g of protein from whey isolate, roughly 100 calories, and a short ingredient list, per Thorne's label at the time of writing, and every flavor carries NSF Certified for Sport status. That combination is why it shows up in athletic training rooms and on clinician dispensaries, and why it sits on our <a href="/best-whey-protein-isolate/">best whey protein isolate</a> shortlist.
+          </p>
+
+          <p>
+            Do not buy it expecting a bargain or a big dose. At Thorne's list price of about $65 for 30 scoops, a 25 g serving of protein costs roughly $2.40 to $2.70, which is close to double what a mainstream isolate costs on sale. And 21 g is a modest scoop; plenty of isolates hand you 25 g or more in a single serving, so you may find yourself using a scoop and a bit to hit the same target.
+          </p>
+
+          <p>
+            The rest of the range is more mixed. Thorne Plant Protein is a sound NSF-certified vegan option at a similar premium. Collagen Fit is a joint and connective tissue product that happens to contain protein, not a substitute for a whey shake. RecoveryPro is a bedtime recovery formula with a small protein dose and a sleep-support stack, and it is expensive for what it delivers as protein.
+          </p>
+
+          <div class="bg-gray-900 text-white rounded-2xl p-6 lg:p-8 my-8">
+            <p class="text-xs font-black uppercase tracking-widest text-[#38BDF8] mb-3">THE RULE</p>
+            <p class="text-xl font-bold text-white mb-3">Pay for the seal only if the seal matters to you.</p>
+            <p class="text-gray-300 leading-relaxed m-0">If you are tested in sport, work in a profession with drug screening, or want third-party proof of label accuracy, Thorne's premium buys something real. If none of that applies, a cheaper Informed Choice or NSF-certified isolate gives you the same protein for much less.</p>
+          </div>
+
+          <p>
+            The rest of this review walks through the label line by line, explains what NSF certification does and does not tell you, compares Thorne with the other certified isolates, and covers the counterfeit problem, which is real for a brand this well known. If you only need a yes or no: yes for tested athletes and cautious buyers, no for budget bulkers and anyone who wants 25 g or more per scoop.
+          </p>
+        </div>
+
+        <div id="who-is-thorne" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            2. Who Thorne Is, and Why the Brand Matters Here
+          </h2>
+
+          <p>
+            Thorne built its reputation as a practitioner brand, selling supplements through doctors, dietitians and clinics long before it was a name in sports nutrition. That history explains the house style you see on its protein: plain packaging, modest claims, short ingredient lists and an emphasis on testing over flavor marketing. It is not a brand that launches cereal collaborations or 20 dessert flavors, and that is the point.
+          </p>
+
+          <p>
+            Ownership has changed in recent years. Thorne HealthTech went public on the Nasdaq in 2021, and in 2023 the private equity firm L Catterton took it private in a deal valued at roughly $680 million, completed in October that year. For buyers, the practical takeaway is that Thorne is a large, well-funded company rather than a small label, which matters when you are trusting it to keep certifying every batch.
+          </p>
+
+          <p>
+            Thorne also leans heavily on NSF Certified for Sport across its sports line. Its whey isolate, plant protein, Collagen Fit and RecoveryPro are all listed by Thorne as NSF Certified for Sport at the time of writing. That is unusual breadth; many brands certify one hero product and leave the rest of the line uncertified. If you need every product in your cabinet to be cleared for competition, Thorne is one of the few brands where that is easy.
+          </p>
+
+          <p>
+            The flip side is that Thorne protein is not designed to win taste tests. Buyer feedback generally describes the vanilla and chocolate as mild and pleasant rather than indulgent, and the brand offers only those two flavors of whey. If flavor variety is high on your list, a brand like those in our <a href="/best-tasting-protein-powder/">best tasting protein powder</a> guide will suit you better, and you can decide whether certification is worth giving that up.
+          </p>
+        </div>
+
+        <!-- Picks -->
+        <div id="top-picks" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            3. The Thorne Protein Range, Ranked
+          </h2>
+
+          <p>
+            Thorne lists more than a dozen products under protein, but most are detox formulas, bundles or collagen for skin. These four are the ones a protein buyer should actually consider, ranked for that job, plus one certified alternative from another brand. Figures are from Thorne's product pages and retailer labels at the time of writing and vary slightly by flavor, so check the tub you buy. We ranked on label analysis, certification status and approximate cost per 25 g of protein, not on our own lab or taste tests.
+          </p>
+
+          {PRODUCTS.map((product, index) => (
+            <div id={product.id} class="scroll-mt-24 mt-12 first:mt-8">
+              <div class="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                <div class="bg-gray-900 px-6 py-4 flex items-center justify-between">
+                  <div class="flex items-center gap-3">
+                    <span class="bg-[#FF4500] text-white w-8 h-8 rounded-full flex items-center justify-center text-sm font-black">
+                      {index + 1}
+                    </span>
+                    {productImages[product.id] && (
+                      <img
+                        src={productImages[product.id]}
+                        alt={product.name}
+                        loading="lazy"
+                        width="40"
+                        height="40"
+                        class="w-10 h-10 rounded-lg bg-white object-contain p-1 shrink-0"
+                      />
+                    )}
+                    <div>
+                      <p class="text-white font-black text-lg">{product.name}</p>
+                      <p class="text-gray-400 text-xs">{product.category}</p>
+                    </div>
+                  </div>
+                  <span class="bg-[#38BDF8]/20 text-[#38BDF8] px-3 py-1 rounded-full text-xs font-bold hidden sm:block">
+                    {product.badge}
+                  </span>
+                </div>
+                <div class="p-6">
+                  {product.rating && (
+                  <div class="flex items-center gap-2 mb-4">
+                    <div class="flex text-yellow-400">
+                      {[...Array(5)].map((_, i) => (
+                        <svg
+                          class={`w-4 h-4 ${i < Math.floor(product.rating) ? "fill-current" : "text-gray-200"}`}
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                        >
+                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        </svg>
+                      ))}
+                    </div>
+                    <span class="text-gray-500 text-sm font-bold">{product.rating}</span>
+                    {product.reviewCount && <span class="text-gray-400 text-xs">({product.reviewCount.toLocaleString()} retailer reviews)</span>}
+                  </div>
+                  )}
+
+                  <SpecGrid specs={product.specs} />
+
+                  <p class="text-gray-700 leading-relaxed mb-6">{product.description}</p>
+
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                    <div class="bg-green-50 rounded-xl p-4">
+                      <p class="text-xs font-black uppercase tracking-widest text-green-700 mb-3">Pros</p>
+                      <ul class="space-y-2">
+                        {product.pros.map((pro) => (
+                          <li class="flex items-start gap-2 text-sm text-green-800">
+                            <svg class="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            {pro}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div class="bg-red-50 rounded-xl p-4">
+                      <p class="text-xs font-black uppercase tracking-widest text-red-700 mb-3">Cons</p>
+                      <ul class="space-y-2">
+                        {product.cons.map((con) => (
+                          <li class="flex items-start gap-2 text-sm text-red-800">
+                            <svg class="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                            {con}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+
+                  <div class="bg-gray-50 rounded-xl p-4 border border-gray-100">
+                    <p class="text-xs font-black uppercase tracking-widest text-gray-500 mb-1">The Bottom Line</p>
+                    <p class="text-gray-900 font-bold">{product.bottomLine}</p>
+                  </div>
+
+                  <a
+                    href={amazonLink(product.amazonUrl, product.name, product.id)}
+                    target="_blank"
+                    rel="sponsored nofollow noopener"
+                    class="mt-6 block bg-[#FF4500] hover:bg-[#E63E00] text-white text-center py-4 rounded-xl font-black no-underline transition-colors uppercase tracking-widest text-sm"
+                  >
+                    Check Price &rarr;
+                  </a>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div id="whey-label" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            4. The Whey Isolate Label, Line by Line
+          </h2>
+
+          <p>
+            Thorne's supplement facts list 25 g of whey protein isolate per scoop, which delivers about 21 g of actual protein; the gap is normal, because isolate powder is roughly 85 to 90 percent protein by weight. Calories run about 100 per scoop, with fat under a gram, and the label lists about 75 mg of sodium and 94 mg of calcium, per Thorne's product page at the time of writing. Leucine, the amino acid most tied to muscle protein synthesis, lands around 2.2 g per scoop by retailer listings.
+          </p>
+
+          <p>
+            The sweetening is the detail most buyers miss. Thorne uses evaporated cane juice sugar alongside rebaudioside A, a purified stevia extract, rather than sucralose or acesulfame potassium. That means a few grams of sugar per scoop, with listings showing 2 to 3 g depending on flavor and label version. For most people that is trivial, but if you are strict about zero sugar, it is worth knowing before you assume isolate means sugar-free.
+          </p>
+
+          <p>
+            Thickeners are carboxymethylcellulose gum and xanthan gum, and the flavors are described as natural. Thorne also adds a 30 mg blend of bromelain and papain, the protein-digesting enzymes from pineapple and papaya. There is no proprietary blend hiding amounts, no added free amino acids that could signal amino spiking, and no long list of extras. Thorne lists it as gluten-free and soy-free.
+          </p>
+
+          <div class="overflow-hidden border border-gray-200 rounded-2xl my-8">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Label item</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Thorne Whey Protein Isolate (per scoop)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Protein</td>
+                    <td class="px-4 py-4 text-gray-700">About 21 g, from whey protein isolate</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Calories</td>
+                    <td class="px-4 py-4 text-gray-700">About 100</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Sugar</td>
+                    <td class="px-4 py-4 text-gray-700">About 2-3 g, from cane juice sugar</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Sweeteners</td>
+                    <td class="px-4 py-4 text-gray-700">Cane juice sugar, rebaudioside A (stevia)</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Enzymes</td>
+                    <td class="px-4 py-4 text-gray-700">Bromelain and papain, 30 mg</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Certification</td>
+                    <td class="px-4 py-4 text-gray-700">NSF Certified for Sport</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <p>
+            Put together, this is an honest, conservative label. The weak spot is dose rather than quality: 21 g is fine for most adults, but a 90 kg lifter aiming for 0.4 g of protein per kg per meal wants closer to 36 g, which takes nearly two scoops. If you want to work out your own per-meal target before choosing a tub, our guide to <a href="/how-much-protein-do-i-need/">how much protein you need</a> walks through the numbers.
+          </p>
+        </div>
+
+        <div id="nsf" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            5. What NSF Certified for Sport Actually Covers
+          </h2>
+
+          <p>
+            NSF Certified for Sport is a third-party program run by NSF, the independent public health organization, and it is recognized by major US leagues and many anti-doping bodies. A certified product is checked to confirm that what is on the label is in the tub, screened for a long list of substances banned in sport, and tested for contaminants, and the manufacturing facility is audited. Certification applies to specific products and flavors, which is why you should check the exact item in NSF's database.
+          </p>
+
+          <p>
+            For a drug-tested athlete, this is the whole game. A tainted supplement is not an excuse under strict liability rules, and an uncertified powder that is accidentally contaminated with a stimulant or a prohormone can end a season. Thorne's protein exists for exactly that buyer, and so does every product in its range that carries the mark.
+          </p>
+
+          <p>
+            For everyone else, the seal still has value, just less. It tells you the protein figure is real, which matters in a category where amino spiking has been a documented problem, and it gives you some assurance on contaminants. What it does not tell you is that the product tastes good, digests well for you, or is the best value, and it is not a guarantee of zero heavy metals; it means levels fall within the program's limits.
+          </p>
+
+          <p>
+            It also helps to know the alternatives. Informed Choice and Informed Sport run similar banned-substance screening, and some brands, like Transparent Labs, publish batch lab results instead of carrying a sport seal. A recreational lifter can reasonably treat any of these as good enough. A competing athlete should follow whatever their governing body recommends, which in the US is very often NSF Certified for Sport specifically.
+          </p>
+
+          <p>
+            One practical tip: Thorne's own product pages flag NSF certification clearly, but listings can change between batches and flavors. Before you buy for competition use, search the product name in NSF's certified products database and confirm the flavor you want is listed. That takes about a minute and is far cheaper than a positive test.
+          </p>
+        </div>
+
+        <div id="cost" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            6. Cost per 25 g: The Thorne Premium in Numbers
+          </h2>
+
+          <p>
+            Protein powders are easiest to compare on cost per 25 g of protein, because scoop sizes and protein per scoop vary so much. Using Thorne's list prices at the time of writing, and treating every figure as approximate, the whey isolate works out to roughly $2.40 to $2.70 per 25 g. Amazon and other retailers sometimes discount it, but Thorne rarely goes on deep sale, so do not expect the price to fall far.
+          </p>
+
+          <div class="overflow-hidden border border-gray-200 rounded-2xl my-8">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Product</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Approx. list price</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Protein per serving</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Approx. cost per 25 g</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Whey Protein Isolate</td>
+                    <td class="px-4 py-4 text-gray-700">About $65, 30 scoops</td>
+                    <td class="px-4 py-4 text-gray-700">About 21 g</td>
+                    <td class="px-4 py-4 text-gray-700">About $2.40-2.70</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Plant Protein</td>
+                    <td class="px-4 py-4 text-gray-700">About $49, 20 servings</td>
+                    <td class="px-4 py-4 text-gray-700">About 21-22 g</td>
+                    <td class="px-4 py-4 text-gray-700">About $2.60-2.90</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Collagen Fit</td>
+                    <td class="px-4 py-4 text-gray-700">About $56, 30 scoops</td>
+                    <td class="px-4 py-4 text-gray-700">About 14 g</td>
+                    <td class="px-4 py-4 text-gray-700">About $3.20-3.40</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">RecoveryPro</td>
+                    <td class="px-4 py-4 text-gray-700">About $56, 12 scoops</td>
+                    <td class="px-4 py-4 text-gray-700">About 13 g whey</td>
+                    <td class="px-4 py-4 text-gray-700">About $8 or more</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <p>
+            For context, a mainstream whey isolate bought in a large tub on sale often lands somewhere around $1.20 to $1.70 per 25 g, and a big tub of whey concentrate blend can be cheaper still. So the Thorne premium is real money: drink one shake a day and you could pay roughly $25 to $35 a month more than with a budget isolate. Over a year, that is a few hundred dollars for the certification and the brand.
+          </p>
+
+          <p>
+            That premium is easier to justify if you would otherwise be buying a different NSF-certified isolate, because certified products as a group cost more. Against other certified isolates, Thorne is competitive rather than cheap, and the difference between it and its closest rivals is usually a matter of cents per serving rather than dollars.
+          </p>
+
+          <p>
+            The other two products in the table are where the value argument falls apart. Collagen Fit and RecoveryPro are not built to be efficient protein sources, and treating them as such makes them look very expensive. Judge them on what they are for, which we cover below, and buy your daily protein elsewhere in the range.
+          </p>
+        </div>
+
+        <div id="vs-rivals" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            7. Thorne vs. the Other Certified Isolates
+          </h2>
+
+          <p>
+            Thorne's closest rival is <strong>Klean Athlete Klean Isolate</strong>, another practitioner-channel brand with NSF Certified for Sport status. Klean Isolate is unflavored and unsweetened, with about 20 g of protein per scoop, so it suits people who want to stir protein into coffee, oats or smoothies. Thorne is the better choice if you want a ready-flavored shake; Klean wins if you want no sweetener at all.
+          </p>
+
+          <p>
+            <strong>Dymatize ISO100</strong> is the value play among certified isolates. Dymatize states it carries Informed Choice certification, it delivers about 25 g of protein per scoop, and it is usually considerably cheaper per 25 g than Thorne, with far more flavors. If you are not bound by an NSF-only rule, it is hard to argue Thorne is the better buy on numbers alone. Our <a href="/dymatize-protein-powder-review/">Dymatize protein powder review</a> covers that range in detail.
+          </p>
+
+          <p>
+            Transparent Labs takes a different route, publishing lab results rather than relying on a sport seal, and its grass-fed isolate carries more protein per scoop than Thorne. Momentous, which also leans on sport certification and sells into the same pro-team market, is the most direct lifestyle competitor; see our <a href="/momentous-protein-powder-review/">Momentous protein powder review</a> and our <a href="/transparent-labs-protein-powder-review/">Transparent Labs review</a> for those labels.
+          </p>
+
+          <p>
+            Where Thorne pulls ahead is consistency across a whole range. If you also want certified creatine, electrolytes, a multivitamin and a plant protein for a dairy-free partner, Thorne can cover all of it under one certification. Where it falls behind is dose and price: most rivals give you more protein per scoop for the same money or less.
+          </p>
+
+          <p>
+            There is also the sweetener question. Thorne avoids sucralose, which some buyers prefer, but it does use a little cane sugar. If you want a stevia-only or completely unsweetened isolate, Transparent Labs or Klean Isolate respectively are the cleaner fits. If you are comparing a wider field of short-label powders, our <a href="/best-clean-protein-powder/">best clean protein powder</a> guide ranks Thorne against them.
+          </p>
+        </div>
+
+        <div id="rest-of-range" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            8. Plant Protein, Collagen Fit and RecoveryPro: Worth It?
+          </h2>
+
+          <p>
+            <strong>Thorne Plant Protein</strong> blends pea, brown rice and chia protein, and Thorne says the mix supplies all nine essential amino acids. A two-scoop serving delivers about 22 g of protein, with one chocolate panel showing 21 g, at around 130 calories for vanilla and 140 for chocolate, per retailer labels at the time of writing. It is NSF Certified for Sport and free of dairy, soy and gluten, which makes it one of the few certified vegan powders that is easy to find.
+          </p>
+
+          <p>
+            The catch is the same as the whey: price. At roughly $49 for 20 two-scoop servings, Plant Protein costs a little more per 25 g than the whey isolate. Plant proteins also tend to carry more heavy metals than dairy, so the NSF contaminant screening is arguably worth more here than on the whey. If you are vegan and drug-tested, it is a strong pick; if not, compare it with the options in our <a href="/best-plant-based-protein-powder/">best plant-based protein powder</a> guide.
+          </p>
+
+          <p>
+            <strong>Collagen Fit</strong> is an unflavored bovine collagen peptide powder with 15 g of collagen per scoop, which retailer labels list as about 14 g of protein, plus 125 mg of nicotinamide riboside. It is NSF Certified for Sport. Collagen is an incomplete protein, missing tryptophan and low in leucine, so it does not replace a whey shake for muscle building. Buy it for its intended job, connective tissue support, and count it as a small top-up to your daily protein at most.
+          </p>
+
+          <p>
+            <strong>RecoveryPro</strong> is a chocolate bedtime formula built on hydrolyzed whey concentrate with L-tryptophan, magnesium bisglycinate and GABA. Thorne's copy cites 13 g of whey protein per serving, and a tub holds 12 servings. That makes it a sleep-and-recovery product with some protein in it, not a protein powder you would buy for value. If you want protein before bed, a casein shake is far cheaper; see our <a href="/best-casein-protein-powder/">best casein protein powder</a> guide.
+          </p>
+
+          <p>
+            The other items Thorne files under protein, such as the MediClear detox formulas and the Collagen Plus skin product, are aimed at different goals and are priced accordingly. They are outside the scope of this review, and none is a sensible pick if your goal is simply hitting a daily protein target.
+          </p>
+        </div>
+
+        <div id="who-should-skip" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            9. Who Should Skip Thorne
+          </h2>
+
+          <p>
+            Skip Thorne if cost per gram is your main concern. Anyone bulking, feeding a family of lifters, or using two or three scoops a day will spend far less with a large tub of mainstream isolate or blend. The difference between roughly $2.50 and roughly $1.40 per 25 g adds up fast at that volume, and nothing in Thorne's label makes up for it if you do not need the certification.
+          </p>
+
+          <p>
+            Skip it if you want a big single scoop. At about 21 g per scoop for the whey, you need more powder to hit 30 g or more per shake, which raises the effective cost again. Lifters who prefer one-scoop convenience at higher doses will be happier with an isolate that lists 25 g to 28 g per serving.
+          </p>
+
+          <p>
+            Skip it if flavor variety is important. Two flavors of whey and two of plant protein is a narrow menu, and buyer reviews describe them as good rather than exciting. People who rely on dessert flavors to stay consistent with protein should look at brands like those we cover in our <a href="/pescience-protein-powder-review/">PEScience protein powder review</a> instead.
+          </p>
+
+          <p>
+            And skip the whey if you are strict about zero sugar or have a milk allergy. The cane sugar is small, but it is there, and whey isolate still contains milk protein even though most lactose is filtered out. People with a diagnosed milk allergy, kidney disease or other medical conditions should check with a doctor or registered dietitian before adding any protein powder; nothing in this review is medical advice.
+          </p>
+        </div>
+
+        <div id="where-to-buy" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            10. Where to Buy Thorne Without Getting a Fake
+          </h2>
+
+          <p>
+            Thorne is popular enough to attract counterfeiters and lookalike sites. While researching this review we saw web domains using Thorne's name and product photos and listing Plant Protein at a fraction of the roughly $49 list price. Treat any Thorne product priced far below what Thorne, Amazon and established retailers charge as a red flag, because a fake certified product defeats the reason you bought it.
+          </p>
+
+          <p>
+            The safe channels are Thorne's own site, Amazon listings sold by Thorne or shipped from Amazon's own inventory, practitioner platforms such as Fullscript, and established retailers. On Amazon, check the seller name on the listing before you buy, and avoid marketplace sellers offering unusual discounts. When the tub arrives, check that the seal is intact and the lot number and best-by date are printed.
+          </p>
+
+          <p>
+            Travel packs are worth knowing about. Thorne sells single-serve packets of both whey flavors, which are useful for gym bags and trips, though they cost more per serving than the tub. If you are trying Thorne for the first time, a pack of single servings is a cheaper way to check you like the taste before committing to 30 scoops.
+          </p>
+
+          <p>
+            Finally, buy the size you will finish. Whey isolate keeps well when sealed, but an opened tub that sits for months in a humid kitchen will clump and lose flavor. One 30-scoop tub a month for a single daily shake is the right rhythm for most people, and buying from a channel with reliable stock beats chasing a deal from a seller you do not recognize.
+          </p>
+        </div>
+
+        <!-- Common Mistakes -->
+        <div id="mistakes" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            11. Common Mistakes to Avoid
+          </h2>
+
+          <div class="space-y-6 my-8">
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Assuming every Thorne product is a protein powder</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Thorne files collagen, detox formulas and a bedtime recovery drink under protein. Only the whey isolate and Plant Protein are efficient daily protein sources. Collagen Fit and RecoveryPro serve other goals, and counting them toward your protein target makes them look far more expensive than they are for their actual job.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Skipping the NSF database check</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Certification covers specific products and flavors, and listings can change. If you are drug-tested, search the exact product and flavor in NSF's certified products database before buying. It takes a minute, and it protects you if a listing changed, a flavor was reformulated, or a retailer is selling an older or uncertified version.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Buying from a too-cheap seller</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Lookalike sites use Thorne's name and photos and list products well under the normal price. A counterfeit tub defeats the purpose of buying a certified product. Stick to Thorne, Amazon listings sold by Thorne or Amazon, practitioner platforms and established retailers, and check the seal and lot number on arrival.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Ignoring the 21 g scoop</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Thorne's whey delivers about 21 g per scoop, not 25 g. If your meal target is 30 g or more, you need extra powder, which raises the real cost per serving. Compare products on cost per 25 g of protein rather than price per tub, or Thorne will look cheaper than it is.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Treating isolate as dairy-safe</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Whey isolate is low in lactose, which helps many lactose-intolerant people, but it is still milk protein. Anyone with a diagnosed milk allergy should not use it, and should ask an allergist or dietitian about alternatives. Thorne Plant Protein is the dairy-free option in the range.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ -->
+        <div id="faq" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            12. Frequently Asked Questions
+          </h2>
+
+          <div class="space-y-6">
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is Thorne protein powder worth the money?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                It is worth it if you need NSF Certified for Sport status or want one of the most documented labels available. At roughly $2.40 to $2.70 per 25 g of protein at list price, it costs far more than mainstream isolates. Recreational lifters without a testing requirement can get the same protein quality for much less from a cheaper certified isolate.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">How much protein is in Thorne Whey Protein Isolate?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                About 21 g of protein per scoop, from 25 g of whey protein isolate, in roughly 100 calories, per Thorne's label at the time of writing. Figures vary slightly between vanilla and chocolate. That is a smaller dose than many rival isolates, which often list 25 g or more per scoop, so heavier lifters may need more than one scoop.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is Thorne whey NSF Certified for Sport?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Yes. Thorne lists its Whey Protein Isolate in both flavors as NSF Certified for Sport, along with its Plant Protein, Collagen Fit and RecoveryPro at the time of writing. Certification applies to specific products and flavors, so drug-tested athletes should confirm the exact item in NSF's certified products database before buying.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">What sweetener does Thorne whey use?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Thorne sweetens its whey isolate with evaporated cane juice sugar and rebaudioside A, a purified stevia extract, rather than sucralose or acesulfame potassium. That leaves a few grams of sugar per scoop, roughly 2 to 3 g depending on the listing. For most people that is negligible, but strict zero-sugar dieters should know it is there.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Is Thorne protein good for weight loss?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                It can fit a calorie deficit well, because a scoop is about 100 calories for 21 g of protein and protein helps with fullness. It is not uniquely suited to weight loss, though; any lean isolate does the same job for less money. Our guide to the best protein powder for weight loss compares cheaper options with similar macros.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Does Thorne make a vegan protein powder?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Yes. Thorne Plant Protein blends pea, brown rice and chia protein for about 21 to 22 g of protein per two-scoop serving, per retailer labels, and it is NSF Certified for Sport. It is free of dairy, soy and gluten. It costs slightly more per 25 g of protein than Thorne's whey isolate at list price.
+              </p>
+            </div>
+
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+              <h3 class="text-lg font-bold text-gray-900 mb-2">Where is the safest place to buy Thorne?</h3>
+              <p class="text-gray-700 text-sm leading-relaxed">
+                Buy from Thorne's own site, Amazon listings sold by Thorne or Amazon, practitioner platforms such as Fullscript, or established retailers. We found lookalike sites listing Thorne products far below normal prices, which is a classic counterfeit sign. Check the seller, the seal and the printed lot number, and avoid deals that look too good to be real.
+              </p>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Related Guides -->
+        <div class="mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">Related Whey Isolate Guides</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <a href="/best-whey-protein-isolate/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#FF4500] font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Whey Protein Isolate</h3>
+              <p class="text-gray-500 text-sm mt-2">Thorne ranked against every major isolate on label, certification and cost.</p>
+            </a>
+            <a href="/best-clean-protein-powder/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#1E90FF] font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Clean Protein Powder</h3>
+              <p class="text-gray-500 text-sm mt-2">Short-label powders with third-party testing you can check.</p>
+            </a>
+            <a href="/bloom-protein-powder-review/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#38BDF8] font-black text-xs uppercase tracking-widest mb-2">Brand Review</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Bloom Protein Powder Review</h3>
+              <p class="text-gray-500 text-sm mt-2">A lifestyle brand's isolate and clear protein, checked against the label.</p>
+            </a>
+          </div>
+        </div>
+
+        <!-- Closing -->
+        <div class="mt-16 bg-gray-900 text-white rounded-2xl p-8">
+          <h2 class="text-2xl font-black text-white mb-4">The Bottom Line</h2>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            Thorne Whey Protein Isolate is a well-made, honestly labeled protein with the strongest certification story in the category, and for drug-tested athletes it is one of the easiest safe choices. Its weaknesses are a modest 21 g scoop, two flavors and a price that runs well above mainstream isolates.
+          </p>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            Buy it if the NSF seal matters to your sport, your job or your peace of mind. If it does not, a cheaper certified isolate from our whey isolate rankings will give you the same protein for a good deal less, and you can put the savings toward food.
+          </p>
+        </div>
+
+        <MoreInCategory category="Brand Reviews" links={moreInCategory} />
+
+        <AuthorBio />
+      </div>
+    </div>
+  </article>
+</Layout>
