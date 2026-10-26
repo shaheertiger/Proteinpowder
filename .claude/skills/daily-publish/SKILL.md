@@ -153,6 +153,11 @@ Then confirm the site builds:
 npm run build
 ```
 
+The build also regenerates `/llms.txt` and `/llms-full.txt`; new pages are indexed
+automatically, so neither needs an edit. It fails if a curated link in
+`src/data/llms-full-intro.md` points at a page or `#anchor` that no longer exists —
+fix the link there.
+
 ## 5b. Affiliate links for any new products
 
 If the batch added a roundup with a `PRODUCTS` array, its products have no direct
