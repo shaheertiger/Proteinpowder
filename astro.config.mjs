@@ -3,6 +3,7 @@ import react from '@astrojs/react';
 import tailwind from '@astrojs/tailwind';
 import sitemap from '@astrojs/sitemap';
 import { SITE_URL } from './site.config.mjs';
+import markdownTwins from './src/integrations/markdown-twins.mjs';
 
 // Pillar pages (the "best-*" roundups the clusters are built to support). They get
 // the highest sitemap priority after the home page and the guide index.
@@ -133,6 +134,9 @@ export default defineConfig({
         return item;
       },
     }),
+    // Writes a Markdown twin of every page (/slug.md) and /llms.txt into dist
+    // for AI agents; middleware.ts serves them. See the integration file.
+    markdownTwins(),
   ],
   server: {
     port: 3000,

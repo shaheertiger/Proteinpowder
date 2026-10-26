@@ -6,6 +6,7 @@ import AdUnit from "../components/AdUnit.astro";
 import { ADSENSE_CLIENT, GA_MEASUREMENT_ID, SITE_NAME } from "../data/site";
 import { NAV_GROUPS } from "../data/nav";
 import "../styles/global.css";
+import { toMarkdownPath } from "@dualmark/core";
 
 interface Props {
   title?: string;
@@ -34,6 +35,10 @@ const {
   jsonLd,
   noindex,
 } = Astro.props;
+
+// Every indexable page has a Markdown twin for AI agents (/slug.md), written at
+// build time by src/integrations/markdown-twins.mjs.
+const markdownTwin = noindex ? null : toMarkdownPath(Astro.url.pathname);
 ---
 
 <!doctype html>
@@ -62,6 +67,7 @@ const {
       rel="stylesheet"
     />
     <link rel="sitemap" href="/sitemap-index.xml" />
+    {markdownTwin && <link rel="alternate" type="text/markdown" href={markdownTwin} />}
     <meta name="google-adsense-account" content={ADSENSE_CLIENT}>
     <script async src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT}`}
      crossorigin="anonymous"></script>
