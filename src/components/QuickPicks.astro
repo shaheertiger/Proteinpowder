@@ -1,5 +1,10 @@
 ---
+// "Our Top Picks" near the top of a roundup: a row of swipeable cards on phones
+// (the next card peeks in so it is obvious the row scrolls), with arrows and
+// dots underneath. Each card names the award, links down to the full review and
+// carries its own buy button.
 import { amazonLink } from "../data/affiliate";
+import productImages from "../data/product-images.json";
 import AdUnit from "./AdUnit.astro";
 
 interface Product {
@@ -14,32 +19,80 @@ interface Props {
   products: Product[];
   heading?: string;
 }
-const { products, heading = "Our Picks at a Glance" } = Astro.props;
+const { products, heading = "Our Top Picks" } = Astro.props;
 const top = products[0];
+const images = productImages as Record<string, string>;
 ---
 
-<div id="quick-picks" class="bg-gray-50 border border-gray-200 rounded-2xl p-5 lg:p-8 my-8 not-prose">
-  <p class="text-xs font-black uppercase tracking-widest text-[#FF4500] mb-4">{heading}</p>
-  <ul class="list-none p-0 m-0 divide-y divide-gray-200">
-    {products.map((product) => (
-      <li class="flex items-center gap-3 py-3 first:pt-0 last:pb-0">
-        <div class="min-w-0 flex-1 text-sm text-gray-700">
-          {product.badge && <span class="block text-xs font-black uppercase tracking-wide text-gray-900">{product.badge}</span>}
-          <a href={`#${product.id}`} class="text-[#1E90FF] font-bold no-underline hover:underline">{product.name}</a>
-          {product.category && <span class="text-gray-500"> — {product.category}</span>}
+<div id="quick-picks" class="not-prose my-8 -mx-4 md:mx-0" data-carousel>
+  <div class="flex items-end justify-between gap-4 px-4 md:px-0 mb-4">
+    <p class="text-xl md:text-2xl font-black text-gray-900 m-0">{heading}</p>
+    <a href={`#${top?.id ?? ""}`} class="text-sm font-bold text-[#0B64C0] no-underline hover:underline whitespace-nowrap">See full reviews</a>
+  </div>
+
+  <ul
+    class="no-scrollbar list-none m-0 flex gap-3 overflow-x-auto snap-x snap-mandatory scroll-smooth px-4 md:px-0 pt-3 pb-1 scroll-px-4 md:scroll-px-0"
+    data-track
+    aria-label={heading}
+  >
+    {products.map((product, index) => (
+      <li class:list={[
+        "relative snap-start shrink-0 w-[82%] sm:w-[60%] md:w-[calc(50%-0.375rem)] flex flex-col rounded-2xl border bg-white",
+        index === 0 ? "border-2 border-amber-300" : "border-gray-200 bg-gray-50",
+      ]}>
+        {index === 0 && (
+          <span class="absolute -top-3 left-4 bg-amber-300 text-gray-900 text-[10px] font-black uppercase tracking-widest px-2.5 py-1 rounded-md">
+            Our #1 Pick
+          </span>
+        )}
+        <div class="flex flex-col flex-1 p-4 pt-5">
+          <a href={`#${product.id}`} class="text-sm text-gray-700 underline decoration-gray-300 underline-offset-2 hover:text-gray-900 leading-snug">
+            {index + 1}. {product.name}
+          </a>
+          {product.badge && <p class="text-lg font-black text-gray-900 leading-tight m-0 mt-1.5">{product.badge}</p>}
+          {product.bottomLine && <p class="text-[0.9375rem] text-gray-600 leading-relaxed m-0 mt-2.5 line-clamp-4">{product.bottomLine}</p>}
+          <div class="mt-auto pt-4 flex items-end justify-between gap-3">
+            <div>
+              <a
+                href={amazonLink(product.amazonUrl, product.name, product.id)}
+                target="_blank"
+                rel="sponsored nofollow noopener"
+                class="inline-flex items-center bg-[#FF4500] hover:bg-[#E63E00] text-white text-sm font-black px-4 py-2.5 rounded-lg no-underline whitespace-nowrap"
+              >
+                Check Price
+              </a>
+              <p class="text-[11px] text-gray-500 m-0 mt-1">On Amazon</p>
+            </div>
+            {images[product.id] && (
+              <img
+                src={images[product.id]}
+                alt=""
+                loading="lazy"
+                decoding="async"
+                width="64"
+                height="64"
+                class="w-16 h-16 rounded-xl bg-white border border-gray-200 object-contain p-1 shrink-0"
+              />
+            )}
+          </div>
         </div>
-        <a
-          href={amazonLink(product.amazonUrl, product.name, product.id)}
-          target="_blank"
-          rel="sponsored nofollow noopener"
-          class="shrink-0 bg-[#FF4500] hover:bg-[#E63E00] text-white text-xs font-black uppercase tracking-wide px-4 py-3 rounded-lg no-underline whitespace-nowrap"
-        >
-          Check Price
-        </a>
       </li>
     ))}
   </ul>
-  <p class="text-xs text-gray-500 mt-4 mb-0">
+
+  <div class="hidden items-center justify-center gap-3 mt-4 px-4" data-controls>
+    <button type="button" class="w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200 grid place-items-center disabled:opacity-40" aria-label="Previous pick" data-prev>
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"></path></svg>
+    </button>
+    <div class="flex items-center gap-1.5 bg-gray-100 rounded-full px-3 py-2.5" data-dots aria-hidden="true">
+      {products.map(() => <span class="w-1.5 h-1.5 rounded-full bg-gray-300 transition-colors"></span>)}
+    </div>
+    <button type="button" class="w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200 grid place-items-center disabled:opacity-40" aria-label="Next pick" data-next>
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg>
+    </button>
+  </div>
+
+  <p class="text-xs text-gray-500 m-0 mt-3 px-4 md:px-0">
     We may earn a commission when you buy through these links, at no extra cost to you.
   </p>
 </div>
@@ -57,17 +110,21 @@ const top = products[0];
       display: none;
     }
   }
+  [data-carousel] [data-dots] span.is-active {
+    background: #111827;
+    width: 0.875rem;
+  }
 </style>
 
 {top && (
   <div
     data-qp-sticky
     hidden
-    class="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-3 z-50 shadow-[0_-4px_10px_rgba(0,0,0,0.05)]"
+    class="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-2.5 z-50 shadow-[0_-4px_10px_rgba(0,0,0,0.05)]"
   >
     <div class="flex items-center gap-3">
       <div class="min-w-0 flex-1">
-        <p class="text-[10px] font-black uppercase tracking-widest text-[#FF4500] m-0">{top.badge ?? "Our Top Pick"}</p>
+        <p class="text-[10px] font-black uppercase tracking-widest text-[#C93500] m-0">{top.badge ?? "Our Top Pick"}</p>
         <p class="text-sm font-bold text-gray-900 m-0 truncate">{top.name}</p>
       </div>
       <a
@@ -83,6 +140,38 @@ const top = products[0];
 )}
 
 <script is:inline>
+  // Carousel arrows and dots. The row is a plain scroll-snap list, so it still
+  // swipes without this script.
+  (function () {
+    var root = document.querySelector("[data-carousel]");
+    if (!root) return;
+    var track = root.querySelector("[data-track]");
+    var controls = root.querySelector("[data-controls]");
+    var dots = root.querySelectorAll("[data-dots] span");
+    var prev = root.querySelector("[data-prev]");
+    var next = root.querySelector("[data-next]");
+    var cards = track.children;
+    function step() {
+      return cards.length > 1 ? cards[1].offsetLeft - cards[0].offsetLeft : track.clientWidth;
+    }
+    function update() {
+      var overflow = track.scrollWidth > track.clientWidth + 4;
+      controls.style.display = overflow ? "flex" : "none";
+      var max = track.scrollWidth - track.clientWidth;
+      var i = Math.round(track.scrollLeft / step());
+      if (track.scrollLeft >= max - 4) i = cards.length - 1;
+      for (var d = 0; d < dots.length; d++) dots[d].classList.toggle("is-active", d === i);
+      prev.disabled = track.scrollLeft <= 4;
+      next.disabled = track.scrollLeft >= max - 4;
+    }
+    prev.addEventListener("click", function () { track.scrollBy({ left: -step(), behavior: "smooth" }); });
+    next.addEventListener("click", function () { track.scrollBy({ left: step(), behavior: "smooth" }); });
+    var raf;
+    track.addEventListener("scroll", function () { cancelAnimationFrame(raf); raf = requestAnimationFrame(update); }, { passive: true });
+    window.addEventListener("resize", update);
+    update();
+  })();
+
   // The layout renders its own sticky CTA after the page body, so wait for the
   // whole document before deciding which bar to keep.
   document.addEventListener("DOMContentLoaded", function () {

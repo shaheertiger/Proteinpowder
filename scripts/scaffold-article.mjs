@@ -54,9 +54,7 @@ ${row.map((cell, j) => `                    <td class="px-4 py-4 ${j === 0 ? 'fo
 
 export function render(spec) {
   const tocItems = [...spec.toc.map(([a, l]) => [a, l]), ['mistakes', 'Common Mistakes'], ['faq', 'FAQ']];
-  const toc = tocItems.map(([a, l], i) =>
-    `          <a href="#${a}" class="text-sm text-gray-600 hover:text-[#1E90FF] no-underline py-1 font-medium">${i + 1}. ${l}</a>`
-  ).join('\n');
+  const toc = tocItems.map(([a, l]) => `      <a href="#${a}">${l}</a>`).join('\n');
 
   const sections = spec.sections.map((s, i) =>
 `        <div id="${s.anchor}" class="scroll-mt-24">
@@ -72,12 +70,14 @@ ${renderBlocks(s.blocks)}        </div>
   })), 6);
 
   const faqHtml = spec.faq.map(([question, answer]) =>
-`            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
-              <h3 class="text-lg font-bold text-gray-900 mb-2">${question}</h3>
-              <p class="text-gray-700 text-sm leading-relaxed">
-                ${answer}
-              </p>
-            </div>
+`            <details class="faq-item">
+              <summary><h3>${question}</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  ${answer}
+                </p>
+              </div>
+            </details>
 `).join('\n');
 
   const mistakesHtml = spec.mistakes.map(([heading, body]) =>
@@ -102,13 +102,12 @@ ${renderBlocks(s.blocks)}        </div>
 
   return `---
 import Layout from "../layouts/Layout.astro";
+import ArticleHeader from "../components/ArticleHeader.astro";
+import TableOfContents from "../components/TableOfContents.astro";
 import MoreInCategory from "../components/MoreInCategory.astro";
 import AuthorBio from "../components/AuthorBio.astro";
 import { AUTHORS, DEFAULT_AUTHOR, authorSchema } from "../data/authors";
 import { SITE_NAME, SITE_URL } from "../data/site";
-import AuthorAvatar from "../components/AuthorAvatar.astro";
-import TrustBadge from "../components/TrustBadge.astro";
-import SocialProof from "../components/SocialProof.astro";
 import { pageDates } from "../data/dates";
 
 const moreInCategory = ${indent(spec.moreInCategory, 0)};
@@ -179,80 +178,19 @@ const schema = {
   }}
 >
   <article class="relative overflow-hidden">
-    <!-- Hero -->
-    <div class="bg-gray-900 py-16 lg:py-24 relative overflow-hidden">
-      <div class="max-w-4xl mx-auto px-4 relative z-10 text-center">
-        <div class="flex justify-center mb-6">
-          <TrustBadge />
-        </div>
-        <div class="flex justify-center gap-3 mb-6">
-          <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#FF4500]/20 text-[#FF4500] text-xs font-black uppercase tracking-widest border border-[#FF4500]/30">
-            ${spec.kicker}
-          </span>
-          <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-green-500/10 text-green-400 text-xs font-bold uppercase tracking-widest border border-green-500/20">
-            Research-Backed
-          </span>
-        </div>
-        <h1 class="text-4xl lg:text-6xl font-black text-white leading-tight mb-8">
-          ${spec.h1}
-        </h1>
-        <p class="text-xl text-gray-300 leading-relaxed mb-8 max-w-3xl mx-auto">
-          ${spec.heroLede}
-        </p>
-        <div class="flex flex-col sm:flex-row gap-4 justify-center">
-          <a
-            href="#${spec.toc[0][0]}"
-            class="px-8 py-4 bg-[#FF4500] hover:bg-[#E63E00] text-white font-black rounded-xl shadow-lg transition-all no-underline"
-          >
-            ${spec.cta1}
-          </a>
-          <a
-            href="#faq"
-            class="px-8 py-4 bg-white/10 hover:bg-white/20 text-white font-bold rounded-xl border border-white/10 no-underline"
-          >
-            Jump to the FAQ
-          </a>
-        </div>
-      </div>
-    </div>
+    <ArticleHeader kicker={${q(spec.kicker)}} badge="Research-Backed" author={author} dates={dates} label="Our standards">
+      <Fragment slot="title">${spec.h1}</Fragment>
+      ${spec.heroLede}
+    </ArticleHeader>
 
-    <!-- Author & Meta -->
-    <div class="max-w-3xl mx-auto px-4 pt-12">
-      <div class="flex items-center gap-6 border-b border-gray-100 pb-8">
-        <div class="flex items-center gap-3">
-          <AuthorAvatar size={48} />
-          <div>
-            <p class="text-sm font-bold text-gray-900">{author.name}</p>
-            <p class="text-xs text-gray-500 uppercase tracking-widest">{author.role}</p>
-          </div>
-        </div>
-        <div class="h-10 w-px bg-gray-200 hidden sm:block"></div>
-        <div class="hidden sm:block">
-          <p class="text-sm font-bold text-gray-900">Last Updated</p>
-          <p class="text-xs text-gray-500">{dates.display}</p>
-        </div>
-        <div class="hidden sm:block ml-auto">
-          <SocialProof />
-        </div>
-      </div>
-    </div>
-
-    <!-- Table of Contents -->
-    <div class="max-w-3xl mx-auto px-4 py-10">
-      <div class="bg-gray-50 border border-gray-200 rounded-2xl p-6 lg:p-8">
-        <h2 class="text-lg font-black text-gray-900 mb-4 flex items-center gap-2">
-          In This Guide
-        </h2>
-        <nav class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+    <TableOfContents>
 ${toc}
-        </nav>
-      </div>
-    </div>
+    </TableOfContents>
 
     <!-- Body -->
     <div class="max-w-3xl mx-auto px-4 pb-16 lg:pb-24">
       <div class="prose prose-lg prose-blue max-w-none text-gray-700 leading-relaxed">
-        <p class="text-2xl font-medium text-gray-900 mb-8 italic">
+        <p class="lede">
           ${spec.lede}
         </p>
 
@@ -274,7 +212,7 @@ ${mistakesHtml}
             ${n + 2}. Frequently Asked Questions
           </h2>
 
-          <div class="space-y-6">
+          <div class="faq-list">
 ${faqHtml}
           </div>
         </div>
@@ -288,7 +226,7 @@ ${relatedHtml}
         </div>
 
         <!-- Closing -->
-        <div class="mt-16 bg-gray-900 text-white rounded-2xl p-8">
+        <div class="mt-16 bg-gray-900 text-white rounded-2xl p-6 md:p-8">
           <h2 class="text-2xl font-black text-white mb-4">The Bottom Line</h2>
 ${closing}
         </div>

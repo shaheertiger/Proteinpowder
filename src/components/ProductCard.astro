@@ -1,0 +1,232 @@
+---
+// One ranked product in a roundup. Order follows the mobile pattern the big
+// review sites use: award, product, a buy button within the first screen of the
+// card, the key specs as a short list, then the write-up and pros/cons in tabs
+// so a phone reader can scan six products without scrolling through six essays.
+//
+// Without JavaScript both tab panels simply show one after the other.
+import { amazonLink } from "../data/affiliate";
+import productImages from "../data/product-images.json";
+
+interface Product {
+  id: string;
+  name: string;
+  brand?: string;
+  badge: string;
+  category: string;
+  description: string;
+  pros: string[];
+  cons: string[];
+  bottomLine: string;
+  specs?: Record<string, string>;
+  rating?: number;
+  reviewCount?: number;
+  amazonUrl?: string;
+}
+
+interface Props {
+  product: Product;
+  rank: number;
+  ratingLabel?: string;
+}
+
+const { product, rank, ratingLabel = "retailer reviews" } = Astro.props;
+const href = amazonLink(product.amazonUrl, product.name, product.id);
+const thumb = (productImages as Record<string, string>)[product.id];
+// Amazon image URLs carry their size in the file name (._SL160_.); ask for a
+// sharper one for the card. Unknown formats are used as they are.
+const image = thumb?.replace(/\._SL\d+_\./, "._SL400_.");
+const specs = Object.entries(product.specs ?? {});
+const top = rank === 1;
+const tabId = `tabs-${product.id}`;
+---
+
+<section
+  id={product.id}
+  class:list={[
+    "product-card scroll-mt-20 not-prose relative",
+    top
+      ? "mt-8 border-2 border-amber-300 rounded-2xl px-4 pb-6 pt-8 md:px-6"
+      : "mt-10 border-t border-gray-200 pt-8",
+  ]}
+>
+  {top && (
+    <span class="absolute -top-px left-4 -translate-y-1/2 inline-flex items-center gap-1.5 bg-amber-300 text-gray-900 text-[11px] font-black uppercase tracking-widest px-3 py-1.5 rounded-lg">
+      <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
+      Our #1 Pick
+    </span>
+  )}
+
+  <div class="flex items-start justify-between gap-3">
+    <h3 class="text-[1.375rem] leading-tight md:text-2xl font-black text-gray-900 m-0">
+      <span class="text-gray-400 font-bold mr-1">{rank}.</span>{product.name}
+    </h3>
+    <a
+      href={href}
+      target="_blank"
+      rel="sponsored nofollow noopener"
+      class="shrink-0 mt-1 text-gray-500 hover:text-gray-900"
+      aria-label={`Check the price of ${product.name} on Amazon`}
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"></path></svg>
+    </a>
+  </div>
+  <p class="text-sm text-gray-500 m-0 mt-1">{product.category}</p>
+
+  <p class="inline-flex items-center gap-2.5 bg-amber-50 border border-amber-300 rounded-xl pl-2 pr-3 py-2 m-0 mt-4">
+    <span class="w-6 h-6 rounded bg-gray-900 text-white text-[10px] font-black grid place-items-center shrink-0" aria-hidden="true">BP</span>
+    <span class="text-[0.9375rem] font-bold text-gray-900 leading-snug">{product.badge}</span>
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" class="text-[#1E90FF] shrink-0" aria-hidden="true"><path d="M19 4h-2V3a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v1H5a1 1 0 0 0-1 1v3a4 4 0 0 0 3.6 3.98A5 5 0 0 0 11 14.9V18H8a1 1 0 0 0 0 2h8a1 1 0 0 0 0-2h-3v-3.1a5 5 0 0 0 3.4-2.92A4 4 0 0 0 20 8V5a1 1 0 0 0-1-1zM6 8V6h1v3.83A2 2 0 0 1 6 8zm12 0a2 2 0 0 1-1 1.83V6h1z"></path></svg>
+  </p>
+
+  {(image || product.rating) && (
+    <div class="mt-4 bg-gray-50 rounded-2xl overflow-hidden">
+      {image && (
+        <div class="flex justify-center px-6 py-5">
+          <img
+            src={image}
+            alt={product.name}
+            loading="lazy"
+            decoding="async"
+            width="176"
+            height="176"
+            class="w-44 h-44 object-contain mix-blend-multiply"
+          />
+        </div>
+      )}
+      {product.rating && (
+        <div class="flex items-center justify-center gap-2 bg-gray-100 py-2.5 text-sm">
+          <span class="font-black text-gray-900">{product.rating}</span>
+          <span class="text-amber-500" aria-hidden="true">&#9733;</span>
+          {product.reviewCount && <span class="text-gray-500">({product.reviewCount.toLocaleString()} {ratingLabel})</span>}
+        </div>
+      )}
+    </div>
+  )}
+
+  <a
+    href={href}
+    target="_blank"
+    rel="sponsored nofollow noopener"
+    class="mt-4 flex items-center justify-center gap-2 bg-[#FF4500] hover:bg-[#E63E00] active:scale-[0.99] text-white text-base font-black py-3.5 rounded-xl no-underline transition"
+  >
+    Check Price on Amazon
+    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+  </a>
+  <p class="text-center text-xs text-gray-500 m-0 mt-1.5">We may earn a commission, at no cost to you</p>
+
+  {specs.length > 0 && (
+    <ul class="list-none m-0 mt-5 p-0 divide-y divide-gray-200 border-y border-gray-200">
+      {specs.map(([label, value]) => (
+        <li class="flex gap-3 py-2.5 text-[0.9375rem] leading-snug">
+          <span class="w-1.5 h-1.5 rounded-full bg-gray-900 mt-2 shrink-0" aria-hidden="true"></span>
+          <span class="text-gray-900"><strong class="font-bold">{label}:</strong> {value}</span>
+        </li>
+      ))}
+    </ul>
+  )}
+
+  <div class="mt-5" data-tabs>
+    <div role="tablist" aria-label={`${product.name} details`} class="hidden gap-1 border-b border-gray-200 overflow-x-auto no-scrollbar" data-tablist>
+      <button type="button" role="tab" id={`${tabId}-take`} aria-controls={`${tabId}-take-panel`} aria-selected="true" class="tab-btn">Our Take</button>
+      <button type="button" role="tab" id={`${tabId}-pros`} aria-controls={`${tabId}-pros-panel`} aria-selected="false" tabindex="-1" class="tab-btn">Pros &amp; Cons</button>
+    </div>
+
+    <div role="tabpanel" id={`${tabId}-take-panel`} aria-labelledby={`${tabId}-take`} class="pt-4">
+      <p class="text-xs font-black uppercase tracking-widest text-gray-500 m-0 mb-2" data-tab-heading>Our Take</p>
+      <p class="text-[1.0625rem] text-gray-700 leading-relaxed m-0">{product.description}</p>
+      <div class="mt-4 border-l-4 border-[#1E90FF] bg-[#1E90FF]/5 rounded-r-xl px-4 py-3">
+        <p class="text-[11px] font-black uppercase tracking-widest text-[#0B64C0] m-0 mb-1">The Bottom Line</p>
+        <p class="text-gray-900 font-bold leading-snug m-0">{product.bottomLine}</p>
+      </div>
+    </div>
+
+    <div role="tabpanel" id={`${tabId}-pros-panel`} aria-labelledby={`${tabId}-pros`} class="pt-4">
+      <p class="text-xs font-black uppercase tracking-widest text-gray-500 m-0 mb-2" data-tab-heading>Pros &amp; Cons</p>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
+        <div>
+          <p class="text-sm font-black text-gray-900 m-0 mb-2">Pros</p>
+          <ul class="list-none m-0 p-0 space-y-2.5">
+            {product.pros.map((pro) => (
+              <li class="flex items-start gap-2.5 text-[0.9375rem] text-gray-800 leading-snug">
+                <svg class="w-5 h-5 text-emerald-600 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg>
+                <span>{pro}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div>
+          <p class="text-sm font-black text-gray-900 m-0 mb-2">Cons</p>
+          <ul class="list-none m-0 p-0 space-y-2.5">
+            {product.cons.map((con) => (
+              <li class="flex items-start gap-2.5 text-[0.9375rem] text-gray-800 leading-snug">
+                <svg class="w-5 h-5 text-red-500 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path></svg>
+                <span>{con}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style is:global>
+  .tab-btn {
+    flex-shrink: 0;
+    padding: 0.75rem 0.875rem;
+    margin-bottom: -1px;
+    border-bottom: 3px solid transparent;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: #6b7280;
+    white-space: nowrap;
+    background: none;
+    cursor: pointer;
+  }
+  .tab-btn[aria-selected="true"] {
+    color: #111827;
+    font-weight: 800;
+    border-bottom-color: #111827;
+  }
+  .tab-btn:focus-visible {
+    outline: 2px solid #1e90ff;
+    outline-offset: -2px;
+  }
+  [data-tabs].is-ready [data-tablist] {
+    display: flex;
+  }
+  [data-tabs].is-ready [data-tab-heading] {
+    display: none;
+  }
+</style>
+
+<script>
+  // Progressive enhancement: turn the two stacked panels into tabs.
+  for (const root of document.querySelectorAll<HTMLElement>("[data-tabs]")) {
+    if (root.classList.contains("is-ready")) continue;
+    const tabs = [...root.querySelectorAll<HTMLButtonElement>('[role="tab"]')];
+    const panels = tabs.map((t) => document.getElementById(t.getAttribute("aria-controls") ?? ""));
+    const select = (i: number, focus = false) => {
+      tabs.forEach((t, j) => {
+        const on = i === j;
+        t.setAttribute("aria-selected", String(on));
+        t.tabIndex = on ? 0 : -1;
+        if (panels[j]) panels[j]!.hidden = !on;
+      });
+      if (focus) tabs[i].focus();
+    };
+    tabs.forEach((t, i) => {
+      t.addEventListener("click", () => select(i));
+      t.addEventListener("keydown", (e) => {
+        if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
+          e.preventDefault();
+          const step = e.key === "ArrowRight" ? 1 : -1;
+          select((i + step + tabs.length) % tabs.length, true);
+        }
+      });
+    });
+    select(0);
+    root.classList.add("is-ready");
+  }
+</script>

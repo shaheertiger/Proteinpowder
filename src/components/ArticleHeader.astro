@@ -1,0 +1,107 @@
+---
+// The top of every article: kicker, headline, intro, byline and a short "how we
+// rank" note. Modelled on how the big review sites lay out a mobile header:
+// light, left-aligned and short enough that the picks start on the first screen.
+//
+//   <ArticleHeader kicker="Buyer's Guide" badge="Updated October 2026" author={author} dates={dates}>
+//     <Fragment slot="title">Best Whey Protein Powder</Fragment>
+//     One or two sentences under the headline.
+//   </ArticleHeader>
+//
+// The headline and intro are slots (not props) so their words stay in the page
+// source, which is what the word-count gate reads.
+import AuthorAvatar from "./AuthorAvatar.astro";
+import AdUnit from "./AdUnit.astro";
+import type { Author } from "../data/authors";
+import type { PageDates } from "../data/dates";
+
+interface Props {
+  kicker: string;
+  badge?: string;
+  author: Author;
+  dates: PageDates;
+  /** Label on the methodology note: "How we rank" on roundups. */
+  label?: string;
+  /**
+   * Show the top ad under the header on phones. The layout's top ad sits above
+   * the headline, which on a phone pushes the title off the first screen, so
+   * article pages hide it below md. Pages with a QuickPicks box already show
+   * that unit under the picks and pass false.
+   */
+  mobileAd?: boolean;
+}
+
+const { kicker, badge, author, dates, label = "How we rank", mobileAd = true } = Astro.props;
+---
+
+<header class="article-header bg-[#F6F7F9] border-b border-gray-200" data-article-header>
+  <div class="max-w-3xl mx-auto px-4 pt-5 pb-6 md:pt-12 md:pb-10">
+    <p class="flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] md:text-xs font-black uppercase tracking-widest m-0 mb-3">
+      <span class="text-[#C93500]">{kicker}</span>
+      {badge && (
+        <>
+          <span aria-hidden="true" class="text-gray-300">&bull;</span>
+          <span class="text-gray-500">{badge}</span>
+        </>
+      )}
+    </p>
+
+    <h1 class="text-[1.875rem] leading-[1.15] md:text-5xl md:leading-[1.1] font-black tracking-tight text-gray-900 m-0 mb-3 md:mb-5">
+      <slot name="title" />
+    </h1>
+
+    <p class="text-[1.0625rem] leading-relaxed text-gray-600 m-0 mb-5 md:text-xl md:mb-7">
+      <slot />
+    </p>
+
+    <div class="flex items-center gap-3 mb-5">
+      <AuthorAvatar author={author.slug} size={40} />
+      <div class="min-w-0 leading-tight">
+        <p class="text-sm text-gray-700 m-0">
+          Written by
+          <a href={`/authors/${author.slug}/`} class="font-bold text-gray-900 underline decoration-gray-300 underline-offset-2 hover:decoration-gray-900">{author.name}</a>
+        </p>
+        <p class="text-xs text-gray-500 m-0 mt-1">
+          {author.role}
+          {dates.display && (
+            <>
+              <span aria-hidden="true"> &middot; </span>Updated <time datetime={dates.modified}>{dates.display}</time>
+            </>
+          )}
+        </p>
+      </div>
+    </div>
+
+    <div>
+      <div class="flex items-center gap-3">
+        <span class="inline-flex items-center gap-2 bg-gray-900 text-white text-[11px] font-black uppercase tracking-widest px-3 py-2 rounded-md">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"></path><path d="m9 12 2 2 4-4"></path></svg>
+          {label}
+        </span>
+        <span class="h-px flex-1 bg-gray-300" aria-hidden="true"></span>
+      </div>
+      <p class="text-sm text-gray-600 leading-relaxed m-0 mt-3">
+        We judge every powder on the label, not the marketing: protein per scoop,
+        cost per 25 g of protein, the full ingredient list and third-party testing.
+        No paid placements, and commission never sets a ranking.
+        <a href="/how-we-test/" class="font-bold text-gray-900 underline decoration-gray-400 underline-offset-2 hover:decoration-gray-900 whitespace-nowrap">Read our methodology</a>
+      </p>
+    </div>
+  </div>
+</header>
+
+{mobileAd && (
+  <div class="article-top-ad md:hidden max-w-3xl mx-auto px-4 mt-6">
+    <AdUnit variant="top" />
+  </div>
+)}
+
+<style is:global>
+  /* On phones, the article header replaces the layout's top ad slot (see the
+     mobileAd prop). Desktop keeps the original placement. */
+  @media (max-width: 767px) {
+    body:has([data-article-header]) .top-ad {
+      display: none;
+    }
+  }
+</style>
