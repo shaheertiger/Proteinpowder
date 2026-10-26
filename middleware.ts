@@ -45,6 +45,17 @@ async function readMarkdown(origin: string, path: string): Promise<string | null
 }
 
 export default async function middleware(request: Request): Promise<Response> {
+  // Fail open: this runs in front of every page, so if anything here throws,
+  // serve the normal static page rather than an error.
+  try {
+    return await handle(request);
+  } catch (error) {
+    console.error("[aeo-middleware]", error);
+    return next();
+  }
+}
+
+async function handle(request: Request): Promise<Response> {
   if (request.headers.get(SUBREQUEST_HEADER)) return next();
   if (request.method !== "GET" && request.method !== "HEAD") return next();
 
