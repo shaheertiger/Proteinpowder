@@ -71,12 +71,17 @@ others), following the [Dualmark](https://github.com/dodopayments/dualmark) AEO 
 | `/best-whey-protein-powder/` with `Accept: text/markdown` | Markdown |
 | `/best-whey-protein-powder/` from an AI crawler (GPTBot, ClaudeBot, PerplexityBot, …) | Markdown |
 | `/best-whey-protein-powder/` from a browser or a search crawler (Googlebot, Bingbot) | HTML, with a `Link: <…md>; rel="alternate"; type="text/markdown"` header |
-| `/llms.txt` | An index of every page, grouped by type |
+| `/llms.txt` | An index of every page, grouped by type, linking to `/llms-full.txt` |
+| `/llms-full.txt` | The guide for AI assistants: which page answers which question, how to present our picks, the methodology and affiliate disclosure, then every sitemap URL by category |
 
 - `src/integrations/markdown-twins.mjs` writes the `.md` files and `llms.txt` into `dist/`
   at the end of `astro build`, converting each rendered page. Product cards and the picks
   carousel carry `data-md` attributes so they convert to structured blocks; keep them when
   editing those components.
+- `/llms-full.txt` is `src/data/llms-full-intro.md` (hand-written; edit it freely) followed by a
+  URL index generated from the built sitemap, so new pages appear with no edit. The build
+  fails if a `https://www.best-proteinpowder.com/…` link in the intro is not a page in the
+  sitemap (or its `#anchor` is not on the page), so curated links cannot rot.
 - `middleware.ts` (Vercel Routing Middleware) serves the twins with the spec headers
   (`Content-Type: text/markdown`, `X-Markdown-Tokens`, `X-Robots-Tag: noindex`,
   `Vary: Accept`, `X-AEO-Version`), does the content negotiation, and returns 406 when a

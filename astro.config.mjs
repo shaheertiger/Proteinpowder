@@ -134,8 +134,9 @@ export default defineConfig({
         return item;
       },
     }),
-    // Writes a Markdown twin of every page (/slug.md) and /llms.txt into dist
-    // for AI agents; middleware.ts serves them. See the integration file.
+    // Writes a Markdown twin of every page (/slug.md), /llms.txt and
+    // /llms-full.txt into dist for AI agents; middleware.ts serves the twins.
+    // Keep it after sitemap(): llms-full.txt is indexed from the built sitemap.
     markdownTwins(),
   ],
   server: {

@@ -6,7 +6,9 @@
 //   /best-whey-protein-powder/  -> /best-whey-protein-powder.md
 //   /authors/editorial-team/    -> /authors/editorial-team.md
 //
-// plus /llms.txt, an index of every page. The root middleware.ts serves these
+// plus /llms.txt, an index of every page, and /llms-full.txt, the guide for AI
+// assistants: the hand-written src/data/llms-full-intro.md followed by a
+// generated index of every URL in the sitemap. The root middleware.ts serves these
 // files with the AEO headers, hands them to AI crawlers and to any request that
 // asks for text/markdown, and advertises them on HTML responses.
 //
@@ -15,14 +17,17 @@
 // Product cards and the picks carousel carry data-md attributes (see
 // ProductCard.astro and QuickPicks.astro) so they convert to tidy structured
 // blocks instead of a dump of their markup.
-import { readdirSync, readFileSync, statSync, writeFileSync, mkdirSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync, statSync, writeFileSync, mkdirSync } from 'node:fs';
 import { dirname, join, relative, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import domino from '@mixmark-io/domino';
 import TurndownService from 'turndown';
 import { tables, strikethrough } from 'turndown-plugin-gfm';
 import { cleanBody, renderLlmsTxt, toMarkdownPath } from '@dualmark/core';
-import { SITE_NAME, SITE_URL } from '../../site.config.mjs';
+import { SITE_HOST, SITE_NAME, SITE_URL } from '../../site.config.mjs';
+
+// The hand-written part of /llms-full.txt. Edit that file, not this one.
+const LLMS_FULL_INTRO = fileURLToPath(new URL('../data/llms-full-intro.md', import.meta.url));
 
 // Pages with no useful content for an agent.
 const SKIP = new Set(['/404/']);
@@ -225,11 +230,32 @@ function makeTurndown() {
   return td;
 }
 
+// The page's <title> without the " | Best Protein Powder" brand segment, so
+// "How We Test | Best Protein Powder" lists as "How We Test" and the home page
+// as "Independent Protein Powder Reviews". llms.txt and llms-full.txt both use
+// it; the Markdown twin itself keeps the on-page h1 as its heading.
+function indexTitle(doc) {
+  const raw = text(doc.querySelector('title'));
+  const parts = raw.split(' | ').filter((p) => p.trim() && p.trim() !== SITE_NAME);
+  return parts.join(' | ').trim() || raw || text(doc.querySelector('h1'));
+}
+
+// What the indexes need to know about a page, read from its rendered HTML.
+function pageMeta(doc, pageUrl) {
+  const header = doc.querySelector('[data-article-header]');
+  return {
+    title: text(doc.querySelector('h1')) || text(doc.querySelector('title')),
+    indexTitle: indexTitle(doc),
+    description: doc.querySelector('meta[name="description"]')?.getAttribute('content') ?? '',
+    canonical: doc.querySelector('link[rel="canonical"]')?.getAttribute('href') || pageUrl,
+    // The small label above an article's h1 ("Buyer's Guide", "Brand Review").
+    kicker: header ? text(header.querySelector('p:first-child span')) : '',
+  };
+}
+
 function convertPage(html, pageUrl, td) {
   const doc = domino.createDocument(html);
-  const title = text(doc.querySelector('h1')) || text(doc.querySelector('title'));
-  const description = doc.querySelector('meta[name="description"]')?.getAttribute('content') ?? '';
-  const canonical = doc.querySelector('link[rel="canonical"]')?.getAttribute('href') || pageUrl;
+  const { title, indexTitle: listTitle, description, canonical, kicker } = pageMeta(doc, pageUrl);
   const header = doc.querySelector('[data-article-header]');
 
   absolutize(doc, canonical);
@@ -237,11 +263,9 @@ function convertPage(html, pageUrl, td) {
 
   const meta = [`- **URL**: ${canonical}`];
   let intro = '';
-  let kicker = '';
   if (header) {
     const time = header.querySelector('time');
     const author = header.querySelector('a[href*="/authors/"]');
-    kicker = text(header.querySelector('p:first-child span'));
     if (time) meta.push(`- **Updated**: ${time.getAttribute('datetime')}`);
     if (author) meta.push(`- **Author**: [${text(author)}](${author.getAttribute('href')})`);
     meta.push(`- **Publisher**: [${SITE_NAME}](${SITE_URL}/)`);
@@ -274,7 +298,14 @@ function convertPage(html, pageUrl, td) {
     .filter(Boolean)
     .join('\n');
 
-  return { md: cleanBody(md, { stripImages: true }) + '\n', title, description, canonical, kicker };
+  return {
+    md: cleanBody(md, { stripImages: true }) + '\n',
+    title,
+    indexTitle: listTitle,
+    description,
+    canonical,
+    kicker,
+  };
 }
 
 function walkHtml(dir) {
@@ -287,21 +318,28 @@ function walkHtml(dir) {
   return out;
 }
 
+// Page categories for llms.txt and the llms-full.txt URL index, first match
+// wins. Articles are sorted by the kicker above their h1, so a page the daily
+// run adds lands in the right group with no edit here; a new kicker falls
+// through to "Guides and explainers".
 const GROUPS = [
   ['Start here', (p) => p.path === '/' || p.path === '/best-of/'],
-  ['Buying guides', (p) => p.kicker === "Buyer's Guide"],
-  ['Brand reviews', (p) => p.kicker === 'Brand Review'],
+  ['Buying guides', (p) => p.kicker === "Buyer's Guide" || p.kicker === 'Shopping Guide'],
+  ['Brand and product reviews', (p) => /\bReview$/.test(p.kicker)],
+  ['Comparisons', (p) => p.kicker === 'Comparison'],
   ['Tools', (p) => p.path === '/protein-calculator/'],
   ['About this site', (p) => !p.kicker],
   ['Guides and explainers', () => true],
 ];
 
+const groupOf = (page) => GROUPS[GROUPS.findIndex(([, test]) => test(page))][0];
+const linkTitle = (title) => title.replace(/[[\]]/g, '');
+
 function llmsTxt(pages) {
   const sections = GROUPS.map(([title]) => ({ title, links: [] }));
-  for (const page of pages.sort((a, b) => a.title.localeCompare(b.title))) {
-    const i = GROUPS.findIndex(([, test]) => test(page));
-    sections[i].links.push({
-      title: page.title.replace(/[[\]]/g, ''),
+  for (const page of [...pages].sort((a, b) => a.indexTitle.localeCompare(b.indexTitle))) {
+    sections.find((s) => s.title === groupOf(page)).links.push({
+      title: linkTitle(page.indexTitle),
       href: page.canonical,
       description: page.description,
     });
@@ -312,6 +350,12 @@ function llmsTxt(pages) {
       'Independent protein powder buying guides and explainers. Every powder is judged on its label: protein per scoop, cost per 25 g of protein, the full ingredient list and third-party testing. No paid placements.',
     sections: [
       {
+        title: 'Full guide for AI assistants',
+        description:
+          'Which page answers which question, how to present our picks accurately, our methodology and affiliate disclosure, and every indexable URL:',
+        links: [{ title: 'llms-full.txt', href: `${SITE_URL}/llms-full.txt` }],
+      },
+      {
         title: 'Markdown versions',
         description:
           'Every page below has a Markdown twin: drop the trailing slash and add .md (for example /best-whey-protein-powder.md), or request the page with "Accept: text/markdown".',
@@ -321,6 +365,105 @@ function llmsTxt(pages) {
     ],
   });
   return intro;
+}
+
+// ---------------------------------------------------------------------------
+// /llms-full.txt
+// ---------------------------------------------------------------------------
+
+// Every URL in the built sitemap. @astrojs/sitemap writes it in its own
+// astro:build:done hook, which runs before this one because sitemap() is
+// registered first in astro.config.mjs.
+function sitemapUrls(outDir) {
+  const files = readdirSync(outDir).filter((f) => /^sitemap-.*\.xml$/.test(f) && f !== 'sitemap-index.xml');
+  const urls = [];
+  for (const file of files) {
+    const xml = readFileSync(join(outDir, file), 'utf8');
+    for (const m of xml.matchAll(/<loc>([^<]+)<\/loc>/g)) urls.push(m[1].trim());
+  }
+  return [...new Set(urls)];
+}
+
+// The file in dist that serves a site URL path.
+function distFile(outDir, path) {
+  if (/\.[a-z0-9]+$/i.test(path)) return join(outDir, path);
+  return join(outDir, path, 'index.html');
+}
+
+// Every https://www.best-proteinpowder.com/... URL in the hand-written intro must
+// be a page in the sitemap (or, for .md/.txt/.xml files, a file in the build),
+// and any #fragment must be an id on that page. Curated links cannot rot.
+function checkIntroLinks(intro, outDir, sitemap) {
+  const host = SITE_URL.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const pattern = new RegExp(`${host}[^\\s\`'"<>)|]*`, 'g');
+  const bad = [];
+  for (const raw of new Set(intro.match(pattern) ?? [])) {
+    const url = new URL(raw);
+    let ok;
+    if (/\.[a-z0-9]+$/i.test(url.pathname)) {
+      ok = url.pathname === '/llms-full.txt' || existsSync(distFile(outDir, url.pathname));
+    } else {
+      // The site uses trailing slashes; accept the slash-less form too.
+      const path = url.pathname.endsWith('/') ? url.pathname : `${url.pathname}/`;
+      ok = sitemap.has(`${SITE_URL}${path}`);
+      if (ok && url.hash) {
+        const html = readFileSync(distFile(outDir, path), 'utf8');
+        ok = html.includes(`id="${decodeURIComponent(url.hash.slice(1))}"`);
+      }
+    }
+    if (!ok) bad.push(raw);
+  }
+  if (bad.length) {
+    throw new Error(
+      `llms-full.txt: src/data/llms-full-intro.md links to ${bad.length} URL(s) that are not in the built sitemap ` +
+        `(or whose #anchor is not on the page). Fix or remove them:\n${bad.map((u) => `  - ${u}`).join('\n')}`,
+    );
+  }
+}
+
+function llmsFullTxt(pages, outDir) {
+  const urls = sitemapUrls(outDir);
+  if (!urls.length) {
+    throw new Error('llms-full.txt: no URLs found in dist/sitemap-*.xml. Is sitemap() registered before markdownTwins()?');
+  }
+  const sitemap = new Set(urls);
+  const intro = readFileSync(LLMS_FULL_INTRO, 'utf8').trim();
+  checkIntroLinks(intro, outDir, sitemap);
+
+  const byUrl = new Map(pages.map((p) => [p.canonical, p]));
+  const sections = GROUPS.map(([title]) => ({ title, entries: [] }));
+  const other = { title: 'Other pages', entries: [] };
+  for (const url of urls) {
+    let page = byUrl.get(url);
+    if (!page) {
+      // In the sitemap but skipped above (noindex, say): read its title directly.
+      const path = url.slice(SITE_URL.length) || '/';
+      const file = distFile(outDir, path);
+      if (url.startsWith(SITE_URL) && existsSync(file)) {
+        page = { ...pageMeta(domino.createDocument(readFileSync(file, 'utf8')), url), path };
+      }
+    }
+    const section = page ? sections.find((s) => s.title === groupOf(page)) : other;
+    const title = page?.indexTitle ? linkTitle(page.indexTitle) : '';
+    section.entries.push({ sort: title || url, line: title ? `- [${title}](${url})` : `- ${url}` });
+  }
+
+  const blocks = [...sections, other]
+    .filter((s) => s.entries.length)
+    .map((s) => {
+      const lines = s.entries.sort((a, b) => a.sort.localeCompare(b.sort)).map((e) => e.line);
+      return `### ${s.title} (${lines.length})\n\n${lines.join('\n')}`;
+    });
+
+  const index = [
+    '<!-- GENERATED:URL-INDEX — do not edit by hand, see src/integrations/markdown-twins.mjs -->',
+    '## Complete URL Index',
+    `Every indexable page on ${SITE_HOST} (${urls.length} URLs), generated from the sitemap.`,
+    ...blocks,
+    '<!-- /GENERATED:URL-INDEX -->',
+  ].join('\n\n');
+
+  return { body: `${intro}\n\n${index}\n`, count: urls.length };
 }
 
 export default function markdownTwins() {
@@ -345,6 +488,9 @@ export default function markdownTwins() {
         }
         writeFileSync(join(outDir, 'llms.txt'), llmsTxt(pages));
         logger.info(`Wrote ${pages.length} Markdown twins and llms.txt`);
+        const full = llmsFullTxt(pages, outDir);
+        writeFileSync(join(outDir, 'llms-full.txt'), full.body);
+        logger.info(`Wrote llms-full.txt (${full.count} URLs in the index)`);
       },
     },
   };
