@@ -29,7 +29,7 @@ export default function MobileNav({ groups }: { groups: NavGroup[] }) {
     <div className="md:hidden">
       <button
         onClick={() => setIsMenuOpen((v) => !v)}
-        className="text-gray-600 relative z-50"
+        className="text-gray-700 relative z-50 -mr-2 p-2"
         aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
         aria-expanded={isMenuOpen}
       >
@@ -40,13 +40,13 @@ export default function MobileNav({ groups }: { groups: NavGroup[] }) {
         <>
           {/* Backdrop — tap outside to close */}
           <div
-            className="fixed inset-0 top-16 bg-black/40 z-40"
+            className="fixed inset-0 top-14 bg-black/40 z-40"
             onClick={close}
             aria-hidden="true"
           />
 
-          {/* Panel — anchored under the sticky 4rem header, scrolls if tall */}
-          <div className="fixed top-16 inset-x-0 z-50 bg-white border-b border-gray-200 py-4 px-6 shadow-md max-h-[calc(100vh-4rem)] overflow-y-auto overscroll-contain">
+          {/* Panel — anchored under the sticky 3.5rem header, scrolls if tall */}
+          <div className="fixed top-14 inset-x-0 z-50 bg-white border-b border-gray-200 py-4 px-6 shadow-md max-h-[calc(100dvh-3.5rem)] overflow-y-auto overscroll-contain">
             <nav className="flex flex-col space-y-4">
               <a href="/" onClick={close} className="text-left text-lg font-semibold py-2">Home</a>
               <a href="/best-of/" onClick={close} className="text-left text-lg font-semibold py-2">All Guides</a>

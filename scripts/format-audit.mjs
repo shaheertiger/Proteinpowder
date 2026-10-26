@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 // Fails the build when an article page drifts from the canonical layout, which is
-// the one used by scripts/scaffold-article.mjs: a dark hero, a byline
-// strip, a table of contents, an #faq section, closing sections, and JSON-LD
-// carrying BreadcrumbList, FAQPage and Article.
+// the one used by scripts/scaffold-article.mjs: the shared ArticleHeader (headline,
+// byline, methodology note), the collapsible TableOfContents, an #faq section,
+// closing sections, and JSON-LD carrying BreadcrumbList, FAQPage and Article.
 import { readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
@@ -21,13 +21,8 @@ const NON_ARTICLE = new Set([
 ]);
 
 const CHECKS = [
-  // A full-width dark hero band. Most pages use bg-gray-900; a couple reach the
-  // same look with a gradient or a slate hex.
-  ['hero', (s) => /bg-gray-900[^"]*\bpy-16\b|from-gray-900|bg-\[#0F172A\]/.test(s)],
-  ['trustBadge', (s) => /TrustBadge/.test(s)],
-  ['authorBox', (s) => /Author & Meta/.test(s) && /AuthorAvatar/.test(s)],
-  ['socialProof', (s) => /SocialProof/.test(s)],
-  ['toc', (s) => /In This Guide/.test(s)],
+  ['articleHeader', (s) => /<ArticleHeader\b/.test(s)],
+  ['toc', (s) => /<TableOfContents\b/.test(s)],
   ['breadcrumbSchema', (s) => /BreadcrumbList/.test(s)],
   ['faqSchema', (s) => /FAQPage/.test(s)],
   ['articleSchema', (s) => /"@type":\s*"Article"/.test(s)],

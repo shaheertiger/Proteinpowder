@@ -5,6 +5,7 @@ import Analytics from "@vercel/analytics/astro";
 import AdUnit from "../components/AdUnit.astro";
 import { ADSENSE_CLIENT, GA_MEASUREMENT_ID, SITE_NAME } from "../data/site";
 import { NAV_GROUPS } from "../data/nav";
+import "../styles/global.css";
 
 interface Props {
   title?: string;
@@ -81,18 +82,19 @@ const {
     <div class="min-h-screen flex flex-col bg-white">
       <!-- Header -->
       <header
-        class="sticky top-0 z-50 bg-white border-b border-gray-100 shadow-sm"
+        class="site-header sticky top-0 z-50 bg-white border-b border-gray-100 shadow-sm"
+        data-site-header
       >
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div class="flex justify-between items-center h-16">
+          <div class="flex justify-between items-center h-14 md:h-16">
             <a
               href="/"
               class="flex items-center gap-2 cursor-pointer no-underline"
             >
-              <span class="text-2xl font-black tracking-tighter text-[#1E90FF]"
+              <span class="text-xl md:text-2xl font-black tracking-tighter text-[#1E90FF]"
                 >BEST PROTEIN</span
               >
-              <span class="text-2xl font-black tracking-tighter text-[#333333]"
+              <span class="text-xl md:text-2xl font-black tracking-tighter text-[#333333]"
                 >POWDER</span
               >
             </a>
@@ -168,6 +170,12 @@ const {
         </div>
       </header>
 
+      <!-- Reading progress: filled by the script at the end of the body. Kept
+           outside the header so it stays on screen when the header slides away. -->
+      <div class="fixed top-0 left-0 right-0 h-[3px] z-[60] pointer-events-none" aria-hidden="true">
+        <div class="h-full w-full bg-[#FF4500] origin-left scale-x-0" data-read-progress></div>
+      </div>
+
       <!-- Main Content -->
       <main class="flex-grow">
         <div class="top-ad max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 my-6">
@@ -182,12 +190,12 @@ const {
       <!-- Mobile Sticky CTA -->
       {
         stickyCta && (
-          <div data-layout-sticky class="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 z-50 shadow-[0_-4px_10px_rgba(0,0,0,0.05)]">
+          <div data-layout-sticky class="sticky-cta md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-2.5 z-50 shadow-[0_-4px_10px_rgba(0,0,0,0.05)]">
             <a
               href={stickyCta.link}
               target={/^https?:/.test(stickyCta.link ?? "") ? "_blank" : undefined}
               rel={/^https?:/.test(stickyCta.link ?? "") ? "sponsored nofollow noopener" : undefined}
-              class="w-full bg-[#FF4500] hover:bg-[#E63E00] text-white py-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-all active:scale-95 shadow-lg no-underline"
+              class="w-full bg-[#FF4500] hover:bg-[#E63E00] text-white py-3 rounded-xl font-bold flex items-center justify-center gap-2 transition-all active:scale-95 no-underline"
             >
               {stickyCta.text}
               <svg
@@ -333,5 +341,79 @@ const {
         </div>
       </footer>
     </div>
+
+    <script is:inline>
+      (function () {
+        // 1. On phones the header slides away while reading down and comes back
+        //    on the first scroll up, so the article gets the whole screen.
+        // 2. A thin bar under the header shows how far through the page you are.
+        var header = document.querySelector("[data-site-header]");
+        var bar = document.querySelector("[data-read-progress]");
+        var article = document.querySelector("article");
+        // The sticky CTA waits until the reader is past the header.
+        var cta = document.querySelector("[data-layout-sticky]");
+        if (cta) cta.classList.add("is-waiting");
+        var mobile = window.matchMedia("(max-width: 767px)");
+        var lastY = window.scrollY;
+        var ticking = false;
+        function onScroll() {
+          var y = window.scrollY;
+          if (header) {
+            var menuOpen = document.body.style.overflow === "hidden";
+            var hide = mobile.matches && !menuOpen && y > 160 && y > lastY + 4;
+            var show = y < lastY - 4 || y <= 160 || !mobile.matches;
+            if (hide) header.classList.add("is-hidden");
+            else if (show) header.classList.remove("is-hidden");
+          }
+          if (bar && article) {
+            var top = article.offsetTop;
+            var span = article.offsetHeight - window.innerHeight;
+            var p = span > 0 ? Math.min(1, Math.max(0, (y - top) / span)) : 0;
+            bar.style.transform = "scaleX(" + p + ")";
+          }
+          if (cta) cta.classList.toggle("is-waiting", y < 400);
+          lastY = y;
+          ticking = false;
+        }
+        window.addEventListener("scroll", function () {
+          if (!ticking) { ticking = true; requestAnimationFrame(onScroll); }
+        }, { passive: true });
+        // Show the header again when a link jumps somewhere on the page.
+        window.addEventListener("hashchange", function () {
+          if (header) header.classList.remove("is-hidden");
+        });
+
+        // Wide comparison tables: flag the ones that scroll sideways so CSS can
+        // show a fade on the right edge, plus a one-line hint above the table.
+        var wraps = [];
+        var tables = document.querySelectorAll(".prose table");
+        for (var t = 0; t < tables.length; t++) {
+          var sc = tables[t].closest(".overflow-x-auto");
+          if (sc && wraps.indexOf(sc) < 0) wraps.push(sc);
+        }
+        function markTables() {
+          for (var i = 0; i < wraps.length; i++) {
+            var w = wraps[i];
+            var outer = w.parentElement;
+            if (!outer) continue;
+            var overflow = w.scrollWidth > w.clientWidth + 2;
+            if (!overflow) { outer.removeAttribute("data-scrollable"); continue; }
+            var atEnd = w.scrollLeft + w.clientWidth >= w.scrollWidth - 2;
+            outer.setAttribute("data-scrollable", atEnd ? "end" : "more");
+            if (!outer.querySelector(".table-hint")) {
+              var hint = document.createElement("div");
+              hint.className = "table-hint items-center gap-1.5 px-4 py-2 text-xs font-semibold text-gray-500 bg-gray-50 border-b border-gray-200";
+              hint.textContent = "Swipe sideways to see every column \u2192";
+              outer.insertBefore(hint, w);
+            }
+          }
+        }
+        for (var i = 0; i < wraps.length; i++) {
+          wraps[i].addEventListener("scroll", markTables, { passive: true });
+        }
+        window.addEventListener("resize", markTables);
+        markTables();
+      })();
+    </script>
   </body>
 </html>

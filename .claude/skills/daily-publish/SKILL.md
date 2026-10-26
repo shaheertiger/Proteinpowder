@@ -73,10 +73,9 @@ Spec fields (all required):
   "ctaText": "See Our Top Whey Isolate Picks",
   "ctaLink": "/best-whey-protein-isolate/",  // ALWAYS the pillar
   "kicker": "Troubleshooting",
-  "h1": "Whey Protein <span class=\"text-[#38BDF8]\">Bloating?</span>",
+  "h1": "Whey Protein Bloating?",            // plain text, no colored spans
   "heroLede": "One or two sentences under the H1.",
-  "cta1": "Start the Diagnostic",
-  "lede": "The italic opening paragraph. Say the thing the page exists to say.",
+  "lede": "The opening paragraph. Say the thing the page exists to say.",
   "toc": [["anchor-1", "Short Label"], ["anchor-2", "Short Label"]],
   "sections": [
     { "anchor": "anchor-1", "heading": "Section Heading", "blocks": [
@@ -101,12 +100,17 @@ Spec fields (all required):
 ### Roundup (pillar) specs
 
 New pillars use `node scripts/scaffold-roundup.mjs spec.json`. Same shared fields, minus
-`ctaText`/`ctaLink`/`kicker`/`cta1`, plus `badge`, `cta2`, `picksAfter`, `picksHeading`,
+`ctaText`/`ctaLink`/`kicker`, plus `badge`, `picksAfter`, `picksHeading`,
 `picksIntro` and a `products` array. Each product has `id` (kebab-case, unique site-wide),
 `name`, `brand`, `badge`, `category`, `description`, `pros`, `cons`, `bottomLine` and a
 four-entry `specs` object (e.g. protein per serving, calories, third-party testing, best
 for). Leave out `rating` and `reviewCount` unless they are copied from the retailer's
-listing on the day — the card only shows stars when they are present.
+listing on the day — the card only shows a rating when they are present.
+
+Both scaffolders emit the shared mobile template: `ArticleHeader` (headline, byline,
+methodology note), a collapsible `TableOfContents`, `QuickPicks` (swipeable picks) and
+`ProductCard` for each product, and FAQ accordions. Change those components, not the
+generated pages, to restyle every article at once.
 
 ### Length is a hard gate
 

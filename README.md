@@ -23,7 +23,8 @@ npm run preview
 | `src/pages/best-of.astro` | The index of every guide, by category |
 | `src/pages/protein-calculator.astro` | Daily protein calculator (`src/components/ProteinCalculator.tsx`) |
 | `src/data/` | Site constants, authors, nav, affiliate link resolver, product ASIN/image maps |
-| `src/components/` | Layout pieces: SEO, QuickPicks, AuthorBio, TrustBadge, AdUnit, … |
+| `src/components/` | Shared template: ArticleHeader, TableOfContents, QuickPicks, ProductCard, AuthorBio, AdUnit, SEO, … |
+| `src/styles/global.css` | Reading styles for article bodies (spacing, links, tables, FAQ accordions) |
 | `scripts/` | Scaffolders, validators, IndexNow, Search Console and affiliate tooling |
 | `content/` | Search Console and analytics exports the topic picker reads |
 | `.claude/skills/daily-publish/` | The daily publishing run (five articles into the thinnest cluster) |
