@@ -1,0 +1,153 @@
+---
+// The comparison tool: pick any two powders and see the labels side by side.
+// Works from a compact copy of the database embedded in the page; links to the
+// full X-vs-Y page when one exists for the pair.
+import Layout from "../../layouts/Layout.astro";
+import { PRODUCTS, COMPARISONS, TYPES, CERT_TIERS } from "../../lib/db.mjs";
+import { SITE_NAME, SITE_URL } from "../../data/site";
+
+const data = PRODUCTS.map((p: any) => ({
+  s: p.slug,
+  n: p.fullName,
+  u: p.url,
+  f: p.family,
+  t: TYPES[p.proteinType].name,
+  fl: p.labelFlavor,
+  ss: p.servingSizeG,
+  pr: p.proteinG,
+  pct: Math.round(p.proteinPct * 100),
+  cal: p.calories,
+  su: p.sugarG,
+  sw: p.sweeteners == null ? null : p.sweeteners.join(", ") || "none",
+  ce: (p.certifications || []).filter((c: string) => (CERT_TIERS as any)[c] === 10).join(", ") || "none",
+  cps: p.costPerServing == null ? null : +p.costPerServing.toFixed(2),
+  c25: p.costPer25 == null ? null : +p.costPer25.toFixed(2),
+  sc: p.score.total,
+}));
+const pairs = COMPARISONS.map((c: any) => c.slug);
+const popular = COMPARISONS.filter((c: any) => c.indexable).sort((x: any, y: any) => (y.a.demand || 0) + (y.b.demand || 0) - ((x.a.demand || 0) + (x.b.demand || 0))).slice(0, 40);
+
+const title = "Protein Powder Comparison Tool: Any Two Labels Side by Side";
+const description = `Compare any two of ${PRODUCTS.length} protein powders: protein per scoop, protein %, calories, sugar, sweeteners, certification, cost per 25 g of protein and Label Score.`;
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Home", item: `${SITE_URL}/` },
+        { "@type": "ListItem", position: 2, name: "Compare", item: `${SITE_URL}/compare/` },
+      ],
+    },
+    {
+      "@type": "SoftwareApplication",
+      name: "Protein Powder Comparison Tool",
+      applicationCategory: "HealthApplication",
+      operatingSystem: "Web",
+      url: `${SITE_URL}/compare/`,
+      offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+      publisher: { "@type": "Organization", name: SITE_NAME, url: SITE_URL },
+    },
+  ],
+};
+---
+
+<Layout title={title} description={description} jsonLd={jsonLd}>
+  <div data-article-header class="max-w-4xl mx-auto px-4 pb-16">
+    <nav aria-label="Breadcrumb" class="text-xs text-gray-500 pt-5 mb-4">
+      <a href="/" class="text-gray-500 no-underline hover:text-[#0b64c0]">Home</a> › Compare
+    </nav>
+    <h1 class="text-[1.875rem] leading-[1.15] md:text-5xl font-black tracking-tight text-gray-900 m-0 mb-4">Compare Two Protein Powders</h1>
+    <p class="text-[1.0625rem] md:text-xl leading-relaxed text-gray-600 m-0 mb-8">
+      Pick the powder you use now and one you are considering. Every number comes from the brand's published label, and cost is worked out per 25 g of protein so tubs of different sizes compare fairly.
+    </p>
+
+    <form class="grid sm:grid-cols-2 gap-4 mb-6" data-compare-form>
+      {["a", "b"].map((k, i) => (
+        <label class="block">
+          <span class="block text-xs font-black uppercase tracking-wider text-gray-500 mb-1">{i === 0 ? "Your powder" : "Compare with"}</span>
+          <select name={k} class="w-full border border-gray-300 rounded-xl px-3 py-3 bg-white text-gray-900">
+            {PRODUCTS.map((p: any, j: number) => <option value={p.slug} selected={j === i}>{p.fullName}</option>)}
+          </select>
+        </label>
+      ))}
+    </form>
+
+    <div data-compare-out class="overflow-x-auto border border-gray-200 rounded-2xl mb-3"></div>
+    <p data-compare-link class="text-sm mb-12"></p>
+
+    <section class="prose max-w-none">
+      <h2 class="text-2xl font-black text-gray-900">Popular comparisons</h2>
+      <ul class="columns-1 sm:columns-2">
+        {popular.map((c: any) => <li><a href={c.url}>{c.a.name} vs {c.b.name}</a></li>)}
+      </ul>
+      <p>Prefer one big table? See <a href="/protein-powder/">all {PRODUCTS.length} protein powders ranked</a>, or the written <a href="/protein-powder-comparison/">protein powder comparison guide</a>.</p>
+    </section>
+  </div>
+
+  <script type="application/json" id="compare-data" set:html={JSON.stringify({ data, pairs })}></script>
+  <script>
+    const { data, pairs } = JSON.parse(document.getElementById("compare-data")!.textContent!);
+    const bySlug = new Map(data.map((p: any) => [p.s, p]));
+    const pairSet = new Set(pairs);
+    const form = document.querySelector<HTMLFormElement>("[data-compare-form]")!;
+    const out = document.querySelector<HTMLElement>("[data-compare-out]")!;
+    const link = document.querySelector<HTMLElement>("[data-compare-link]")!;
+    const money = (n: number | null) => (n == null ? "not checked" : `$${n.toFixed(2)}`);
+    const g = (n: number | null, u = " g") => (n == null ? "–" : `${n}${u}`);
+    const ROWS: [string, (p: any) => string, string?][] = [
+      ["Protein type", (p) => p.t],
+      ["Flavor on label", (p) => p.fl],
+      ["Serving size", (p) => g(p.ss)],
+      ["Protein per serving", (p) => g(p.pr), "hi:pr"],
+      ["Protein %", (p) => `${p.pct}%`, "hi:pct"],
+      ["Calories", (p) => g(p.cal, ""), "lo:cal"],
+      ["Sugar", (p) => g(p.su), "lo:su"],
+      ["Sweeteners", (p) => p.sw ?? "not stated"],
+      ["Sport certification", (p) => p.ce],
+      ["Cost per serving", (p) => money(p.cps), "lo:cps"],
+      ["Cost per 25 g protein", (p) => money(p.c25), "lo:c25"],
+      ["Label Score", (p) => `${p.sc}/100`, "hi:sc"],
+    ];
+    const esc = (s: string) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]!);
+    function render() {
+      const a: any = bySlug.get((form.elements.namedItem("a") as HTMLSelectElement).value);
+      const b: any = bySlug.get((form.elements.namedItem("b") as HTMLSelectElement).value);
+      if (!a || !b) return;
+      const cell = (p: any, other: any, rule?: string) => {
+        let win = false;
+        if (rule) {
+          const [dir, key] = rule.split(":");
+          if (p[key] != null && other[key] != null && p[key] !== other[key]) win = dir === "hi" ? p[key] > other[key] : p[key] < other[key];
+        }
+        return win ? "font-black text-green-700" : "";
+      };
+      out.innerHTML = `<table class="w-full text-sm text-left"><thead class="bg-gray-50 border-b border-gray-200"><tr><th class="px-4 py-3"></th>
+        <th class="px-4 py-3"><a class="font-bold text-gray-900" href="${a.u}">${esc(a.n)}</a></th>
+        <th class="px-4 py-3"><a class="font-bold text-gray-900" href="${b.u}">${esc(b.n)}</a></th></tr></thead><tbody>
+        ${ROWS.map(([label, f, rule]) => `<tr class="border-b border-gray-100"><td class="px-4 py-3 font-semibold text-gray-600">${label}</td>
+          <td class="px-4 py-3 ${cell(a, b, rule)}">${esc(f(a))}</td><td class="px-4 py-3 ${cell(b, a, rule)}">${esc(f(b))}</td></tr>`).join("")}
+        </tbody></table>`;
+      const [x, y] = [a.s, b.s].sort();
+      const slug = `${x}-vs-${y}`;
+      link.innerHTML = pairSet.has(slug) ? `<a class="font-bold text-[#0b64c0]" href="${"/compare/" + slug + "/"}">Read the full ${esc(a.n)} vs ${esc(b.n)} comparison →</a>` : "";
+      const url = new URL(location.href);
+      url.searchParams.set("a", a.s);
+      url.searchParams.set("b", b.s);
+      history.replaceState(null, "", url);
+    }
+    const params = new URLSearchParams(location.search);
+    for (const k of ["a", "b"]) {
+      const v = params.get(k);
+      const sel = form.elements.namedItem(k) as HTMLSelectElement;
+      if (v && bySlug.has(v)) sel.value = v;
+    }
+    if ((form.elements.namedItem("a") as HTMLSelectElement).value === (form.elements.namedItem("b") as HTMLSelectElement).value) {
+      const a: any = bySlug.get((form.elements.namedItem("a") as HTMLSelectElement).value);
+      const alt = data.find((p: any) => p.f === a.f && p.s !== a.s) || data.find((p: any) => p.s !== a.s);
+      (form.elements.namedItem("b") as HTMLSelectElement).value = alt.s;
+    }
+    form.addEventListener("change", render);
+    render();
+  </script>
+</Layout>

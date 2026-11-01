@@ -1,0 +1,37 @@
+---
+// One "compare" list on a product page: five products from the database with
+// the numbers that put them on the list.
+import { fmt, money, comparisonFor } from "../../lib/db.mjs";
+interface Props {
+  heading: string;
+  rows: any[];
+  current: any;
+}
+const { heading, rows, current } = Astro.props;
+---
+
+<div class="border border-gray-200 rounded-2xl p-5 bg-white">
+  <h3 class="text-base font-black text-gray-900 mt-0 mb-3">{heading}</h3>
+  <ol class="list-none p-0 m-0 space-y-3">
+    {rows.map((o) => {
+      const pair = comparisonFor(current, o);
+      return (
+        <li class="flex items-start justify-between gap-3 text-sm">
+          <div class="min-w-0">
+            <a href={o.url} class="font-bold text-gray-900 hover:text-[#1E90FF] no-underline">{o.fullName}</a>
+            <span class="block text-xs text-gray-500">
+              {fmt(o.proteinG)} g protein · {o.costPer25 == null ? "price not checked" : `${money(o.costPer25)} per 25 g`}
+              {pair && (
+                <>
+                  {" · "}
+                  <a href={pair.url} class="text-[#0b64c0]">compare</a>
+                </>
+              )}
+            </span>
+          </div>
+          <span class="shrink-0 font-black tabular-nums text-gray-700">{o.score.total}</span>
+        </li>
+      );
+    })}
+  </ol>
+</div>

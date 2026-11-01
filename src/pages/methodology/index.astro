@@ -1,0 +1,133 @@
+---
+// The Label Score formula. Every score on the site links here. The numbers on
+// this page are read from SCORE / CERT_TIERS / TYPES in src/lib/db.mjs, the same
+// constants that compute the scores, so the page cannot drift from the maths.
+import Layout from "../../layouts/Layout.astro";
+import { SCORE, CERT_TIERS, TYPES, ARTIFICIAL_SWEETENERS, PRODUCTS, MEDIANS, money } from "../../lib/db.mjs";
+import { SITE_NAME, SITE_URL } from "../../data/site";
+
+const title = "Methodology: How the Label Score Is Calculated";
+const description = "The Label Score formula behind every protein powder ranking: protein density, cost per 25 g of protein, sugar and additives, certification and amino acid completeness.";
+const aminoRows = Object.entries(TYPES)
+  .map(([, t]: any) => t)
+  .reduce((acc: any[], t: any) => (acc.some((x) => x.amino === t.amino && x.names.includes(t.name)) ? acc : [...acc, { amino: t.amino, names: [t.name] }]), [])
+  .reduce((acc: any[], r: any) => {
+    const hit = acc.find((x) => x.amino === r.amino);
+    if (hit) hit.names.push(...r.names);
+    else acc.push({ ...r });
+    return acc;
+  }, [])
+  .sort((a: any, b: any) => b.amino - a.amino);
+const certRows = Object.entries(CERT_TIERS).sort((a: any, b: any) => b[1] - a[1]);
+const priced = PRODUCTS.filter((p: any) => p.costPer25 != null).length;
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Home", item: `${SITE_URL}/` },
+        { "@type": "ListItem", position: 2, name: "Methodology", item: `${SITE_URL}/methodology/` },
+      ],
+    },
+    {
+      "@type": "WebPage",
+      name: title,
+      description,
+      url: `${SITE_URL}/methodology/`,
+      publisher: { "@type": "Organization", name: SITE_NAME, url: SITE_URL, publishingPrinciples: `${SITE_URL}/methodology/` },
+    },
+  ],
+};
+---
+
+<Layout title={title} description={description} jsonLd={jsonLd}>
+  <article data-article-header class="max-w-3xl mx-auto px-4 pb-16">
+    <nav aria-label="Breadcrumb" class="text-xs text-gray-500 pt-5 mb-4">
+      <a href="/" class="text-gray-500 no-underline hover:text-[#0b64c0]">Home</a> › Methodology
+    </nav>
+    <p class="text-[11px] md:text-xs font-black uppercase tracking-widest m-0 mb-3 text-[#C93500]">Editorial standards</p>
+    <h1 class="text-[1.875rem] leading-[1.15] md:text-5xl font-black tracking-tight text-gray-900 m-0 mb-5">How the Label Score Is Calculated</h1>
+    <p class="text-[1.0625rem] md:text-xl leading-relaxed text-gray-600 m-0 mb-10">
+      Every powder in our database gets a Label Score from 0 to 100. It is computed from the numbers on the label and a dated price, never assigned by hand, and the same formula applies to every product. Here it is in full.
+    </p>
+
+    <div class="grid grid-cols-5 gap-2 mb-10 text-center">
+      {Object.values(SCORE).map((s: any) => (
+        <div class="bg-[#F6F7F9] border border-gray-200 rounded-xl p-3">
+          <span class="block text-2xl font-black text-gray-900">{s.max}</span>
+          <span class="block text-[11px] leading-tight text-gray-600 mt-1">{s.label}</span>
+        </div>
+      ))}
+    </div>
+
+    <div class="prose max-w-none">
+      <h2 id="density" class="text-2xl font-black text-gray-900">1. Protein density: {SCORE.density.max} points</h2>
+      <p>
+        Protein per serving divided by serving weight. A powder at {Math.round(SCORE.density.floor * 100)}% protein or less scores 0; a powder at {Math.round(SCORE.density.ceiling * 100)}% or more scores the full {SCORE.density.max}; everything in between scales in a straight line. This is the biggest component because it is the hardest to fake: a big scoop can inflate "protein per serving", but it cannot inflate protein per gram. The database median is {Math.round(MEDIANS.proteinPct * 100)}%.
+      </p>
+
+      <h2 id="cost" class="text-2xl font-black text-gray-900">2. Cost per 25 g of protein: {SCORE.cost.max} points</h2>
+      <p>
+        Tub price ÷ servings ÷ grams of protein per serving × 25, using a price we saw on a named retailer's site on a recorded date. {money(SCORE.cost.best)} or less per 25 g scores the full {SCORE.cost.max}; {money(SCORE.cost.worst)} or more scores 0; in between scales linearly. The database median is {money(MEDIANS.costPer25)}.
+      </p>
+      <p>
+        When we have no dated price for a product ({PRODUCTS.length - priced} of {PRODUCTS.length} right now), the cost component is left out and the other four are scaled up to 100. Those scores are marked with an asterisk and "no price" so you know they are provisional.
+      </p>
+
+      <h2 id="clean" class="text-2xl font-black text-gray-900">3. Sugar and additives: {SCORE.clean.max} points</h2>
+      <p>Two parts, read from the label and ingredient list of the flavor shown:</p>
+      <ul>
+        <li><strong>Sugar (up to 8):</strong> 1 g or less per serving scores 8; up to 3 g scores 5; up to 6 g scores 2; more scores 0.</li>
+        <li><strong>Additives (up to 7):</strong> start at 7, lose 2 for each artificial sweetener ({ARTIFICIAL_SWEETENERS.join(", ")}) and 1 for each flagged additive (carrageenan, gums, artificial colors).</li>
+      </ul>
+      <p>
+        These ingredients are approved and safe at the amounts in a scoop. They cost points because many readers want to avoid them and some people find gums and sugar alcohols hard on the stomach, not because they are dangerous.
+      </p>
+
+      <h2 id="cert" class="text-2xl font-black text-gray-900">4. Third-party certification: {SCORE.cert.max} points</h2>
+      <p>The highest-tier certification the exact product holds:</p>
+      <ul>
+        {certRows.map(([c, pts]) => <li><strong>{c}:</strong> {pts} points</li>)}
+        <li><strong>None:</strong> 0 points</li>
+      </ul>
+      <p>
+        The 10-point programs batch-test finished product for substances banned in sport. USDA Organic, Non-GMO Project, kosher and gluten-free seals describe sourcing or processing, not what is in the tub, so they are shown on product pages but score nothing. Certifications are recorded per product, and we link to each registry so you can check the listing yourself.
+      </p>
+
+      <h2 id="amino" class="text-2xl font-black text-gray-900">5. Amino acid completeness: {SCORE.amino.max} points</h2>
+      <p>Scored by protein type, following how each type rates on digestibility-corrected amino acid scores (DIAAS/PDCAAS) and leucine content:</p>
+      <ul>
+        {aminoRows.map((r: any) => <li><strong>{r.amino} points:</strong> {r.names.join(", ")}</li>)}
+      </ul>
+      <p>
+        Collagen and bone broth score low because they lack or are very low in tryptophan and leucine; they are useful for other reasons but do far less for muscle protein synthesis gram for gram. Single plant proteins score below blends because blending (pea with rice, for example) fills each one's limiting amino acid.
+      </p>
+
+      <h2 id="data" class="text-2xl font-black text-gray-900">Where the numbers come from</h2>
+      <p>
+        Label data comes from the brand's own supplement-facts panel for the flavor named on each page, or from a major retailer's listing when the brand's page is unavailable; the source is linked on every product page with the date we checked it. Prices are the price we saw on the named retailer's site that day. We re-check labels and prices on a rolling 90-day cycle and update the dates on the page when we do.
+      </p>
+      <p>
+        <strong>What we have not done yet:</strong> weigh scoops, mix shakes or run blind taste panels for every product. Where a guide reports taste or mixability, it says whether that is our own experience or buyer feedback. As hands-on tests are completed, product pages will show a dated "Tested" line with the lot number and measured scoop weight. Until then, the Label Score is exactly what it says: a score of the label.
+      </p>
+      <p>
+        Product pages stay out of search results until their label table is complete, and head-to-head comparison pages are only indexed when both products are ones people actually search for.
+      </p>
+
+      <h2 id="money" class="text-2xl font-black text-gray-900">What we do not accept</h2>
+      <p>
+        No paid placements, no sponsored rankings and no brand-written reviews. Brands do not see a page before it is published. We earn affiliate commissions when you buy through our retailer links; the commission rate never enters the formula, and products with no affiliate program are scored the same way as every other product. See <a href="/how-we-test/">how we test</a> for how our written guides are put together.
+      </p>
+
+      <h2 id="corrections" class="text-2xl font-black text-gray-900">Corrections</h2>
+      <p>
+        If a label has changed or we have a number wrong, tell us through the <a href="/contact/">contact page</a> with a photo of the panel and we will fix it, re-score the product and note the change here.
+      </p>
+      <ul>
+        <li><strong>November 2026:</strong> Label database and Label Score launched.</li>
+      </ul>
+    </div>
+  </article>
+</Layout>

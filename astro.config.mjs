@@ -4,6 +4,20 @@ import tailwind from '@astrojs/tailwind';
 import sitemap from '@astrojs/sitemap';
 import { SITE_URL } from './site.config.mjs';
 import markdownTwins from './src/integrations/markdown-twins.mjs';
+import { noindexPaths } from './src/lib/db.mjs';
+
+// Generated pages that carry noindex (comparison pairs without search demand,
+// product pages with an incomplete label) stay out of the sitemap.
+const NOINDEX = noindexPaths();
+
+// Database hubs: the all-powders table, the brand index, the compare tool,
+// the glossary index and the methodology page every score links to.
+const databaseHubs = new Set(['protein-powder', 'brands', 'compare', 'glossary', 'methodology']);
+
+// One sitemap per generated template (sitemap-products-0.xml and so on), so
+// Search Console reports indexing per template. Everything else falls through to
+// sitemap-pages-0.xml.
+const chunkFor = (prefix) => (item) => (new URL(item.url).pathname.startsWith(prefix) ? item : undefined);
 
 // Pillar pages (the "best-*" roundups the clusters are built to support). They get
 // the highest sitemap priority after the home page and the guide index.
@@ -98,6 +112,19 @@ const priorityGuides = new Set([
   'ritual-protein-powder-review',
   'oath-protein-powder-review',
   'prodough-protein-powder-review',
+  // November 2026: SEO blueprint Tier 1 and Tier 2 best-ofs.
+  'best-lactose-free-protein-powder',
+  'best-protein-powder-for-sensitive-stomach',
+  'best-egg-white-protein-powder',
+  'best-protein-powder-for-teens',
+  'best-protein-powder-for-seniors',
+  'best-protein-powder-for-diabetics',
+  'best-costco-protein-powder',
+  'best-low-carb-protein-powder',
+  'best-protein-powder-for-glp-1',
+  'best-protein-powder-for-coffee',
+  'best-protein-powder-for-baking',
+  'best-protein-powder-without-heavy-metals',
 ]);
 
 export default defineConfig({
@@ -109,6 +136,13 @@ export default defineConfig({
     react(),
     tailwind(),
     sitemap({
+      filter: (page) => !NOINDEX.has(new URL(page).pathname),
+      chunks: {
+        products: chunkFor('/protein-powder/'),
+        brands: chunkFor('/brands/'),
+        compare: chunkFor('/compare/'),
+        glossary: chunkFor('/glossary/'),
+      },
       serialize(item) {
         const url = item.url.replace(/\/$/, '');
         const slug = url.slice(SITE_URL.length + 1);
@@ -120,6 +154,12 @@ export default defineConfig({
         } else if (slug === 'best-of') {
           item.changefreq = 'weekly';
           item.priority = 0.9;
+        } else if (databaseHubs.has(slug)) {
+          item.changefreq = 'weekly';
+          item.priority = 0.9;
+        } else if (/^(protein-powder|brands)\//.test(slug)) {
+          item.changefreq = 'monthly';
+          item.priority = 0.7;
         } else if (pillarGuides.has(slug)) {
           item.changefreq = 'monthly';
           item.priority = 0.9;

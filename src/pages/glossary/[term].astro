@@ -1,0 +1,127 @@
+---
+// Glossary term page: a definition first (for snippets and AI Overviews), then
+// the detail, where it shows up on a label, and links into the database.
+import Layout from "../../layouts/Layout.astro";
+import { GLOSSARY, GLOSSARY_BY_SLUG, PRODUCTS } from "../../lib/db.mjs";
+import { SITE_NAME, SITE_URL } from "../../data/site";
+
+export function getStaticPaths() {
+  return GLOSSARY.map((g) => ({ params: { term: g.slug }, props: { g } }));
+}
+const { g } = Astro.props as { g: any };
+const related = (g.related || []).map((s: string) => GLOSSARY_BY_SLUG.get(s)).filter(Boolean);
+
+// Products the term describes, where the link is mechanical and true.
+const TYPE_TERMS: Record<string, string[]> = {
+  "whey-protein-concentrate": ["whey-concentrate", "whey-blend"],
+  "whey-protein-isolate": ["whey-isolate"],
+  "whey-protein-hydrolysate": ["whey-hydrolysate"],
+  "micellar-casein": ["casein"],
+  "milk-protein-isolate": ["milk-blend"],
+  "pea-protein-isolate": ["pea"],
+  "soy-protein-isolate": ["soy"],
+  "brown-rice-protein": ["rice"],
+  "hemp-protein": ["hemp"],
+  "collagen-peptides": ["collagen"],
+  "egg-white-protein": ["egg-white"],
+  "beef-protein-isolate": ["beef"],
+  "bone-broth-protein": ["bone-broth"],
+};
+const SWEET_TERMS: Record<string, RegExp> = {
+  sucralose: /sucralose/i,
+  "acesulfame-potassium": /acesulfame|ace-k/i,
+  stevia: /stevia|reb/i,
+  "monk-fruit": /monk|luo han/i,
+  "sugar-alcohols": /erythritol|xylitol|sorbitol|maltitol|allulose/i,
+};
+const CERT_TERMS: Record<string, string> = {
+  "informed-choice": "Informed Choice",
+  "informed-sport": "Informed Sport",
+  "nsf-certified-for-sport": "NSF Certified for Sport",
+  "clean-label-project": "Clean Label Project",
+};
+let examples: any[] = [];
+let exampleHeading = "";
+if (TYPE_TERMS[g.slug]) {
+  examples = PRODUCTS.filter((p: any) => TYPE_TERMS[g.slug].includes(p.proteinType));
+  exampleHeading = `${g.term} powders in our database`;
+} else if (SWEET_TERMS[g.slug]) {
+  examples = PRODUCTS.filter((p: any) => (p.sweeteners || []).some((s: string) => SWEET_TERMS[g.slug].test(s)));
+  exampleHeading = `Powders sweetened with ${g.term.toLowerCase()}`;
+} else if (CERT_TERMS[g.slug]) {
+  examples = PRODUCTS.filter((p: any) => (p.certifications || []).includes(CERT_TERMS[g.slug]));
+  exampleHeading = `${CERT_TERMS[g.slug]} certified powders in our database`;
+}
+examples = examples.slice(0, 10);
+
+const title = `What Is ${g.term}? Protein Powder Glossary`;
+const description = g.short.length > 155 ? g.short.slice(0, 152) + "…" : g.short;
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Home", item: `${SITE_URL}/` },
+        { "@type": "ListItem", position: 2, name: "Glossary", item: `${SITE_URL}/glossary/` },
+        { "@type": "ListItem", position: 3, name: g.term, item: `${SITE_URL}${g.url}` },
+      ],
+    },
+    {
+      "@type": "DefinedTerm",
+      name: g.term,
+      description: g.short,
+      url: `${SITE_URL}${g.url}`,
+      inDefinedTermSet: { "@type": "DefinedTermSet", name: `${SITE_NAME} Glossary`, url: `${SITE_URL}/glossary/` },
+    },
+  ],
+};
+---
+
+<Layout title={title} description={description} jsonLd={jsonLd}>
+  <article data-article-header class="max-w-3xl mx-auto px-4 pb-16">
+    <nav aria-label="Breadcrumb" class="text-xs text-gray-500 pt-5 mb-4">
+      <a href="/" class="text-gray-500 no-underline hover:text-[#0b64c0]">Home</a> ›
+      <a href="/glossary/" class="text-gray-500 no-underline hover:text-[#0b64c0]">Glossary</a>
+    </nav>
+    <p class="text-[11px] md:text-xs font-black uppercase tracking-widest m-0 mb-3 text-[#C93500]">Glossary</p>
+    <h1 class="text-[1.875rem] leading-[1.15] md:text-5xl font-black tracking-tight text-gray-900 m-0 mb-5">What is {g.term.toLowerCase().startsWith("the ") ? g.term : g.term}?</h1>
+    <p class="text-[1.125rem] md:text-xl leading-relaxed text-gray-800 m-0 mb-8 font-medium bg-[#F6F7F9] border border-gray-200 rounded-2xl p-5">{g.short}</p>
+    <div class="prose max-w-none">
+      {g.body.map((para: string) => <p>{para}</p>)}
+      {g.onLabel && (
+        <>
+          <h2 class="text-2xl font-black text-gray-900">On a protein powder label</h2>
+          <p>{g.onLabel}</p>
+        </>
+      )}
+      {examples.length > 0 && (
+        <>
+          <h2 class="text-2xl font-black text-gray-900">{exampleHeading}</h2>
+          <ul>
+            {examples.map((p: any) => (
+              <li><a href={p.url}>{p.fullName}</a>: {p.proteinG} g protein per {p.servingSizeG} g, Label Score {p.score.total}</li>
+            ))}
+          </ul>
+        </>
+      )}
+      {g.sources?.length > 0 && (
+        <>
+          <h2 class="text-xl font-black text-gray-900">Sources</h2>
+          <ul>
+            {g.sources.map((s: any) => <li><a href={s.url} rel="nofollow noopener" target="_blank">{s.name}</a></li>)}
+          </ul>
+        </>
+      )}
+    </div>
+    {related.length > 0 && (
+      <section class="mt-10">
+        <h2 class="text-lg font-black text-gray-900 mb-3">Related terms</h2>
+        <div class="flex flex-wrap gap-2">
+          {related.map((r: any) => <a href={r.url} class="border border-gray-300 rounded-full px-4 py-2 text-sm font-semibold text-gray-800 no-underline hover:border-[#1E90FF]">{r.term}</a>)}
+        </div>
+      </section>
+    )}
+    <p class="mt-10 text-sm"><a href="/glossary/" class="text-[#0b64c0] font-bold">All glossary terms</a> · <a href="/protein-powder/" class="text-[#0b64c0] font-bold">All protein powders ranked</a> · <a href="/methodology/" class="text-[#0b64c0] font-bold">How we score</a></p>
+  </article>
+</Layout>

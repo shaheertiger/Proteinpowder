@@ -1,0 +1,74 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { BRANDS, PRODUCTS } from "../../lib/db.mjs";
+import { SITE_NAME, SITE_URL } from "../../data/site";
+
+const title = `Protein Powder Brands: ${BRANDS.length} Brands by Label Score`;
+const description = `Every protein powder brand in our label database, with how many powders each makes, its best-scoring product and its average Label Score.`;
+const rows = BRANDS.map((b: any) => ({
+  ...b,
+  avg: Math.round(b.products.reduce((a: number, p: any) => a + p.score.total, 0) / b.products.length),
+  certified: b.products.filter((p: any) => p.diets.includes("certified")).length,
+})).sort((a: any, b: any) => b.avg - a.avg || a.name.localeCompare(b.name));
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Home", item: `${SITE_URL}/` },
+        { "@type": "ListItem", position: 2, name: "Brands", item: `${SITE_URL}/brands/` },
+      ],
+    },
+    {
+      "@type": "CollectionPage",
+      name: title,
+      description,
+      url: `${SITE_URL}/brands/`,
+      publisher: { "@type": "Organization", name: SITE_NAME, url: SITE_URL },
+      mainEntity: {
+        "@type": "ItemList",
+        numberOfItems: rows.length,
+        itemListElement: rows.map((b: any, i: number) => ({ "@type": "ListItem", position: i + 1, url: `${SITE_URL}${b.url}`, name: b.name })),
+      },
+    },
+  ],
+};
+---
+
+<Layout title={title} description={description} jsonLd={jsonLd}>
+  <div data-article-header class="max-w-5xl mx-auto px-4 pb-16">
+    <nav aria-label="Breadcrumb" class="text-xs text-gray-500 pt-5 mb-4">
+      <a href="/" class="text-gray-500 no-underline hover:text-[#0b64c0]">Home</a> › Brands
+    </nav>
+    <h1 class="text-[1.875rem] leading-[1.15] md:text-5xl font-black tracking-tight text-gray-900 m-0 mb-4">Protein Powder Brands</h1>
+    <p class="text-[1.0625rem] md:text-xl leading-relaxed text-gray-600 m-0 mb-8 max-w-3xl">
+      {BRANDS.length} brands and {PRODUCTS.length} powders, ranked by the average Label Score of the products we track. Each brand page lists every powder with its full label numbers. Looking for our written take on the big names? See <a href="/protein-powder-brands/" class="text-[#0b64c0]">the best protein powder brands</a>.
+    </p>
+    <div class="overflow-x-auto border border-gray-200 rounded-2xl">
+      <table class="w-full text-sm text-left">
+        <thead class="bg-gray-50 border-b border-gray-200">
+          <tr>
+            <th class="px-4 py-3 font-bold text-gray-600">Brand</th>
+            <th class="px-4 py-3 font-bold text-gray-600">Powders</th>
+            <th class="px-4 py-3 font-bold text-gray-600">Best scoring</th>
+            <th class="px-4 py-3 font-bold text-gray-600">Sport-certified</th>
+            <th class="px-4 py-3 font-bold text-gray-600">Avg. score</th>
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((b: any) => (
+            <tr class="border-b border-gray-100">
+              <td class="px-4 py-3"><a href={b.url} class="font-bold text-gray-900 no-underline hover:text-[#1E90FF]">{b.name}</a></td>
+              <td class="px-4 py-3 tabular-nums">{b.products.length}</td>
+              <td class="px-4 py-3"><a href={b.products[0].url} class="text-gray-700 no-underline hover:text-[#1E90FF]">{b.products[0].name}</a> <span class="text-gray-400">({b.products[0].score.total})</span></td>
+              <td class="px-4 py-3 tabular-nums">{b.certified}/{b.products.length}</td>
+              <td class="px-4 py-3 font-black tabular-nums">{b.avg}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</Layout>
