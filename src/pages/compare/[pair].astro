@@ -1,0 +1,208 @@
+---
+// Comparison page (X vs Y), generated for every pair in the same protein family.
+// Indexed only when both products have search demand; the rest are noindex and
+// kept out of the sitemap (see COMPARISONS in src/lib/db.mjs).
+import Layout from "../../layouts/Layout.astro";
+import ScoreBadge from "../../components/db/ScoreBadge.astro";
+import { COMPARISONS, TYPES, CERT_TIERS, fmt, money } from "../../lib/db.mjs";
+import { amazonLink } from "../../data/affiliate";
+import ASINS from "../../data/product-asins.json";
+import { SITE_URL } from "../../data/site";
+
+export function getStaticPaths() {
+  return COMPARISONS.map((c) => ({ params: { pair: c.slug }, props: { c } }));
+}
+
+const { c } = Astro.props as { c: any };
+const { a, b } = c;
+const sport = (p: any) => (p.certifications || []).filter((x: string) => (CERT_TIERS as any)[x] === 10);
+const buy = (p: any) => amazonLink(null, p.fullName, [...(p.aliases || []), p.slug].find((k: string) => (ASINS as any)[k]));
+
+const winner = (fa: number | null, fb: number | null, high = true) => {
+  if (fa == null || fb == null || fa === fb) return null;
+  return (high ? fa > fb : fa < fb) ? a : b;
+};
+const valueWin = winner(a.costPer25, b.costPer25, false);
+const densityWin = winner(a.proteinPct, b.proteinPct);
+const scoreWin = winner(a.score.total, b.score.total);
+const certA = sport(a).length > 0;
+const certB = sport(b).length > 0;
+const certWin = certA === certB ? null : certA ? a : b;
+
+const quickParts = [
+  scoreWin ? `${scoreWin.fullName} has the higher Label Score (${scoreWin.score.total} vs ${(scoreWin === a ? b : a).score.total}).` : `They tie on Label Score at ${a.score.total}.`,
+  valueWin ? `${valueWin.name} is cheaper per gram of protein (${money(valueWin.costPer25)} vs ${money((valueWin === a ? b : a).costPer25)} per 25 g).` : a.costPer25 == null || b.costPer25 == null ? "We do not have dated prices for both, so cost per gram is not compared." : "They cost the same per gram of protein.",
+  densityWin ? `${densityWin.name} packs more protein per gram of powder (${Math.round(densityWin.proteinPct * 100)}% vs ${Math.round((densityWin === a ? b : a).proteinPct * 100)}%).` : "",
+  certWin ? `Only ${certWin.name} is sport-certified (${sport(certWin).join(", ")}).` : certA ? "Both are sport-certified." : "Neither is sport-certified.",
+].filter(Boolean);
+
+const rows: [string, (p: any) => string][] = [
+  ["Protein type", (p) => TYPES[p.proteinType].name],
+  ["Flavor on label", (p) => p.labelFlavor],
+  ["Serving size", (p) => `${fmt(p.servingSizeG)} g`],
+  ["Protein per serving", (p) => `${fmt(p.proteinG)} g`],
+  ["Protein % by weight", (p) => `${Math.round(p.proteinPct * 100)}%`],
+  ["Calories", (p) => fmt(p.calories)],
+  ["Carbohydrate", (p) => (p.carbsG == null ? "–" : `${fmt(p.carbsG)} g`)],
+  ["Sugar", (p) => (p.sugarG == null ? "–" : `${fmt(p.sugarG)} g`)],
+  ["Fat", (p) => (p.fatG == null ? "–" : `${fmt(p.fatG)} g`)],
+  ["Sodium", (p) => (p.sodiumMg == null ? "–" : `${fmt(p.sodiumMg)} mg`)],
+  ["Sweeteners", (p) => (p.sweeteners == null ? "not stated" : p.sweeteners.join(", ") || "none")],
+  ["Sport certification", (p) => sport(p).join(", ") || "none"],
+  ["Cost per serving", (p) => (p.costPerServing == null ? "not checked" : money(p.costPerServing))],
+  ["Cost per 25 g protein", (p) => (p.costPer25 == null ? "not checked" : money(p.costPer25))],
+  ["Label Score", (p) => `${p.score.total}/100`],
+];
+
+// H2 sections only where the labels differ by more than 10%.
+const diff = (x: number | null, y: number | null) => x != null && y != null && Math.max(x, y) > 0 && Math.abs(x - y) / Math.max(x, y) > 0.1;
+const diffs: { h: string; body: string }[] = [];
+if (diff(a.proteinG, b.proteinG)) {
+  const [hi, lo] = a.proteinG > b.proteinG ? [a, b] : [b, a];
+  diffs.push({ h: `Protein: ${hi.name} has ${fmt(hi.proteinG - lo.proteinG)} g more per serving`, body: `${hi.fullName} gives ${fmt(hi.proteinG)} g per ${fmt(hi.servingSizeG)} g serving against ${fmt(lo.proteinG)} g per ${fmt(lo.servingSizeG)} g for ${lo.fullName}. Per gram of powder that is ${Math.round(hi.proteinPct * 100)}% vs ${Math.round(lo.proteinPct * 100)}% protein, so ${hi.proteinPct >= lo.proteinPct ? "the gap is real, not just a bigger scoop" : "the gap is mostly a bigger scoop"}.` });
+}
+if (diff(a.calories, b.calories)) {
+  const [hi, lo] = a.calories > b.calories ? [a, b] : [b, a];
+  diffs.push({ h: `Calories: ${lo.name} is lighter`, body: `${lo.name} has ${fmt(lo.calories)} calories per serving, ${hi.name} ${fmt(hi.calories)}. Per gram of protein that is ${fmt(lo.calories / lo.proteinG)} vs ${fmt(hi.calories / hi.proteinG)} calories, which matters if you are cutting.` });
+}
+if (diff(a.sugarG, b.sugarG) && Math.abs(a.sugarG - b.sugarG) >= 1) {
+  const [hi, lo] = a.sugarG > b.sugarG ? [a, b] : [b, a];
+  diffs.push({ h: `Sugar: ${hi.name} has more`, body: `${hi.name} has ${fmt(hi.sugarG)} g of sugar per serving against ${fmt(lo.sugarG)} g for ${lo.name}. Neither amount matters much for most people, but it adds up at two or three scoops a day.` });
+}
+if (diff(a.costPer25, b.costPer25)) {
+  const [hi, lo] = a.costPer25 > b.costPer25 ? [a, b] : [b, a];
+  const pct = Math.round((1 - lo.costPer25 / hi.costPer25) * 100);
+  diffs.push({ h: `Price: ${lo.name} is ${pct}% cheaper per gram of protein`, body: `At the dated prices on file, 25 g of protein costs ${money(lo.costPer25)} from ${lo.name} and ${money(hi.costPer25)} from ${hi.name}. At one shake a day, that is about ${money((hi.costPer25 - lo.costPer25) * 30)} a month.` });
+}
+if (certA !== certB) {
+  diffs.push({ h: `Testing: only ${certWin.name} is sport-certified`, body: `${certWin.fullName} carries ${sport(certWin).join(" and ")}, which batch-tests finished product for banned substances. ${(certWin === a ? b : a).fullName} has no sport certification we could confirm. If you are a drug-tested athlete, that settles it.` });
+}
+
+const cheaperName = valueWin ? valueWin.name : null;
+const buyText = [
+  scoreWin ? `On the label alone, ${scoreWin.name} is the better product (${scoreWin.score.total}/100).` : "On the label they are close enough that flavor and price on the day should decide.",
+  cheaperName ? `If budget leads, ${cheaperName} gives you more protein for the money.` : "",
+  densityWin ? `If you are cutting, ${densityWin.name}'s higher protein share means fewer calories per gram of protein.` : "",
+  certWin ? `If you are tested in sport, buy ${certWin.name}.` : "",
+].filter(Boolean).join(" ");
+
+const title = `${a.fullName} vs ${b.fullName}: Label Compared`;
+const description = `${a.name} vs ${b.name}, side by side: protein per scoop, calories, sugar, sweeteners, certification and cost per 25 g of protein. ${quickParts[0]}`.slice(0, 300);
+
+const faq: [string, string][] = [
+  [`Which has more protein, ${a.name} or ${b.name}?`, `${a.name} has ${fmt(a.proteinG)} g per ${fmt(a.servingSizeG)} g serving (${Math.round(a.proteinPct * 100)}% protein); ${b.name} has ${fmt(b.proteinG)} g per ${fmt(b.servingSizeG)} g (${Math.round(b.proteinPct * 100)}%). Numbers are for the flavors shown and vary slightly by flavor.`],
+  [`Which is cheaper, ${a.name} or ${b.name}?`, a.costPer25 != null && b.costPer25 != null ? `Per 25 g of protein, ${a.name} costs ${money(a.costPer25)} and ${b.name} ${money(b.costPer25)} at the dated prices on each product page. Prices change, so check the retailer before you buy.` : "We do not have dated prices for both products yet. Compare them on cost per 25 g of protein using the price you see today."],
+  [`Is ${a.name} or ${b.name} better for weight loss?`, `${a.name} has ${fmt(a.calories)} calories per serving and ${b.name} ${fmt(b.calories)}. The one with more protein per calorie (${a.proteinG / a.calories >= b.proteinG / b.calories ? a.name : b.name}) is the better fit for a cut, but total daily calories decide weight loss.`],
+  [`Are ${a.name} and ${b.name} third-party tested?`, `${a.name}: ${sport(a).join(", ") || "no sport certification we could confirm"}. ${b.name}: ${sport(b).join(", ") || "no sport certification we could confirm"}. Check the certifier's registry for the exact product and flavor.`],
+];
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Home", item: `${SITE_URL}/` },
+        { "@type": "ListItem", position: 2, name: "Compare", item: `${SITE_URL}/compare/` },
+        { "@type": "ListItem", position: 3, name: `${a.name} vs ${b.name}`, item: `${SITE_URL}${c.url}` },
+      ],
+    },
+    {
+      "@type": "Article",
+      headline: title,
+      description,
+      url: `${SITE_URL}${c.url}`,
+      author: { "@type": "Organization", name: "Best Protein Powder", url: SITE_URL },
+    },
+    {
+      "@type": "ItemList",
+      numberOfItems: 2,
+      itemListElement: [a, b].map((p: any, i: number) => ({ "@type": "ListItem", position: i + 1, url: `${SITE_URL}${p.url}`, name: p.fullName })),
+    },
+    {
+      "@type": "FAQPage",
+      mainEntity: faq.map(([q, ans]) => ({ "@type": "Question", name: q, acceptedAnswer: { "@type": "Answer", text: ans } })),
+    },
+  ],
+};
+---
+
+<Layout title={title} description={description} jsonLd={jsonLd} noindex={!c.indexable}>
+  <article data-article-header class="max-w-3xl mx-auto px-4 pb-16">
+    <nav aria-label="Breadcrumb" class="text-xs text-gray-500 pt-5 mb-4">
+      <a href="/" class="text-gray-500 no-underline hover:text-[#0b64c0]">Home</a> ›
+      <a href="/compare/" class="text-gray-500 no-underline hover:text-[#0b64c0]">Compare</a>
+    </nav>
+    <p class="text-[11px] md:text-xs font-black uppercase tracking-widest m-0 mb-3 text-[#C93500]">Head to head</p>
+    <h1 class="text-[1.75rem] leading-[1.15] md:text-4xl font-black tracking-tight text-gray-900 m-0 mb-4">{a.fullName} vs {b.fullName}</h1>
+    <p class="text-xs text-gray-500 m-0 mb-6">From each brand's published label. We earn a commission if you buy through our retailer links. <a href="/methodology/" class="text-[#0b64c0]">Methodology</a>.</p>
+
+    <section class="bg-[#F6F7F9] border border-gray-200 rounded-2xl p-5 md:p-6 mb-8">
+      <h2 class="text-xs font-black uppercase tracking-widest text-gray-500 m-0 mb-2">Quick answer</h2>
+      <p class="text-[1.0625rem] leading-relaxed text-gray-800 m-0">{quickParts.join(" ")}</p>
+      <div class="flex justify-around mt-5">
+        {[a, b].map((p: any) => (
+          <div class="text-center">
+            <ScoreBadge score={p.score} size="sm" />
+            <a href={p.url} class="block text-sm font-bold text-gray-900 mt-1 no-underline hover:text-[#1E90FF]">{p.name}</a>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <div class="overflow-x-auto border border-gray-200 rounded-2xl mb-10">
+      <table class="w-full text-sm text-left">
+        <thead class="bg-gray-50 border-b border-gray-200">
+          <tr>
+            <th class="px-4 py-3 font-bold text-gray-600"></th>
+            <th class="px-4 py-3 font-bold text-gray-900"><a href={a.url} class="text-gray-900 no-underline">{a.name}</a></th>
+            <th class="px-4 py-3 font-bold text-gray-900"><a href={b.url} class="text-gray-900 no-underline">{b.name}</a></th>
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map(([label, f]) => (
+            <tr class="border-b border-gray-100">
+              <td class="px-4 py-3 font-semibold text-gray-600">{label}</td>
+              <td class="px-4 py-3">{f(a)}</td>
+              <td class="px-4 py-3">{f(b)}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="prose max-w-none">
+      {diffs.map((d) => (
+        <>
+          <h2 class="text-2xl font-black text-gray-900">{d.h}</h2>
+          <p>{d.body}</p>
+        </>
+      ))}
+      {diffs.length === 0 && <p>The two labels are within 10% of each other on protein, calories, sugar and price, so choose on flavor, sweetener and where you can buy it.</p>}
+      <h2 class="text-2xl font-black text-gray-900">Which should you buy?</h2>
+      <p>{buyText}</p>
+    </div>
+    <div class="flex flex-wrap gap-3 my-6">
+      {[a, b].map((p: any) => (
+        <a href={buy(p)} target="_blank" rel="sponsored nofollow noopener" class="bg-[#FF4500] hover:bg-[#E63E00] text-white font-bold px-5 py-3 rounded-xl no-underline">{p.name} on Amazon</a>
+      ))}
+    </div>
+
+    <section id="faq" class="mt-10 scroll-mt-24">
+      <h2 class="text-2xl font-black text-gray-900 mb-4">FAQ</h2>
+      <div class="faq-list">
+        {faq.map(([q, ans]) => (
+          <details class="faq-item">
+            <summary><h3>{q}</h3></summary>
+            <div class="faq-answer"><p>{ans}</p></div>
+          </details>
+        ))}
+      </div>
+    </section>
+    <p class="mt-10 text-sm">
+      <a href={a.url} class="text-[#0b64c0] font-bold">{a.name} label review</a> ·
+      <a href={b.url} class="text-[#0b64c0] font-bold">{b.name} label review</a> ·
+      <a href="/protein-powder/" class="text-[#0b64c0] font-bold">All powders ranked</a>
+    </p>
+  </article>
+</Layout>

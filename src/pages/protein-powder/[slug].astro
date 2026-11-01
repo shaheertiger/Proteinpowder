@@ -1,0 +1,458 @@
+---
+// Product page template: one page per powder in src/data/db/products.json.
+// Every sentence below the H1 is generated from the product's label row and its
+// position in the database, so a label or price change updates the page, the
+// hub table and every compare block in the same build.
+import Layout from "../../layouts/Layout.astro";
+import ScoreBadge from "../../components/db/ScoreBadge.astro";
+import CompareBlock from "../../components/db/CompareBlock.astro";
+import AuthorAvatar from "../../components/AuthorAvatar.astro";
+import { AUTHORS, DEFAULT_AUTHOR } from "../../data/authors";
+import { SITE_NAME, SITE_URL } from "../../data/site";
+import { amazonLink } from "../../data/affiliate";
+import ASINS from "../../data/product-asins.json";
+import IMAGES from "../../data/product-images.json";
+import {
+  PRODUCTS,
+  BRAND_BY_SLUG,
+  GOALS,
+  DIETS,
+  TYPES,
+  CERT_TIERS,
+  CERT_REGISTRY,
+  MEDIANS,
+  GLOSSARY_BY_SLUG,
+  compareBlocks,
+  verdict,
+  fmt,
+  money,
+} from "../../lib/db.mjs";
+import { roundupsFor } from "../../lib/roundups";
+
+export function getStaticPaths() {
+  return PRODUCTS.map((p) => ({ params: { slug: p.slug }, props: { p } }));
+}
+
+const { p } = Astro.props as { p: any };
+const author = AUTHORS[DEFAULT_AUTHOR];
+const brand = BRAND_BY_SLUG.get(p.brandSlug)!;
+const type = TYPES[p.proteinType as keyof typeof TYPES];
+const total = PRODUCTS.length;
+const pct = Math.round(p.proteinPct * 100);
+const sportCerts: string[] = (p.certifications || []).filter((c: string) => CERT_TIERS[c as keyof typeof CERT_TIERS]);
+const otherCerts: string[] = (p.certifications || []).filter((c: string) => !CERT_TIERS[c as keyof typeof CERT_TIERS]);
+// Best-of guides first (they are the pages we want to pass authority to), then reviews.
+const roundups = roundupsFor(p.slug)
+  .sort((a, b) => Number(!a.url.startsWith("/best-")) - Number(!b.url.startsWith("/best-")) || a.position - b.position)
+  .slice(0, 8);
+const blocks = compareBlocks(p);
+const sameFamily = PRODUCTS.filter((o: any) => o.family === p.family);
+const familyRank = sameFamily.findIndex((o: any) => o.slug === p.slug) + 1;
+const typeGloss = { "whey-concentrate": "whey-protein-concentrate", "whey-blend": "whey-protein-concentrate", "whey-isolate": "whey-protein-isolate", "whey-hydrolysate": "whey-protein-hydrolysate", "milk-blend": "milk-protein-isolate", casein: "micellar-casein", "egg-white": "egg-white-protein", beef: "beef-protein-isolate", "bone-broth": "bone-broth-protein", collagen: "collagen-peptides", soy: "soy-protein-isolate", pea: "pea-protein-isolate", rice: "brown-rice-protein", hemp: "hemp-protein" } as Record<string, string>;
+const gloss = (slug: string) => (GLOSSARY_BY_SLUG.has(slug) ? `/glossary/${slug}/` : null);
+const typeGlossUrl = gloss(typeGloss[p.proteinType] || "");
+
+const fmtDate = (d: string | null | undefined) =>
+  d ? new Date(`${d}T12:00:00Z`).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric", timeZone: "UTC" }) : null;
+const labelChecked = fmtDate(p.labelChecked || p.price?.checked);
+const priceChecked = fmtDate(p.price?.checked);
+
+// Affiliate link: prefer an alias we already hold an ASIN for.
+const asinKey = [...(p.aliases || []), p.slug].find((a: string) => (ASINS as Record<string, string>)[a]);
+const buyUrl = amazonLink(null, p.fullName, asinKey);
+const image = [...(p.aliases || []), p.slug].map((a: string) => (IMAGES as Record<string, string>)[a]).find(Boolean) || null;
+
+// ---------- Copy generated from the row ----------
+const densityLine =
+  p.proteinPct >= MEDIANS.proteinPct
+    ? `That is ${pct}% protein by weight, above the database median of ${Math.round(MEDIANS.proteinPct * 100)}%.`
+    : `That is ${pct}% protein by weight, below the database median of ${Math.round(MEDIANS.proteinPct * 100)}%, so more of each scoop is flavor, carbohydrate or fat.`;
+const costLine =
+  p.costPer25 == null
+    ? "We have not recorded a dated price for it yet, so its cost per 25 g of protein is not scored."
+    : `At ${money(p.price.usd)} for ${p.price.servings} servings (${p.price.retailer}, ${priceChecked}), it costs ${money(p.costPerServing)} a serving, or ${money(p.costPer25)} per 25 g of protein, against a database median of ${money(MEDIANS.costPer25)}.`;
+const verified: string[] = p.certVerified || [];
+const certSource = (c: string) => (verified.includes(c) ? "listed in the certifier's registry" : `per ${p.brand}`);
+const certLine = sportCerts.length
+  ? `It carries ${sportCerts.map((c) => `${c} certification (${certSource(c)})`).join(" and ")}, which tests finished product for banned substances.`
+  : "It has no sport certification (Informed Choice, Informed Sport, NSF Certified for Sport or BSCG) that we could confirm.";
+const quick = `${p.fullName} (${p.labelFlavor}) has ${fmt(p.proteinG)} g of protein in a ${fmt(p.servingSizeG)} g serving with ${fmt(p.calories)} calories and ${p.sugarG == null ? "no sugar figure on the panel" : fmt(p.sugarG) + " g of sugar"}. ${densityLine} ${costLine} ${certLine}`;
+
+const title = `${p.fullName}: ${fmt(p.proteinG)} g Protein per Scoop (${fmt(p.calories)} kcal)`;
+const description = `${p.name} (${p.labelFlavor}): ${fmt(p.proteinG)} g protein, ${fmt(p.calories)} calories, ${p.sugarG == null ? "–" : fmt(p.sugarG)} g sugar per ${fmt(p.servingSizeG)} g serving.${p.costPer25 == null ? "" : ` ${money(p.costPer25)} per 25 g protein.`}${sportCerts.length ? ` ${sportCerts[0]} certified.` : ""} Compared with ${total} powders.`;
+
+// %DV uses the FDA Daily Values for adults on a 2,000-calorie diet.
+const DV: Record<string, number> = { proteinG: 50, carbsG: 275, fatG: 78, sodiumMg: 2300, fiberG: 28 };
+const dv = (key: string) => (p[key] == null || !DV[key] ? "–" : `${Math.round((p[key] / DV[key]) * 100)}%`);
+const LABEL_ROWS = [
+  ["Calories", "calories", ""],
+  ["Protein", "proteinG", "g"],
+  ["Total carbohydrate", "carbsG", "g"],
+  ["Dietary fiber", "fiberG", "g"],
+  ["Total sugars", "sugarG", "g"],
+  ["Total fat", "fatG", "g"],
+  ["Sodium", "sodiumMg", "mg"],
+  ["Leucine", "leucineG", "g"],
+  ["BCAAs", "bcaaG", "g"],
+].filter(([, key]) => key === "calories" || p[key] != null) as [string, string, string][];
+const LABEL_ROWS_MISSING = [["Total carbohydrate", "carbsG"], ["Total sugars", "sugarG"], ["Total fat", "fatG"]].filter(([, k]) => p[k] == null).map(([l]) => l);
+
+const goalSections = GOALS.filter((g) => g.slug !== "meal-replacement" || p.calories >= 160).map((g) => {
+  const ok = p.goals.includes(g.slug);
+  return { g, ok, text: ok ? g.why(p) : g.whyNot(p) };
+});
+
+const lactoseFree = p.diets.includes("dairy-free");
+const lactoseAnswer = lactoseFree
+  ? `It is not made from milk, so it has no lactose${(p.allergens || []).length ? `, though the label declares ${p.allergens.join(", ")}` : ""}.`
+  : p.proteinType === "whey-isolate" || p.proteinType === "whey-hydrolysate"
+    ? "It is a milk protein, so it is not dairy-free, but isolates and hydrolysates carry very little lactose (typically under 1 g a serving), which most lactose-intolerant people tolerate."
+    : "It is made from milk and contains lactose. Concentrates and blends carry more lactose than an isolate, so if dairy upsets you, look at a whey isolate or a plant protein instead.";
+
+const sweetAnswer = p.sweeteners == null
+  ? "The brand's ingredient list did not make the sweeteners clear for this flavor."
+  : p.sweeteners.length === 0
+    ? "No. This flavor has no added sweeteners of any kind."
+    : p.artificial.length
+      ? `Yes. This flavor is sweetened with ${p.sweeteners.join(", ")}; ${p.artificial.join(" and ")} ${p.artificial.length > 1 ? "are" : "is"} artificial.`
+      : `No artificial sweeteners. This flavor uses ${p.sweeteners.join(", ")}.`;
+
+const metalsAnswer = p.heavyMetals
+  ? p.heavyMetals
+  : `We have no public third-party heavy-metal result for ${p.fullName}. "No public data" is not the same as a problem; it means the brand has not published a certificate of analysis and the independent testers we track have not reported on this product. ${type.family === "plant" ? "Plant proteins tend to carry more lead and cadmium than dairy proteins because the plants take metals up from soil, so a published test matters more here." : "Dairy proteins have generally tested lower for lead and cadmium than plant proteins in published surveys."}`;
+
+const faq: [string, string][] = [
+  [`How much protein is in a scoop of ${p.fullName}?`, `${fmt(p.proteinG)} g per ${fmt(p.servingSizeG)} g serving${p.scoopsPerServing && p.scoopsPerServing > 1 ? ` (${p.scoopsPerServing} scoops)` : ""}, for the ${p.labelFlavor} flavor. That is ${pct}% protein by weight. Other flavors usually land within a gram or two; check the panel on the flavor you buy.`],
+  [`Is ${p.fullName} good for weight loss?`, goalSections.find((s) => s.g.slug === "weight-loss")!.text + " Total daily calories and protein decide weight loss; a powder only helps you hit the protein number."],
+  [`Is ${p.fullName} third-party tested?`, sportCerts.length ? `${sportCerts.every((c) => verified.includes(c)) ? "Yes." : "According to the brand, yes."} It is ${sportCerts.map((c) => `${c} certified (${certSource(c)})`).join(" and ")}. Certification covers specific products and sometimes specific flavors, so check the registry for the exact tub you buy.` : `Not by a sport certifier that we could confirm. ${otherCerts.length ? `It carries ${otherCerts.join(", ")}, which covers sourcing or processing rather than contaminant testing.` : ""} If you are a tested athlete, choose a powder with Informed Sport or NSF Certified for Sport.`],
+  [`Is ${p.fullName} lactose-free?`, lactoseAnswer],
+  [`Does ${p.fullName} have artificial sweeteners?`, sweetAnswer],
+  [`Does ${p.fullName} have lead or heavy metals?`, p.heavyMetals ? p.heavyMetals : `No public third-party heavy-metal result is available for this product that we could find. ${type.family === "plant" ? "Plant proteins generally test higher for lead than dairy proteins, so ask the brand for a certificate of analysis." : "Dairy proteins have generally tested low in published surveys."}`],
+  [`How much does ${p.fullName} cost per serving?`, p.costPer25 == null ? "We have not recorded a dated price yet. Divide the tub price by the servings on the label, then by the grams of protein per serving and multiply by 25 to get the cost per 25 g of protein, the fair way to compare tubs." : `${money(p.costPerServing)} per serving and ${money(p.costPer25)} per 25 g of protein at ${money(p.price.usd)} for ${p.price.servings} servings (${p.price.retailer}, checked ${priceChecked}). Prices move often; the retailer's current price is what counts.`],
+];
+
+const crumbs = [
+  { name: "Home", item: `${SITE_URL}/` },
+  { name: "Protein Powders", item: `${SITE_URL}/protein-powder/` },
+  { name: brand.name, item: `${SITE_URL}${brand.url}` },
+  { name: p.name, item: `${SITE_URL}${p.url}` },
+];
+
+const productSchema: Record<string, unknown> = {
+  "@type": "Product",
+  "@id": `${SITE_URL}${p.url}#product`,
+  name: p.fullName,
+  brand: { "@type": "Brand", name: p.brand },
+  description: p.description || quick,
+  category: `${type.name} protein powder`,
+  ...(image ? { image } : {}),
+  additionalProperty: [
+    { "@type": "PropertyValue", name: "Serving size", value: p.servingSizeG, unitCode: "GRM" },
+    { "@type": "PropertyValue", name: "Protein per serving", value: p.proteinG, unitCode: "GRM" },
+    { "@type": "PropertyValue", name: "Calories per serving", value: p.calories },
+    ...(p.sugarG != null ? [{ "@type": "PropertyValue", name: "Sugar per serving", value: p.sugarG, unitCode: "GRM" }] : []),
+    { "@type": "PropertyValue", name: "Protein type", value: type.name },
+  ],
+  review: {
+    "@type": "Review",
+    author: { "@type": "Organization", name: SITE_NAME, url: SITE_URL },
+    publisher: { "@type": "Organization", name: SITE_NAME, url: SITE_URL },
+    reviewRating: { "@type": "Rating", ratingValue: p.score.total, bestRating: 100, worstRating: 0 },
+    reviewBody: `${verdict(p)}. Label Score ${p.score.total}/100.`,
+  },
+  ...(p.price?.usd && p.price?.url
+    ? {
+        offers: {
+          "@type": "Offer",
+          price: p.price.usd.toFixed(2),
+          priceCurrency: "USD",
+          url: p.price.url,
+          seller: { "@type": "Organization", name: p.price.retailer },
+        },
+      }
+    : {}),
+};
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: crumbs.map((c, i) => ({ "@type": "ListItem", position: i + 1, name: c.name, item: c.item })),
+    },
+    productSchema,
+    {
+      "@type": "NutritionInformation",
+      "@id": `${SITE_URL}${p.url}#nutrition`,
+      servingSize: `${fmt(p.servingSizeG)} g`,
+      calories: `${fmt(p.calories)} calories`,
+      proteinContent: `${fmt(p.proteinG)} g`,
+      ...(p.carbsG != null ? { carbohydrateContent: `${fmt(p.carbsG)} g` } : {}),
+      ...(p.fatG != null ? { fatContent: `${fmt(p.fatG)} g` } : {}),
+      ...(p.sugarG != null ? { sugarContent: `${fmt(p.sugarG)} g` } : {}),
+      ...(p.sodiumMg != null ? { sodiumContent: `${fmt(p.sodiumMg)} mg` } : {}),
+      ...(p.fiberG != null ? { fiberContent: `${fmt(p.fiberG)} g` } : {}),
+    },
+    {
+      "@type": "FAQPage",
+      mainEntity: faq.map(([q, a]) => ({ "@type": "Question", name: q, acceptedAnswer: { "@type": "Answer", text: a } })),
+    },
+  ],
+};
+
+const scoreParts = p.score.parts;
+---
+
+<Layout
+  title={title}
+  description={description}
+  jsonLd={jsonLd}
+  noindex={!p.labelComplete}
+  ogType="article"
+  stickyCta={{ text: "Check today's price", link: buyUrl }}
+>
+  <article data-article-header class="max-w-3xl mx-auto px-4 pb-16">
+    <nav aria-label="Breadcrumb" class="text-xs text-gray-500 pt-5 mb-4">
+      <a href="/" class="text-gray-500 no-underline hover:text-[#0b64c0]">Home</a> ›
+      <a href="/protein-powder/" class="text-gray-500 no-underline hover:text-[#0b64c0]">Protein Powders</a> ›
+      <a href={brand.url} class="text-gray-500 no-underline hover:text-[#0b64c0]">{brand.name}</a>
+    </nav>
+
+    <p class="text-[11px] md:text-xs font-black uppercase tracking-widest m-0 mb-3 text-[#C93500]">
+      Label Review · #{p.rank} of {total}
+    </p>
+    <div class="flex items-start gap-5">
+      <h1 class="flex-1 text-[1.75rem] leading-[1.15] md:text-4xl font-black tracking-tight text-gray-900 m-0 mb-4">
+        {p.fullName}: {fmt(p.proteinG)} g Protein per Scoop ({fmt(p.calories)} kcal)
+      </h1>
+      {image && <img src={image} alt={`${p.fullName} tub`} width="96" height="96" class="hidden sm:block w-24 h-24 object-contain shrink-0" loading="eager" />}
+    </div>
+
+    <div class="flex items-center gap-3 mb-4">
+      <AuthorAvatar author={author.slug} size={36} />
+      <p class="text-xs text-gray-600 m-0 leading-snug">
+        By <a href={`/authors/${author.slug}/`} class="text-gray-900 font-semibold no-underline">{author.name}</a><br />
+        {labelChecked && <>Label checked {labelChecked} (brand's published panel)</>}
+        {priceChecked && <> · Price checked {priceChecked}</>}
+        {" · "}<a href="/methodology/" class="text-[#0b64c0]">Methodology</a>
+      </p>
+    </div>
+    {p.formerly && <p class="text-sm text-gray-600 m-0 mb-3">Formerly sold as {p.brand} {p.formerly}.</p>}
+    <p class="text-xs text-gray-500 m-0 mb-6">We earn a commission if you buy through our retailer links. It never changes a score.</p>
+
+    <!-- Quick answer -->
+    <section class="bg-[#F6F7F9] border border-gray-200 rounded-2xl p-5 md:p-6 mb-6" aria-labelledby="quick-answer">
+      <div class="flex flex-col-reverse sm:flex-row gap-4 sm:gap-5 items-start">
+        <div class="flex-1 min-w-0">
+          <h2 id="quick-answer" class="text-xs font-black uppercase tracking-widest text-gray-500 m-0 mb-2">Quick answer</h2>
+          <p class="text-[1.0625rem] leading-relaxed text-gray-800 m-0 mb-3">{quick}</p>
+          <p class="text-sm font-bold text-gray-900 m-0">Verdict: {verdict(p)}.</p>
+        </div>
+        <ScoreBadge score={p.score} />
+      </div>
+    </section>
+
+    <!-- Spec strip -->
+    <dl class="grid grid-cols-2 sm:grid-cols-4 gap-px bg-gray-200 border border-gray-200 rounded-2xl overflow-hidden mb-10 text-center">
+      {[
+        ["Protein / scoop", `${fmt(p.proteinG)} g`],
+        ["Calories", fmt(p.calories)],
+        ["Sugar", p.sugarG == null ? "–" : `${fmt(p.sugarG)} g`],
+        ["Protein type", type.name],
+        ["Price / serving", p.costPerServing == null ? "not checked" : money(p.costPerServing)],
+        ["Cost / 25 g protein", p.costPer25 == null ? "not checked" : money(p.costPer25)],
+        ["Certified", sportCerts[0] || "No sport cert"],
+        ["Servings / tub", p.servingsPerContainer ? `${p.servingsPerContainer}${p.containerSize ? ` (${p.containerSize})` : ""}` : "–"],
+      ].map(([k, v]) => (
+        <div class="bg-white p-3">
+          <dt class="text-[11px] uppercase tracking-wider font-bold text-gray-500">{k}</dt>
+          <dd class="m-0 mt-1 font-black text-gray-900 text-sm">{v}</dd>
+        </div>
+      ))}
+    </dl>
+
+    <div class="prose max-w-none">
+      <!-- Supplement facts -->
+      <h2 id="supplement-facts" class="text-2xl font-black text-gray-900 mt-0 mb-3 scroll-mt-24">{p.fullName} supplement facts</h2>
+      <p>
+        The panel below is the {p.labelFlavor} flavor, per serving and per 100 g so you can compare it with any other tub.
+        {p.flavors?.length > 1 && <> {p.brand} also sells {p.flavors.filter((f: string) => f !== p.labelFlavor).slice(0, 8).join(", ")}; the numbers shift slightly between flavors, so read the panel on the one you buy.</>}
+      </p>
+      <div class="overflow-x-auto border border-gray-200 rounded-2xl my-6 not-prose">
+        <table class="w-full text-sm text-left">
+          <thead class="bg-gray-50 border-b border-gray-200">
+            <tr>
+              <th class="px-4 py-3 font-bold text-gray-600">Per {fmt(p.servingSizeG)} g serving</th>
+              <th class="px-4 py-3 font-bold text-gray-600">Amount</th>
+              <th class="px-4 py-3 font-bold text-gray-600">Per 100 g</th>
+              <th class="px-4 py-3 font-bold text-gray-600">% DV</th>
+            </tr>
+          </thead>
+          <tbody>
+            {LABEL_ROWS.map(([label, key, unit]) => (
+              <tr class="border-b border-gray-100">
+                <td class="px-4 py-3 font-semibold text-gray-900">{label}</td>
+                <td class="px-4 py-3 tabular-nums">{fmt(p[key])}{unit && ` ${unit}`}</td>
+                <td class="px-4 py-3 tabular-nums text-gray-600">{fmt(p.per100(p[key]))}{unit && ` ${unit}`}</td>
+                <td class="px-4 py-3 tabular-nums text-gray-600">{key === "calories" ? "–" : dv(key)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p class="text-sm text-gray-500">
+        % Daily Value uses the FDA reference amounts for a 2,000-calorie diet. Source: {p.brand}'s published label{p.sources?.[0] && <> (<a href={p.sources[0]} rel="nofollow noopener" target="_blank">brand page</a>)</>}.
+        {p.leucineG == null && " The brand does not publish a leucine figure for this product."}
+        {LABEL_ROWS_MISSING.length > 0 && ` Not printed on this panel: ${LABEL_ROWS_MISSING.join(", ").toLowerCase()}.`}
+      </p>
+
+      <!-- Score -->
+      <h2 id="label-score" class="text-2xl font-black text-gray-900 mt-12 mb-3 scroll-mt-24">Label Score: {p.score.total}/100</h2>
+      <p>
+        The Label Score is computed from the label, not assigned: protein density, cost per 25 g of protein, sugar and additives, third-party certification and amino acid completeness, with the weights published on our <a href="/methodology/">methodology page</a>.
+        {p.score.provisional && " No dated price is on file, so the cost component is left out and the other four are scaled to 100."}
+        {" "}It ranks #{p.rank} of {total} powders overall and #{familyRank} of {sameFamily.length} {p.family === "animal" ? "egg, beef and collagen" : p.family} powders.
+      </p>
+      <div class="not-prose space-y-3 my-6">
+        {scoreParts.map((s: any) => (
+          <div>
+            <div class="flex justify-between text-sm mb-1">
+              <span class="font-semibold text-gray-800">{s.label}</span>
+              <span class="tabular-nums text-gray-600">{s.points == null ? "not scored" : `${fmt(s.points)} / ${s.max}`}</span>
+            </div>
+            <div class="h-2.5 bg-gray-100 rounded-full overflow-hidden">
+              <div class="h-full bg-[#1E90FF] rounded-full" style={`width:${s.points == null ? 0 : (s.points / s.max) * 100}%`}></div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {roundups.length > 0 && (
+        <div class="not-prose bg-blue-50 border border-blue-100 rounded-2xl p-5 my-8">
+          <p class="text-xs font-black uppercase tracking-widest text-[#0b64c0] m-0 mb-2">Ranked in our guides</p>
+          <ul class="list-none p-0 m-0 space-y-1.5 text-sm">
+            {roundups.map((r) => (
+              <li>
+                #{r.position}{r.badge && ` (${r.badge})`} in <a href={r.url} class="font-bold text-gray-900">{r.title}</a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      <!-- Goals -->
+      {goalSections.map(({ g, ok, text }) => (
+        <>
+          <h2 class="text-2xl font-black text-gray-900 mt-12 mb-3">Is {p.fullName} good for {g.name}?</h2>
+          <p>
+            <strong>{ok ? "Yes, on the numbers." : "Not the best fit."}</strong> {text}
+            {g.hub && <> See the full ranking in <a href={g.hub}>best protein powders for {g.name}</a>.</>}
+          </p>
+        </>
+      ))}
+
+      <!-- Ingredients -->
+      <h2 id="ingredients" class="text-2xl font-black text-gray-900 mt-12 mb-3 scroll-mt-24">Ingredients and sweeteners</h2>
+      {p.ingredients ? <p><strong>Ingredients ({p.labelFlavor}):</strong> {p.ingredients}</p> : <p>The brand's full ingredient list was not available for this flavor when we checked.</p>}
+      <p>
+        <strong>Protein source:</strong> {typeGlossUrl ? <a href={typeGlossUrl}>{type.name}</a> : type.name}.
+        {" "}<strong>Sweeteners:</strong> {p.sweeteners == null ? "not stated" : p.sweeteners.length ? p.sweeteners.join(", ") : "none"}.
+        {(p.flaggedAdditives || []).length > 0 && <> <strong>Flagged additives:</strong> {p.flaggedAdditives.join(", ")}. These are safe at food levels but are the ingredients most often blamed for bloating in people who are sensitive to them.</>}
+        {(p.allergens || []).length > 0 && <> <strong>Allergens declared:</strong> {p.allergens.join(", ")}.</>}
+      </p>
+      {p.artificial.length > 0 && <p>{p.artificial.join(" and ")} {p.artificial.length > 1 ? "are" : "is"} approved by the FDA and safe at the amounts in a scoop. We deduct points for them only because many buyers want to avoid them; if you do, filter the <a href="/protein-powder/">full table</a> for "No artificial sweeteners".</p>}
+
+      <!-- Certification -->
+      <h2 id="third-party-tested" class="text-2xl font-black text-gray-900 mt-12 mb-3 scroll-mt-24">Is {p.fullName} third-party tested?</h2>
+      {sportCerts.length ? (
+        <p>
+          {sportCerts.every((c) => verified.includes(c)) ? "Yes." : "According to the brand, yes."} {p.fullName} is {sportCerts.map((c, i) => <>{i > 0 && " and "}{CERT_REGISTRY[c as keyof typeof CERT_REGISTRY] ? <a href={CERT_REGISTRY[c as keyof typeof CERT_REGISTRY]} rel="nofollow noopener" target="_blank">{c}</a> : c} certified ({certSource(c)})</>)}. These programs test samples of the finished product for substances banned in sport and re-test on a schedule. Certification is granted per product and sometimes per flavor, so search the registry for the exact tub before you rely on it.
+        </p>
+      ) : (
+        <p>
+          We could not confirm a sport certification (Informed Choice, Informed Sport, NSF Certified for Sport or BSCG) for this product. That does not mean it is contaminated; it means no independent body has been paid to check each batch for banned substances. If you are drug-tested, pick a certified powder from the <a href="/protein-powder/">database</a> instead.
+        </p>
+      )}
+      {otherCerts.length > 0 && <p>It also carries {otherCerts.join(", ")}. Those cover how the ingredients are grown, sourced or prepared, not what is in the finished tub.</p>}
+
+      <!-- Heavy metals -->
+      <h2 id="heavy-metals" class="text-2xl font-black text-gray-900 mt-12 mb-3 scroll-mt-24">Heavy metals</h2>
+      <p>{metalsAnswer}</p>
+      <p>Read more in <a href="/is-protein-powder-safe/">is protein powder safe?</a>{gloss("heavy-metals") && <> and our glossary entry on <a href="/glossary/heavy-metals/">heavy metals</a></>}.</p>
+
+      <!-- Price -->
+      <h2 id="price" class="text-2xl font-black text-gray-900 mt-12 mb-3 scroll-mt-24">Price</h2>
+      {p.price ? (
+        <div class="not-prose border border-gray-200 rounded-2xl overflow-x-auto my-4">
+          <table class="w-full text-sm text-left">
+            <thead class="bg-gray-50 border-b border-gray-200">
+              <tr>
+                <th class="px-4 py-3 font-bold text-gray-600">Retailer</th>
+                <th class="px-4 py-3 font-bold text-gray-600">Size</th>
+                <th class="px-4 py-3 font-bold text-gray-600">Per tub</th>
+                <th class="px-4 py-3 font-bold text-gray-600">Per serving</th>
+                <th class="px-4 py-3 font-bold text-gray-600">Per 25 g protein</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="px-4 py-3 font-semibold">{p.price.retailer}<span class="block text-xs text-gray-500 font-normal">checked {priceChecked}</span></td>
+                <td class="px-4 py-3">{p.price.size || p.containerSize || "–"}</td>
+                <td class="px-4 py-3 tabular-nums">{money(p.price.usd)}</td>
+                <td class="px-4 py-3 tabular-nums">{money(p.costPerServing)}</td>
+                <td class="px-4 py-3 tabular-nums font-bold">{money(p.costPer25)}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      ) : (
+        <p>No dated price is on file for this product yet. Use the button below for today's price, or work out the cost per 25 g yourself with the <a href="/tools/protein-cost-calculator/">protein cost calculator</a>.</p>
+      )}
+      <div class="not-prose flex flex-wrap gap-3 my-5">
+        <a href={buyUrl} target="_blank" rel="sponsored nofollow noopener" class="bg-[#FF4500] hover:bg-[#E63E00] text-white font-bold px-5 py-3 rounded-xl no-underline">Check price on Amazon</a>
+        {p.price?.url && !/amazon\./.test(p.price.url) && (
+          <a href={p.price.url} target="_blank" rel="nofollow noopener" class="border border-gray-300 text-gray-900 font-bold px-5 py-3 rounded-xl no-underline hover:border-gray-500">Check price at {p.price.retailer}</a>
+        )}
+        <a href={`/compare/?a=${p.slug}`} class="border border-gray-300 text-gray-900 font-bold px-5 py-3 rounded-xl no-underline hover:border-gray-500">Compare with your powder</a>
+      </div>
+      <p class="text-sm text-gray-500">Prices change daily. Our cost per 25 g uses the dated price above; the retailer's price at checkout is what you pay.</p>
+    </div>
+
+    <!-- Compare blocks -->
+    {blocks.length > 0 && (
+      <section class="mt-12">
+        <h2 class="text-2xl font-black text-gray-900 mb-4">Alternatives to {p.fullName}</h2>
+        <div class="grid sm:grid-cols-2 gap-4">
+          {blocks.map((b) => <CompareBlock heading={b.heading} rows={b.rows} current={p} />)}
+        </div>
+      </section>
+    )}
+
+    <!-- FAQ -->
+    <section id="faq" class="mt-12 scroll-mt-24">
+      <h2 class="text-2xl font-black text-gray-900 mb-4">{p.fullName} FAQ</h2>
+      <div class="faq-list">
+        {faq.map(([q, a]) => (
+          <details class="faq-item">
+            <summary><h3>{q}</h3></summary>
+            <div class="faq-answer"><p>{a}</p></div>
+          </details>
+        ))}
+      </div>
+    </section>
+
+    <!-- Related -->
+    <section class="mt-12">
+      <h2 class="text-xl font-black text-gray-900 mb-4">Related</h2>
+      <ul class="grid sm:grid-cols-2 gap-3 list-none p-0 m-0 text-sm">
+        <li><a href={brand.url} class="block border border-gray-200 rounded-xl p-4 no-underline font-bold text-gray-900 hover:border-[#1E90FF]">Every {brand.name} powder, compared</a></li>
+        {brand.review && <li><a href={brand.review} class="block border border-gray-200 rounded-xl p-4 no-underline font-bold text-gray-900 hover:border-[#1E90FF]">{brand.name} review</a></li>}
+        <li><a href={type.hub} class="block border border-gray-200 rounded-xl p-4 no-underline font-bold text-gray-900 hover:border-[#1E90FF]">Best {type.name.toLowerCase()} powders</a></li>
+        {DIETS.filter((d) => d.hub && p.diets.includes(d.slug) && d.hub !== type.hub).slice(0, 3).map((d) => (
+          <li><a href={d.hub} class="block border border-gray-200 rounded-xl p-4 no-underline font-bold text-gray-900 hover:border-[#1E90FF]">Best {d.name.replace(/ \(.*\)/, "").toLowerCase()} protein powders</a></li>
+        ))}
+        <li><a href="/protein-powder/" class="block border border-gray-200 rounded-xl p-4 no-underline font-bold text-gray-900 hover:border-[#1E90FF]">All {total} protein powders ranked</a></li>
+      </ul>
+    </section>
+  </article>
+</Layout>

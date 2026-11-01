@@ -1,0 +1,192 @@
+---
+// The sortable label table. The hub, every brand hub and the pillars that embed
+// "every powder in the database" all render this, so a label change shows up
+// everywhere at once. It is a plain <table> sorted by Label Score on the server,
+// so it reads fine without JavaScript; the script only adds click-to-sort and
+// the filter chips.
+import { DIETS, TYPES, fmt, money } from "../../lib/db.mjs";
+
+interface Props {
+  rows: any[];
+  caption?: string;
+  /** Show the type and diet filter chips above the table. */
+  filters?: boolean;
+  /** Show the database-wide rank column (off on brand hubs, where it confuses). */
+  rank?: boolean;
+  id?: string;
+}
+
+const { rows, caption, filters = false, rank = true, id = "db-table" } = Astro.props;
+const typesPresent = [...new Set(rows.map((p) => p.proteinType))];
+const families = [
+  { key: "whey", name: "Whey" },
+  { key: "casein", name: "Casein" },
+  { key: "plant", name: "Plant" },
+  { key: "animal", name: "Egg, beef & collagen" },
+].filter((f) => rows.some((p) => p.family === f.key));
+const diets = DIETS.filter((d) => rows.some((p) => p.diets.includes(d.slug)));
+---
+
+<div class="db-table not-prose" data-db-table={id}>
+  {filters && (
+    <div class="flex flex-wrap gap-2 mb-4" data-filters role="group" aria-label="Filter powders">
+      <button type="button" class="db-chip is-on" data-filter="all">All {rows.length}</button>
+      {families.map((f) => (
+        <button type="button" class="db-chip" data-filter={`family:${f.key}`}>{f.name}</button>
+      ))}
+      {diets.map((d) => (
+        <button type="button" class="db-chip" data-filter={`diet:${d.slug}`}>{d.name}</button>
+      ))}
+    </div>
+  )}
+  <div class="overflow-x-auto border border-gray-200 rounded-2xl">
+    <table class="w-full text-left text-sm">
+      {caption && <caption class="sr-only">{caption}</caption>}
+      <thead class="bg-gray-50 border-b border-gray-200">
+        <tr>
+          {rank && <th scope="col" class="db-th" data-sort="rank" data-type="num" aria-sort="ascending">#</th>}
+          <th scope="col" class="db-th" data-sort="name" data-type="text">Product</th>
+          <th scope="col" class="db-th" data-sort="protein" data-type="num">Protein / scoop</th>
+          <th scope="col" class="db-th" data-sort="pct" data-type="num">Protein %</th>
+          <th scope="col" class="db-th" data-sort="cal" data-type="num">Calories</th>
+          <th scope="col" class="db-th" data-sort="sugar" data-type="num">Sugar</th>
+          <th scope="col" class="db-th" data-sort="cost" data-type="num">Cost / 25 g</th>
+          <th scope="col" class="db-th">Certified</th>
+          <th scope="col" class="db-th" data-sort="score" data-type="num">Label Score</th>
+        </tr>
+      </thead>
+      <tbody>
+        {rows.map((p, i) => (
+          <tr
+            class="border-b border-gray-100 bg-white"
+            data-family={p.family}
+            data-diets={p.diets.join(" ")}
+            data-rank={p.rank}
+            data-name={p.fullName}
+            data-protein={p.proteinG}
+            data-pct={p.proteinPct.toFixed(3)}
+            data-cal={p.calories ?? ""}
+            data-sugar={p.sugarG ?? ""}
+            data-cost={p.costPer25 == null ? "" : p.costPer25.toFixed(3)}
+            data-score={p.score.total}
+          >
+            {rank && <td class="px-3 py-3 font-bold text-gray-400 tabular-nums">{p.rank}</td>}
+            <td class="px-3 py-3 min-w-[11rem]">
+              <a href={p.url} class="font-bold text-gray-900 hover:text-[#1E90FF] no-underline">{p.fullName}</a>
+              <span class="block text-xs text-gray-500">{TYPES[p.proteinType].name} · {p.labelFlavor}</span>
+            </td>
+            <td class="px-3 py-3 tabular-nums font-semibold">{fmt(p.proteinG)} g <span class="text-gray-400 font-normal">/ {fmt(p.servingSizeG)} g</span></td>
+            <td class="px-3 py-3 tabular-nums">{Math.round(p.proteinPct * 100)}%</td>
+            <td class="px-3 py-3 tabular-nums">{fmt(p.calories)}</td>
+            <td class="px-3 py-3 tabular-nums">{p.sugarG == null ? "–" : `${fmt(p.sugarG)} g`}</td>
+            <td class="px-3 py-3 tabular-nums">{p.costPer25 == null ? <span class="text-gray-400">not checked</span> : money(p.costPer25)}</td>
+            <td class="px-3 py-3 text-xs">{(p.certifications || []).filter((c: string) => !/organic|non-gmo|kosher|halal|gluten/i.test(c)).join(", ") || <span class="text-gray-400">none</span>}</td>
+            <td class="px-3 py-3">
+              <span class={`inline-flex items-center justify-center w-10 h-7 rounded-md text-sm font-black tabular-nums ${p.score.total >= 75 ? "bg-green-100 text-green-800" : p.score.total >= 60 ? "bg-blue-50 text-blue-800" : "bg-gray-100 text-gray-700"}`}>
+                {p.score.total}
+              </span>
+              {p.score.provisional && <span class="block text-[10px] text-gray-400 mt-0.5">no price</span>}
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+  <p class="text-xs text-gray-500 mt-2">
+    Numbers from each brand's published supplement-facts panel for the flavor shown (they vary by flavor). Cost per 25 g of protein uses the dated price on each product page.
+    <a href="/methodology/" class="text-[#0b64c0]">How the Label Score is calculated</a>.
+  </p>
+</div>
+
+<style>
+  .db-th {
+    padding: 0.75rem;
+    font-size: 0.75rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #4b5563;
+    white-space: nowrap;
+  }
+  .db-th[data-sort] {
+    cursor: pointer;
+    user-select: none;
+  }
+  .db-th[data-sort]:hover {
+    color: #0b64c0;
+  }
+  .db-th[aria-sort="ascending"]::after {
+    content: " ▲";
+    font-size: 0.6rem;
+  }
+  .db-th[aria-sort="descending"]::after {
+    content: " ▼";
+    font-size: 0.6rem;
+  }
+  .db-chip {
+    border: 1px solid #d1d5db;
+    background: #fff;
+    color: #374151;
+    border-radius: 9999px;
+    padding: 0.375rem 0.875rem;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .db-chip.is-on {
+    background: #111827;
+    border-color: #111827;
+    color: #fff;
+  }
+</style>
+
+<script>
+  for (const root of document.querySelectorAll<HTMLElement>("[data-db-table]")) {
+    const tbody = root.querySelector("tbody")!;
+    const headers = [...root.querySelectorAll<HTMLElement>("th[data-sort]")];
+    for (const th of headers) {
+      th.tabIndex = 0;
+      const sort = () => {
+        const key = th.dataset.sort!;
+        const numeric = th.dataset.type === "num";
+        // Score, protein and protein % read best high-to-low first; cost, rank, sugar and calories low-to-high.
+        const highFirst = ["score", "protein", "pct"].includes(key);
+        const current = th.getAttribute("aria-sort");
+        const dir = current ? (current === "ascending" ? "descending" : "ascending") : highFirst ? "descending" : "ascending";
+        headers.forEach((h) => h.removeAttribute("aria-sort"));
+        th.setAttribute("aria-sort", dir);
+        const rows = [...tbody.rows];
+        rows.sort((a, b) => {
+          const x = a.dataset[key] ?? "";
+          const y = b.dataset[key] ?? "";
+          if (x === "" && y !== "") return 1; // blanks always last
+          if (y === "" && x !== "") return -1;
+          const c = numeric ? Number(x) - Number(y) : x.localeCompare(y);
+          return dir === "ascending" ? c : -c;
+        });
+        tbody.append(...rows);
+      };
+      th.addEventListener("click", sort);
+      th.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          sort();
+        }
+      });
+    }
+    const chips = [...root.querySelectorAll<HTMLButtonElement>("[data-filter]")];
+    for (const chip of chips) {
+      chip.addEventListener("click", () => {
+        chips.forEach((c) => c.classList.toggle("is-on", c === chip));
+        const [kind, value] = chip.dataset.filter!.split(":");
+        for (const row of tbody.rows) {
+          const show =
+            kind === "all" ||
+            (kind === "family" && row.dataset.family === value) ||
+            (kind === "diet" && (row.dataset.diets || "").split(" ").includes(value));
+          row.hidden = !show;
+        }
+      });
+    }
+  }
+</script>

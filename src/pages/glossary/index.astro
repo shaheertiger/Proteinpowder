@@ -1,0 +1,50 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { GLOSSARY } from "../../lib/db.mjs";
+import { SITE_NAME, SITE_URL } from "../../data/site";
+
+const title = "Protein Powder Glossary: Label Terms Explained";
+const description = `${GLOSSARY.length} protein powder terms in plain English: leucine, DIAAS, whey isolate vs concentrate, amino spiking, sweeteners, certifications and more.`;
+const groups = [...new Set(GLOSSARY.map((g: any) => g.term[0].toUpperCase()))].sort();
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Home", item: `${SITE_URL}/` },
+        { "@type": "ListItem", position: 2, name: "Glossary", item: `${SITE_URL}/glossary/` },
+      ],
+    },
+    {
+      "@type": "DefinedTermSet",
+      name: `${SITE_NAME} Glossary`,
+      url: `${SITE_URL}/glossary/`,
+      hasDefinedTerm: GLOSSARY.map((g: any) => ({ "@type": "DefinedTerm", name: g.term, description: g.short, url: `${SITE_URL}${g.url}` })),
+    },
+  ],
+};
+---
+
+<Layout title={title} description={description} jsonLd={jsonLd}>
+  <div data-article-header class="max-w-4xl mx-auto px-4 pb-16">
+    <nav aria-label="Breadcrumb" class="text-xs text-gray-500 pt-5 mb-4">
+      <a href="/" class="text-gray-500 no-underline hover:text-[#0b64c0]">Home</a> › Glossary
+    </nav>
+    <h1 class="text-[1.875rem] leading-[1.15] md:text-5xl font-black tracking-tight text-gray-900 m-0 mb-4">Protein Powder Glossary</h1>
+    <p class="text-[1.0625rem] md:text-xl leading-relaxed text-gray-600 m-0 mb-10">The words on a protein powder label, and the ones in our reviews, explained in plain English with sources.</p>
+    {groups.map((letter) => (
+      <section class="mb-8">
+        <h2 class="text-xl font-black text-gray-900 border-b border-gray-200 pb-2 mb-4">{letter}</h2>
+        <dl class="grid sm:grid-cols-2 gap-x-8 gap-y-4 m-0">
+          {GLOSSARY.filter((g: any) => g.term[0].toUpperCase() === letter).map((g: any) => (
+            <div>
+              <dt><a href={g.url} class="font-bold text-gray-900 no-underline hover:text-[#1E90FF]">{g.term}</a></dt>
+              <dd class="m-0 text-sm text-gray-600 leading-relaxed">{g.short}</dd>
+            </div>
+          ))}
+        </dl>
+      </section>
+    ))}
+  </div>
+</Layout>

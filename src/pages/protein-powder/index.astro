@@ -1,0 +1,177 @@
+---
+// The hub: every powder in the label database in one sortable table. Modelled on
+// the single-URL long-tail pattern — one page that answers "which protein powder
+// has the most protein per dollar / per calorie / per scoop" for every row.
+import Layout from "../../layouts/Layout.astro";
+import ProductTable from "../../components/db/ProductTable.astro";
+import { PRODUCTS, BRANDS, MEDIANS, TYPES, DIETS, fmt, money } from "../../lib/db.mjs";
+import { SITE_NAME, SITE_URL } from "../../data/site";
+
+const total = PRODUCTS.length;
+const priced = PRODUCTS.filter((p: any) => p.costPer25 != null);
+const cheapest = [...priced].sort((a: any, b: any) => a.costPer25 - b.costPer25).slice(0, 5);
+const densest = [...PRODUCTS].sort((a: any, b: any) => b.proteinPct - a.proteinPct).slice(0, 5);
+const mostProtein = [...PRODUCTS].sort((a: any, b: any) => b.proteinG - a.proteinG || b.proteinPct - a.proteinPct).slice(0, 5);
+const top = PRODUCTS[0];
+const topPlant = PRODUCTS.find((p: any) => p.family === "plant");
+const topCertified = PRODUCTS.find((p: any) => p.diets.includes("certified"));
+const cheapestPick = cheapest[0];
+const leanest = [...PRODUCTS].filter((p: any) => p.proteinG >= 20).sort((a: any, b: any) => a.calories / a.proteinG - b.calories / b.proteinG)[0];
+const certifiedCount = PRODUCTS.filter((p: any) => p.diets.includes("certified")).length;
+const plantCount = PRODUCTS.filter((p: any) => p.family === "plant").length;
+
+const title = `All ${total} Protein Powders Ranked by Label Score`;
+const description = `Every protein powder in our label database in one sortable table: protein per scoop, protein %, calories, sugar, cost per 25 g of protein, certification and Label Score.`;
+
+const faq: [string, string][] = [
+  [
+    "Which protein powder has the most protein per dollar?",
+    cheapestPick
+      ? `Of the ${priced.length} powders with a dated price on file, ${cheapestPick.fullName} is cheapest at ${money(cheapestPick.costPer25)} per 25 g of protein. The database median is ${money(MEDIANS.costPer25)}. Sort the table by "Cost / 25 g" to see the full order; prices move, so recheck before you buy.`
+      : "Sort the table by cost per 25 g of protein once prices are on file.",
+  ],
+  [
+    "Which protein powder has the highest protein content?",
+    `By protein share of the scoop, ${densest[0].fullName} leads at ${Math.round(densest[0].proteinPct * 100)}% protein by weight. By grams per serving, ${mostProtein[0].fullName} leads with ${fmt(mostProtein[0].proteinG)} g, though bigger servings often just mean bigger scoops. Protein % is the fairer comparison.`,
+  ],
+  [
+    "What is a good amount of protein per scoop?",
+    `The median powder in our database has ${fmt(MEDIANS.proteinG)} g of protein per serving and is ${Math.round(MEDIANS.proteinPct * 100)}% protein by weight. A whey isolate should be 80% or more; a concentrate or blend 70% or more. Lower than that, and you are paying for flavor, carbohydrate and fat.`,
+  ],
+  [
+    "How is the Label Score calculated?",
+    "It is computed from each label: 40 points for protein density, 25 for cost per 25 g of protein, 15 for sugar and additives, 10 for third-party sport certification and 10 for amino acid completeness by protein type. The full formula and thresholds are on the methodology page.",
+  ],
+  [
+    "Are these protein powders tested in a lab?",
+    `The numbers come from each brand's published supplement-facts panel and are checked against the product page on the date shown. ${certifiedCount} of the ${total} powders carry a sport certification (Informed Choice, Informed Sport, NSF Certified for Sport or BSCG), which means an independent lab tests the finished product.`,
+  ],
+  [
+    "Which plant-based protein powder ranks highest?",
+    topPlant
+      ? `${topPlant.fullName} has the highest Label Score of the ${plantCount} plant proteins in the database, with ${fmt(topPlant.proteinG)} g of protein per ${fmt(topPlant.servingSizeG)} g serving. Use the "Plant" filter above the table to compare them all.`
+      : "Use the Plant filter above the table.",
+  ],
+];
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Home", item: `${SITE_URL}/` },
+        { "@type": "ListItem", position: 2, name: "Protein Powders", item: `${SITE_URL}/protein-powder/` },
+      ],
+    },
+    {
+      "@type": "CollectionPage",
+      name: title,
+      description,
+      url: `${SITE_URL}/protein-powder/`,
+      publisher: { "@type": "Organization", name: SITE_NAME, url: SITE_URL },
+      mainEntity: {
+        "@type": "ItemList",
+        numberOfItems: total,
+        itemListOrder: "https://schema.org/ItemListOrderDescending",
+        itemListElement: PRODUCTS.map((p: any) => ({ "@type": "ListItem", position: p.rank, url: `${SITE_URL}${p.url}`, name: p.fullName })),
+      },
+    },
+    {
+      "@type": "FAQPage",
+      mainEntity: faq.map(([q, a]) => ({ "@type": "Question", name: q, acceptedAnswer: { "@type": "Answer", text: a } })),
+    },
+  ],
+};
+
+const picks = [
+  { label: "Highest Label Score", p: top, why: `${top.score.total}/100` },
+  cheapestPick && { label: "Cheapest per 25 g protein", p: cheapestPick, why: `${money(cheapestPick.costPer25)} per 25 g` },
+  topPlant && { label: "Best plant-based", p: topPlant, why: `${topPlant.score.total}/100` },
+  leanest && { label: "Most protein per calorie", p: leanest, why: `${fmt(leanest.proteinG)} g in ${fmt(leanest.calories)} kcal` },
+  topCertified && topCertified !== top && { label: "Best sport-certified", p: topCertified, why: topCertified.certifications.find((c: string) => /Informed|NSF|BSCG/.test(c)) },
+].filter(Boolean) as { label: string; p: any; why: string }[];
+// One card per product: a powder that wins two categories shows once, under the first.
+const seenPicks = new Set<string>();
+const uniquePicks = picks.filter(({ p }) => !seenPicks.has(p.slug) && seenPicks.add(p.slug));
+---
+
+<Layout title={title} description={description} jsonLd={jsonLd}>
+  <div data-article-header class="max-w-6xl mx-auto px-4 pb-16">
+    <nav aria-label="Breadcrumb" class="text-xs text-gray-500 pt-5 mb-4">
+      <a href="/" class="text-gray-500 no-underline hover:text-[#0b64c0]">Home</a> › Protein Powders
+    </nav>
+    <p class="text-[11px] md:text-xs font-black uppercase tracking-widest m-0 mb-3 text-[#C93500]">Label Database · {total} powders · {BRANDS.length} brands</p>
+    <h1 class="text-[1.875rem] leading-[1.15] md:text-5xl font-black tracking-tight text-gray-900 m-0 mb-4 max-w-4xl">
+      All {total} Protein Powders Ranked by Label Score
+    </h1>
+    <p class="text-[1.0625rem] md:text-xl leading-relaxed text-gray-600 m-0 mb-3 max-w-3xl">
+      Every powder we track, scored on the same five numbers from its label: protein density, cost per 25 g of protein, sugar and additives, third-party certification and amino acid completeness. Sort by any column, or filter by protein type and diet.
+    </p>
+    <p class="text-xs text-gray-500 m-0 mb-8">We earn a commission if you buy through our retailer links. It never changes a score. <a href="/methodology/" class="text-[#0b64c0]">How we score</a>.</p>
+
+    <section aria-label="Top picks" class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-10">
+      {uniquePicks.map(({ label, p, why }) => (
+        <a href={p.url} class="block bg-[#F6F7F9] border border-gray-200 rounded-2xl p-4 no-underline hover:border-[#1E90FF]">
+          <span class="block text-[11px] font-black uppercase tracking-wider text-[#C93500] mb-1">{label}</span>
+          <span class="block font-black text-gray-900 leading-snug">{p.fullName}</span>
+          <span class="block text-sm text-gray-600 mt-1">{why}</span>
+        </a>
+      ))}
+    </section>
+
+    <ProductTable rows={PRODUCTS} filters caption={`All ${total} protein powders in the database`} />
+
+    <div class="max-w-3xl">
+      <section class="prose max-w-none mt-14">
+        <h2 class="text-2xl font-black text-gray-900">How to read this table</h2>
+        <p>
+          <strong>Protein / scoop</strong> is the grams of protein in one serving as printed on the label, with the serving weight after the slash. <strong>Protein %</strong> divides one by the other. It is the fairest single number for comparing tubs, because a 45 g scoop with 25 g of protein is a worse product than a 30 g scoop with the same 25 g. The median across the database is {Math.round(MEDIANS.proteinPct * 100)}%.
+        </p>
+        <p>
+          <strong>Cost / 25 g</strong> is what 25 g of protein costs at the dated price on each product page: tub price ÷ servings ÷ grams of protein × 25. Twenty-five grams is roughly one good dose for muscle protein synthesis, so this is the price of one useful shake. The median is {money(MEDIANS.costPer25)}. Products marked "not checked" have no dated price on file yet; their Label Score is computed from the other four components and scaled to 100.
+        </p>
+        <p>
+          <strong>Certified</strong> lists only sport and contaminant certifications (Informed Choice, Informed Sport, NSF Certified for Sport, BSCG, NSF Contents Certified, Clean Label Project). Organic and non-GMO seals describe sourcing, not what is in the finished tub, so they appear on the product pages but do not score.
+        </p>
+
+        <h2 class="text-2xl font-black text-gray-900">The cheapest protein per gram right now</h2>
+        <ol>
+          {cheapest.map((p: any) => (
+            <li><a href={p.url}>{p.fullName}</a>: {money(p.costPer25)} per 25 g of protein ({p.price.retailer}, {p.price.checked})</li>
+          ))}
+        </ol>
+
+        <h2 class="text-2xl font-black text-gray-900">The highest protein density</h2>
+        <ol>
+          {densest.map((p: any) => (
+            <li><a href={p.url}>{p.fullName}</a>: {Math.round(p.proteinPct * 100)}% protein ({fmt(p.proteinG)} g in {fmt(p.servingSizeG)} g)</li>
+          ))}
+        </ol>
+
+        <h2 class="text-2xl font-black text-gray-900">Browse by type and diet</h2>
+        <ul>
+          {[...new Map(Object.values(TYPES).map((t: any) => [t.hub, t])).values()].map((t: any) => (
+            <li><a href={t.hub}>Best {t.name.toLowerCase()} protein powders</a></li>
+          ))}
+          {DIETS.filter((d) => d.hub).map((d) => (
+            <li><a href={d.hub}>Best {d.name.replace(/ \(.*\)/, "").toLowerCase()} protein powders</a></li>
+          ))}
+        </ul>
+        <p>Or browse <a href="/brands/">all {BRANDS.length} brands</a>, put two powders side by side with the <a href="/compare/">comparison tool</a>, or look up a term in the <a href="/glossary/">glossary</a>.</p>
+      </section>
+
+      <section id="faq" class="mt-12 scroll-mt-24">
+        <h2 class="text-2xl font-black text-gray-900 mb-4">Frequently asked questions</h2>
+        <div class="faq-list">
+          {faq.map(([q, a]) => (
+            <details class="faq-item">
+              <summary><h3>{q}</h3></summary>
+              <div class="faq-answer"><p>{a}</p></div>
+            </details>
+          ))}
+        </div>
+      </section>
+    </div>
+  </div>
+</Layout>

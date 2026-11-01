@@ -5,18 +5,12 @@
 // canonical trailing-slash form of pages that actually exist).
 import { SITE_URL } from '../site.config.mjs';
 import { readdirSync, readFileSync, statSync } from 'node:fs';
-import { join } from 'node:path';
+import { join, relative } from 'node:path';
+import { generatedRoutes } from '../src/lib/db.mjs';
 
 const SRC_DIR = join(import.meta.dirname, '..', 'src');
 const PAGES_DIR = join(SRC_DIR, 'pages');
 const SITE = SITE_URL;
-
-const pages = new Set(
-  readdirSync(PAGES_DIR)
-    .filter((f) => f.endsWith('.astro'))
-    .map((f) => f.replace(/\.astro$/, ''))
-);
-pages.delete('index'); // the home page is referenced as "/"
 
 function walk(dir) {
   return readdirSync(dir).flatMap((entry) => {
@@ -25,12 +19,22 @@ function walk(dir) {
   });
 }
 
+// Static routes: src/pages/foo.astro -> foo, src/pages/foo/index.astro -> foo.
+// Dynamic routes ([slug].astro) come from the label database, which generates them.
+const pages = new Set(
+  walk(PAGES_DIR)
+    .filter((f) => f.endsWith('.astro') && !/\[/.test(f))
+    .map((f) => relative(PAGES_DIR, f).replace(/\.astro$/, '').replace(/(^|\/)index$/, '').split('\\').join('/'))
+    .filter(Boolean)
+);
+for (const { path } of generatedRoutes()) pages.add(path.replace(/^\/|\/$/g, ''));
+
 const problems = [];
 
 for (const file of walk(SRC_DIR)) {
   if (!/\.(astro|tsx|ts)$/.test(file)) continue;
   const source = readFileSync(file, 'utf-8');
-  const relative = file.slice(SRC_DIR.length - 3);
+  const rel = file.slice(SRC_DIR.length - 3);
 
   const refs = [
     // href="/some-page/" — the site's own routes, ignoring assets and anchors
@@ -53,9 +57,9 @@ for (const file of walk(SRC_DIR)) {
     if (path === '' || path.includes('.')) continue; // home page, assets, sitemap
     const slug = path.replace(/\/$/, '');
     if (!pages.has(slug)) {
-      problems.push(`${relative}: ${raw} — no page src/pages/${slug}.astro`);
+      problems.push(`${rel}: ${raw} — no page src/pages/${slug}.astro`);
     } else if (!path.endsWith('/')) {
-      problems.push(`${relative}: ${raw} — missing canonical trailing slash`);
+      problems.push(`${rel}: ${raw} — missing canonical trailing slash`);
     }
   }
 }
