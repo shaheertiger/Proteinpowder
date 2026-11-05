@@ -1,0 +1,839 @@
+---
+import Layout from "../layouts/Layout.astro";
+import ArticleHeader from "../components/ArticleHeader.astro";
+import TableOfContents from "../components/TableOfContents.astro";
+import ProductCard from "../components/ProductCard.astro";
+import MoreInCategory from "../components/MoreInCategory.astro";
+import { AUTHORS, DEFAULT_AUTHOR, authorSchema } from "../data/authors";
+import { SITE_NAME, SITE_URL } from "../data/site";
+import QuickPicks from "../components/QuickPicks.astro";
+import AuthorBio from "../components/AuthorBio.astro";
+import { pageDates } from "../data/dates";
+
+const moreInCategory = [
+  {
+    "title": "Best Costco Protein Powder",
+    "url": "/best-costco-protein-powder/"
+  },
+  {
+    "title": "Best Walmart Protein Powder",
+    "url": "/best-walmart-protein-powder/"
+  },
+  {
+    "title": "Best Cheap Protein Powder",
+    "url": "/best-cheap-protein-powder/"
+  },
+  {
+    "title": "Best Protein Powder on Amazon",
+    "url": "/amazon-protein-powder/"
+  }
+];
+const author = AUTHORS[DEFAULT_AUTHOR];
+const dates = pageDates(Astro.url.pathname, { published: "2026-11-05", modified: "2026-11-05" });
+const title = "Best Target Protein Powder: The Aisle Ranked by Cost per 25 g";
+const description =
+  "The best Target protein powder ranked by cost per 25 g of protein and label quality, from Optimum Nutrition and Premier to Orgain, OWYN and Target's own up&up whey.";
+
+const PRODUCTS: {
+  id: string;
+  name: string;
+  brand?: string;
+  badge: string;
+  category: string;
+  description: string;
+  pros: string[];
+  cons: string[];
+  bottomLine: string;
+  specs?: Record<string, string>;
+  rating?: number;
+  reviewCount?: number;
+  amazonUrl?: string;
+}[] = [
+  {
+    "id": "optimum-nutrition-gold-standard-100-whey",
+    "name": "Optimum Nutrition Gold Standard 100% Whey",
+    "brand": "Optimum Nutrition",
+    "badge": "Best Overall at Target",
+    "category": "Whey blend (isolate listed first)",
+    "description": "Gold Standard is the most complete whey range on Target's shelf, sold in small tubs of around 24 oz and, online, a 3.96 lb tub of about 58 servings. Per the label at the time of writing (Double Rich Chocolate), a scoop gives 24 g of protein, about 120 calories, 1 g of sugar and around 130 mg of sodium, from whey isolate, concentrate and hydrolyzed whey. Labels vary by flavor and by lot, so check the panel on the tub you buy.",
+    "pros": [
+      "About $1.44 per 25 g of protein in the 3.96 lb tub at Target's listed price, one of the lowest name-brand figures on the site",
+      "Short ingredient list: whey, cocoa, lecithin, flavor and one sweetener in the chocolate version, per the label",
+      "The widest flavor range Target carries, so the small tub works as a cheap taste test"
+    ],
+    "cons": [
+      "The small 24 oz tub costs noticeably more per gram than the big one",
+      "The brand says it is banned-substance tested but we could not confirm a named certifier for every flavor",
+      "Contains whey concentrate, so slightly more lactose than a pure isolate"
+    ],
+    "bottomLine": "The default Target pick for anyone who tolerates dairy: good protein per dollar in the big tub, a clean whey label and a long track record.",
+    "specs": {
+      "Protein / serving": "24 g (label, varies by flavor)",
+      "Cost per 25 g": "About $1.44 (3.96 lb tub)",
+      "Third-party tested": "Brand says banned-substance tested",
+      "Best for": "Everyday whey"
+    }
+  },
+  {
+    "id": "premier-protein-100-whey-chocolate-milkshake",
+    "name": "Premier Protein 100% Whey Protein Powder, Chocolate Milkshake",
+    "brand": "Premier Protein",
+    "badge": "Most Protein per Scoop",
+    "category": "Whey isolate and concentrate blend",
+    "description": "Premier's powder is the tub version of the shakes Target stacks by the case, and it is one of the few powders in the aisle that gives 30 g of protein per serving. Per the label at the time of writing, a 41 g serving (about 2 scoops) gives 30 g of protein, about 150 calories, 1 g of sugar and 170 mg of sodium, sweetened with sucralose and acesulfame potassium. Target lists the 17-serving tub at $29.99.",
+    "pros": [
+      "30 g of protein per serving, per the label, more than any other whey on this list",
+      "About $1.47 per 25 g of protein at Target's listed price, close to Gold Standard's big tub",
+      "Low sugar and moderate sodium for a flavored whey, per the label"
+    ],
+    "cons": [
+      "Two artificial sweeteners, which some buyers find too sweet",
+      "No named third-party sport certification",
+      "Only around 17 servings per tub, so you rebuy often"
+    ],
+    "bottomLine": "The best Target buy if you want a big protein hit per shake at a low cost per gram and do not mind sucralose.",
+    "specs": {
+      "Protein / serving": "30 g (label)",
+      "Cost per 25 g": "About $1.47",
+      "Third-party tested": "No sport certification confirmed",
+      "Best for": "Maximum protein per scoop"
+    }
+  },
+  {
+    "id": "orgain-organic-protein-plant-based",
+    "name": "Orgain Organic Protein Plant-Based Protein Powder",
+    "brand": "Orgain",
+    "badge": "Best Plant-Based",
+    "category": "Organic pea, brown rice and mung bean blend",
+    "description": "Orgain is the plant powder Target stocks most widely, in a 16.32 oz tub and a 2.03 lb tub of about 20 servings. Per the label at the time of writing (Creamy Chocolate Fudge), a 46 g serving gives 21 g of protein and about 150 calories from organic pea, brown rice, mung bean and chia, sweetened with stevia. Sodium is relatively high at around 390 mg, and some package versions list erythritol, so read the panel on your tub.",
+    "pros": [
+      "USDA Organic, per the label, with no dairy or soy ingredients",
+      "About $1.84 per 25 g of protein in the 2.03 lb tub at Target's listed price",
+      "Widely reported by buyers to taste less earthy than most pea blends"
+    ],
+    "cons": [
+      "The small 16.32 oz tub works out at roughly $2.38 per 25 g",
+      "Around 390 mg of sodium per serving, per the label",
+      "USDA Organic is a farming standard, not a contaminant test"
+    ],
+    "bottomLine": "The plant powder to buy at Target if you want organic and a mild taste; always buy the 2.03 lb tub, not the small one.",
+    "specs": {
+      "Protein / serving": "21 g (label)",
+      "Cost per 25 g": "About $1.84 (2.03 lb tub)",
+      "Third-party tested": "USDA Organic only",
+      "Best for": "Dairy-free, organic"
+    }
+  },
+  {
+    "id": "owyn-plant-protein-powder",
+    "name": "OWYN Plant Protein Powder (20 g)",
+    "brand": "OWYN",
+    "badge": "Best Allergen-Friendly",
+    "category": "Pea-based plant blend",
+    "description": "OWYN's 20 g powder sits in Target's aisle in 1.1 lb tubs of Dark Chocolate and Vanilla, and the brand markets its range as free of the major food allergens, which makes it the obvious pick for households avoiding dairy, soy and nuts at once. Per grocery-retailer listings of the label at the time of writing, a 2-scoop serving gives 20 g of protein, about 140 calories and roughly 70 mg of sodium, with about 4 g of sugar.",
+    "pros": [
+      "Marketed as free of the major allergens, including dairy, soy and tree nuts",
+      "About $1.70 per 25 g of protein at Target's listed price for the 1.1 lb tub",
+      "Low sodium for a plant powder, per retailer listings of the label"
+    ],
+    "cons": [
+      "About 4 g of sugar per serving, much of it added, per one retailer listing",
+      "Only 20 g of protein per serving, so you need more powder per gram",
+      "Small tubs of roughly 14 servings"
+    ],
+    "bottomLine": "Choose it for a strict allergy household; otherwise Orgain or a whey gives you more protein for the money.",
+    "specs": {
+      "Protein / serving": "20 g (label)",
+      "Cost per 25 g": "About $1.70",
+      "Third-party tested": "None confirmed",
+      "Best for": "Multiple food allergies"
+    }
+  },
+  {
+    "id": "isopure-zero-carb",
+    "name": "Isopure Zero Carb Protein Powder",
+    "brand": "Isopure",
+    "badge": "Best Isolate",
+    "category": "Whey protein isolate",
+    "description": "Isopure is Target's main pure-isolate option, sold in roughly 1 lb tubs and, online, 3 lb and 4.5 lb tubs. Per the label at the time of writing (Creamy Vanilla), a scoop gives 25 g of protein for about 110 calories with 0 g of carbohydrate and sugar, sweetened with sucralose. Because it is almost all isolate, it is the Target whey most likely to suit someone who finds regular whey hard on the stomach.",
+    "pros": [
+      "25 g of protein with 0 g of carbs and sugar, per the label",
+      "Pure whey isolate, which carries very little lactose",
+      "About $2.05 per 25 g in the 3 lb or 4.5 lb tub at Target's listed prices"
+    ],
+    "cons": [
+      "The small tubs cost roughly $2.30 to $2.50 per 25 g",
+      "Sucralose in the flavored versions",
+      "No third-party sport certification we could confirm"
+    ],
+    "bottomLine": "Worth the premium only if you are lactose-sensitive or counting carbs strictly; buy the big tub to keep the cost per gram sane.",
+    "specs": {
+      "Protein / serving": "25 g (label)",
+      "Cost per 25 g": "About $2.05 (3 lb tub)",
+      "Third-party tested": "None confirmed",
+      "Best for": "Low carb, lactose-sensitive"
+    }
+  },
+  {
+    "id": "vital-proteins-collagen-peptides",
+    "name": "Vital Proteins Collagen Peptides (Unflavored)",
+    "brand": "Vital Proteins",
+    "badge": "Best Collagen Add-In",
+    "category": "Bovine collagen peptides",
+    "description": "Vital Proteins is the collagen tub most Target stores carry, and it sits in the same aisle as the protein powders, which is why it ends up in so many carts. Per the label at the time of writing, a 20 g serving gives 18 g of protein and about 70 calories from bovine collagen alone, and it is NSF Certified for Sport. It is not a complete protein, so treat it as an add-in for coffee or oats rather than a shake.",
+    "pros": [
+      "NSF Certified for Sport, confirmed on the certifier's registry",
+      "Unflavored and dissolves into hot or cold drinks, per buyer reports",
+      "One ingredient: bovine collagen peptides"
+    ],
+    "cons": [
+      "Collagen is an incomplete protein and is low in leucine",
+      "Roughly $2.20 per 25 g at the brand's list price, more than any whey here",
+      "Not a substitute for a muscle-building protein shake"
+    ],
+    "bottomLine": "A well-tested collagen if that is what you want, but buy a whey or plant powder first and add this second, if at all.",
+    "specs": {
+      "Protein / serving": "18 g (label)",
+      "Cost per 25 g": "About $2.20 (brand list price)",
+      "Third-party tested": "NSF Certified for Sport",
+      "Best for": "Coffee and oats add-in"
+    }
+  }
+];
+
+const schema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Home",
+          item: `${SITE_URL}/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Best Lists",
+          item: `${SITE_URL}/best-of/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 3,
+          name: "Best Target Protein Powder",
+          item: `${SITE_URL}/best-target-protein-powder/`,
+        },
+      ],
+    },
+    {
+      "@type": "FAQPage",
+      mainEntity: [
+        {
+          "@type": "Question",
+          "name": "What is the best protein powder at Target?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "For most people it is Optimum Nutrition Gold Standard 100% Whey in the 3.96 lb tub, at about $1.44 per 25 g of protein at Target's listed price, with a short label and a long track record. Premier Protein gives more protein per scoop for similar money, Orgain is the best plant option, and Isopure suits low-carb or lactose-sensitive shoppers."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does Target have its own brand of protein powder?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Target's up&up brand sells a whey protein powder in chocolate and vanilla, listed at $25.99 for a 32 oz tub of about 21 servings at the time of writing. We could not find a Good & Gather protein powder; that brand sells protein bars and bites instead. The up&up label includes maltodextrin and lists no third-party certification."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is up&up protein powder any good?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It is the cheapest protein per gram at Target, roughly $1.24 per 25 g on the 32 oz tub. The trade-off is the label: about 170 calories and 10 g of carbohydrate per 43 g serving, with maltodextrin high on the ingredient list, per the listing. It is fine if price matters most; a name-brand whey gives a cleaner panel for slightly more."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is protein powder cheaper at Target or Amazon?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It depends on the day and the size. Target's sale prices and Circle offers sometimes beat Amazon on small tubs, while Amazon usually sells the largest sizes, which have the lowest cost per 25 g. Compare cost per 25 g of protein rather than tub price, and buy from the retailer or the brand's official storefront rather than unknown sellers."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does Target Circle discount protein powder?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sometimes. Target Circle offers rotate in the app, and protein powder and shakes appear in health and wellness promotions from time to time, though we cannot predict when. The Target Circle Card takes 5 percent off most purchases at the time of writing and stacks with sale prices. Check current terms in the app before you rely on any discount."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What plant-based protein powders does Target sell?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Target stocks Orgain, OWYN, Garden of Life, Truvani and Ka'Chava among others, at the time of writing. Orgain's 2.03 lb tub is our pick on value and taste reports; OWYN suits households avoiding several allergens; Garden of Life's 20 g Organic Protein is also good value. Ka'Chava is a meal shake and costs far more per gram of protein."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is Target protein powder third-party tested?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Mostly not. Of the powders we rank, only Vital Proteins Collagen Peptides is NSF Certified for Sport on the certifier's registry. Optimum Nutrition says Gold Standard is banned-substance tested. If you compete in a tested sport, check the exact product and flavor on the NSF or Informed Sport database before buying, and ask a doctor about any health concerns."
+          }
+        }
+      ],
+    },
+    {
+      "@type": "Article",
+      headline: title,
+      author: authorSchema(),
+      datePublished: dates.published,
+      dateModified: dates.modified,
+      publisher: { "@type": "Organization", name: SITE_NAME, url: SITE_URL },
+    },
+    {
+      "@type": "ItemList",
+      name: title,
+      numberOfItems: PRODUCTS.length,
+      itemListElement: PRODUCTS.map((product, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name: product.name,
+        url: new URL(`#${product.id}`, Astro.url).toString(),
+      })),
+    },
+    ...PRODUCTS.map((product) => ({
+      "@type": "Product",
+      name: product.name,
+      description: product.description,
+      brand: {
+        "@type": "Brand",
+        name: product.brand ?? product.name.split(" ")[0],
+      },
+    })),
+  ],
+};
+---
+
+<Layout
+  title={title}
+  description={description}
+  ogType="article"
+  article={{
+    publishedTime: dates.published,
+    modifiedTime: dates.modified,
+    author: author.name,
+    section: "Protein Powder Rankings",
+    tags: [
+      "best target protein powder",
+      "target protein powder",
+      "up&up protein powder",
+      "protein powder prices"
+    ],
+  }}
+  jsonLd={schema}
+>
+  <article class="relative overflow-hidden">
+    <ArticleHeader kicker={"Buyer's Guide"} badge={"Label-Checked"} author={author} dates={dates} mobileAd={false}>
+      <Fragment slot="title">Best Target Protein Powder</Fragment>
+      Six powders Target actually stocks, ranked by how much protein you get for your money, then by what is on the label.
+    </ArticleHeader>
+
+    <TableOfContents>
+      <a href="#quick-comparison">Comparison Table</a>
+      <a href="#how-we-ranked">How We Ranked</a>
+      <a href="#top-picks">Our Top Picks</a>
+      <a href="#what-target-sells">What Target Stocks</a>
+      <a href="#target-own-brand">Target's Own Brand</a>
+      <a href="#cost-per-25g">Cost per 25 g</a>
+      <a href="#target-circle">Target Circle Deals</a>
+      <a href="#target-vs-amazon">Target vs Amazon</a>
+      <a href="#label-quality">Label Quality</a>
+      <a href="#which-to-buy">Which to Buy</a>
+      <a href="#mistakes">Common Mistakes</a>
+      <a href="#faq">FAQ</a>
+    </TableOfContents>
+
+    <!-- Content -->
+    <div class="max-w-3xl mx-auto px-4 pb-16 lg:pb-24">
+      <div class="prose prose-lg prose-blue max-w-none text-gray-700 leading-relaxed">
+        <p class="lede">
+          The best Target protein powder for most people is Optimum Nutrition Gold Standard 100% Whey in the 3.96 lb tub: about $1.44 per 25 g of protein at Target's listed price and a short, whey-led label. Premier Protein gives 30 g per scoop for almost the same cost per gram, Orgain is the plant pick, and Target's own up&up whey is cheapest of all if you accept maltodextrin. Below we rank what Target stocks, show the math, and explain when Target Circle and Amazon change the answer.
+        </p>
+
+        <QuickPicks products={PRODUCTS} />
+
+        <div id="quick-comparison" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            1. Target Protein Powders Compared at a Glance
+          </h2>
+
+          <p>
+            Target carries more protein powder than most people expect from a store that also sells throw pillows. The category page lists several hundred results, most of them flavor and size variants of perhaps two dozen brands. The table below covers the six we rank, using Target's listed prices on the day we checked and label figures that we hedge everywhere: per the label at the time of writing, and varying by flavor.
+          </p>
+
+          <div class="overflow-hidden border border-gray-200 rounded-2xl my-8">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Powder</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Protein</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Target price seen</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Cost per 25 g</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Optimum Nutrition Gold Standard</td>
+                    <td class="px-4 py-4 text-gray-700">24 g</td>
+                    <td class="px-4 py-4 text-gray-700">$79.99 / 58 servings</td>
+                    <td class="px-4 py-4 text-gray-700">About $1.44</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Premier Protein 100% Whey</td>
+                    <td class="px-4 py-4 text-gray-700">30 g</td>
+                    <td class="px-4 py-4 text-gray-700">$29.99 / 17 servings</td>
+                    <td class="px-4 py-4 text-gray-700">About $1.47</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">OWYN Plant Protein (20 g)</td>
+                    <td class="px-4 py-4 text-gray-700">20 g</td>
+                    <td class="px-4 py-4 text-gray-700">$18.99 / about 14 servings</td>
+                    <td class="px-4 py-4 text-gray-700">About $1.70</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Orgain Organic Protein</td>
+                    <td class="px-4 py-4 text-gray-700">21 g</td>
+                    <td class="px-4 py-4 text-gray-700">$30.99 / 20 servings</td>
+                    <td class="px-4 py-4 text-gray-700">About $1.84</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Isopure Zero Carb</td>
+                    <td class="px-4 py-4 text-gray-700">25 g</td>
+                    <td class="px-4 py-4 text-gray-700">$89.99 / 44 servings</td>
+                    <td class="px-4 py-4 text-gray-700">About $2.05</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Vital Proteins Collagen</td>
+                    <td class="px-4 py-4 text-gray-700">18 g</td>
+                    <td class="px-4 py-4 text-gray-700">Varies by size</td>
+                    <td class="px-4 py-4 text-gray-700">About $2.20 (brand list price)</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <p>
+            Two things stand out. First, the cheapest name-brand whey at Target is not the cheapest tub. The 3.96 lb Gold Standard costs $79.99, but at roughly $1.44 per 25 g of protein it undercuts almost every small tub in the aisle. Second, the spread is narrow at the top and wide at the bottom: four of the six land between about $1.40 and $1.85 per 25 g, then the isolate and the collagen jump past $2.
+          </p>
+
+          <p>
+            Prices at Target move often. Sale tags, Target Circle offers and the difference between in-store and online pricing can each shift a figure by a dollar or more per tub. Treat the cost column as a snapshot for ranking, not a quote, and run the same sum yourself at the shelf, which we explain in the cost section below. The ranking itself is unlikely to change much unless one tub goes deeply on sale.
+          </p>
+
+          <p>
+            We also left two products out of the table on purpose. Target's own up&up whey and Garden of Life's 20 g Organic Protein both score very well on cost per 25 g, and we cover them in detail below, but our product cards link to Amazon and we could not confirm either is sold there in the same form. Ka'Chava is stocked too, but it is a meal shake priced like one.
+          </p>
+        </div>
+
+        <div id="how-we-ranked" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            2. How We Ranked Target's Shelf
+          </h2>
+
+          <p>
+            We did not taste these powders, and nothing on this page claims hands-on testing. The ranking is built from three things we can check: the nutrition panel and ingredient list printed on each label, the price Target listed for a specific size on the day we looked, and whether a named third-party certifier lists the product in its public registry. Taste and mixability are reported only as what buyers say.
+          </p>
+
+          <p>
+            The main sort is cost per 25 g of protein. That number takes a tub's price, divides it by the number of servings, then scales for how much protein each serving actually delivers. It is the only fair way to compare a 30 g scoop of Premier with a 20 g scoop of OWYN, and it is the same method we use in our <a href="/best-cheap-protein-powder/">guide to cheap protein powder</a>, so the figures line up across the site.
+          </p>
+
+          <p>
+            Label quality is the second sort. We look for a short ingredient list led by the protein source, low sugar, reasonable sodium, and no proprietary blends hiding how much protein comes from cheap fillers. We note sweeteners without treating any approved sweetener as dangerous; sucralose and stevia are matters of taste and personal preference rather than safety for most healthy adults, though some people find they upset their stomach.
+          </p>
+
+          <p>
+            Certification is the tiebreaker. A badge from NSF Certified for Sport or Informed Sport means an outside lab checks the product for banned substances and, in NSF's case, verifies the label contents. Most Target powders do not carry one, which is common in grocery-store protein. Finally, because our product links go to Amazon, every ranked pick had to be a product also sold there, which is why Target's own brand appears in the text rather than the cards.
+          </p>
+        </div>
+
+        <!-- Picks -->
+        <div id="top-picks" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            3. The Best Protein Powders at Target
+          </h2>
+
+          <p>
+            Ranked by cost per 25 g of protein at Target's listed prices on the day we checked, then by label quality and certification. Nutrition figures are per the label at the time of writing and vary by flavor; prices change often, so check the shelf. Every pick is also sold on Amazon, where our links go.
+          </p>
+
+          {PRODUCTS.map((product, index) => (
+            <ProductCard product={product} rank={index + 1} />
+          ))}
+        </div>
+
+        <div id="what-target-sells" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            4. What Target Actually Stocks
+          </h2>
+
+          <p>
+            Target's protein aisle is built around grocery and wellness brands rather than bodybuilding labels. On the day we checked, the category page and brand searches showed Optimum Nutrition, Premier Protein, Orgain, OWYN, Isopure, Dymatize, Garden of Life, Ka'Chava, Vital Proteins, Levels, Truvani, Just Ingredients, Clean Simple Eats, FlavCity, Bloom and Ryse, plus Target's own up&up line. Muscle Milk appears on Target listings too, depending on the store.
+          </p>
+
+          <p>
+            What you will not find much of is the 5 lb and 10 lb bulk tubs that make supplement-shop pricing cheap. Most of Target's stock is in 1 lb to 2 lb tubs, which is fine for trying a flavor but expensive per gram. The exceptions are mostly online: the 3.96 lb Gold Standard and the 3 lb and 4.5 lb Isopure tubs showed on target.com but are less likely to be on a store shelf.
+          </p>
+
+          <p>
+            Store stock varies a lot. A large Target with a full grocery section may carry a dozen powder brands; a small-format store near a campus may have three. The app's store selector is the honest guide here, and it is worth checking before a special trip. If the tub you want shows as online only, compare the delivered price with Amazon before ordering, because shipping thresholds differ.
+          </p>
+
+          <p>
+            Target also sells a lot of protein that is not powder: ready-to-drink shakes from Premier, Fairlife Core Power, OWYN and Orgain, single-serve powder packets, protein bars and Good & Gather protein snacks. Shakes are convenient but almost always cost more per gram than a tub of the same brand. If you buy shakes weekly, switching to the matching powder is usually the single biggest saving available in the aisle.
+          </p>
+
+          <p>
+            A final quirk: Target's listings sometimes mix product generations. We saw small differences between the panel text and the headline description on some pages, such as calories quoted one way in the blurb and another on the panel. When the two disagree, trust the nutrition panel photo on the listing or the tub itself, not the marketing copy above it.
+          </p>
+        </div>
+
+        <div id="target-own-brand" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            5. Does Target Have Its Own Protein Powder?
+          </h2>
+
+          <p>
+            Yes, but it is not Good & Gather. Target's food brand, Good & Gather, sells protein bars and protein bites, and we could not find a Good & Gather protein powder listed at the time of writing. The own-brand powder is up&up, Target's health-and-household label, which sells a whey protein powder in chocolate and vanilla in a 32 oz tub and a larger 5 lb size.
+          </p>
+
+          <p>
+            On paper, up&up whey is the best value in the store. Target listed the 32 oz chocolate tub at $25.99 for about 21 servings of 25 g of protein, which works out to roughly $1.24 per 25 g, cheaper than any name brand we ranked. The larger size was listed within a $25.99 to $49.29 price range across sizes, so it should be cheaper still per gram; check the exact tub before you assume.
+          </p>
+
+          <p>
+            The label is less impressive. Per the listing at the time of writing, a 43 g serving has 170 calories, 10 g of carbohydrate and 240 mg of sodium, and Target's own answer to a shopper question said it is made mainly of whey concentrate, maltodextrin, cocoa and whey isolate. Maltodextrin that high in the list is filler that adds calories and carbs without adding protein. It also contains milk and soy.
+          </p>
+
+          <p>
+            We found no third-party certification on the up&up listing, only a gluten-free badge with no named certifier, and Target does not name the manufacturer on the listing. None of that makes it unsafe. It does mean you are trading label quality and transparency for price, which is the same trade house-brand wheys make at other big retailers.
+          </p>
+
+          <p>
+            Our verdict: if price is the only thing that matters and you do not mind a few extra calories of carbohydrate, up&up is a reasonable buy and the cheapest protein at Target. If you want a cleaner panel, Optimum Nutrition's big tub costs about 20 cents more per 25 g and drops the filler. Because up&up is a Target exclusive, it does not appear in our ranked cards, which link to Amazon.
+          </p>
+        </div>
+
+        <div id="cost-per-25g" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            6. Cost per 25 g: The Only Price Comparison That Works
+          </h2>
+
+          <p>
+            Tub prices at Target are designed to be compared badly. A $18.99 tub looks cheaper than a $29.99 tub, but if the first holds 14 servings of 20 g and the second 17 servings of 30 g, the expensive tub is better value. Unit pricing per ounce, which Target shows on some listings, does not help either, because an ounce of maltodextrin-heavy powder contains less protein than an ounce of isolate.
+          </p>
+
+          <div class="bg-gray-900 text-white rounded-2xl p-6 lg:p-8 my-8">
+            <p class="text-xs font-black uppercase tracking-widest text-[#38BDF8] mb-4">Cost per 25 g of protein at Target prices seen</p>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+              <div>
+                <p class="text-3xl font-black text-white">$1.24</p>
+                <p class="text-gray-400 text-xs mt-1">up&up whey, 32 oz</p>
+              </div>
+              <div>
+                <p class="text-3xl font-black text-[#38BDF8]">$1.44</p>
+                <p class="text-gray-400 text-xs mt-1">Gold Standard, 3.96 lb</p>
+              </div>
+              <div>
+                <p class="text-3xl font-black text-white">$1.84</p>
+                <p class="text-gray-400 text-xs mt-1">Orgain, 2.03 lb</p>
+              </div>
+              <div>
+                <p class="text-3xl font-black text-[#38BDF8]">$5.00</p>
+                <p class="text-gray-400 text-xs mt-1">Ka'Chava, 15.31 oz</p>
+              </div>
+            </div>
+          </div>
+
+          <p>
+            The sum is simple. Divide the tub price by the number of servings, which gives the cost per serving. Divide that by the grams of protein per serving, then multiply by 25. For Premier: $29.99 divided by 17 is about $1.76 a serving; divided by 30 g and multiplied by 25 gives about $1.47. Do this on your phone in the aisle and the ranking takes ten seconds.
+          </p>
+
+          <p>
+            Size matters more at Target than almost anywhere else. Orgain's 2.03 lb tub costs about $1.84 per 25 g; the 16.32 oz tub of the same powder costs about $2.38. Gold Standard's small tub runs about $1.61 against $1.44 for the big one. Unless you are trying a flavor for the first time, the larger tub is almost always the better buy, even before any sale.
+          </p>
+
+          <p>
+            Ka'Chava is the outlier. At $34.99 for a 15.31 oz bag of about seven servings with 25 g of protein each, it costs about $5.00 per 25 g, more than three times the whey picks. That is because it is a meal shake with greens, fiber and vitamins, not a protein powder, and our <a href="/kachava-review/">Ka'Chava review</a> judges it on those terms. As a way to buy protein, it is the most expensive tub in the aisle.
+          </p>
+
+          <p>
+            Twenty-five grams is a useful unit because it is roughly the dose many studies use for a post-workout serving, but it is not a target you must hit. How much you need in a day depends on body weight and goals; our <a href="/how-much-protein-do-i-need/">protein needs guide</a> walks through the numbers. People with kidney disease, those who are pregnant, and anyone on medication should check with a doctor or registered dietitian before adding protein supplements.
+          </p>
+        </div>
+
+        <div id="target-circle" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            7. Target Circle Deals and When to Buy
+          </h2>
+
+          <p>
+            Target Circle is Target's free loyalty program, and it is the main reason a protein tub can be cheaper at Target than the shelf tag suggests. Circle members see rotating offers in the app, and health and wellness categories, including protein powder and shakes, come up from time to time as a percentage off or a buy-more-save-more offer. We cannot predict when, and offers change weekly, so treat any specific discount as a bonus rather than a plan.
+          </p>
+
+          <p>
+            The Target Circle Card, the store's debit and credit card formerly called RedCard, takes 5 percent off most purchases at the time of writing, and it stacks with sale prices. On a $79.99 Gold Standard tub that is about $4, enough to move its cost per 25 g from roughly $1.44 to about $1.37. Check the card's current terms before applying; we are describing the program, not recommending a credit product.
+          </p>
+
+          <p>
+            Target Circle 360 is the paid tier and mostly buys same-day delivery. It does not change the price of the powder, so it only makes sense if you already use delivery for other shopping. For protein alone, the free Circle program and in-store pickup get you the same tub at the same price without a fee.
+          </p>
+
+          <p>
+            Timing helps. Large seasonal sales such as Target Circle Week and the January health push tend to bring wellness discounts, and new-year shelf resets are when brands most often launch new sizes. If you go through a tub a month, buying two when a meaningful Circle offer appears, and checking the expiry date on each, is the simplest way to cut the yearly cost. Keep sealed tubs somewhere cool and dry.
+          </p>
+        </div>
+
+        <div id="target-vs-amazon" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            8. Target vs Amazon: Where to Buy the Same Tub
+          </h2>
+
+          <p>
+            Every product we rank is also sold on Amazon, which is where our product links point. That is not a claim that Amazon is always cheaper. On any given day, the same tub can be a few dollars cheaper at either store, and Target's sale prices and Circle offers sometimes beat Amazon outright, especially on smaller tubs.
+          </p>
+
+          <p>
+            Amazon's advantage is range. The biggest sizes, such as 5 lb tubs of Gold Standard or Isopure, and every flavor a brand makes are usually available there, while Target's shelf might carry two flavors in a 1.5 lb size. Bigger tubs mean a lower cost per 25 g, so if you already know the powder you like, the large online size is usually the cheapest route. Our <a href="/amazon-protein-powder/">Amazon protein powder guide</a> covers what to look for there, including third-party sellers.
+          </p>
+
+          <p>
+            Target's advantage is immediacy and returns. You can pick up a tub the same day, check the seal and the best-by date in your hand, and return it at a store if something is wrong. For a first purchase of an untried flavor, that is worth a little extra. The sensible pattern for many people is to try a small tub at Target, then buy the big size wherever it is cheapest per gram.
+          </p>
+
+          <p>
+            Whichever store you use, buy from the retailer itself or the brand's official storefront rather than an unfamiliar marketplace seller. Counterfeit and expired supplements are a documented problem on large marketplaces, and the price gap is rarely big enough to justify the risk. If a deal looks far below every other listing, treat that as a warning, not a bargain.
+          </p>
+        </div>
+
+        <div id="label-quality" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            9. Testing, Certification and Label Quality
+          </h2>
+
+          <p>
+            Most powders in Target's aisle do not carry a third-party sport certification. Of our six picks, only Vital Proteins Collagen Peptides is NSF Certified for Sport on the certifier's registry. Optimum Nutrition says Gold Standard is banned-substance tested, and some of its flavors have carried Informed Choice, but we could not confirm a named certification for every flavor Target sells. Premier, Orgain, OWYN and Isopure list no sport certification we could confirm.
+          </p>
+
+          <p>
+            That matters most for athletes in tested sports, where a positive test is the athlete's responsibility regardless of what the tub said. If that is you, check the exact product and flavor on the NSF Certified for Sport or Informed Sport database before buying. For everyone else, certification is a useful tiebreaker. A large, established brand with a documented quality system is a reasonable choice without one, and our page on <a href="/is-protein-powder-safe/">whether protein powder is safe</a> explains where the real risks lie.
+          </p>
+
+          <p>
+            Label quality is easier to judge yourself. On a whey, the first ingredient should be whey protein isolate or concentrate, and the protein should be most of the scoop by weight: Gold Standard's 24 g in a 31 g scoop is a good ratio, while a 43 g scoop with 25 g of protein, as on up&up, leaves room for filler. On plant powders, expect a larger scoop because pea and rice protein are less concentrated.
+          </p>
+
+          <p>
+            Organic and certified gluten-free badges tell you about farming and allergen handling, not purity. Orgain and Garden of Life both carry USDA Organic, which is meaningful if organic farming matters to you, but it does not test for heavy metals. Plant proteins tend to carry more heavy metals than dairy proteins on average, which is one reason we rank whey first for most shoppers; see our <a href="/best-protein-powder-without-heavy-metals/">heavy metals guide</a> for the testing that does exist.
+          </p>
+
+          <p>
+            Garden of Life's 20 g Organic Protein deserves a mention here. Target listed the 19.2 oz chocolate tub at $19.99 for about 18 servings of 20 g, roughly $1.39 per 25 g, and the label lists USDA Organic, Non-GMO Project Verified and NSF gluten-free certification, sweetened with erythritol and stevia. It would rank near the top on value, but we could not confirm a matching Amazon listing, so it stays out of the cards.
+          </p>
+        </div>
+
+        <div id="which-to-buy" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            10. Which Target Protein Powder Should You Buy?
+          </h2>
+
+          <h3 class="text-2xl font-bold text-gray-900 mt-10 mb-4">If you just want good, cheap whey</h3>
+
+          <p>
+            Buy the 3.96 lb Optimum Nutrition Gold Standard. At about $1.44 per 25 g it is the cheapest name-brand whey we found at Target, the label is short and the brand is long established. If you want to try a flavor first, the small tub costs more per gram but less up front. If price is everything and you accept maltodextrin, up&up is cheaper still.
+          </p>
+
+          <h3 class="text-2xl font-bold text-gray-900 mt-10 mb-4">If you want the most protein per shake</h3>
+
+          <p>
+            Premier Protein's powder gives 30 g per serving for about $1.47 per 25 g, per the label and Target's listed price. It is the easiest way to hit a high protein number in one glass, and it suits people who already like the Premier ready-to-drink shakes. Our <a href="/premier-protein-powder-review/">Premier Protein review</a> covers the flavor line-up in more detail.
+          </p>
+
+          <h3 class="text-2xl font-bold text-gray-900 mt-10 mb-4">If dairy is off the table</h3>
+
+          <p>
+            Orgain Organic Protein in the 2.03 lb tub is the best plant option at Target for most people, at about $1.84 per 25 g. If your household avoids several allergens at once, OWYN's 20 g powder is the one built for that, though it carries more sugar. Compare both with the wider field in our <a href="/best-plant-based-protein-powder/">plant-based protein powder rankings</a>.
+          </p>
+
+          <h3 class="text-2xl font-bold text-gray-900 mt-10 mb-4">If you are cutting or lactose-sensitive</h3>
+
+          <p>
+            Isopure Zero Carb is the pick: 25 g of protein with no carbs or sugar, per the label, from whey isolate that contains very little lactose. Buy the 3 lb tub to keep the cost near $2.05 per 25 g. Our <a href="/whey-vs-whey-isolate/">whey vs isolate explainer</a> covers whether the extra cost is worth it for you; for many people with mild lactose sensitivity, regular whey is fine in small servings.
+          </p>
+
+          <p>
+            Shopping other big-box stores too? Our <a href="/best-costco-protein-powder/">Costco protein powder rankings</a> and <a href="/best-walmart-protein-powder/">Walmart protein powder rankings</a> use the same cost-per-25 g method, so you can compare a Target tub against a warehouse-club bag directly. Warehouse clubs usually win on bulk; Target usually wins on range, small tubs and convenience.
+          </p>
+        </div>
+
+        <!-- Common Mistakes -->
+        <div id="mistakes" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            11. Common Mistakes to Avoid
+          </h2>
+
+          <div class="space-y-6 my-8">
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Comparing tub prices instead of protein</h3>
+              <p class="text-gray-700 text-sm m-0">
+                A cheaper tub is not cheaper protein. Target's smaller tubs often hold fewer servings with less protein in each, so an $18.99 tub can cost more per gram than a $29.99 one. Divide the price by servings, divide by grams of protein per serving and multiply by 25 before deciding which tub is the bargain.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Buying the small tub out of habit</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Target shelves are full of 1 lb tubs, and they are the most expensive way to buy powder. Orgain's 16.32 oz tub costs roughly half again as much per gram as the 2.03 lb tub of the same formula. Once you know you like a flavor, step up to the largest size Target or Amazon sells.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Assuming up&up is Good & Gather quality</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Target's grocery brand and its protein powder are different lines. Good & Gather makes protein bars and snacks; the powder is up&up, and its label leads with whey concentrate and maltodextrin. It is the cheapest per gram, but read the panel and decide whether the extra carbohydrate fits your goals before buying.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Counting collagen as a protein shake</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Vital Proteins sits right next to the whey, and its 18 g of protein looks comparable. Collagen is an incomplete protein, low in leucine, so it does not support muscle the way whey or a complete plant blend does. Use it as an add-in if you like it, not as your main protein source.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Trusting the listing blurb over the panel</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Target's product descriptions occasionally disagree with the nutrition panel shown on the same page, for example quoting different calories. Labels also change between production runs. When the numbers conflict, trust the panel photo or the physical tub, and check the serving size in grams, not just in scoops.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ -->
+        <div id="faq" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            12. Frequently Asked Questions
+          </h2>
+
+          <div class="faq-list">
+            <details class="faq-item">
+              <summary><h3>What is the best protein powder at Target?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  For most people it is Optimum Nutrition Gold Standard 100% Whey in the 3.96 lb tub, at about $1.44 per 25 g of protein at Target's listed price, with a short label and a long track record. Premier Protein gives more protein per scoop for similar money, Orgain is the best plant option, and Isopure suits low-carb or lactose-sensitive shoppers.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>Does Target have its own brand of protein powder?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  Yes. Target's up&up brand sells a whey protein powder in chocolate and vanilla, listed at $25.99 for a 32 oz tub of about 21 servings at the time of writing. We could not find a Good & Gather protein powder; that brand sells protein bars and bites instead. The up&up label includes maltodextrin and lists no third-party certification.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>Is up&up protein powder any good?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  It is the cheapest protein per gram at Target, roughly $1.24 per 25 g on the 32 oz tub. The trade-off is the label: about 170 calories and 10 g of carbohydrate per 43 g serving, with maltodextrin high on the ingredient list, per the listing. It is fine if price matters most; a name-brand whey gives a cleaner panel for slightly more.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>Is protein powder cheaper at Target or Amazon?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  It depends on the day and the size. Target's sale prices and Circle offers sometimes beat Amazon on small tubs, while Amazon usually sells the largest sizes, which have the lowest cost per 25 g. Compare cost per 25 g of protein rather than tub price, and buy from the retailer or the brand's official storefront rather than unknown sellers.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>Does Target Circle discount protein powder?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  Sometimes. Target Circle offers rotate in the app, and protein powder and shakes appear in health and wellness promotions from time to time, though we cannot predict when. The Target Circle Card takes 5 percent off most purchases at the time of writing and stacks with sale prices. Check current terms in the app before you rely on any discount.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>What plant-based protein powders does Target sell?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  Target stocks Orgain, OWYN, Garden of Life, Truvani and Ka'Chava among others, at the time of writing. Orgain's 2.03 lb tub is our pick on value and taste reports; OWYN suits households avoiding several allergens; Garden of Life's 20 g Organic Protein is also good value. Ka'Chava is a meal shake and costs far more per gram of protein.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>Is Target protein powder third-party tested?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  Mostly not. Of the powders we rank, only Vital Proteins Collagen Peptides is NSF Certified for Sport on the certifier's registry. Optimum Nutrition says Gold Standard is banned-substance tested. If you compete in a tested sport, check the exact product and flavor on the NSF or Informed Sport database before buying, and ask a doctor about any health concerns.
+                </p>
+              </div>
+            </details>
+
+          </div>
+        </div>
+
+        <!-- Related Guides -->
+        <div class="mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">Related Protein Powder Guides</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <a href="/best-costco-protein-powder/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#FF4500] font-black text-xs uppercase tracking-widest mb-2">Store Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Costco Protein Powder</h3>
+              <p class="text-gray-500 text-sm mt-2">Kirkland, Gold Standard and Ascent ranked by protein per dollar.</p>
+            </a>
+            <a href="/best-walmart-protein-powder/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#1E90FF] font-black text-xs uppercase tracking-widest mb-2">Store Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Walmart Protein Powder</h3>
+              <p class="text-gray-500 text-sm mt-2">What Walmart stocks, ranked by the same cost-per-25 g method.</p>
+            </a>
+            <a href="/best-cheap-protein-powder/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#FF4500] font-black text-xs uppercase tracking-widest mb-2">Budget</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Cheap Protein Powder</h3>
+              <p class="text-gray-500 text-sm mt-2">The lowest cost per gram of protein from any retailer.</p>
+            </a>
+          </div>
+        </div>
+
+        <!-- Closing -->
+        <div class="mt-16 bg-gray-900 text-white rounded-2xl p-6 md:p-8">
+          <h2 class="text-2xl font-black text-white mb-4">The Bottom Line</h2>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            Target is a good place to buy protein powder if you shop by the gram rather than by the tub. The big Optimum Nutrition tub and Premier's 30 g powder both land under $1.50 per 25 g at listed prices, Orgain's large tub is a sound dairy-free choice, and Isopure earns its premium only for low-carb or lactose-sensitive shoppers. Target's up&up whey is cheapest of all, with a busier label to match.
+          </p>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            Run the cost-per-25 g sum at the shelf, buy the biggest tub of a flavor you already like, and use Target Circle offers when they appear rather than waiting for them. If you compete in a tested sport, check the certifier's database first. And if you are managing a health condition, talk to a doctor or registered dietitian before adding a protein supplement.
+          </p>
+        </div>
+
+        <MoreInCategory category="Protein Powder Rankings" links={moreInCategory} />
+
+        <AuthorBio />
+      </div>
+    </div>
+  </article>
+</Layout>
