@@ -1,0 +1,873 @@
+---
+import Layout from "../layouts/Layout.astro";
+import ArticleHeader from "../components/ArticleHeader.astro";
+import TableOfContents from "../components/TableOfContents.astro";
+import ProductCard from "../components/ProductCard.astro";
+import MoreInCategory from "../components/MoreInCategory.astro";
+import { AUTHORS, DEFAULT_AUTHOR, authorSchema } from "../data/authors";
+import { SITE_NAME, SITE_URL } from "../data/site";
+import QuickPicks from "../components/QuickPicks.astro";
+import AuthorBio from "../components/AuthorBio.astro";
+import { pageDates } from "../data/dates";
+
+const moreInCategory = [
+  {
+    "title": "Best Lactose-Free Protein Powder",
+    "url": "/best-lactose-free-protein-powder/"
+  },
+  {
+    "title": "Best Protein Powder for Sensitive Stomach",
+    "url": "/best-protein-powder-for-sensitive-stomach/"
+  },
+  {
+    "title": "Best Paleo Protein Powder",
+    "url": "/best-paleo-protein-powder/"
+  },
+  {
+    "title": "Best Plant-Based Protein Powder",
+    "url": "/best-plant-based-protein-powder/"
+  }
+];
+const author = AUTHORS[DEFAULT_AUTHOR];
+const dates = pageDates(Astro.url.pathname, { published: "2026-11-08", modified: "2026-11-08" });
+const title = "Best Gluten-Free Protein Powder: Certified Picks and How to Check the Label for Celiac Safety";
+const description =
+  "The best gluten-free protein powders, comparing certified and claim-only picks, the FDA 20 ppm rule, GFCO seals and hidden gluten sources such as barley malt.";
+
+const PRODUCTS: {
+  id: string;
+  name: string;
+  brand?: string;
+  badge: string;
+  category: string;
+  description: string;
+  pros: string[];
+  cons: string[];
+  bottomLine: string;
+  specs?: Record<string, string>;
+  rating?: number;
+  reviewCount?: number;
+  amazonUrl?: string;
+}[] = [
+  {
+    "id": "garden-of-life-sport-organic-plant-protein",
+    "name": "Garden of Life Sport Organic Plant-Based Protein",
+    "brand": "Garden of Life",
+    "badge": "Best Overall Certified Gluten-Free",
+    "category": "Organic pea-led plant protein",
+    "description": "Garden of Life's Sport powder stacks up more independent checks than anything else here. Retailer and brand listings at the time of writing describe it as NSF Certified Gluten-Free, and it is also NSF Certified for Sport and USDA Organic, per the brand. A two-scoop serving gives about 30 g of plant protein in around 170-180 calories, sweetened with stevia. It is also dairy-free and soy-free, which helps people with celiac disease who react to other foods too.",
+    "pros": [
+      "NSF Certified Gluten-Free, per brand and retailer listings",
+      "NSF Certified for Sport and USDA Organic, per the brand",
+      "About 30 g of protein per serving"
+    ],
+    "cons": [
+      "Two-scoop serving and about 170-180 calories",
+      "Stevia and an earthy plant taste, buyers report",
+      "Check the seal on each flavor and size you buy"
+    ],
+    "bottomLine": "The safest everyday choice for someone with celiac disease who also wants sport certification.",
+    "specs": {
+      "Protein per serving": "About 30 g (listing)",
+      "Gluten-free status": "NSF Certified Gluten-Free (per brand)",
+      "Protein source": "Pea-led plant blend",
+      "Best for": "Celiac athletes"
+    }
+  },
+  {
+    "id": "dymatize-iso100-hydrolyzed",
+    "name": "Dymatize ISO100 Hydrolyzed Whey Isolate",
+    "brand": "Dymatize",
+    "badge": "Best Gluten-Free Whey",
+    "category": "Hydrolyzed whey isolate + whey isolate",
+    "description": "ISO100 is the most widely sold whey isolate labeled gluten-free. Per the label at the time of writing, a 30 g scoop gives 25 g of protein in about 110-120 calories with roughly 1 g of sugar, and Dymatize lists it as gluten-free and describes it as banned-substance tested. Whey itself contains no gluten, so the claim mostly speaks to flavorings and manufacturing; it is a strong option for anyone who wants a familiar dairy whey.",
+    "pros": [
+      "Labeled gluten-free, per the brand and retailer listings",
+      "25 g of protein in about 110-120 calories",
+      "Very low in lactose, helpful for celiac patients with lactose trouble"
+    ],
+    "cons": [
+      "Gluten-free claim rather than a third-party gluten seal",
+      "Premium cost per 25 g of protein",
+      "Check each flavor, especially dessert and cereal flavors"
+    ],
+    "bottomLine": "The whey to choose if you want a well-known isolate with a clear gluten-free label claim.",
+    "specs": {
+      "Protein per scoop": "25 g (label)",
+      "Gluten-free status": "Gluten-free claim (per brand)",
+      "Protein source": "Whey isolate",
+      "Best for": "Mainstream whey drinkers"
+    }
+  },
+  {
+    "id": "owyn-pro-elite-protein-powder",
+    "name": "OWYN Pro Elite Protein Powder",
+    "brand": "OWYN",
+    "badge": "Best Allergen-Friendly",
+    "category": "Pea and pumpkin plant protein",
+    "description": "OWYN states that its products meet an internal gluten standard of under 10 ppm, half the FDA's 20 ppm limit, and markets the range as free of the major food allergens. The Pro Elite chocolate panel at the time of writing lists 30 g of pea and pumpkin protein in 180 calories per two-scoop serving, with 0 g of sugar and monk fruit sweetening. Some OWYN products show a Certified Gluten-Free badge, so check the tub for the seal.",
+    "pros": [
+      "Brand standard of under 10 ppm gluten, per OWYN",
+      "Free of dairy, soy and other major allergens, per the brand",
+      "30 g of protein and 0 g of sugar per serving"
+    ],
+    "cons": [
+      "Third-party gluten certification varies by product; check the tub",
+      "No sport certification",
+      "About 180 calories per serving"
+    ],
+    "bottomLine": "The best pick for households avoiding gluten and several other allergens at once.",
+    "specs": {
+      "Protein per serving": "30 g (label)",
+      "Gluten-free status": "Under 10 ppm brand standard",
+      "Protein source": "Pea + pumpkin",
+      "Best for": "Multiple food allergies"
+    }
+  },
+  {
+    "id": "garden-of-life-raw-organic-protein",
+    "name": "Garden of Life Raw Organic Protein",
+    "brand": "Garden of Life",
+    "badge": "Best Organic Certified Gluten-Free",
+    "category": "Organic sprouted plant protein blend",
+    "description": "Raw Organic Protein lists 22 g of protein, 5 g of fiber and 0 g of sugar in 130 calories per scoop, per the listing at the time of writing, and the brand lists NSF Gluten-Free and NSF Contents Certified among its certifications. The protein comes mainly from organic pea and sprouted brown rice with a long list of sprouted seeds and grains, all of which are gluten-free grains such as brown rice, quinoa and millet. The vanilla uses erythritol and stevia.",
+    "pros": [
+      "NSF Gluten-Free certified, per the brand",
+      "USDA Organic with 5 g of fiber per scoop",
+      "0 g of sugar, per the label"
+    ],
+    "cons": [
+      "Contains erythritol, which can bloat sensitive stomachs",
+      "Premium cost per 25 g of protein",
+      "Only 22 g of protein per scoop"
+    ],
+    "bottomLine": "A certified gluten-free organic powder for everyday smoothies rather than heavy training.",
+    "specs": {
+      "Protein per scoop": "22 g (label)",
+      "Gluten-free status": "NSF Gluten-Free (per brand)",
+      "Protein source": "Pea + sprouted brown rice",
+      "Best for": "Organic smoothies"
+    }
+  },
+  {
+    "id": "transparent-labs-grass-fed-whey-protein-isolate",
+    "name": "Transparent Labs 100% Grass-Fed Whey Protein Isolate",
+    "brand": "Transparent Labs",
+    "badge": "Best Certified Whey Isolate",
+    "category": "Grass-fed whey isolate",
+    "description": "Transparent Labs lists its grass-fed isolate as free of gluten, artificial sweeteners, dyes and preservatives, per brand and retailer listings at the time of writing. A roughly 32 g scoop gives 28 g of protein in about 120-150 calories depending on flavor, sweetened with stevia, and it is Informed Choice and Informed Protein certified, per the brand. Those programs test for banned substances and label accuracy rather than gluten, but they show a brand willing to submit to outside testing.",
+    "pros": [
+      "Listed as gluten-free, per the brand",
+      "28 g of protein per scoop",
+      "Informed Choice and Informed Protein certified, per the brand"
+    ],
+    "cons": [
+      "No dedicated gluten-free seal we could confirm",
+      "Some flavors contain peanuts",
+      "Premium cost per 25 g of protein"
+    ],
+    "bottomLine": "A top-quality isolate for gluten-free eaters who also want third-party testing.",
+    "specs": {
+      "Protein per scoop": "28 g (brand)",
+      "Gluten-free status": "Gluten-free claim (per brand)",
+      "Protein source": "Grass-fed whey isolate",
+      "Best for": "Tested athletes"
+    }
+  },
+  {
+    "id": "thorne-whey-protein-isolate",
+    "name": "Thorne Whey Protein Isolate",
+    "brand": "Thorne",
+    "badge": "Best Short-Label Whey",
+    "category": "Whey protein isolate, flavored",
+    "description": "Thorne's whey isolate combines a short ingredient list with NSF Certified for Sport status, per the brand and NSF at the time of writing, and Thorne lists it as gluten-free. It delivers about 21 g of protein per scoop from whey isolate with no added sugar. A short label is genuinely useful for celiac shoppers, because every extra flavoring, inclusion or filler is another place gluten could hide.",
+    "pros": [
+      "Gluten-free, per Thorne",
+      "NSF Certified for Sport, per the brand and NSF (verify the flavor)",
+      "Short ingredient list"
+    ],
+    "cons": [
+      "Premium cost per 25 g of protein",
+      "About 21 g per scoop, slightly under a full 25 g dose",
+      "No dedicated gluten-free seal we could confirm"
+    ],
+    "bottomLine": "A low-fuss certified whey for people who want as few ingredients to vet as possible.",
+    "specs": {
+      "Protein per scoop": "About 21 g (label)",
+      "Gluten-free status": "Gluten-free claim (per brand)",
+      "Protein source": "Whey isolate",
+      "Best for": "Short labels"
+    }
+  },
+  {
+    "id": "naked-nutrition-naked-pea",
+    "name": "Naked Pea Protein (Unflavored)",
+    "brand": "Naked Nutrition",
+    "badge": "Best Budget",
+    "category": "Single-ingredient yellow pea protein",
+    "description": "Naked Pea has one ingredient, yellow pea protein, which the brand says comes from the United States and Canada, and Naked markets it as gluten-free. It delivers about 27 g of protein in roughly 120 calories per serving, per the label at the time of writing, at a budget-tier cost per 25 g. One ingredient means no flavorings or inclusions to check, though cross-contact at the processing stage still matters for celiac disease.",
+    "pros": [
+      "One ingredient, nothing added",
+      "About 27 g of protein in roughly 120 calories",
+      "Budget-tier cost per 25 g of protein"
+    ],
+    "cons": [
+      "No third-party gluten seal we could confirm",
+      "Earthy taste in water alone, buyers report",
+      "No sport certification"
+    ],
+    "bottomLine": "The cheapest simple gluten-free protein if you flavor it yourself.",
+    "specs": {
+      "Protein per serving": "About 27 g (label)",
+      "Gluten-free status": "Gluten-free claim (per brand)",
+      "Protein source": "Yellow pea",
+      "Best for": "Budget, DIY smoothies"
+    }
+  },
+  {
+    "id": "vega-sport-premium-protein",
+    "name": "Vega Sport Premium Protein",
+    "brand": "Vega",
+    "badge": "Best-Tasting Plant Option",
+    "category": "Plant protein blend",
+    "description": "Vega Sport blends pea with pumpkin seed, sunflower seed and alfalfa protein for about 30 g of protein per serving, with about 1 g of sugar and no added sugar per the US label at the time of writing. Vega markets it as gluten-free and states it is NSF Certified for Sport. Buyers commonly describe it as one of the more drinkable plant shakes in water, which matters if you have already given up on chalky gluten-free alternatives.",
+    "pros": [
+      "About 30 g of protein with about 1 g of sugar",
+      "Labeled gluten-free, per the brand",
+      "NSF Certified for Sport, per the brand"
+    ],
+    "cons": [
+      "Premium price tier per 25 g of protein",
+      "Contains stevia and, in some versions, xanthan gum",
+      "Label versions vary; check calories and the gluten statement"
+    ],
+    "bottomLine": "The plant powder to try if taste has been the problem with gluten-free shakes.",
+    "specs": {
+      "Protein per serving": "About 30 g (label)",
+      "Gluten-free status": "Gluten-free claim (per brand)",
+      "Protein source": "Pea, pumpkin, sunflower",
+      "Best for": "Better-tasting plant shakes"
+    }
+  }
+];
+
+const schema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Home",
+          item: `${SITE_URL}/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Best Lists",
+          item: `${SITE_URL}/best-of/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 3,
+          name: "Best Gluten-Free Protein Powder",
+          item: `${SITE_URL}/best-gluten-free-protein-powder/`,
+        },
+      ],
+    },
+    {
+      "@type": "FAQPage",
+      mainEntity: [
+        {
+          "@type": "Question",
+          "name": "What is the best gluten-free protein powder?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Garden of Life Sport Organic Plant-Based Protein is our overall pick because listings describe it as NSF Certified Gluten-Free, and it is also NSF Certified for Sport and USDA Organic, per the brand. Dymatize ISO100 is the best-known whey labeled gluten-free, and OWYN Pro Elite suits people avoiding several allergens. Always check the seal on your exact flavor."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is whey protein gluten-free?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Whey itself contains no gluten, since it comes from milk. Flavored whey powders can still contain gluten through barley malt, cookie pieces or other additions, or through cross-contact during manufacturing. Look for a gluten-free claim or certification on the tub, especially if you have celiac disease, rather than assuming all whey is safe."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What does certified gluten-free mean on protein powder?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It means an independent organization has audited the manufacturing process and tests the product against its standard. GFCO, for example, certifies products at 10 ppm of gluten or less, half the FDA's 20 ppm limit for a gluten-free claim. A brand's own gluten-free claim must meet the FDA limit, but no outside testing is required."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is 20 ppm gluten safe for celiac disease?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The FDA chose 20 ppm because research indicated most people with celiac disease tolerate that level, and it matches the international Codex standard. Some people are more sensitive and prefer products certified at 10 ppm or less. Your gastroenterologist or dietitian can advise how strict you need to be, based on your symptoms and test results."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Which protein powder ingredients contain gluten?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Watch for wheat, barley, rye, malt, malt extract, malted milk powder, brewer's yeast, and cookie, cake or cereal pieces. Oats may be contaminated unless certified gluten-free. Greens blends with wheatgrass or barley grass are only acceptable in products labeled or certified gluten-free. Wheat must be declared as an allergen, but barley, rye and oats do not."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is plant protein powder gluten-free?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Pea, rice, hemp, pumpkin and soy proteins contain no gluten, but they can be cross-contaminated during growing, milling or manufacturing, and some plant powders add oat or grain ingredients. A plant powder with a gluten-free certification, such as Garden of Life Sport per the brand, is safer for celiac disease than one without any gluten statement."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I trust a gluten-free claim without a seal?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Usually, yes, for people avoiding gluten by preference, because the FDA requires a gluten-free claim to mean under 20 ppm. For celiac disease, a seal adds independent testing that the FDA does not require. A claim from a brand with a short ingredient list is a reasonable second choice; a product with no gluten statement is worth questioning."
+          }
+        }
+      ],
+    },
+    {
+      "@type": "Article",
+      headline: title,
+      author: authorSchema(),
+      datePublished: dates.published,
+      dateModified: dates.modified,
+      publisher: { "@type": "Organization", name: SITE_NAME, url: SITE_URL },
+    },
+    {
+      "@type": "ItemList",
+      name: title,
+      numberOfItems: PRODUCTS.length,
+      itemListElement: PRODUCTS.map((product, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name: product.name,
+        url: new URL(`#${product.id}`, Astro.url).toString(),
+      })),
+    },
+    ...PRODUCTS.map((product) => ({
+      "@type": "Product",
+      name: product.name,
+      description: product.description,
+      brand: {
+        "@type": "Brand",
+        name: product.brand ?? product.name.split(" ")[0],
+      },
+    })),
+  ],
+};
+---
+
+<Layout
+  title={title}
+  description={description}
+  ogType="article"
+  article={{
+    publishedTime: dates.published,
+    modifiedTime: dates.modified,
+    author: author.name,
+    section: "Specialty Protein",
+    tags: [
+      "gluten free protein powder",
+      "best gluten free protein powder",
+      "certified gluten free protein powder",
+      "celiac safe protein powder",
+      "is protein powder gluten free"
+    ],
+  }}
+  jsonLd={schema}
+>
+  <article class="relative overflow-hidden">
+    <ArticleHeader kicker={"Buyer's Guide"} badge={"Label-Checked"} author={author} dates={dates} mobileAd={false}>
+      <Fragment slot="title">Best Gluten-Free Protein Powder</Fragment>
+      Eight protein powders with certified or labeled gluten-free status, compared on protein, sugar and certification, plus how to spot barley malt, oats and cross-contact before you buy.
+    </ArticleHeader>
+
+    <TableOfContents>
+      <a href="#quick-comparison">Comparison Table</a>
+      <a href="#how-we-picked">How We Picked</a>
+      <a href="#top-picks">Our Top Picks</a>
+      <a href="#is-protein-powder-gluten-free">Is Protein Powder Gluten-Free?</a>
+      <a href="#certified-vs-claim">Certified vs Claim</a>
+      <a href="#ingredients-to-watch">Ingredients to Watch</a>
+      <a href="#cross-contact">Cross-Contact</a>
+      <a href="#celiac">Celiac and Sensitivity</a>
+      <a href="#mistakes">Common Mistakes</a>
+      <a href="#faq">FAQ</a>
+    </TableOfContents>
+
+    <!-- Content -->
+    <div class="max-w-3xl mx-auto px-4 pb-16 lg:pb-24">
+      <div class="prose prose-lg prose-blue max-w-none text-gray-700 leading-relaxed">
+        <p class="lede">
+          The best gluten-free protein powder for most people is Garden of Life Sport Organic Plant-Based Protein, which brand and retailer listings describe as NSF Certified Gluten-Free, alongside NSF Certified for Sport and USDA Organic status, with about 30 g of protein per serving. Dymatize ISO100 is the best-known whey labeled gluten-free, OWYN Pro Elite works to an under-10 ppm standard for allergy-conscious households, and Naked Pea is the budget pick. A US gluten-free claim means under 20 ppm of gluten, but only third-party certification such as GFCO, at 10 ppm or less, adds outside testing, which matters most if you have celiac disease.
+        </p>
+
+        <QuickPicks products={PRODUCTS} />
+
+        <div id="quick-comparison" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            1. Gluten-Free Protein Powders Compared
+          </h2>
+
+          <p>
+            The answer first. These are the eight powders we rank, with protein per scoop, calories, sugar, price tier and gluten status. Price tier reflects cost per 25 g of protein at typical retail prices when we checked. The certification column separates third-party gluten-free certification from a brand's own gluten-free claim, because for someone with celiac disease that difference matters. Figures come from labels and brand listings at the time of writing and vary by flavor.
+          </p>
+
+          <div class="overflow-hidden border border-gray-200 rounded-2xl my-8">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Product</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Protein / scoop</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Calories</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Sugar</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Price tier</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Certification</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Garden of Life Sport Plant (2 scoops)</td>
+                    <td class="px-4 py-4 text-gray-700">About 30 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 170-180</td>
+                    <td class="px-4 py-4 text-gray-700">Low</td>
+                    <td class="px-4 py-4 text-gray-700">Mid</td>
+                    <td class="px-4 py-4 text-gray-700">NSF Certified Gluten-Free, NSF Sport (per brand)</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Dymatize ISO100</td>
+                    <td class="px-4 py-4 text-gray-700">25 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 110-120</td>
+                    <td class="px-4 py-4 text-gray-700">About 1 g</td>
+                    <td class="px-4 py-4 text-gray-700">Premium</td>
+                    <td class="px-4 py-4 text-gray-700">Gluten-free claim</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">OWYN Pro Elite (2 scoops)</td>
+                    <td class="px-4 py-4 text-gray-700">30 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 180</td>
+                    <td class="px-4 py-4 text-gray-700">0 g</td>
+                    <td class="px-4 py-4 text-gray-700">Mid</td>
+                    <td class="px-4 py-4 text-gray-700">Under 10 ppm brand standard</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Garden of Life Raw Organic Protein</td>
+                    <td class="px-4 py-4 text-gray-700">22 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 130</td>
+                    <td class="px-4 py-4 text-gray-700">0 g</td>
+                    <td class="px-4 py-4 text-gray-700">Premium</td>
+                    <td class="px-4 py-4 text-gray-700">NSF Gluten-Free (per brand)</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Transparent Labs Grass-Fed Isolate</td>
+                    <td class="px-4 py-4 text-gray-700">28 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 120-150</td>
+                    <td class="px-4 py-4 text-gray-700">Low</td>
+                    <td class="px-4 py-4 text-gray-700">Premium</td>
+                    <td class="px-4 py-4 text-gray-700">Gluten-free claim, Informed Choice</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Thorne Whey Isolate</td>
+                    <td class="px-4 py-4 text-gray-700">About 21 g</td>
+                    <td class="px-4 py-4 text-gray-700">Check flavor</td>
+                    <td class="px-4 py-4 text-gray-700">No added sugar</td>
+                    <td class="px-4 py-4 text-gray-700">Premium</td>
+                    <td class="px-4 py-4 text-gray-700">Gluten-free claim, NSF Sport</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Naked Pea Unflavored</td>
+                    <td class="px-4 py-4 text-gray-700">About 27 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 120</td>
+                    <td class="px-4 py-4 text-gray-700">Trace</td>
+                    <td class="px-4 py-4 text-gray-700">Budget</td>
+                    <td class="px-4 py-4 text-gray-700">Gluten-free claim</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Vega Sport Premium</td>
+                    <td class="px-4 py-4 text-gray-700">About 30 g</td>
+                    <td class="px-4 py-4 text-gray-700">Varies by version</td>
+                    <td class="px-4 py-4 text-gray-700">About 1 g</td>
+                    <td class="px-4 py-4 text-gray-700">Premium</td>
+                    <td class="px-4 py-4 text-gray-700">Gluten-free claim, NSF Sport</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <p>
+            Garden of Life Sport Organic Plant-Based Protein is our overall pick because it combines NSF gluten-free certification with NSF Certified for Sport and USDA Organic status, per the brand. Dymatize ISO100 is the best-known whey labeled gluten-free, OWYN Pro Elite suits households managing several allergies, and Naked Pea is the budget option with a single ingredient.
+          </p>
+
+          <p>
+            One important caveat before the details. Certifications and claims apply to specific products, and sometimes to specific flavors or sizes, not to whole brands. Always look for the seal or the gluten-free statement on the exact tub you are buying, and if you have celiac disease, talk to your doctor or a registered dietitian about how strict you need to be. This guide is general information, not medical advice.
+          </p>
+        </div>
+
+        <div id="how-we-picked" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            2. How We Picked
+          </h2>
+
+          <p>
+            We started with gluten status. Every product had to carry either a third-party gluten-free certification or a clear gluten-free claim from the brand, and we ranked certified products higher. We then weighed protein per scoop, ingredient list length, other third-party testing, sugar and price tier. Our general methods are set out on the <a href="/how-we-test/">how we test</a> page.
+          </p>
+
+          <p>
+            We did not test these powders for gluten ourselves, and we did not taste them; flavor comments reflect what buyers commonly report. Gluten status comes from brand statements, product listings and certification descriptions at the time of writing. Brands change formulas and suppliers, so a product's status can change, which is why we keep pointing you back to the label.
+          </p>
+
+          <p>
+            We gave a bonus to short ingredient lists. Every flavoring, inclusion, thickener and superfood blend is another ingredient someone with celiac disease has to trust, and the most common sources of hidden gluten in protein powders are exactly those extras. Single-ingredient powders like Naked Pea and short-label isolates like Thorne score well on that basis even without a dedicated gluten seal.
+          </p>
+
+          <p>
+            Finally, we checked that each product is sold on Amazon and currently available. If you also want contaminant testing for heavy metals and other impurities, our <a href="/best-clean-protein-powder/">best clean protein powder</a> guide covers that side of label trust in more depth.
+          </p>
+        </div>
+
+        <!-- Picks -->
+        <div id="top-picks" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            3. The Best Gluten-Free Protein Powders
+          </h2>
+
+          <p>
+            We ranked these on gluten status first, certified ahead of claim-only, then protein, ingredient list length, other third-party testing and price tier. Gluten status and nutrition figures come from brand statements and labels at the time of writing; we did not test these products, and taste comments reflect buyer reviews. Check the seal or statement on the exact flavor and size you buy.
+          </p>
+
+          {PRODUCTS.map((product, index) => (
+            <ProductCard product={product} rank={index + 1} />
+          ))}
+        </div>
+
+        <div id="is-protein-powder-gluten-free" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            4. Is Protein Powder Gluten-Free?
+          </h2>
+
+          <p>
+            Most protein sources are naturally gluten-free. Whey, casein, egg white, pea, brown rice, soy, hemp, pumpkin seed and collagen proteins contain no gluten on their own. Gluten is a protein found in wheat, barley and rye, and related grains such as spelt, so a plain protein powder made from any of the sources above starts out gluten-free.
+          </p>
+
+          <p>
+            The risk comes from what is added and how the powder is made. Flavorings, inclusions like cookie or brownie pieces, malt-based ingredients, oat flour, some thickeners and greens blends can introduce gluten. So can cross-contact, where a gluten-free powder is made on the same equipment or in the same facility as products containing wheat or barley. That is why two whey powders with the same protein source can differ in their suitability for celiac disease.
+          </p>
+
+          <p>
+            The result is that "is protein powder gluten-free?" has an unsatisfying answer: usually, but not reliably enough for celiac disease without checking. Plain unflavored isolates and single-ingredient plant proteins are the lowest-risk category. Dessert flavors, mass gainers and meal replacement shakes, which often include oat powder or grain-based carbohydrate, are the highest. Our <a href="/best-meal-replacement-shake/">best meal replacement shake</a> guide shows how much more goes into those products.
+          </p>
+
+          <p>
+            For people without celiac disease or a wheat allergy, small traces rarely matter, and a brand's gluten-free claim is usually enough. For people with celiac disease, where even small amounts of gluten can damage the small intestine, the questions in the next sections are worth asking every time.
+          </p>
+        </div>
+
+        <div id="certified-vs-claim" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            5. Certified Gluten-Free vs a Gluten-Free Claim
+          </h2>
+
+          <p>
+            In the US, a "gluten-free" label is regulated. Under the FDA rule that took effect in 2014, foods labeled gluten-free, no gluten, free of gluten or without gluten must contain less than 20 parts per million of gluten. The rule covers dietary supplements as well as conventional foods, so it applies to protein powder. The 20 ppm threshold matches the international Codex standard and is the level most people with celiac disease tolerate, according to the research the FDA relied on.
+          </p>
+
+          <p>
+            The catch is enforcement. The FDA does not require manufacturers to test their products or to use a specific testing method; the company is responsible for making sure the claim is true. In practice, reputable brands test, but there is no routine outside check before a gluten-free claim appears on a tub.
+          </p>
+
+          <p>
+            Third-party certification adds that check. The Gluten-Free Certification Organization, run by the Gluten Intolerance Group and known as GFCO, certifies products at 10 ppm or less, half the FDA threshold, with ongoing product testing and annual facility audits. NSF runs its own gluten-free certification with audits and testing too. A certification seal does not make a product perfectly free of gluten, but it means someone outside the company has inspected the process and tested the product.
+          </p>
+
+          <div class="overflow-hidden border border-gray-200 rounded-2xl my-8">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Label</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Gluten limit</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Who checks</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">What it tells you</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">FDA gluten-free claim</td>
+                    <td class="px-4 py-4 text-gray-700">Under 20 ppm</td>
+                    <td class="px-4 py-4 text-gray-700">The manufacturer</td>
+                    <td class="px-4 py-4 text-gray-700">Legal standard, no required testing</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">GFCO Certified Gluten-Free</td>
+                    <td class="px-4 py-4 text-gray-700">10 ppm or less</td>
+                    <td class="px-4 py-4 text-gray-700">GFCO audits and testing</td>
+                    <td class="px-4 py-4 text-gray-700">Independent verification, stricter limit</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">NSF Certified Gluten-Free</td>
+                    <td class="px-4 py-4 text-gray-700">Program standard</td>
+                    <td class="px-4 py-4 text-gray-700">NSF audits and testing</td>
+                    <td class="px-4 py-4 text-gray-700">Independent verification</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Brand internal standard</td>
+                    <td class="px-4 py-4 text-gray-700">Varies (OWYN states under 10 ppm)</td>
+                    <td class="px-4 py-4 text-gray-700">The manufacturer</td>
+                    <td class="px-4 py-4 text-gray-700">A stricter target, self-reported</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">No gluten statement</td>
+                    <td class="px-4 py-4 text-gray-700">Unknown</td>
+                    <td class="px-4 py-4 text-gray-700">Nobody</td>
+                    <td class="px-4 py-4 text-gray-700">Ask the brand before buying</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <p>
+            For celiac disease, certified products are the safest default, and a brand gluten-free claim from a company with a short, simple ingredient list is a reasonable second choice. Products with no gluten statement at all, even if the ingredients look harmless, are the ones to question. Some people also use independent testing services such as Gluten Free Watchdog, which publishes test results for specific products.
+          </p>
+        </div>
+
+        <div id="ingredients-to-watch" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            6. Ingredients That Can Hide Gluten
+          </h2>
+
+          <p>
+            Start with the allergen statement, but do not stop there. US law requires wheat to be declared as a major allergen, so any wheat ingredient should appear in the ingredient list or a "Contains: wheat" statement. Barley, rye and oats are not on that list, which means they do not have to be called out in the allergen statement and can be easy to miss. You have to find them in the ingredient list yourself.
+          </p>
+
+          <p>
+            Barley malt is the most common hidden source. Look for malt, malt extract, malt flavoring, malt syrup, malted milk powder and malted barley, which turn up in chocolate, vanilla malt and dessert flavors. Under FDA labeling conventions, "malt" on its own refers to barley malt unless another grain is named. Brewer's yeast, a byproduct of beer brewing, can also carry gluten unless it is labeled gluten-free.
+          </p>
+
+          <p>
+            Oats are a judgment call. Oats are naturally gluten-free but are frequently contaminated with wheat or barley during growing and milling, and a small share of people with celiac disease react to avenin, the protein in oats themselves. The FDA allows oats in gluten-free foods if the finished product is under 20 ppm. If you react to oats, avoid powders with oat flour, oat protein or oat milk powder, and check meal shakes especially carefully.
+          </p>
+
+          <p>
+            Several other ingredients deserve a second look. Cookie, brownie, cake and cereal flavors may contain real wheat-based pieces. Greens blends sometimes include wheatgrass or barley grass; the grass itself does not contain gluten, but seed contamination is possible, so these are acceptable only in a product that is labeled or certified gluten-free. Maltodextrin and dextrose in the US are usually made from corn, and if they are made from wheat, wheat must be declared.
+          </p>
+
+          <div class="bg-gray-900 text-white rounded-2xl p-6 lg:p-8 my-8">
+            <p class="text-xs font-black uppercase tracking-widest text-[#38BDF8] mb-3">THE LABEL RULE</p>
+            <p class="text-xl font-bold text-white mb-3">Read the ingredient list for barley, rye, oats and malt</p>
+            <p class="text-gray-300 leading-relaxed m-0">The "Contains" allergen line will flag wheat but not barley, rye or oats. Scan the full ingredient list for malt, barley, rye, oats, wheatgrass and cookie or cereal pieces, and prefer a certified gluten-free seal when you have celiac disease.</p>
+          </div>
+        </div>
+
+        <div id="cross-contact" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            7. Cross-Contact and Shared Facilities
+          </h2>
+
+          <p>
+            Even a powder with entirely gluten-free ingredients can pick up gluten during manufacturing. Supplement plants often run many products on the same lines, including mass gainers with oat flour, cookie-flavored proteins and bars. Cleaning between runs reduces the risk, but the residue that remains is exactly what gluten-free testing and certification are designed to catch.
+          </p>
+
+          <p>
+            Statements like "made in a facility that also processes wheat" are voluntary and not regulated, so their presence or absence tells you less than it seems. A product with such a statement may still test well under 20 ppm, while a product without one may share equipment. A gluten-free claim or certification is far more informative, because it speaks to the finished product rather than the building.
+          </p>
+
+          <p>
+            If a product you like has no gluten statement, it is reasonable to ask the brand directly whether it tests for gluten, what threshold it uses and whether the line is shared. Brands that test can usually answer quickly. Vague replies are a reason to choose a certified alternative instead.
+          </p>
+
+          <p>
+            Plant proteins have one extra consideration. Pea and rice proteins are processed from crops that can be grown, harvested or milled near wheat and barley. That is not a reason to avoid them, and both of our plant picks from Garden of Life carry NSF gluten-free certification per the brand, but it is another reason certification matters more than the protein source. Our <a href="/best-plant-based-protein-powder/">best plant-based protein powder</a> guide covers the wider plant category.
+          </p>
+        </div>
+
+        <div id="celiac" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            8. Gluten-Free Protein for Celiac Disease and Sensitivity
+          </h2>
+
+          <p>
+            Celiac disease is an autoimmune condition in which gluten damages the lining of the small intestine, and it affects roughly 1% of people. If you have it, your doctor or gastroenterologist, ideally with a registered dietitian, should guide how strictly you avoid gluten and which products you trust. A protein powder is a small part of the diet, but because it is often taken daily, it is worth getting right.
+          </p>
+
+          <p>
+            If you suspect celiac disease but have not been diagnosed, talk to a doctor before cutting out gluten. The standard blood tests and biopsy depend on you still eating gluten, and going gluten-free first can make the diagnosis much harder. Non-celiac gluten sensitivity and wheat allergy are different conditions with different levels of strictness, and only proper testing can tell them apart.
+          </p>
+
+          <p>
+            People with celiac disease sometimes have other digestive issues, including lactose intolerance while the gut heals. In that case a whey isolate, which is very low in lactose, or a plant protein may be gentler than a whey concentrate. Our <a href="/best-lactose-free-protein-powder/">best lactose-free protein powder</a> and <a href="/best-protein-powder-for-sensitive-stomach/">sensitive stomach</a> guides cover those choices.
+          </p>
+
+          <p>
+            For people avoiding gluten by preference rather than medical need, most protein powders will be fine, and a brand's gluten-free claim is plenty. The extra steps in this guide, certification seals, checking for barley malt and asking about shared lines, matter most for celiac disease and wheat allergy, where small exposures have real consequences.
+          </p>
+        </div>
+
+        <!-- Common Mistakes -->
+        <div id="mistakes" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            9. Common Mistakes to Avoid
+          </h2>
+
+          <div class="space-y-6 my-8">
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Relying on the allergen statement alone</h3>
+              <p class="text-gray-700 text-sm m-0">
+                US law requires wheat to be declared, but not barley, rye or oats. A tub can say Contains: milk and still include barley malt. Read the full ingredient list for malt, barley, rye, oats and wheatgrass rather than trusting the allergen line.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Assuming a brand is gluten-free across the range</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Gluten claims and certifications apply to specific products, and sometimes specific flavors. A brand's plain vanilla may be certified while its cookie flavor contains wheat pieces. Check the label on every flavor and size before you reorder or switch.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Treating no gluten ingredients as gluten-free</h3>
+              <p class="text-gray-700 text-sm m-0">
+                A powder made only from whey or pea can still pick up gluten on shared equipment. Without a gluten-free claim or certification, nobody has said the finished product is under 20 ppm. For celiac disease, choose products that make the claim or carry a seal.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Going gluten-free before getting tested</h3>
+              <p class="text-gray-700 text-sm m-0">
+                If you suspect celiac disease, cutting gluten first can make the blood tests and biopsy unreliable. See your doctor while you are still eating gluten, get a proper diagnosis, then use certified products to build a safe routine.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Forgetting about oats in meal shakes</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Many meal replacement and weight-gainer powders use oat flour or oat protein. Oats are often cross-contaminated, and some people with celiac disease react to oats themselves. If oats bother you, choose a plain protein powder or a certified gluten-free shake made without them.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ -->
+        <div id="faq" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            10. Frequently Asked Questions
+          </h2>
+
+          <div class="faq-list">
+            <details class="faq-item">
+              <summary><h3>What is the best gluten-free protein powder?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  Garden of Life Sport Organic Plant-Based Protein is our overall pick because listings describe it as NSF Certified Gluten-Free, and it is also NSF Certified for Sport and USDA Organic, per the brand. Dymatize ISO100 is the best-known whey labeled gluten-free, and OWYN Pro Elite suits people avoiding several allergens. Always check the seal on your exact flavor.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>Is whey protein gluten-free?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  Whey itself contains no gluten, since it comes from milk. Flavored whey powders can still contain gluten through barley malt, cookie pieces or other additions, or through cross-contact during manufacturing. Look for a gluten-free claim or certification on the tub, especially if you have celiac disease, rather than assuming all whey is safe.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>What does certified gluten-free mean on protein powder?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  It means an independent organization has audited the manufacturing process and tests the product against its standard. GFCO, for example, certifies products at 10 ppm of gluten or less, half the FDA's 20 ppm limit for a gluten-free claim. A brand's own gluten-free claim must meet the FDA limit, but no outside testing is required.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>Is 20 ppm gluten safe for celiac disease?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  The FDA chose 20 ppm because research indicated most people with celiac disease tolerate that level, and it matches the international Codex standard. Some people are more sensitive and prefer products certified at 10 ppm or less. Your gastroenterologist or dietitian can advise how strict you need to be, based on your symptoms and test results.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>Which protein powder ingredients contain gluten?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  Watch for wheat, barley, rye, malt, malt extract, malted milk powder, brewer's yeast, and cookie, cake or cereal pieces. Oats may be contaminated unless certified gluten-free. Greens blends with wheatgrass or barley grass are only acceptable in products labeled or certified gluten-free. Wheat must be declared as an allergen, but barley, rye and oats do not.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>Is plant protein powder gluten-free?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  Pea, rice, hemp, pumpkin and soy proteins contain no gluten, but they can be cross-contaminated during growing, milling or manufacturing, and some plant powders add oat or grain ingredients. A plant powder with a gluten-free certification, such as Garden of Life Sport per the brand, is safer for celiac disease than one without any gluten statement.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>Can I trust a gluten-free claim without a seal?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  Usually, yes, for people avoiding gluten by preference, because the FDA requires a gluten-free claim to mean under 20 ppm. For celiac disease, a seal adds independent testing that the FDA does not require. A claim from a brand with a short ingredient list is a reasonable second choice; a product with no gluten statement is worth questioning.
+                </p>
+              </div>
+            </details>
+
+          </div>
+        </div>
+
+        <!-- Related Guides -->
+        <div class="mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">Related Dietary Guides</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <a href="/best-lactose-free-protein-powder/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#FF4500] font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Lactose-Free Protein Powder</h3>
+              <p class="text-gray-500 text-sm mt-2">Isolates and plant powders for people who struggle with milk sugar.</p>
+            </a>
+            <a href="/best-plant-based-protein-powder/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#38BDF8] font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Plant-Based Protein Powder</h3>
+              <p class="text-gray-500 text-sm mt-2">Pea, rice and blended vegan powders ranked on protein and testing.</p>
+            </a>
+            <a href="/best-clean-protein-powder/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#FF4500] font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Clean Protein Powder</h3>
+              <p class="text-gray-500 text-sm mt-2">Short labels and third-party testing you can actually verify.</p>
+            </a>
+          </div>
+        </div>
+
+        <!-- Closing -->
+        <div class="mt-16 bg-gray-900 text-white rounded-2xl p-6 md:p-8">
+          <h2 class="text-2xl font-black text-white mb-4">The Bottom Line</h2>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            Most protein sources are naturally gluten-free, but flavorings, barley malt, oats and shared equipment can change that. A US gluten-free claim means under 20 ppm of gluten; third-party certification such as GFCO or NSF adds outside testing, and for celiac disease that is the safest default.
+          </p>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            Garden of Life Sport is the best all-round certified pick, ISO100 is the go-to whey labeled gluten-free, OWYN suits households with several allergies and Naked Pea is the simple budget choice. Check the label on every flavor, read the ingredient list for malt and oats, and let your doctor or dietitian guide how strict you need to be.
+          </p>
+        </div>
+
+        <MoreInCategory category="Specialty Protein" links={moreInCategory} />
+
+        <AuthorBio />
+      </div>
+    </div>
+  </article>
+</Layout>
