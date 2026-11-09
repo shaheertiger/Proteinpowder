@@ -1,0 +1,821 @@
+---
+import Layout from "../layouts/Layout.astro";
+import ArticleHeader from "../components/ArticleHeader.astro";
+import TableOfContents from "../components/TableOfContents.astro";
+import ProductCard from "../components/ProductCard.astro";
+import MoreInCategory from "../components/MoreInCategory.astro";
+import { AUTHORS, DEFAULT_AUTHOR, authorSchema } from "../data/authors";
+import { SITE_NAME, SITE_URL } from "../data/site";
+import QuickPicks from "../components/QuickPicks.astro";
+import AuthorBio from "../components/AuthorBio.astro";
+import { pageDates } from "../data/dates";
+
+const moreInCategory = [
+  {
+    "title": "Best Organic Protein Powder",
+    "url": "/best-organic-protein-powder/"
+  },
+  {
+    "title": "Best Protein Powder for Sensitive Stomach",
+    "url": "/best-protein-powder-for-sensitive-stomach/"
+  },
+  {
+    "title": "Best Gluten-Free Protein Powder",
+    "url": "/best-gluten-free-protein-powder/"
+  },
+  {
+    "title": "Best Paleo Protein Powder",
+    "url": "/best-paleo-protein-powder/"
+  }
+];
+const author = AUTHORS[DEFAULT_AUTHOR];
+const dates = pageDates(Astro.url.pathname, { published: "2026-11-09", modified: "2026-11-09" });
+const title = "Best Greens Protein Powder: Real Veg Doses vs Label Hype";
+const description =
+  "The best greens protein powders compared on protein, calories, sweeteners and cost, plus how small the greens doses really are, heavy-metal risk and when to buy protein and vegetables separately.";
+
+const PRODUCTS: {
+  id: string;
+  name: string;
+  brand?: string;
+  badge: string;
+  category: string;
+  description: string;
+  pros: string[];
+  cons: string[];
+  bottomLine: string;
+  specs?: Record<string, string>;
+  rating?: number;
+  reviewCount?: number;
+  amazonUrl?: string;
+}[] = [
+  {
+    "id": "vega-protein-supergreens",
+    "name": "Vega Protein + Supergreens",
+    "brand": "Vega",
+    "badge": "Best Overall",
+    "category": "Pea protein with powdered greens",
+    "description": "The successor to Vega Protein & Greens, and the most honest greens protein here about what it is: a pea protein powder with a short list of greens. Per the label at the time of writing (Creamy Vanilla), a 46 g scoop gives 25 g of protein, 180 calories, 1 g of sugar and 4 g of fiber, with spinach, kale, alfalfa and broccoli powders, sweetened with stevia. Figures vary by flavor.",
+    "pros": [
+      "25 g of protein per scoop, the best protein-to-calorie ratio of the greens blends here",
+      "Short ingredient list with spinach named third, so you can see roughly where the greens sit",
+      "Stevia-sweetened with 1 g of sugar, per the label",
+      "Non-GMO Project Verified"
+    ],
+    "cons": [
+      "Small 11-serving tub makes it about 2.70 dollars a serving at the price we saw",
+      "Greens amounts are not disclosed in grams",
+      "No published heavy-metal results we could find"
+    ],
+    "bottomLine": "The best choice if you want a real protein powder first and a modest greens bonus second.",
+    "specs": {
+      "Protein per serving": "25 g per 46 g scoop (label)",
+      "Calories": "180 (label, Creamy Vanilla)",
+      "Greens on label": "Spinach, kale, alfalfa, broccoli",
+      "Best for": "Daily protein with a greens top-up"
+    }
+  },
+  {
+    "id": "orgain-organic-protein-greens",
+    "name": "Orgain Organic Protein + Greens",
+    "brand": "Orgain",
+    "badge": "Best Value",
+    "category": "Organic plant protein with greens",
+    "description": "Orgain's greens version of its best-selling plant powder. Per the retailer label at the time of writing (Vanilla Bean, 882 g tub), a 49 g two-scoop serving gives 21 g of protein from pea, brown rice and chia, 150 calories, 1 g of sugar and 5 g of erythritol, with organic spinach, broccoli and kale. The brand describes the greens as roughly 15 spinach leaves, 2 broccoli florets and half a cup of kale per serving.",
+    "pros": [
+      "Cheapest per serving here, about 2 dollars at the tub price we saw",
+      "USDA Organic, with a large 18-serving tub",
+      "Easy-going vanilla flavor that hides the greens well"
+    ],
+    "cons": [
+      "Two-scoop, 49 g serving for 21 g of protein",
+      "Contains erythritol, which bothers some stomachs",
+      "Marketing fiber claim is higher than the 1 g on the panel we read"
+    ],
+    "bottomLine": "The value pick if you want organic certification and a greens blend without paying meal-shake prices.",
+    "specs": {
+      "Protein per serving": "21 g per 49 g serving (label)",
+      "Calories": "150 (label, Vanilla Bean)",
+      "Greens on label": "Organic spinach, broccoli, kale",
+      "Best for": "Budget organic protein with greens"
+    }
+  },
+  {
+    "id": "garden-of-life-raw-organic-protein-and-greens",
+    "name": "Garden of Life Raw Organic Protein & Greens",
+    "brand": "Garden of Life",
+    "badge": "Best Low-Calorie",
+    "category": "Organic plant protein and greens blend",
+    "description": "The lightest true protein-and-greens powder here. It pairs 20 g of protein from organic pea and sprouted grains and legumes with organic spinach, kale, broccoli, alfalfa grass, carrots and beets, plus probiotics and enzymes, per the listing. Retailer labels put it at roughly 100-110 calories per scoop, varying by version and flavor. It is sweetened with organic stevia.",
+    "pros": [
+      "20 g of protein in roughly 100-110 calories, per retailer labels",
+      "Widest list of named vegetables among the pure protein powders here",
+      "USDA Organic and non-GMO, per the listing"
+    ],
+    "cons": [
+      "Earthier taste than Vega or Orgain, by most accounts",
+      "Probiotic and greens doses are inside blends, not itemized",
+      "20 g is on the low side after hard training"
+    ],
+    "bottomLine": "Pick it if calories matter most and you want the broadest named vegetable list in a pure protein powder.",
+    "specs": {
+      "Protein per serving": "20 g per scoop (label)",
+      "Calories": "About 100-110 (varies by retailer label)",
+      "Greens on label": "Spinach, kale, broccoli, alfalfa, carrot, beet",
+      "Best for": "Low-calorie shakes and smoothies"
+    }
+  },
+  {
+    "id": "happy-viking-plant-protein-triple-chocolate",
+    "name": "Happy Viking High Protein Meal, Triple Chocolate",
+    "brand": "Happy Viking",
+    "badge": "Most Protein",
+    "category": "Plant protein meal with superfood blends",
+    "description": "Formerly sold as Plant-Based Protein + 100 Superfoods, now sold as High Protein Meal. Per the brand label at the time of writing (Triple Chocolate), a 63 g serving gives 30 g of pea and brown rice protein, 250 calories, 10 g of fiber and 5 g of sugar, with superfood, vegetable, ancient-grain and probiotic blends, plus KSM-66 ashwagandha. Other flavors run 240-250 calories.",
+    "pros": [
+      "30 g of protein, the most per serving here",
+      "10 g of fiber, per the label",
+      "Thick, sweet, dessert-style chocolate that does not taste of greens"
+    ],
+    "cons": [
+      "About 4 dollars a serving at the brand price we saw",
+      "Contains cane sugar and ashwagandha, which not everyone wants daily",
+      "Dozens of superfoods share a few grams of blend space"
+    ],
+    "bottomLine": "Best when you want a filling, high-protein breakfast shake and accept that the superfoods are mostly a garnish.",
+    "specs": {
+      "Protein per serving": "30 g per 63 g serving (label)",
+      "Calories": "250 (label, Triple Chocolate)",
+      "Greens on label": "Kale, broccoli, spinach, chlorella in blends",
+      "Best for": "High-protein meal shakes"
+    }
+  },
+  {
+    "id": "kachava-chocolate",
+    "name": "Ka'Chava All-In-One Nutrition Shake, Chocolate",
+    "brand": "Ka'Chava",
+    "badge": "Best Superfood Meal",
+    "category": "Plant-based meal shake with superfoods",
+    "description": "The best-known superfood shake, and the one with the longest ingredient list. Per a retailer label at the time of writing (Chocolate), a 62 g serving gives 25 g of protein from pea and brown rice, 240 calories, 6 g of fiber and 7 g of sugar (4 g added), with a greens and superfoods blend that runs from maca and acai to spinach, kale, chlorella, spirulina and wheat and barley grass, plus vitamins, minerals, probiotics and enzymes.",
+    "pros": [
+      "A real meal: protein, carbohydrate, fat, fiber and a vitamin and mineral premix",
+      "Widely praised chocolate flavor",
+      "Huge superfood list for people who want everything in one scoop"
+    ],
+    "cons": [
+      "Most expensive here, about 5.50 dollars a serving in the small bag we priced",
+      "The greens share one blend with coconut nectar and cocoa, so doses are unknowable",
+      "240 calories is a meal, not a post-workout top-up"
+    ],
+    "bottomLine": "A good meal replacement with a superfood story, not a cost-effective way to eat more vegetables.",
+    "specs": {
+      "Protein per serving": "25 g per 62 g serving (label)",
+      "Calories": "240 (label, Chocolate)",
+      "Greens on label": "Spinach, kale, chlorella, spirulina, grasses in blend",
+      "Best for": "Breakfast meal replacement"
+    }
+  },
+  {
+    "id": "garden-of-life-raw-organic-meal",
+    "name": "Garden of Life Raw Organic Meal",
+    "brand": "Garden of Life",
+    "badge": "Best Light Meal",
+    "category": "Organic plant meal powder with vegetables",
+    "description": "A lighter meal-style option. Its nutrition panel lists a 37.5 g scoop with 150 calories, 20 g of sprouted pea and brown rice protein, 13 g of carbohydrate, 7 g of fiber and 0 g of sugar, with an organic fruit and vegetable blend, probiotics and enzymes. The vanilla is sweetened with organic erythritol and stevia. Figures vary by flavor.",
+    "pros": [
+      "7 g of fiber in 150 calories, per the label",
+      "Organic fruit and vegetable blend plus probiotics",
+      "Sold in a 28-serving tub that brings the per-serving cost down"
+    ],
+    "cons": [
+      "150 calories is a snack unless you blend in fruit, oats or nut butter",
+      "Contains erythritol"
+    ],
+    "bottomLine": "A sensible high-fiber base for people who want a light greens-and-protein breakfast and will add real food to it.",
+    "specs": {
+      "Protein per serving": "20 g per 37.5 g scoop (label)",
+      "Calories": "150 (label)",
+      "Greens on label": "Organic fruit and vegetable blend",
+      "Best for": "Light, high-fiber breakfasts"
+    }
+  }
+];
+
+const schema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Home",
+          item: `${SITE_URL}/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Best Lists",
+          item: `${SITE_URL}/best-of/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 3,
+          name: "Best Greens Protein Powder",
+          item: `${SITE_URL}/best-greens-protein-powder/`,
+        },
+      ],
+    },
+    {
+      "@type": "FAQPage",
+      mainEntity: [
+        {
+          "@type": "Question",
+          "name": "What is the best greens protein powder?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "For most people, Vega Protein + Supergreens. Per its label at the time of writing, a 46 g scoop gives 25 g of pea protein in 180 calories with about 1 g of sugar, and spinach is named third in a short ingredient list. Orgain Organic Protein + Greens is the cheaper organic pick, and Garden of Life Raw Organic Protein &amp; Greens is the lightest."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Do greens protein powders replace vegetables?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. The greens are usually inside an undisclosed blend, and label order suggests a few grams of powder per scoop, roughly a small handful of fresh leaves. That is a useful extra, but it lacks the volume and fiber of real vegetables and does not cover the several servings a day most guidance recommends. Treat the greens as a bonus."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is Ka'Chava a greens protein powder?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It is closer to a meal replacement. Per a retailer label at the time of writing, a 62 g serving of the chocolate gives 240 calories, 25 g of protein, 6 g of fiber and 7 g of sugar, with a long greens and superfoods blend plus vitamins and probiotics. It is a good breakfast shake, but an expensive way to get greens."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Do greens protein powders contain heavy metals?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "They can. Plant protein and powdered greens both absorb metals like lead and cadmium from soil, and Consumer Reports found plant-based powders averaged about nine times more lead than dairy in its 2025 testing. We found no published results for the specific greens products here, so ask brands for a certificate of analysis and favor vanilla over chocolate."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is it cheaper to buy protein and vegetables separately?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Usually, yes. At the prices we saw, superfood meal shakes cost about 4-5.50 dollars a serving, while a plain pea or whey protein costs considerably less per 25 g of protein. Adding a handful of frozen spinach to your smoothie costs pennies and very likely delivers more greens than a scoop of powder does."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Do greens protein powders taste bad?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The pure ones can taste earthy or grassy, especially those with alfalfa, grasses, spirulina or chlorella. The best-tasting ones, like Ka'Chava and Happy Viking, rely on cocoa and sugar. Blending any greens protein with frozen fruit and plant milk hides most of the vegetable flavor, and vanilla tends to work better in smoothies than chocolate."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I take a greens protein powder every day?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Most healthy adults can use one serving a day as part of a normal diet. Because plant powders carry more lead on average, keeping to one serving and rotating brands or protein types is sensible. If you take blood thinners, are pregnant, have kidney disease or are buying for a child, check with your doctor first. This is not medical advice."
+          }
+        }
+      ],
+    },
+    {
+      "@type": "Article",
+      headline: title,
+      author: authorSchema(),
+      datePublished: dates.published,
+      dateModified: dates.modified,
+      publisher: { "@type": "Organization", name: SITE_NAME, url: SITE_URL },
+    },
+    {
+      "@type": "ItemList",
+      name: title,
+      numberOfItems: PRODUCTS.length,
+      itemListElement: PRODUCTS.map((product, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name: product.name,
+        url: new URL(`#${product.id}`, Astro.url).toString(),
+      })),
+    },
+    ...PRODUCTS.map((product) => ({
+      "@type": "Product",
+      name: product.name,
+      description: product.description,
+      brand: {
+        "@type": "Brand",
+        name: product.brand ?? product.name.split(" ")[0],
+      },
+    })),
+  ],
+};
+---
+
+<Layout
+  title={title}
+  description={description}
+  ogType="article"
+  article={{
+    publishedTime: dates.published,
+    modifiedTime: dates.modified,
+    author: author.name,
+    section: "Specialty Protein",
+    tags: [
+      "best greens protein powder",
+      "protein powder with greens",
+      "superfood protein powder",
+      "greens and protein powder"
+    ],
+  }}
+  jsonLd={schema}
+>
+  <article class="relative overflow-hidden">
+    <ArticleHeader kicker={"Buyer's Guide"} badge={"Label-Checked"} author={author} dates={dates} mobileAd={false}>
+      <Fragment slot="title">Best Greens Protein Powder</Fragment>
+      Vega, Orgain, Garden of Life, Ka'Chava and Happy Viking compared on what the label actually shows: protein per scoop, calories, where the greens sit in the ingredient list, sweeteners and cost per serving.
+    </ArticleHeader>
+
+    <TableOfContents>
+      <a href="#what-it-is">What a Greens Protein Powder Actually Is</a>
+      <a href="#at-a-glance">The Shortlist at a Glance</a>
+      <a href="#top-picks">Our Top Picks</a>
+      <a href="#proprietary-blends">The Proprietary-Blend Problem</a>
+      <a href="#how-much-greens">How Much Greens Is in a Scoop</a>
+      <a href="#heavy-metals">Heavy Metals</a>
+      <a href="#taste">The Taste Trade-Off</a>
+      <a href="#who-should-buy">Who Should Buy One</a>
+      <a href="#buy-separately">Buy Protein and Veg Separately</a>
+      <a href="#how-to-choose">How to Read a Greens Protein Label</a>
+      <a href="#mistakes">Common Mistakes</a>
+      <a href="#faq">FAQ</a>
+    </TableOfContents>
+
+    <!-- Content -->
+    <div class="max-w-3xl mx-auto px-4 pb-16 lg:pb-24">
+      <div class="prose prose-lg prose-blue max-w-none text-gray-700 leading-relaxed">
+        <p class="lede">
+          Greens protein powders promise a serving of vegetables in every protein shake, and most of them deliver a small one. The greens usually sit in an undisclosed blend, often after the sweetener, so the protein, flavor and price are what you are really buying. Vega Protein + Supergreens is the best overall pick, with 25 g of protein in 180 calories and greens named high in a short ingredient list. Orgain Organic Protein + Greens is the value pick, and Garden of Life Raw Organic Protein &amp; Greens is the lightest. Ka'Chava and Happy Viking are superfood meal shakes rather than protein powders, and they cost about twice as much per serving. Below we explain the proprietary-blend problem, the heavy-metal issue that plant protein and powdered greens share, and when plain protein plus frozen spinach is simply the better buy.
+        </p>
+
+        <QuickPicks products={PRODUCTS} />
+
+        <div id="what-it-is" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            1. What a Greens Protein Powder Actually Is
+          </h2>
+
+          <p>
+            A greens protein powder is a normal protein powder, usually pea, brown rice or a plant blend, with powdered vegetables, grasses or algae mixed in. The vegetables are dried and milled, so a teaspoon of spinach powder stands in for a much bigger pile of fresh leaves. The pitch is simple: one scoop covers your protein and a serving of vegetables at the same time.
+          </p>
+
+          <p>
+            The category splits into two very different products that sit next to each other on the shelf. The first is a protein powder with greens, such as Vega Protein + Supergreens, Orgain Organic Protein + Greens and Garden of Life Raw Organic Protein &amp; Greens. These land at 100-180 calories and 20-25 g of protein per serving and behave like any other protein shake.
+          </p>
+
+          <p>
+            The second is the superfood meal shake, such as Ka'Chava and Happy Viking. These add carbohydrate, fat, fiber, vitamins, probiotics and long lists of fruits, mushrooms, adaptogens and grains, and they come in at 240-250 calories a serving. They are closer to a <a href="/best-meal-replacement-shake/">meal replacement shake</a> than to a protein powder, and they are priced like one.
+          </p>
+
+          <p>
+            Nearly all of these products are plant-based, because the brands that sell greens are the same brands that sell vegan protein. That has two consequences you should know before buying. The protein quality and taste follow the plant base, which our <a href="/best-plant-based-protein-powder/">plant-based protein powder guide</a> covers in depth, and the heavy-metal profile follows it too, which we cover below.
+          </p>
+
+          <p>
+            The honest summary is that a greens protein powder is a convenience product. It can be a good one, and for some people it is the difference between eating some greens and eating none. But it is not a vegetable substitute, and the brands that market it as one are selling the feeling of a salad rather than the salad itself.
+          </p>
+        </div>
+
+        <div id="at-a-glance" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            2. The Shortlist at a Glance
+          </h2>
+
+          <p>
+            We compared current greens protein powders on the label: protein per serving, calories, how clearly the greens are listed, sweeteners, certifications and cost per serving at prices we saw at the time of writing. We did not test these products hands-on, and every number below is per the label or the retailer listing and varies by flavor.
+          </p>
+
+          <div class="overflow-hidden border border-gray-200 rounded-2xl my-8">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Product</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Protein</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Calories</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Cost/serving*</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Vega Protein + Supergreens</td>
+                    <td class="px-4 py-4 text-gray-700">25 g</td>
+                    <td class="px-4 py-4 text-gray-700">180</td>
+                    <td class="px-4 py-4 text-gray-700">~2.70 dollars</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Orgain Protein + Greens</td>
+                    <td class="px-4 py-4 text-gray-700">21 g</td>
+                    <td class="px-4 py-4 text-gray-700">150</td>
+                    <td class="px-4 py-4 text-gray-700">~1.95 dollars</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">GoL Raw Protein &amp; Greens</td>
+                    <td class="px-4 py-4 text-gray-700">20 g</td>
+                    <td class="px-4 py-4 text-gray-700">~100-110</td>
+                    <td class="px-4 py-4 text-gray-700">varies</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Happy Viking High Protein Meal</td>
+                    <td class="px-4 py-4 text-gray-700">30 g</td>
+                    <td class="px-4 py-4 text-gray-700">250</td>
+                    <td class="px-4 py-4 text-gray-700">~4.00 dollars</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Ka'Chava</td>
+                    <td class="px-4 py-4 text-gray-700">25 g</td>
+                    <td class="px-4 py-4 text-gray-700">240</td>
+                    <td class="px-4 py-4 text-gray-700">~5.50 dollars</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">GoL Raw Organic Meal</td>
+                    <td class="px-4 py-4 text-gray-700">20 g</td>
+                    <td class="px-4 py-4 text-gray-700">150</td>
+                    <td class="px-4 py-4 text-gray-700">varies</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <p>
+            *Cost per serving uses the single price we saw for one size at one retailer on the day we checked: Vitacost for Vega, Orgain and Ka'Chava, the brand site for Happy Viking. Bigger tubs, subscriptions and sales move these numbers a lot, so treat them as a rough ranking rather than a quote.
+          </p>
+
+          <p>
+            Two products you might expect are missing. Vega One, long the best-known all-in-one greens shake, appears to have been renamed and reformulated as Vega All-in-One Nutrition, and retailers now list several old Vega One flavors as discontinued. Amazing Grass Protein Superfood still shows up in search results, but we could not confirm a current label and price from a reliable retailer, so we left it out rather than guess.
+          </p>
+
+          <p>
+            The pattern in the table is the whole story of this category. The pure protein powders deliver 20-25 g of protein for about 2-3 dollars, and the superfood meal shakes deliver 25-30 g for 4-5.50 dollars. You pay the premium for calories, fiber, vitamins and a long ingredient list, not for meaningfully more vegetables.
+          </p>
+        </div>
+
+        <!-- Picks -->
+        <div id="top-picks" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            3. The Best Greens Protein Powders
+          </h2>
+
+          <p>
+            We ranked these on the label, not on taste tests: protein per serving, calories, how clearly the greens are listed, sweeteners, certifications and cost per serving at prices we saw at the time of writing. We did not test these products hands-on. Figures are per the label or a retailer listing, vary by flavor and change with reformulations, so check the panel on the product you buy.
+          </p>
+
+          {PRODUCTS.map((product, index) => (
+            <ProductCard product={product} rank={index + 1} />
+          ))}
+        </div>
+
+        <div id="proprietary-blends" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            4. The Proprietary-Blend Problem
+          </h2>
+
+          <p>
+            Most greens protein powders list their vegetables inside a named blend, such as an organic greens blend or a greens and superfoods blend, without saying how many grams of each, or even of the whole blend, are in a scoop. That is legal, and it is also the single biggest reason to be skeptical of the category.
+          </p>
+
+          <p>
+            Ingredients are listed in descending order by weight, so position is the only clue you get. On Vega Protein + Supergreens, spinach powder is the third ingredient, after pea protein and acacia gum, with kale, alfalfa and broccoli further down after the gums. That tells you spinach is a real ingredient and the rest are minor. On Orgain Protein + Greens, the greens blend comes after the creamer base and the erythritol, which tells you the greens weigh less than the sweetener.
+          </p>
+
+          <p>
+            Ka'Chava is the extreme case. Its greens and superfoods blend contains more than thirty items, starting with coconut nectar and cocoa, then maca, sacha inchi and acai, before spinach, kale, chlorella, spirulina and the grasses appear. Because coconut nectar and cocoa lead the blend, the vegetables that follow must each weigh less than they do, and they share the space with dozens of other ingredients.
+          </p>
+
+          <p>
+            Happy Viking has the same structure across several blends: an everyday superfood blend, a whole-food nutrient blend, an ancient grains blend, a phytonutrient blend and an antioxidant blend. The label claims a big number of superfoods, and that number is the point of the marketing. A long list in a fixed serving size means each item is, by arithmetic, a small amount.
+          </p>
+
+          <p>
+            None of this makes the products dishonest. It makes them unverifiable. If a brand will not tell you the grams of greens per scoop, assume the dose is small, buy the product for its protein, flavor and price, and treat the greens as a garnish. If greens are your main reason for buying, the lack of a number is your answer.
+          </p>
+        </div>
+
+        <div id="how-much-greens" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            5. How Much Greens Is Really in a Scoop
+          </h2>
+
+          <p>
+            You can estimate the greens dose with simple label arithmetic. Take Vega Protein + Supergreens: a 46 g scoop delivers 25 g of protein. Pea protein isolate is typically around 80 percent protein, so roughly 30 g of the scoop is the protein ingredient. That leaves around 16 g for acacia gum, spinach, coconut oil powder, flavors, sweetener, gums and the other greens combined.
+          </p>
+
+          <p>
+            Since acacia gum outweighs spinach, and everything after spinach weighs less still, the total greens in a scoop are plausibly a few grams. That is our estimate, not a label figure. Fresh spinach is mostly water, so a few grams of dried powder corresponds to a few tens of grams of fresh leaves, about the size of a modest handful, which is useful but not the cup or two people imagine.
+          </p>
+
+          <p>
+            Orgain's own framing supports that scale. The brand describes each serving as about 15 spinach leaves, 2 broccoli florets and half a cup of kale. That is real food, but it adds up to roughly one small side portion of vegetables, and it is described as an equivalence rather than a weight on the panel.
+          </p>
+
+          <p>
+            The meal shakes are harder to estimate because they carry more non-protein ingredients: oils, fibers, creamers, sweeteners, cocoa and a vitamin premix. With a 62 g Ka'Chava serving holding 25 g of protein and a long list of other components, the greens are a fraction of a fraction. The benefit is the overall nutrient profile, not the vegetables.
+          </p>
+
+          <p>
+            The practical takeaway is to count a greens protein shake as, at best, a small vegetable serving. Most dietary guidance asks adults for several servings of vegetables a day, and a scoop of powder does not close that gap. It also lacks the bulk and water that make whole vegetables filling, which matters if you are using shakes to manage hunger.
+          </p>
+        </div>
+
+        <div id="heavy-metals" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            6. Heavy Metals: Greens and Plant Protein Stack Up
+          </h2>
+
+          <p>
+            This is the part of the category most buyers never hear about. Plants pull lead, cadmium and arsenic from soil, and both plant protein and powdered greens concentrate whatever the plant absorbed. A greens protein powder therefore combines two ingredient types that tend to test higher for heavy metals than dairy protein does.
+          </p>
+
+          <p>
+            The best public data comes from Consumer Reports' October 2025 protein investigation, which found that plant-based products averaged about nine times more lead than dairy-based ones. The Clean Label Project's 2025 report similarly found plant powders had roughly three times more lead than whey, and that chocolate powders had about four times more lead than vanilla. Our <a href="/best-protein-powder-without-heavy-metals/">guide to protein powders without heavy metals</a> covers those results product by product.
+          </p>
+
+          <p>
+            We could not find published heavy-metal results for the specific greens products on this list, so we cannot rank them on lead. What we can say is that related products did not test well. Consumer Reports measured Orgain's regular plant-based powder in Vanilla Bean at about 143 percent of its daily lead level of concern per serving, and advised limiting Garden of Life Sport's plant protein to roughly once a week. Those are sister products, not the ones here, so treat that as context rather than a verdict.
+          </p>
+
+          <p>
+            Powdered greens and algae add their own question. Ingredients like spirulina, chlorella and grass powders are known for absorbing minerals from their growing environment, and their quality varies by source. In a blend you cannot tell how much is there or where it came from, which is another reason to prefer a short, clearly listed greens ingredient over a long superfood list.
+          </p>
+
+          <p>
+            If you drink a greens protein shake every day, a few habits lower your exposure. Choose vanilla or unflavored over chocolate, keep it to one serving a day, rotate with a dairy protein if you tolerate dairy, and ask the brand for a recent certificate of analysis showing lead and cadmium results. This is general information, not medical advice; if you are pregnant or buying for a child, talk to your doctor before making any powder a daily habit.
+          </p>
+        </div>
+
+        <div id="taste" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            7. The Taste Trade-Off
+          </h2>
+
+          <p>
+            Greens do not taste neutral. Spinach and kale powders are mild, but alfalfa, wheat grass, barley grass, spirulina and chlorella bring grassy, seaweed-like and bitter notes that a plant protein base, already earthy on its own, does little to hide. Brands deal with this the same way every time: more sweetener, more flavoring, and chocolate.
+          </p>
+
+          <p>
+            That is why the best-reviewed products in the category are the sweetest. Ka'Chava and Happy Viking both lean on cocoa and real sugar, with 7 g and 5 g of sugar per serving respectively per their labels, and both are generally described as tasting like a chocolate shake rather than a green one. The cost is sugar, calories and, for chocolate specifically, the higher average lead mentioned above.
+          </p>
+
+          <p>
+            The lighter powders take the opposite route. Vega Protein + Supergreens uses stevia and keeps sugar at about 1 g, and Orgain uses erythritol plus stevia. Garden of Life Raw Organic Protein &amp; Greens uses stevia alone, and it is the one most often described as earthy or vegetal. If you dislike the aftertaste of stevia or erythritol, or erythritol upsets your stomach, check the sweetener before buying.
+          </p>
+
+          <p>
+            The simplest fix for taste is to stop drinking it with water. Blend a greens protein powder with frozen banana, mango or pineapple and a plant milk and the greens fade into the background. Our <a href="/best-protein-powder-for-smoothies/">smoothie protein guide</a> has more on which bases blend best. Vanilla versions are more forgiving in smoothies than chocolate.
+          </p>
+
+          <p>
+            Expect to compromise. A greens protein powder that tastes great usually does so because the greens are a small part of the scoop and the sweetener is doing a lot of work. One that tastes strongly of greens is at least telling you the truth about what is in it. Decide which of those you want before you buy a large tub.
+          </p>
+        </div>
+
+        <div id="who-should-buy" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            8. Who Should Buy One, and Who Should Not
+          </h2>
+
+          <p>
+            A greens protein powder makes sense if you already drink a protein shake most days and currently eat few vegetables. Swapping your regular plant protein for Vega Protein + Supergreens or Orgain Protein + Greens costs little extra, changes nothing about your routine, and adds a small but real vegetable contribution every day. That is the best case for the category.
+          </p>
+
+          <p>
+            It also suits people who want one tub to cover a light breakfast. Garden of Life Raw Organic Meal and Happy Viking pair protein with fiber, and fiber is the nutrient most adults fall short on. If fiber is your real goal, compare them against our <a href="/best-protein-powder-with-fiber/">protein powders with fiber</a>, since some plain proteins with added fiber do the job for less.
+          </p>
+
+          <p>
+            Travelers and very busy people are the other good fit. A single sachet or scoop that delivers protein, some greens and, in the meal shakes, a vitamin premix is useful when fresh produce is hard to find. In that situation the convenience is worth paying for, and the imprecise greens dose matters less than having something reasonable to drink.
+          </p>
+
+          <p>
+            You should skip the category if you are buying mainly for the greens. If you have a medical reason to manage vitamin K intake, for example if you take a blood thinner such as warfarin, talk to your doctor before adding a daily greens product, since leafy greens are a major source of vitamin K. People with kidney disease, those who are pregnant, and anyone buying for a child should also check with a clinician first.
+          </p>
+
+          <p>
+            Finally, skip it if you are sensitive to added extras. Happy Viking contains ashwagandha, several of these products contain probiotics and enzymes, and Orgain and Raw Organic Meal contain erythritol. If gut health is your goal, our sibling guide to <a href="/best-protein-powder-with-probiotics/">protein powders with probiotics</a> looks at which strains and doses are actually disclosed.
+          </p>
+        </div>
+
+        <div id="buy-separately" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            9. When Buying Protein and Vegetables Separately Wins
+          </h2>
+
+          <p>
+            For most people who cook at all, buying a plain protein powder and real vegetables beats a greens blend on cost, dose and transparency. A plain pea protein or a clean whey gives you a known amount of protein for less money, and a bag of frozen spinach or kale gives you a known amount of vegetables, measured in grams on a label rather than implied by a blend.
+          </p>
+
+          <p>
+            The cost gap is real. At the prices we saw, the superfood meal shakes ran about 4-5.50 dollars a serving. A plain plant protein from our <a href="/best-pea-protein-powder/">pea protein guide</a> typically costs well under that per 25 g of protein, and a handful of frozen spinach thrown into the blender adds pennies. You end up with more protein, more greens and more money left over.
+          </p>
+
+          <p>
+            The dose gap is bigger. A handful of frozen spinach is easily more leafy greens than the few grams of powder we estimated in a typical scoop, and it brings fiber, water and volume that make the shake more filling. It also blends invisibly into a banana or berry smoothie, which removes most of the taste argument for buying a pre-mixed product.
+          </p>
+
+          <p>
+            Separating the two also lets you control heavy-metal exposure. You can choose a dairy protein, which tested lowest on lead in the 2025 investigations, or a plant protein with published test results, and pair it with fresh or frozen vegetables you rotate week to week. A blend locks you into one supplier's sourcing for both.
+          </p>
+
+          <p>
+            The case for the blend comes back only when convenience is the bottleneck: no freezer, no blender, constant travel, or a habit you will only keep if it is one scoop and water. If that is you, buy the blend and do not feel guilty about it. If it is not, an <a href="/best-unflavored-protein-powder/">unflavored protein powder</a> and a bag of frozen greens is the stronger buy.
+          </p>
+        </div>
+
+        <div id="how-to-choose" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            10. How to Read a Greens Protein Label
+          </h2>
+
+          <p>
+            Start with protein per serving and the serving size together. A good greens protein powder should give at least 20 g of protein, and ideally 25 g, without a scoop that is mostly filler. Divide protein grams by serving grams: Vega's 25 g in 46 g is about 54 percent protein, Orgain's 21 g in 49 g is about 43 percent, and Ka'Chava's 25 g in 62 g is about 40 percent, because a meal shake carries other macros.
+          </p>
+
+          <p>
+            Next, find where the greens sit in the ingredient list. Greens named individually near the top, as on Vega, beat greens buried in a long blend after sweeteners and creamers. A brand that discloses grams of greens per serving deserves extra credit, because it is giving you the one number the rest of the category withholds.
+          </p>
+
+          <p>
+            Then check sugar and sweeteners. Several of these products add cane sugar or coconut nectar, others use stevia, monk fruit or erythritol. None is a dealbreaker, but if you are drinking a shake daily, 5-7 g of added sugar adds up, and erythritol is a common cause of bloating. Our guide to <a href="/best-protein-powder-without-artificial-sweeteners/">protein powder without artificial sweeteners</a> goes deeper on the options.
+          </p>
+
+          <p>
+            Look at certifications and testing last, but do look. USDA Organic and Non-GMO Project marks describe how ingredients are grown, not what heavy metals they contain. Third-party certifications such as NSF Certified for Sport include contaminant limits, though those limits are looser than Consumer Reports' level of concern. The most useful document is a recent certificate of analysis with lead and cadmium results, and it is fair to ask the brand for one.
+          </p>
+
+          <p>
+            Finally, run the cost per serving at the size you will actually buy. Small tubs and 7-serving bags look affordable on the shelf but cost far more per serving than the large sizes. Work it out per 25 g of protein, and compare that with what a plain protein powder plus frozen vegetables would cost you for the same week.
+          </p>
+        </div>
+
+        <!-- Common Mistakes -->
+        <div id="mistakes" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            11. Common Mistakes to Avoid
+          </h2>
+
+          <div class="space-y-6 my-8">
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Buying it for the vegetables</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Most greens protein powders hide their vegetables in a blend with no gram amounts, and label order suggests a few grams of powder per scoop at most. That is a small side portion, not your daily vegetables. Buy a greens protein for its protein, flavor and price, and keep eating real vegetables alongside it.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Confusing a meal shake with a protein powder</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Ka'Chava and Happy Viking are 240-250 calorie meal shakes, not 120-calorie protein scoops. Drinking one after the gym on top of normal meals adds a meal's worth of calories. If you only need extra protein, Vega or Orgain's greens powders cost less and add far fewer calories per serving.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Ignoring heavy metals because it is organic</h3>
+              <p class="text-gray-700 text-sm m-0">
+                USDA Organic describes farming methods, not lead content. Consumer Reports found plant-based powders averaged about nine times more lead than dairy in 2025, and powdered greens come from the same soils. Prefer vanilla over chocolate, limit yourself to one serving a day, and ask brands for a recent certificate of analysis.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Trusting the superfood count</h3>
+              <p class="text-gray-700 text-sm m-0">
+                A label that boasts dozens of superfoods is advertising its length, not its doses. In a fixed 60 g serving that also holds 25-30 g of protein, sweeteners, oils and fibers, each of those superfoods is present in tiny amounts. Short, clearly ordered ingredient lists tell you more than long ones.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Skipping the medication check</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Leafy greens are rich in vitamin K, and some of these products also contain adaptogens such as ashwagandha. If you take a blood thinner like warfarin, have a thyroid condition, are pregnant or are managing kidney disease, ask your doctor before adding a daily greens product. This guide is general information, not medical advice.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ -->
+        <div id="faq" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            12. Frequently Asked Questions
+          </h2>
+
+          <div class="faq-list">
+            <details class="faq-item">
+              <summary><h3>What is the best greens protein powder?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  For most people, Vega Protein + Supergreens. Per its label at the time of writing, a 46 g scoop gives 25 g of pea protein in 180 calories with about 1 g of sugar, and spinach is named third in a short ingredient list. Orgain Organic Protein + Greens is the cheaper organic pick, and Garden of Life Raw Organic Protein &amp; Greens is the lightest.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>Do greens protein powders replace vegetables?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  No. The greens are usually inside an undisclosed blend, and label order suggests a few grams of powder per scoop, roughly a small handful of fresh leaves. That is a useful extra, but it lacks the volume and fiber of real vegetables and does not cover the several servings a day most guidance recommends. Treat the greens as a bonus.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>Is Ka'Chava a greens protein powder?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  It is closer to a meal replacement. Per a retailer label at the time of writing, a 62 g serving of the chocolate gives 240 calories, 25 g of protein, 6 g of fiber and 7 g of sugar, with a long greens and superfoods blend plus vitamins and probiotics. It is a good breakfast shake, but an expensive way to get greens.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>Do greens protein powders contain heavy metals?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  They can. Plant protein and powdered greens both absorb metals like lead and cadmium from soil, and Consumer Reports found plant-based powders averaged about nine times more lead than dairy in its 2025 testing. We found no published results for the specific greens products here, so ask brands for a certificate of analysis and favor vanilla over chocolate.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>Is it cheaper to buy protein and vegetables separately?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  Usually, yes. At the prices we saw, superfood meal shakes cost about 4-5.50 dollars a serving, while a plain pea or whey protein costs considerably less per 25 g of protein. Adding a handful of frozen spinach to your smoothie costs pennies and very likely delivers more greens than a scoop of powder does.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>Do greens protein powders taste bad?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  The pure ones can taste earthy or grassy, especially those with alfalfa, grasses, spirulina or chlorella. The best-tasting ones, like Ka'Chava and Happy Viking, rely on cocoa and sugar. Blending any greens protein with frozen fruit and plant milk hides most of the vegetable flavor, and vanilla tends to work better in smoothies than chocolate.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>Can I take a greens protein powder every day?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  Most healthy adults can use one serving a day as part of a normal diet. Because plant powders carry more lead on average, keeping to one serving and rotating brands or protein types is sensible. If you take blood thinners, are pregnant, have kidney disease or are buying for a child, check with your doctor first. This is not medical advice.
+                </p>
+              </div>
+            </details>
+
+          </div>
+        </div>
+
+        <!-- Related Guides -->
+        <div class="mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">Related Guides</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <a href="/best-plant-based-protein-powder/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#FF4500] font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Plant-Based Protein Powder</h3>
+              <p class="text-gray-500 text-sm mt-2">The plain plant proteins worth buying, ranked on protein, taste and cost.</p>
+            </a>
+            <a href="/best-protein-powder-without-heavy-metals/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#1E90FF] font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Protein Powder Without Heavy Metals</h3>
+              <p class="text-gray-500 text-sm mt-2">Ranked only on published lead tests, with plant vs whey explained.</p>
+            </a>
+            <a href="/best-protein-powder-with-probiotics/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#FF4500] font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Protein Powder With Probiotics</h3>
+              <p class="text-gray-500 text-sm mt-2">Which protein powders disclose real strains and doses, and which do not.</p>
+            </a>
+          </div>
+        </div>
+
+        <!-- Closing -->
+        <div class="mt-16 bg-gray-900 text-white rounded-2xl p-6 md:p-8">
+          <h2 class="text-2xl font-black text-white mb-4">The Bottom Line</h2>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            Buy Vega Protein + Supergreens if you want a real protein powder with a modest, clearly listed greens boost: 25 g of protein in 180 calories per its label. Choose Orgain Organic Protein + Greens for organic certification at the lowest price per serving we saw, Garden of Life Raw Organic Protein &amp; Greens for the fewest calories, and Ka'Chava or Happy Viking only if you want a full superfood meal shake and accept the price.
+          </p>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            Whatever you buy, count the greens as a garnish rather than a vegetable serving, keep to one plant-based shake a day, and favor vanilla over chocolate to limit lead exposure. If you have a blender and a freezer, a plain protein powder plus a handful of frozen spinach will give you more protein, more greens and more control for less money.
+          </p>
+        </div>
+
+        <MoreInCategory category="Specialty Protein" links={moreInCategory} />
+
+        <AuthorBio />
+      </div>
+    </div>
+  </article>
+</Layout>
