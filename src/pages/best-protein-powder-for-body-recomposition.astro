@@ -1,0 +1,839 @@
+---
+import Layout from "../layouts/Layout.astro";
+import ArticleHeader from "../components/ArticleHeader.astro";
+import TableOfContents from "../components/TableOfContents.astro";
+import ProductCard from "../components/ProductCard.astro";
+import MoreInCategory from "../components/MoreInCategory.astro";
+import { AUTHORS, DEFAULT_AUTHOR, authorSchema } from "../data/authors";
+import { SITE_NAME, SITE_URL } from "../data/site";
+import QuickPicks from "../components/QuickPicks.astro";
+import AuthorBio from "../components/AuthorBio.astro";
+import { pageDates } from "../data/dates";
+
+const moreInCategory = [
+  {
+    "title": "Best Protein Powder for Muscle Gain",
+    "url": "/best-protein-powder-for-muscle-gain/"
+  },
+  {
+    "title": "Best Protein Powder for Weight Loss",
+    "url": "/best-protein-powder-for-weight-loss/"
+  },
+  {
+    "title": "Best Protein Powder with Creatine",
+    "url": "/best-protein-powder-with-creatine/"
+  },
+  {
+    "title": "Best Casein Protein Powder",
+    "url": "/best-casein-protein-powder/"
+  },
+  {
+    "title": "Best Protein Powder for Beginners",
+    "url": "/best-protein-powder-for-beginners/"
+  }
+];
+const author = AUTHORS[DEFAULT_AUTHOR];
+const dates = pageDates(Astro.url.pathname, { published: "2026-11-09", modified: "2026-11-09" });
+const title = "Best Protein Powder for Body Recomposition: What Works";
+const description =
+  "The best protein powder for body recomposition, with what the research says on 1.6 to 2.2 g/kg of protein, who can actually recompose, and the hype to ignore.";
+
+const PRODUCTS: {
+  id: string;
+  name: string;
+  brand?: string;
+  badge: string;
+  category: string;
+  description: string;
+  pros: string[];
+  cons: string[];
+  bottomLine: string;
+  specs?: Record<string, string>;
+  rating?: number;
+  reviewCount?: number;
+  amazonUrl?: string;
+}[] = [
+  {
+    "id": "optimum-nutrition-gold-standard-100-whey",
+    "name": "Optimum Nutrition Gold Standard 100% Whey",
+    "brand": "Optimum Nutrition",
+    "badge": "Best Overall",
+    "category": "Whey isolate-led blend",
+    "description": "Gold Standard is the default for a reason: per the label at the time of writing, a roughly 30 to 31 g scoop gives about 24 g of protein for about 120 calories, with around 3 g of carbohydrate. It is a complete, leucine-rich whey that mixes easily, comes in many flavors and sizes, and goes on deal often on Amazon, which keeps the cost per 25 g low over a months-long recomposition. Optimum Nutrition promotes it as Informed Choice certified; check your flavor.",
+    "pros": [
+      "About 24 g of complete whey protein per scoop",
+      "Low cost per 25 g in large tubs",
+      "Promoted as Informed Choice certified"
+    ],
+    "cons": [
+      "Contains whey concentrate, so some lactose",
+      "Uses artificial sweetener in most flavors",
+      "Widely counterfeited; buy from the brand or Amazon"
+    ],
+    "bottomLine": "The everyday whey that makes a 1.6 to 2.2 g/kg target cheap and easy to hit.",
+    "specs": {
+      "Protein / serving": "About 24 g (label)",
+      "Calories": "About 120",
+      "Third-party testing": "Informed Choice (per brand)",
+      "Best for": "Daily protein target, value"
+    }
+  },
+  {
+    "id": "transparent-labs-grass-fed-whey-protein-isolate",
+    "name": "Transparent Labs 100% Grass-Fed Whey Protein Isolate",
+    "brand": "Transparent Labs",
+    "badge": "Best Clean-Label Isolate",
+    "category": "Grass-fed whey protein isolate",
+    "description": "Transparent Labs is the upgrade for people who want an isolate with no artificial sweeteners and a published certification. Per the brand at the time of writing, a scoop of about 32 g gives 28 g of protein from grass-fed whey isolate, with roughly 120 to 150 calories depending on flavor. That higher dose per scoop helps when your target is near the top of the range. It is Informed Choice and Informed Protein certified, per the brand, and costs more per 25 g than Gold Standard.",
+    "pros": [
+      "28 g of protein per scoop, per the brand",
+      "No artificial sweeteners",
+      "Informed Choice and Informed Protein certified, per the brand"
+    ],
+    "cons": [
+      "Premium cost per 25 g",
+      "Calories vary by flavor; check the panel",
+      "Flavored versions add salt"
+    ],
+    "bottomLine": "The isolate for recomposers who want more protein per scoop and a cleaner label.",
+    "specs": {
+      "Protein / serving": "28 g (brand)",
+      "Calories": "About 120-150",
+      "Third-party testing": "Informed Choice + Informed Protein",
+      "Best for": "High targets, clean label"
+    }
+  },
+  {
+    "id": "dymatize-iso100-hydrolyzed",
+    "name": "Dymatize ISO100 Hydrolyzed Whey Isolate",
+    "brand": "Dymatize",
+    "badge": "Best for a Tight Deficit",
+    "category": "Hydrolyzed whey isolate and whey isolate",
+    "description": "ISO100 fits recomposers running a real deficit, where every calorie matters. Per the label at the time of writing, a roughly 30 g scoop gives about 25 g of protein in about 110 to 120 calories depending on flavor, with about 1 g of sugar and very little fat or lactose. It mixes thin and smooth, buyers report, and comes in many flavors that make a lean shake easier to stick with. Dymatize promotes it as Informed Choice certified. It costs more per 25 g than Gold Standard.",
+    "pros": [
+      "About 25 g of protein in about 110-120 calories",
+      "Very low lactose, fat and sugar",
+      "Promoted as Informed Choice certified"
+    ],
+    "cons": [
+      "Premium cost per 25 g",
+      "Artificial sweetener in most flavors",
+      "Thinner texture than whey blends"
+    ],
+    "bottomLine": "The lean, flavored isolate for a deficit where calories are tight.",
+    "specs": {
+      "Protein / serving": "About 25 g (label)",
+      "Calories": "About 110-120",
+      "Third-party testing": "Informed Choice (per brand)",
+      "Best for": "Cutting-side recomposition"
+    }
+  },
+  {
+    "id": "now-sports-whey-protein-isolate",
+    "name": "NOW Sports Whey Protein Isolate (Unflavored)",
+    "brand": "NOW Sports",
+    "badge": "Best Budget Isolate",
+    "category": "Unflavored whey protein isolate",
+    "description": "NOW Sports Whey Isolate gives you isolate macros at a value price. The unflavored label lists 24 g of protein in about 110 calories per 28 g scoop at the time of writing, with about 1 g of carbohydrate and no sweetener. Because it is unflavored, it goes into oats, coffee, yogurt and smoothies, which makes it easier to spread protein across several meals rather than relying on one shake. NOW lists Informed Sport on the label; confirm it in the registry.",
+    "pros": [
+      "Isolate macros at a value cost per 25 g",
+      "Unflavored, so it works in food as well as shakes",
+      "No sweetener"
+    ],
+    "cons": [
+      "Plain taste needs your own flavoring",
+      "Certification is a label claim; verify in the registry",
+      "Large tubs only make sense for daily users"
+    ],
+    "bottomLine": "The cheapest way to add lean protein to every meal of the day.",
+    "specs": {
+      "Protein / serving": "24 g (label)",
+      "Calories": "About 110",
+      "Third-party testing": "Informed Sport (label claim)",
+      "Best for": "Budget, protein in food"
+    }
+  },
+  {
+    "id": "optimum-nutrition-gold-standard-100-casein",
+    "name": "Optimum Nutrition Gold Standard 100% Casein",
+    "brand": "Optimum Nutrition",
+    "badge": "Best Before Bed",
+    "category": "Micellar casein",
+    "description": "If evenings are where you fall short of your protein target, a slow-digesting casein is the tool. Per the label at the time of writing, a roughly 33 to 34 g scoop of Gold Standard Casein gives 24 g of protein from micellar casein at about 120 calories, and the brand describes it as banned-substance tested. Mixed thick, buyers say it makes a passable pudding, which helps as a late-evening snack in a deficit. Two scoops approach the 40 g dose used in pre-sleep studies.",
+    "pros": [
+      "24 g of slow-digesting casein per scoop",
+      "Thickens into a pudding-style snack, buyers report",
+      "Easy to find on Amazon"
+    ],
+    "cons": [
+      "Thick texture is not for everyone",
+      "Pre-sleep benefit is modest",
+      "Contains dairy and artificial sweetener"
+    ],
+    "bottomLine": "A practical way to add 25 to 50 g of protein in the evening, where many people fall short.",
+    "specs": {
+      "Protein / serving": "24 g (label)",
+      "Calories": "About 120",
+      "Third-party testing": "Banned-substance tested (per brand)",
+      "Best for": "Evenings, before bed"
+    }
+  },
+  {
+    "id": "orgain-30g-protein-creatine",
+    "name": "Orgain 30g Protein + Creatine Powder",
+    "brand": "Orgain",
+    "badge": "Best Plant-Based",
+    "category": "Pea and brown rice protein with creatine",
+    "description": "Orgain's creatine blend combines the two supplements with the best evidence for recomposition in one plant-based scoop. Per the brand's page at the time of writing, a two-scoop serving gives 30 g of pea and brown rice protein plus 5 g of micronized creatine monohydrate, at about 170 calories with 4 g of fiber and no dairy or soy. The higher protein dose partly makes up for plant protein's lower leucine. It has no sport certification listed, and comes in vanilla only at the time of writing.",
+    "pros": [
+      "30 g of plant protein plus 5 g of creatine, per the brand",
+      "No dairy or soy",
+      "Saves buying creatine separately"
+    ],
+    "cons": [
+      "No third-party sport certification listed",
+      "About 170 calories per serving",
+      "Single flavor at the time of writing"
+    ],
+    "bottomLine": "The simplest plant-based recomposition stack: protein and creatine in one scoop.",
+    "specs": {
+      "Protein / serving": "30 g (label)",
+      "Calories": "About 170",
+      "Third-party testing": "None listed",
+      "Best for": "Vegan, protein plus creatine"
+    }
+  }
+];
+
+const schema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Home",
+          item: `${SITE_URL}/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Best Lists",
+          item: `${SITE_URL}/best-of/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 3,
+          name: "Best Protein Powder for Body Recomposition",
+          item: `${SITE_URL}/best-protein-powder-for-body-recomposition/`,
+        },
+      ],
+    },
+    {
+      "@type": "FAQPage",
+      mainEntity: [
+        {
+          "@type": "Question",
+          "name": "What is the best protein powder for body recomposition?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "For most people, Optimum Nutrition Gold Standard 100% Whey, at about 24 g of protein for 120 calories per the label, offers the best mix of quality, certification per the brand and price. Dymatize ISO100 and Transparent Labs suit tighter calorie budgets, and Orgain's protein plus creatine is the best plant-based pick."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How much protein do I need for body recomposition?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Aim for about 1.6 to 2.2 g of protein per kilogram of body weight a day, based on a 2018 meta-analysis by Morton and colleagues. In a calorie deficit, the upper half of that range is sensible. If you carry a lot of body fat, base the number on a goal weight. Spread it across three or four meals."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can you lose fat and build muscle at the same time?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Recomposition is well documented, especially in beginners, people returning to training, and those with more body fat. It requires progressive resistance training, a modest calorie deficit or maintenance calories, and high protein. Lean, experienced lifters can recompose too, but progress is slow and harder to see."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is whey or plant protein better for recomposition?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Whey has a slight edge because it is higher in leucine and digests quickly, but plant protein works if you eat enough of it. A pea and rice blend at a slightly higher dose, such as Orgain's 30 g serving, closes most of the gap. Total daily protein matters more than the source."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Should I take creatine for body recomposition?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Creatine monohydrate is the one supplement besides protein with strong evidence. Combined with resistance training, it consistently increases lean mass and strength in studies. A dose of 3 to 5 g a day is typical. Talk to a doctor first if you have kidney disease or another medical condition."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "When should I drink a protein shake for recomposition?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Whenever it helps you reach your daily target. Research suggests timing matters far less than total protein, so a shake within a few hours of training, at breakfast or in the evening all work. Casein before bed is a reasonable option if evenings are where you fall short."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How long does body recomposition take?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Beginners and returning lifters often see clear changes in strength, waist measurement and photos within two to three months. Lean, experienced lifters may need six months or more to see a meaningful change. Weekly scale weight can stay flat throughout, so track strength and measurements instead."
+          }
+        }
+      ],
+    },
+    {
+      "@type": "Article",
+      headline: title,
+      author: authorSchema(),
+      datePublished: dates.published,
+      dateModified: dates.modified,
+      publisher: { "@type": "Organization", name: SITE_NAME, url: SITE_URL },
+    },
+    {
+      "@type": "ItemList",
+      name: title,
+      numberOfItems: PRODUCTS.length,
+      itemListElement: PRODUCTS.map((product, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name: product.name,
+        url: new URL(`#${product.id}`, Astro.url).toString(),
+      })),
+    },
+    ...PRODUCTS.map((product) => ({
+      "@type": "Product",
+      name: product.name,
+      description: product.description,
+      brand: {
+        "@type": "Brand",
+        name: product.brand ?? product.name.split(" ")[0],
+      },
+    })),
+  ],
+};
+---
+
+<Layout
+  title={title}
+  description={description}
+  ogType="article"
+  article={{
+    publishedTime: dates.published,
+    modifiedTime: dates.modified,
+    author: author.name,
+    section: "By Goal",
+    tags: [
+      "protein powder for body recomposition",
+      "body recomposition protein",
+      "protein for recomp",
+      "how much protein for body recomposition"
+    ],
+  }}
+  jsonLd={schema}
+>
+  <article class="relative overflow-hidden">
+    <ArticleHeader kicker={"Buyer's Guide"} badge={"Updated November 2026"} author={author} dates={dates} mobileAd={false}>
+      <Fragment slot="title">Best Protein Powder for Body Recomposition</Fragment>
+      Six powders chosen to help you hit a high daily protein target in a small calorie deficit, with the evidence on how much protein recomposition needs and who it works for.
+    </ArticleHeader>
+
+    <TableOfContents>
+      <a href="#quick-comparison">Quick Comparison</a>
+      <a href="#top-picks">Our Top Picks</a>
+      <a href="#what-is-recomp">What Is Body Recomposition?</a>
+      <a href="#who-can-recomp">Who Can Recompose?</a>
+      <a href="#how-much-protein">How Much Protein?</a>
+      <a href="#calories-training">Calories and Training</a>
+      <a href="#creatine-casein-timing">Creatine, Casein, Timing</a>
+      <a href="#hype">Claims to Ignore</a>
+      <a href="#buying-on-amazon">Buying on Amazon</a>
+      <a href="#how-we-picked">How We Picked</a>
+      <a href="#mistakes">Common Mistakes</a>
+      <a href="#faq">FAQ</a>
+    </TableOfContents>
+
+    <!-- Content -->
+    <div class="max-w-3xl mx-auto px-4 pb-16 lg:pb-24">
+      <div class="prose prose-lg prose-blue max-w-none text-gray-700 leading-relaxed">
+        <p class="lede">
+          The best protein powder for body recomposition is <strong>Optimum Nutrition Gold Standard 100% Whey</strong>: about 24 g of protein in 120 calories per the label, third-party certified per the brand, and cheap enough to use every day. No powder recomposes your body by itself; what the research supports is about <strong>1.6 to 2.2 g of protein per kilogram of body weight</strong> a day, resistance training and a modest calorie deficit, and a shake is simply the easiest way to reach that protein target.
+        </p>
+
+        <QuickPicks products={PRODUCTS} />
+
+        <div id="quick-comparison" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            1. Quick Comparison: The Best Protein Powders for Body Recomposition
+          </h2>
+
+          <p>
+            The short version: a well-made whey is the best tool for recomposition because it is complete, high in leucine, lean and affordable. Optimum Nutrition Gold Standard is the everyday default, Transparent Labs and Dymatize ISO100 are the leaner isolate upgrades, NOW Sports is the budget isolate, ON casein covers the overnight gap, and Orgain's protein plus creatine is the plant-based pick that bundles the one other supplement with solid evidence.
+          </p>
+
+          <div class="overflow-hidden border border-gray-200 rounded-2xl my-8">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Product</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Protein per serving</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Protein per 100 kcal</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Third-party testing</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Best for</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Optimum Nutrition Gold Standard 100% Whey</td>
+                    <td class="px-4 py-4 text-gray-700">About 24 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 20 g</td>
+                    <td class="px-4 py-4 text-gray-700">Informed Choice (per brand)</td>
+                    <td class="px-4 py-4 text-gray-700">Best overall, value</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Transparent Labs Grass-Fed Whey Isolate</td>
+                    <td class="px-4 py-4 text-gray-700">28 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 19-23 g</td>
+                    <td class="px-4 py-4 text-gray-700">Informed Choice (per brand)</td>
+                    <td class="px-4 py-4 text-gray-700">Clean-label isolate</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Dymatize ISO100</td>
+                    <td class="px-4 py-4 text-gray-700">About 25 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 21-23 g</td>
+                    <td class="px-4 py-4 text-gray-700">Informed Choice (per brand)</td>
+                    <td class="px-4 py-4 text-gray-700">Tight calorie budgets</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">NOW Sports Whey Isolate (Unflavored)</td>
+                    <td class="px-4 py-4 text-gray-700">24 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 22 g</td>
+                    <td class="px-4 py-4 text-gray-700">Informed Sport (label)</td>
+                    <td class="px-4 py-4 text-gray-700">Budget isolate</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Optimum Nutrition Gold Standard Casein</td>
+                    <td class="px-4 py-4 text-gray-700">24 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 20 g</td>
+                    <td class="px-4 py-4 text-gray-700">Banned-substance tested (per brand)</td>
+                    <td class="px-4 py-4 text-gray-700">Before bed</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Orgain 30g Protein + Creatine</td>
+                    <td class="px-4 py-4 text-gray-700">30 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 18 g</td>
+                    <td class="px-4 py-4 text-gray-700">None listed</td>
+                    <td class="px-4 py-4 text-gray-700">Plant-based, with creatine</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <p>
+            Figures are per the label or brand page at the time of writing and vary by flavor; protein per 100 kcal is our arithmetic. Certification claims are as the brand lists them, so confirm your flavor in the certifier's database. For a wider look at muscle-building powders, see our <a href="/best-protein-powder-for-muscle-gain/">best protein powder for muscle gain</a> guide, and for the leanest options, our sibling <a href="/best-low-calorie-protein-powder/">best low calorie protein powder</a> guide.
+          </p>
+        </div>
+
+        <!-- Picks -->
+        <div id="top-picks" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            2. The Best Protein Powders for Body Recomposition, Ranked
+          </h2>
+
+          <p>
+            Recomposition rewards consistency, so we favored complete, high-leucine proteins with good protein per calorie, third-party certification where the brand lists it, and a price you can sustain for months. Nutrition figures come from each label or brand page at the time of writing and vary by flavor. We did not test any product ourselves; taste notes reflect what buyers report.
+          </p>
+
+          {PRODUCTS.map((product, index) => (
+            <ProductCard product={product} rank={index + 1} />
+          ))}
+        </div>
+
+        <div id="what-is-recomp" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            3. What Is Body Recomposition, and Is It Real?
+          </h2>
+
+          <p>
+            Body recomposition means losing fat and gaining muscle at the same time, so your body changes shape even if the scale barely moves. The traditional advice was that you cannot do both at once: you bulk in a surplus to build muscle, then cut in a deficit to lose fat. That remains the most efficient route for many lean, experienced lifters, but recomposition is real and well documented in the research, especially in certain groups.
+          </p>
+
+          <p>
+            The clearest controlled example is a 2016 study by Longland and colleagues in the American Journal of Clinical Nutrition. Young men ate about 40 percent fewer calories than they needed for four weeks while doing intense resistance and interval training six days a week. The group eating 2.4 g of protein per kilogram a day gained about 1.2 kg of lean mass and lost about 4.8 kg of fat; the group eating 1.2 g/kg kept lean mass roughly unchanged and lost about 3.5 kg of fat.
+          </p>
+
+          <p>
+            That study is often quoted as proof that high protein builds muscle in a deficit, and it does support that, but notice the conditions: a supervised, very demanding program in young men who were not highly trained. It shows what is possible, not what a typical person should expect from adding a shake. A 2020 review in the Strength and Conditioning Journal by Barakat and colleagues went further and argued that recomposition also happens in trained lifters, with training quality, protein intake and other lifestyle factors as the levers.
+          </p>
+
+          <h3 class="text-2xl font-bold text-gray-900 mt-10 mb-4">How to tell if it is working</h3>
+
+          <p>
+            Because fat loss and muscle gain partly cancel out on the scale, body weight is a poor guide. Track waist measurement, progress photos in the same light, and, most important, whether your strength in key lifts is rising. Strength going up while the waist comes down is the signature of recomposition. Bathroom body-fat scales are too noisy to rely on week to week, and even DEXA scans have a margin of error that can swamp small changes.
+          </p>
+        </div>
+
+        <div id="who-can-recomp" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            4. Who Can Recompose? Beginners, Returners and Some Trained Lifters
+          </h2>
+
+          <p>
+            Beginners are the clearest case. People new to resistance training respond quickly, and the stimulus of lifting is strong enough that they can build muscle even while eating somewhat below maintenance, provided protein is high. If you have never trained consistently, a recomposition approach, with modest calorie reduction, a structured lifting program and enough protein, is usually a better plan than either bulking or crash dieting.
+          </p>
+
+          <p>
+            People returning after a break are the second group. Muscle that was once built tends to come back faster than it was first gained, an effect often attributed to changes that persist in muscle cells after training stops. Someone who lifted for years, stopped and gained some fat often sees fast recomposition in the first months back, which is why returning lifters frequently report losing their gut and getting stronger at the same time.
+          </p>
+
+          <p>
+            People carrying more body fat also recompose more readily, because there is plenty of stored energy available to fund muscle growth while in a deficit. That is part of why many weight-loss studies with resistance training show lean mass held or gained while fat falls. The same principle applies, with medical guidance, to people losing weight on GLP-1 medications, where protecting muscle is a priority; our <a href="/best-protein-powder-for-glp-1/">best protein powder for GLP-1</a> guide covers that.
+          </p>
+
+          <h3 class="text-2xl font-bold text-gray-900 mt-10 mb-4">Lean, experienced lifters</h3>
+
+          <p>
+            Recomposition is possible for lean, well-trained lifters too, but it is slow, and progress can be hard to see. For that group, a planned muscle-gain phase in a small surplus followed by a fat-loss phase is often more efficient. If you are already lean and have trained hard for years, expect months of patience rather than weeks, and keep protein at the higher end of the range below. Our <a href="/best-protein-powder-for-beginners/">best protein powder for beginners</a> guide is a good place to start if you are new.
+          </p>
+        </div>
+
+        <div id="how-much-protein" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            5. How Much Protein Do You Need for Body Recomposition?
+          </h2>
+
+          <p>
+            The most-cited evidence is a 2018 meta-analysis by Morton and colleagues in the British Journal of Sports Medicine, covering 49 trials and about 1,800 participants doing resistance training. Protein supplementation increased gains in lean mass and strength, and the benefit for lean mass leveled off at around 1.6 g of protein per kilogram of body weight per day, with the statistical uncertainty extending up to about 2.2 g/kg. That is where the common 1.6 to 2.2 g/kg recommendation comes from.
+          </p>
+
+          <p>
+            For recomposition specifically, aiming toward the upper half of that range makes sense, because a calorie deficit raises protein needs. The International Society of Sports Nutrition's position stand recommends 1.4 to 2.0 g/kg a day for most exercising people and notes higher intakes may help preserve lean mass during calorie restriction. A frequently cited 2014 review by Helms and colleagues suggested 2.3 to 3.1 g per kilogram of lean mass for lean, resistance-trained people dieting, which works out to roughly 2.0 to 2.7 g/kg of total body weight for someone at moderate body fat.
+          </p>
+
+          <div class="overflow-hidden border border-gray-200 rounded-2xl my-8">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Body weight</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">1.6 g/kg per day</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">2.2 g/kg per day</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Per meal at 0.4 g/kg (4 meals)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">60 kg (132 lb)</td>
+                    <td class="px-4 py-4 text-gray-700">96 g</td>
+                    <td class="px-4 py-4 text-gray-700">132 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 24 g</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">70 kg (154 lb)</td>
+                    <td class="px-4 py-4 text-gray-700">112 g</td>
+                    <td class="px-4 py-4 text-gray-700">154 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 28 g</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">80 kg (176 lb)</td>
+                    <td class="px-4 py-4 text-gray-700">128 g</td>
+                    <td class="px-4 py-4 text-gray-700">176 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 32 g</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">90 kg (198 lb)</td>
+                    <td class="px-4 py-4 text-gray-700">144 g</td>
+                    <td class="px-4 py-4 text-gray-700">198 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 36 g</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">100 kg (220 lb)</td>
+                    <td class="px-4 py-4 text-gray-700">160 g</td>
+                    <td class="px-4 py-4 text-gray-700">220 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 40 g</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <p>
+            If you carry a lot of body fat, base the calculation on a goal or reference body weight rather than your current weight, or the target becomes unrealistically high. Spreading protein across three or four meals of roughly 0.4 g/kg each, as Schoenfeld and Aragon suggested in a 2018 paper, is a sensible way to organize it. Our <a href="/protein-calculator/">protein calculator</a> and <a href="/how-much-protein-do-i-need/">how much protein do I need</a> guide help you set a number.
+          </p>
+
+          <p>
+            These intakes are considered safe for healthy adults, but they are not for everyone. If you have kidney disease, are pregnant, or have a medical condition or take medication that affects protein or fluid needs, talk to your doctor or a registered dietitian before raising protein substantially. Protein powder is a convenience food: whole-food protein counts exactly the same toward the target.
+          </p>
+        </div>
+
+        <div id="calories-training" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            6. Calories and Training Matter More Than the Powder
+          </h2>
+
+          <p>
+            Protein is necessary for recomposition but nowhere near sufficient. The driver of muscle growth is resistance training with progressive overload, meaning you gradually lift more weight or do more reps over weeks. Without that stimulus, extra protein in a deficit mostly helps you hold on to the muscle you have. A sensible program trains each major muscle group about twice a week, with sets taken close to failure, and tracks numbers so progress is visible.
+          </p>
+
+          <p>
+            The calorie deficit should be modest. Very aggressive deficits, like the one in the Longland study, can work under supervision, but for most people a deficit of roughly 10 to 20 percent below maintenance, or simply eating at maintenance with high protein, makes recomposition far more sustainable and protects training quality. Losing about 0.5 percent of body weight a week or less is a reasonable pace when the aim is to keep or build muscle.
+          </p>
+
+          <p>
+            Sleep is the underrated third factor. Short sleep during a diet has been linked in controlled studies to more of the weight lost coming from lean mass rather than fat, and it makes training and appetite harder to manage. Daily steps and overall activity also make the deficit easier without cutting food further. These basics account for far more of your result than any choice between the powders on this page.
+          </p>
+
+          <p>
+            Where a powder does make a difference is adherence. Hitting 150 g of protein a day from food alone is hard for many people, particularly on a budget or a busy schedule. A 120-calorie scoop that supplies about a fifth of the day's target, costs around a dollar or two, and takes thirty seconds to make is the practical reason to buy one. Our <a href="/do-protein-supplements-build-muscle/">do protein supplements build muscle</a> guide reviews what the research shows supplements add on top of diet.
+          </p>
+        </div>
+
+        <div id="creatine-casein-timing" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            7. Do Creatine, Casein or Protein Timing Help Recomposition?
+          </h2>
+
+          <h3 class="text-2xl font-bold text-gray-900 mt-10 mb-4">Creatine: the one add-on with strong evidence</h3>
+
+          <p>
+            Creatine monohydrate is the most researched sports supplement after protein, and meta-analyses consistently find that, combined with resistance training, it produces greater gains in lean mass and strength than training alone. The International Society of Sports Nutrition considers it safe and effective for healthy people at typical doses of 3 to 5 g a day. Some of the early lean-mass gain is water in muscle, so the scale may tick up slightly at first. If you want one supplement besides protein, this is it; our <a href="/best-protein-powder-with-creatine/">best protein powder with creatine</a> guide compares combined products.
+          </p>
+
+          <h3 class="text-2xl font-bold text-gray-900 mt-10 mb-4">Casein before bed</h3>
+
+          <p>
+            Casein digests slowly, and studies from Luc van Loon's group in the Netherlands found that about 40 g of casein before sleep increased overnight muscle protein synthesis, and that a pre-sleep protein supplement combined with 12 weeks of training increased gains in strength and muscle size compared with placebo. The effect is real but modest, and it largely works by adding protein to the day. It is a good option if evenings are when you fall short of your target; see our <a href="/best-protein-powder-before-bed/">best protein powder before bed</a> guide.
+          </p>
+
+          <h3 class="text-2xl font-bold text-gray-900 mt-10 mb-4">Timing is a minor factor</h3>
+
+          <p>
+            The idea of a narrow anabolic window after training has faded. A 2013 meta-analysis by Schoenfeld, Aragon and Krieger found that the apparent benefit of protein timing largely disappeared once total daily protein was accounted for. Having a shake within a few hours of training is perfectly sensible, but there is no need to rush one down in the locker room. Total daily protein and its spread across meals matter far more; our <a href="/when-to-take-protein-powder/">when to take protein powder</a> guide covers timing in detail.
+          </p>
+        </div>
+
+        <div id="hype" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            8. Recomposition Claims to Ignore
+          </h2>
+
+          <p>
+            Fat-burning protein powders are the first. Products marketed for cutting or shredding often add green tea extract, caffeine, L-carnitine or CLA to an otherwise ordinary whey. The doses are usually too small to matter, the evidence for most of these ingredients is weak, and stimulants add risk for some people. You pay extra for little. Our <a href="/best-fat-burning-protein-powder/">best fat burning protein powder</a> guide explains why a plain isolate usually beats them.
+          </p>
+
+          <p>
+            BCAA supplements are the second. Branched-chain amino acids are already present in every complete protein, and whey is especially rich in them. Once you are eating enough total protein, research has not shown that extra BCAAs add muscle. They can make sense in narrow situations, but for recomposition they are mostly an expensive way to drink flavored water. Spend the money on more whey or on creatine instead.
+          </p>
+
+          <p>
+            Third, be wary of dramatic before-and-after claims, especially those promising large muscle gains and large fat loss in a few weeks. Real recomposition in a trained person might mean a few pounds of muscle and a few pounds of fat over several months. Photos can be shaped by lighting, pump, posture, tanning and, in some cases, undisclosed drug use. If a product's marketing leans on transformations rather than label numbers and certifications, treat that as a reason for caution.
+          </p>
+
+          <p>
+            Finally, ignore any suggestion that more protein is always better. Beyond roughly 2.2 g/kg, evidence for further muscle gain is thin for most people, and very high intakes crowd out the carbohydrates that fuel hard training and the fiber and plants that support overall health. Very high protein intakes have generally been well tolerated in healthy adults in studies, but they are not a shortcut. Our <a href="/is-protein-powder-safe/">is protein powder safe</a> guide covers who should be cautious.
+          </p>
+        </div>
+
+        <div id="buying-on-amazon" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            9. Buying Protein Powder for Recomposition on Amazon: Value and Verification
+          </h2>
+
+          <p>
+            Recomposition is a months-long project, so you will likely buy several tubs, and the big names on this list are among the most counterfeited supplements on Amazon. Under the Add to Cart button, check Ships from and Sold by: you want the brand's own store or Amazon itself. Third-party sellers are not always a problem, but they raise the risk of fakes, heat-damaged stock and short dates. Be suspicious of a price well below the brand's other listings.
+          </p>
+
+          <p>
+            When the tub arrives, check that the seal is intact, the label print is crisp, and a lot number and best-by date are printed on the tub. For certified products, look up the lot or flavor on the certifier's site, such as Informed Choice or NSF Certified for Sport, rather than trusting a logo in the listing images. Compare the Nutrition Facts on the tub with the label image in the listing: the images and bullet copy are not always updated after a reformulation, and the tub is the version that counts.
+          </p>
+
+          <h3 class="text-2xl font-bold text-gray-900 mt-10 mb-4">Size traps and cost per 25 g</h3>
+
+          <p>
+            Big tubs are where the value is, but Amazon listings often show a price for a different size from the one pictured, and flavors in the same listing can be priced very differently. Confirm the weight and flavor selected before comparing. Then work out cost per 25 g of protein: price divided by servings, divided by protein per serving, multiplied by 25. A 5 lb tub of a mainstream whey commonly comes in well under a premium isolate on this measure. Our <a href="/tools/protein-cost-calculator/">protein cost calculator</a> does the arithmetic.
+          </p>
+
+          <p>
+            Subscribe and Save typically takes 5 percent off, rising to up to 15 percent once you have five or more subscriptions in a month, which suits a powder you will use daily for months. Set the interval to match how fast you go through a tub at two scoops a day rather than accepting the default. Our <a href="/amazon-protein-powder/">Amazon protein powder</a> guide covers more listing traps, and <a href="/best-nsf-certified-protein-powder/">best NSF certified protein powder</a> lists certified options.
+          </p>
+        </div>
+
+        <div id="how-we-picked" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            10. How We Picked
+          </h2>
+
+          <p>
+            We looked for powders sold on Amazon US that make a high daily protein target easy and affordable: complete proteins with good leucine content, at least about 18 g of protein per 100 calories, and a realistic cost per 25 g for daily use over months. We gave weight to third-party certification as listed by the brand, and to products that fill a specific recomposition need, such as a casein for the evening or a plant protein with creatine.
+          </p>
+
+          <p>
+            We ranked from label analysis, certifications and published research, not hands-on testing; taste and mixing notes reflect what buyers report. We left out products whose main selling points are fat-burning additives or proprietary blends. Our <a href="/methodology/">methodology</a> page explains how we weigh evidence, and our sibling guide to the <a href="/best-low-sodium-protein-powder/">best low sodium protein powder</a> covers several of the same isolates from another angle.
+          </p>
+        </div>
+
+        <!-- Common Mistakes -->
+        <div id="mistakes" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            11. Common Mistakes to Avoid
+          </h2>
+
+          <div class="space-y-6 my-8">
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Expecting the powder to do the work</h3>
+              <p class="text-gray-700 text-sm m-0">
+                No protein powder builds muscle or burns fat on its own. Recomposition comes from progressive resistance training, a modest deficit and enough total protein. The powder only makes the protein target easier and cheaper to hit, so plan training first and buy second.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Cutting calories too hard</h3>
+              <p class="text-gray-700 text-sm m-0">
+                A large deficit can work in a supervised study, but for most people it hurts training, sleep and adherence. A deficit of about 10 to 20 percent, or eating at maintenance with high protein, makes recomposition far more sustainable and protects muscle.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Judging progress by the scale</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Fat loss and muscle gain partly cancel out on the scale, so weight may barely move while your body changes. Track waist measurement, photos and strength in key lifts. Rising strength with a shrinking waist means it is working.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Overshooting protein and undershooting carbs</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Beyond about 2.2 g/kg, evidence for extra muscle gain is thin for most people. Pushing protein far higher can crowd out the carbohydrate that fuels hard training. Hit your target, then fill the rest of your calories with carbohydrate, fat and plenty of plants.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Paying for fat-burning extras</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Cutting or shredding formulas often add caffeine, green tea extract or carnitine in small doses with weak evidence. A plain whey plus 3 to 5 g of creatine monohydrate covers what the research supports, usually for less money.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ -->
+        <div id="faq" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            12. Frequently Asked Questions
+          </h2>
+
+          <div class="faq-list">
+            <details class="faq-item">
+              <summary><h3>What is the best protein powder for body recomposition?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  For most people, Optimum Nutrition Gold Standard 100% Whey, at about 24 g of protein for 120 calories per the label, offers the best mix of quality, certification per the brand and price. Dymatize ISO100 and Transparent Labs suit tighter calorie budgets, and Orgain's protein plus creatine is the best plant-based pick.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>How much protein do I need for body recomposition?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  Aim for about 1.6 to 2.2 g of protein per kilogram of body weight a day, based on a 2018 meta-analysis by Morton and colleagues. In a calorie deficit, the upper half of that range is sensible. If you carry a lot of body fat, base the number on a goal weight. Spread it across three or four meals.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>Can you lose fat and build muscle at the same time?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  Yes. Recomposition is well documented, especially in beginners, people returning to training, and those with more body fat. It requires progressive resistance training, a modest calorie deficit or maintenance calories, and high protein. Lean, experienced lifters can recompose too, but progress is slow and harder to see.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>Is whey or plant protein better for recomposition?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  Whey has a slight edge because it is higher in leucine and digests quickly, but plant protein works if you eat enough of it. A pea and rice blend at a slightly higher dose, such as Orgain's 30 g serving, closes most of the gap. Total daily protein matters more than the source.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>Should I take creatine for body recomposition?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  Creatine monohydrate is the one supplement besides protein with strong evidence. Combined with resistance training, it consistently increases lean mass and strength in studies. A dose of 3 to 5 g a day is typical. Talk to a doctor first if you have kidney disease or another medical condition.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>When should I drink a protein shake for recomposition?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  Whenever it helps you reach your daily target. Research suggests timing matters far less than total protein, so a shake within a few hours of training, at breakfast or in the evening all work. Casein before bed is a reasonable option if evenings are where you fall short.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>How long does body recomposition take?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  Beginners and returning lifters often see clear changes in strength, waist measurement and photos within two to three months. Lean, experienced lifters may need six months or more to see a meaningful change. Weekly scale weight can stay flat throughout, so track strength and measurements instead.
+                </p>
+              </div>
+            </details>
+
+          </div>
+        </div>
+
+        <!-- Related Guides -->
+        <div class="mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">Related Guides</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <a href="/best-protein-powder-for-muscle-gain/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#1E90FF] font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Protein Powder for Muscle Gain</h3>
+              <p class="text-gray-500 text-sm mt-2">The powders that make a muscle-building target easiest to hit.</p>
+            </a>
+            <a href="/best-low-calorie-protein-powder/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#10B981] font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Low Calorie Protein Powder</h3>
+              <p class="text-gray-500 text-sm mt-2">The isolates with the most protein per 100 calories.</p>
+            </a>
+            <a href="/do-protein-supplements-build-muscle/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#FF4500] font-black text-xs uppercase tracking-widest mb-2">Research Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Do Protein Supplements Build Muscle?</h3>
+              <p class="text-gray-500 text-sm mt-2">What the trials show protein powder adds on top of diet.</p>
+            </a>
+          </div>
+        </div>
+
+        <!-- Closing -->
+        <div class="mt-16 bg-gray-900 text-white rounded-2xl p-6 md:p-8">
+          <h2 class="text-2xl font-black text-white mb-4">The Bottom Line</h2>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            Body recomposition is real, and it is most achievable for beginners, people returning to training and those carrying more body fat. What drives it is progressive resistance training, a modest calorie deficit or maintenance calories, enough sleep, and about 1.6 to 2.2 g of protein per kilogram a day. Optimum Nutrition Gold Standard is the best everyday powder for hitting that target, with Dymatize ISO100 and Transparent Labs as leaner upgrades and Orgain's protein plus creatine for plant-based eaters.
+          </p>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            Ignore fat-burning additives, BCAA add-ons and dramatic transformation claims, and judge progress by strength and waist measurement rather than the scale. If you have kidney disease, are pregnant, or have a medical condition or take medication that affects your diet, talk to your doctor or a registered dietitian before raising protein substantially.
+          </p>
+        </div>
+
+        <MoreInCategory category="By Goal" links={moreInCategory} />
+
+        <AuthorBio />
+      </div>
+    </div>
+  </article>
+</Layout>

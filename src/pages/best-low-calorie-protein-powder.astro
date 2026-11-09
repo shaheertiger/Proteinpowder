@@ -1,0 +1,817 @@
+---
+import Layout from "../layouts/Layout.astro";
+import ArticleHeader from "../components/ArticleHeader.astro";
+import TableOfContents from "../components/TableOfContents.astro";
+import ProductCard from "../components/ProductCard.astro";
+import MoreInCategory from "../components/MoreInCategory.astro";
+import { AUTHORS, DEFAULT_AUTHOR, authorSchema } from "../data/authors";
+import { SITE_NAME, SITE_URL } from "../data/site";
+import QuickPicks from "../components/QuickPicks.astro";
+import AuthorBio from "../components/AuthorBio.astro";
+import { pageDates } from "../data/dates";
+
+const moreInCategory = [
+  {
+    "title": "Best Protein Powder for Weight Loss",
+    "url": "/best-protein-powder-for-weight-loss/"
+  },
+  {
+    "title": "Best Low Carb Protein Powder",
+    "url": "/best-low-carb-protein-powder/"
+  },
+  {
+    "title": "Best Fat Burning Protein Powder",
+    "url": "/best-fat-burning-protein-powder/"
+  },
+  {
+    "title": "Best Protein Powder for GLP-1",
+    "url": "/best-protein-powder-for-glp-1/"
+  },
+  {
+    "title": "Best Sugar-Free Protein Powder",
+    "url": "/best-sugar-free-protein-powder/"
+  }
+];
+const author = AUTHORS[DEFAULT_AUTHOR];
+const dates = pageDates(Astro.url.pathname, { published: "2026-11-09", modified: "2026-11-09" });
+const title = "Best Low Calorie Protein Powder: Most Protein per 100 kcal";
+const description =
+  "The best low calorie protein powder ranked by grams of protein per 100 calories, from 25 g isolates to plant picks, plus how to keep a shake under 150 calories.";
+
+const PRODUCTS: {
+  id: string;
+  name: string;
+  brand?: string;
+  badge: string;
+  category: string;
+  description: string;
+  pros: string[];
+  cons: string[];
+  bottomLine: string;
+  specs?: Record<string, string>;
+  rating?: number;
+  reviewCount?: number;
+  amazonUrl?: string;
+}[] = [
+  {
+    "id": "isopure-zero-carb-unflavored",
+    "name": "Isopure Zero Carb Unflavored Protein Powder",
+    "brand": "Isopure",
+    "badge": "Best Overall",
+    "category": "Unflavored whey protein isolate",
+    "description": "Isopure Zero Carb Unflavored sits right on the ceiling for this metric. Per retail labels at the time of writing, a 29 g scoop gives about 25 g of protein for about 100 calories, with 0 g of carbohydrate and essentially no fat, from whey protein isolate and a little lecithin. That is about 25 g of protein per 100 calories. It has no sweetener or flavor, so it disappears into coffee, oats or a fruit smoothie. Sodium is higher than some isolates at about 160 mg per scoop.",
+    "pros": [
+      "About 25 g of protein per 100 calories, per the label",
+      "Zero carbohydrate and no sweetener",
+      "Widely sold on Amazon in several sizes"
+    ],
+    "cons": [
+      "About 160 mg of sodium, higher than other isolates",
+      "Bland on its own",
+      "No sport certification we could confirm"
+    ],
+    "bottomLine": "The leanest protein you can practically buy: about as close to pure protein as a label allows.",
+    "specs": {
+      "Protein / serving": "About 25 g (label)",
+      "Calories": "About 100",
+      "Protein per 100 kcal": "About 25 g",
+      "Best for": "Tightest calorie budgets"
+    }
+  },
+  {
+    "id": "klean-athlete-klean-isolate",
+    "name": "Klean Athlete Klean Isolate (Unflavored)",
+    "brand": "Klean Athlete",
+    "badge": "Best Certified",
+    "category": "Unflavored whey protein isolate",
+    "description": "Klean Isolate is a minimal whey isolate with NSF Certified for Sport status, per the brand. The unflavored pouch lists about 20 g of protein in about 85 calories per 22 g scoop at the time of writing, roughly 23.5 g per 100 calories, with about 1 g of carbohydrate. The only other ingredient is a little sunflower lecithin for mixing. It costs more per gram than mass-market isolates, which is the price of the certification.",
+    "pros": [
+      "About 23.5 g of protein per 100 calories",
+      "NSF Certified for Sport, per the brand",
+      "No sweetener or flavor in the unflavored pouch"
+    ],
+    "cons": [
+      "Only about 20 g of protein per scoop",
+      "Premium cost per 25 g",
+      "Small pouches; frequent reordering"
+    ],
+    "bottomLine": "The lean isolate for tested athletes or anyone who wants certification with their low calories.",
+    "specs": {
+      "Protein / serving": "About 20 g (label)",
+      "Calories": "About 85",
+      "Protein per 100 kcal": "About 23.5 g",
+      "Best for": "Certified, minimal label"
+    }
+  },
+  {
+    "id": "naked-nutrition-naked-pea",
+    "name": "Naked Pea Protein (Unflavored)",
+    "brand": "Naked Nutrition",
+    "badge": "Best Plant-Based",
+    "category": "Unflavored yellow pea protein isolate",
+    "description": "Naked Pea shows that a plant powder can keep pace with whey on calories. It is one ingredient, yellow pea protein the brand says is sourced from the United States and Canada, and the label at the time of writing lists about 27 g of protein for roughly 120 calories per two-scoop serving, about 22.5 g per 100 calories. It costs little per 25 g. Like other pea isolates it carries more sodium than whey, and its earthy taste needs flavoring.",
+    "pros": [
+      "About 22.5 g of protein per 100 calories, per the label",
+      "One ingredient, dairy-free",
+      "Budget-tier cost per 25 g"
+    ],
+    "cons": [
+      "Earthy taste, buyers report",
+      "More sodium than whey isolate",
+      "Plant powders average higher heavy-metal levels"
+    ],
+    "bottomLine": "The lean, dairy-free pick, with flavoring left to you.",
+    "specs": {
+      "Protein / serving": "About 27 g (label)",
+      "Calories": "About 120",
+      "Protein per 100 kcal": "About 22.5 g",
+      "Best for": "Vegan, dairy-free"
+    }
+  },
+  {
+    "id": "isopure-infusions",
+    "name": "Isopure Infusions",
+    "brand": "Isopure",
+    "badge": "Best Clear Flavored",
+    "category": "Clear whey protein isolate drink",
+    "description": "Isopure Infusions is a clear whey isolate that mixes into a light, juice-like drink. Retail labels at the time of writing list about 20 g of protein for about 90 calories per 25 g scoop, around 22 g per 100 calories, with close to zero sugar and fat and very little sodium. For people who find creamy shakes heavy or who want something refreshing after training, it delivers flavor without moving far from the calorie efficiency of unflavored isolate.",
+    "pros": [
+      "About 22 g of protein per 100 calories",
+      "Flavored, light and refreshing",
+      "Very low sodium for a flavored powder"
+    ],
+    "cons": [
+      "Uses artificial sweetener; check the label",
+      "Juice-like, not creamy",
+      "Higher cost per 25 g than unflavored tubs"
+    ],
+    "bottomLine": "The flavored pick that stays almost as lean as plain isolate.",
+    "specs": {
+      "Protein / serving": "About 20 g (label)",
+      "Calories": "About 90",
+      "Protein per 100 kcal": "About 22 g",
+      "Best for": "Post-workout, summer drinks"
+    }
+  },
+  {
+    "id": "now-sports-whey-protein-isolate",
+    "name": "NOW Sports Whey Protein Isolate (Unflavored)",
+    "brand": "NOW Sports",
+    "badge": "Best Value",
+    "category": "Unflavored whey protein isolate",
+    "description": "NOW Sports Whey Isolate is the cheapest way to buy lean protein on this list. The unflavored label lists 24 g of protein in about 110 calories per 28 g scoop at the time of writing, about 22 g per 100 calories, with about 1 g of carbohydrate and no sweetener. Large tubs bring the cost per 25 g into value territory. NOW lists Informed Sport on the label, though we could not confirm this exact product in the registry.",
+    "pros": [
+      "About 22 g of protein per 100 calories",
+      "Value cost per 25 g in large tubs",
+      "No sweetener or flavor"
+    ],
+    "cons": [
+      "Slightly less efficient than Isopure or Klean",
+      "Milky taste on its own",
+      "Certification is a label claim; verify in the registry"
+    ],
+    "bottomLine": "The lean isolate for people who care about cost as much as calories.",
+    "specs": {
+      "Protein / serving": "24 g (label)",
+      "Calories": "About 110",
+      "Protein per 100 kcal": "About 22 g",
+      "Best for": "Budget daily shakes"
+    }
+  },
+  {
+    "id": "dymatize-iso100-hydrolyzed",
+    "name": "Dymatize ISO100 Hydrolyzed Whey Isolate",
+    "brand": "Dymatize",
+    "badge": "Best Creamy Flavored",
+    "category": "Hydrolyzed whey isolate and whey isolate",
+    "description": "ISO100 is the pick if you want a milkshake-style flavor without giving up much efficiency. Per the label at the time of writing, a roughly 30 g scoop gives about 25 g of protein in about 110 to 120 calories depending on flavor, roughly 21 to 23 g per 100 calories, with about 1 g of sugar. It comes in many flavors, including Gourmet Vanilla and licensed cereal flavors, and Dymatize promotes it as Informed Choice certified. Dessert flavors sit at the higher calorie end.",
+    "pros": [
+      "About 25 g of protein per scoop",
+      "Many flavors, mixes thin and smooth, buyers report",
+      "Promoted as Informed Choice certified"
+    ],
+    "cons": [
+      "Premium cost per 25 g",
+      "Calories vary by flavor; check the panel",
+      "Uses artificial sweetener"
+    ],
+    "bottomLine": "The best-tasting route to a lean shake, if you check the flavor's panel.",
+    "specs": {
+      "Protein / serving": "About 25 g (label)",
+      "Calories": "About 110-120",
+      "Protein per 100 kcal": "About 21-23 g",
+      "Best for": "Flavored, creamy shakes"
+    }
+  }
+];
+
+const schema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Home",
+          item: `${SITE_URL}/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Best Lists",
+          item: `${SITE_URL}/best-of/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 3,
+          name: "Best Low Calorie Protein Powder",
+          item: `${SITE_URL}/best-low-calorie-protein-powder/`,
+        },
+      ],
+    },
+    {
+      "@type": "FAQPage",
+      mainEntity: [
+        {
+          "@type": "Question",
+          "name": "What is the lowest calorie protein powder?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Isopure Zero Carb Unflavored lists about 25 g of protein for 100 calories per scoop, the practical ceiling, since protein counts as 4 calories per gram. Klean Isolate lists about 20 g for 85 calories. Among flavored powders, Isopure Infusions lists about 20 g for 90 calories, per labels at the time of writing."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Which protein powder has the most protein per calorie?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Unflavored whey isolates lead, at roughly 22 to 25 g of protein per 100 calories. Isopure Zero Carb Unflavored is about 25 g, Klean Isolate about 23.5 g and NOW Sports Whey Isolate about 22 g. Naked Pea, at about 22.5 g, is the best plant option we found."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is whey isolate lower in calories than whey concentrate?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, slightly. Isolate is typically 90 percent protein or more, while concentrate is about 70 to 80 percent, with a little more fat and lactose. That usually means 10 to 30 more calories per 25 g of protein for concentrate, or about 18 to 20 g of protein per 100 calories versus 22 to 25 g for isolate."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is low calorie protein powder good for weight loss?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It can help. Protein is filling, costs more energy to digest than carbohydrate or fat, and helps preserve muscle in a calorie deficit. A lean shake makes a high protein target easier to hit within your calories. It only helps if it replaces something or fits your plan; adding it on top adds calories."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How many calories should a protein shake have?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "For a snack, a shake made with an isolate and water or unsweetened almond milk lands around 100 to 140 calories. With skim milk, about 190 to 210. As a meal replacement, 300 to 400 calories with fruit, milk and a fat source is reasonable. The right number depends on your goals and the rest of your day."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is plant protein lower in calories than whey?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Not usually. Pea protein isolate can match whey, and Naked Pea lists about 27 g of protein for 120 calories. Most flavored plant blends are higher in calories per gram of protein, around 14 to 18 g per 100 calories, because of added fiber, fats, flavors and seed proteins."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Are there protein powders under 100 calories?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Klean Isolate lists about 85 calories for 20 g of protein, Isopure Infusions about 90 for 20 g and Isopure Zero Carb about 100 for 25 g, per labels at the time of writing. Smaller scoops of other powders can also come in under 100, but check that protein per 100 calories stays above about 20 g."
+          }
+        }
+      ],
+    },
+    {
+      "@type": "Article",
+      headline: title,
+      author: authorSchema(),
+      datePublished: dates.published,
+      dateModified: dates.modified,
+      publisher: { "@type": "Organization", name: SITE_NAME, url: SITE_URL },
+    },
+    {
+      "@type": "ItemList",
+      name: title,
+      numberOfItems: PRODUCTS.length,
+      itemListElement: PRODUCTS.map((product, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name: product.name,
+        url: new URL(`#${product.id}`, Astro.url).toString(),
+      })),
+    },
+    ...PRODUCTS.map((product) => ({
+      "@type": "Product",
+      name: product.name,
+      description: product.description,
+      brand: {
+        "@type": "Brand",
+        name: product.brand ?? product.name.split(" ")[0],
+      },
+    })),
+  ],
+};
+---
+
+<Layout
+  title={title}
+  description={description}
+  ogType="article"
+  article={{
+    publishedTime: dates.published,
+    modifiedTime: dates.modified,
+    author: author.name,
+    section: "By Goal",
+    tags: [
+      "low calorie protein powder",
+      "lowest calorie protein powder",
+      "protein powder low in calories",
+      "best low calorie protein shake"
+    ],
+  }}
+  jsonLd={schema}
+>
+  <article class="relative overflow-hidden">
+    <ArticleHeader kicker={"Buyer's Guide"} badge={"Updated November 2026"} author={author} dates={dates} mobileAd={false}>
+      <Fragment slot="title">Best Low Calorie Protein Powder</Fragment>
+      Six powders ranked on one number, grams of protein per 100 calories, with the label maths explained and what to mix them with so the shake stays lean.
+    </ArticleHeader>
+
+    <TableOfContents>
+      <a href="#quick-comparison">Quick Comparison</a>
+      <a href="#top-picks">Our Top Picks</a>
+      <a href="#protein-per-100-calories">Protein per 100 Calories</a>
+      <a href="#lowest-calorie-type">Lowest-Calorie Types</a>
+      <a href="#weight-loss">For Weight Loss</a>
+      <a href="#under-150-calories">Shakes Under 150 Calories</a>
+      <a href="#sweeteners">Sweeteners and Calories</a>
+      <a href="#buying-on-amazon">Buying on Amazon</a>
+      <a href="#how-we-picked">How We Picked</a>
+      <a href="#mistakes">Common Mistakes</a>
+      <a href="#faq">FAQ</a>
+    </TableOfContents>
+
+    <!-- Content -->
+    <div class="max-w-3xl mx-auto px-4 pb-16 lg:pb-24">
+      <div class="prose prose-lg prose-blue max-w-none text-gray-700 leading-relaxed">
+        <p class="lede">
+          The best low calorie protein powder is <strong>Isopure Zero Carb Unflavored</strong>, which lists about 25 g of protein for 100 calories per scoop, the practical ceiling for any powder. <strong>Klean Isolate</strong> is a close, NSF-certified second at about 20 g for 85 calories. Judge every powder by protein per 100 calories rather than calories per scoop, because a small scoop can look low in calories while delivering little protein.
+        </p>
+
+        <QuickPicks products={PRODUCTS} />
+
+        <div id="quick-comparison" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            1. Quick Comparison: The Best Low Calorie Protein Powders
+          </h2>
+
+          <p>
+            The short version: unflavored whey isolate gets you closest to pure protein, so it dominates this list. Isopure Zero Carb and Klean Isolate lead on protein per 100 calories, NOW Sports is the value pick at only slightly lower efficiency, Isopure Infusions and Dymatize ISO100 are the flavored options, and Naked Pea is the plant powder that keeps pace with whey. Anything above about 20 g of protein per 100 calories is excellent.
+          </p>
+
+          <div class="overflow-hidden border border-gray-200 rounded-2xl my-8">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Product</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Protein per serving</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Calories (label)</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Protein per 100 kcal</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Best for</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Isopure Zero Carb (Unflavored)</td>
+                    <td class="px-4 py-4 text-gray-700">About 25 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 100</td>
+                    <td class="px-4 py-4 text-gray-700">About 25 g</td>
+                    <td class="px-4 py-4 text-gray-700">Best overall</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Klean Athlete Klean Isolate</td>
+                    <td class="px-4 py-4 text-gray-700">About 20 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 85</td>
+                    <td class="px-4 py-4 text-gray-700">About 23.5 g</td>
+                    <td class="px-4 py-4 text-gray-700">NSF Certified for Sport</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Naked Pea (Unflavored)</td>
+                    <td class="px-4 py-4 text-gray-700">About 27 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 120</td>
+                    <td class="px-4 py-4 text-gray-700">About 22.5 g</td>
+                    <td class="px-4 py-4 text-gray-700">Best plant-based</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Isopure Infusions</td>
+                    <td class="px-4 py-4 text-gray-700">About 20 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 90</td>
+                    <td class="px-4 py-4 text-gray-700">About 22 g</td>
+                    <td class="px-4 py-4 text-gray-700">Best clear, flavored</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">NOW Sports Whey Isolate (Unflavored)</td>
+                    <td class="px-4 py-4 text-gray-700">24 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 110</td>
+                    <td class="px-4 py-4 text-gray-700">About 22 g</td>
+                    <td class="px-4 py-4 text-gray-700">Best value</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Dymatize ISO100</td>
+                    <td class="px-4 py-4 text-gray-700">About 25 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 110-120</td>
+                    <td class="px-4 py-4 text-gray-700">About 21-23 g</td>
+                    <td class="px-4 py-4 text-gray-700">Best creamy flavored</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <p>
+            Calories and protein are per the label at the time of writing and vary by flavor; protein per 100 kcal is our arithmetic. For comparison, a typical whey concentrate gives about 18 to 20 g per 100 calories, a plant blend 14 to 18 g, and a meal replacement shake often under 10 g. Our <a href="/best-whey-protein-isolate/">best whey protein isolate</a> guide covers more isolates, and our <a href="/best-protein-powder-for-weight-loss/">best protein powder for weight loss</a> guide covers the wider goal.
+          </p>
+        </div>
+
+        <!-- Picks -->
+        <div id="top-picks" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            2. The Best Low Calorie Protein Powders, Ranked
+          </h2>
+
+          <p>
+            Every pick gives at least 21 g of protein per 100 calories on its label at the time of writing. We ranked on that figure first, then certification, ingredients and cost per 25 g. Nutrition figures come from each label and vary by flavor, so check the panel on the exact tub you buy. We did not test any product ourselves; taste and mixing notes reflect what buyers report.
+          </p>
+
+          {PRODUCTS.map((product, index) => (
+            <ProductCard product={product} rank={index + 1} />
+          ))}
+        </div>
+
+        <div id="protein-per-100-calories" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            3. Why Protein per 100 Calories Is the Right Measure
+          </h2>
+
+          <p>
+            Calories per scoop is the number most people look at, and it is the wrong one. A scoop is whatever size the brand decides. A 15 g scoop of a mediocre blend can list 60 calories and look leaner than a 30 g scoop of isolate at 110, while delivering only 9 g of protein. Dividing protein by calories and multiplying by 100 gives you a single number you can compare across any product, flavor or serving size.
+          </p>
+
+          <p>
+            There is a hard ceiling on that number. Food labels count protein at 4 calories per gram, so pure protein works out to 25 g per 100 calories. No powder can genuinely beat that; the only way to get close is to remove nearly all the fat and carbohydrate, which is what whey isolate does. Isopure Zero Carb's label sits right on the ceiling. Every other powder falls short in proportion to how much fat, sugar, fiber or flavoring it carries.
+          </p>
+
+          <h3 class="text-2xl font-bold text-gray-900 mt-10 mb-4">When a label beats the ceiling</h3>
+
+          <p>
+            You will occasionally see a label that appears to break 25 g per 100 calories, such as 26 g of protein for 100 calories. That comes from rounding, not magic. FDA rules have labels round calories above 50 to the nearest 10 and protein to the nearest gram, so a scoop with 104 real calories can show 100, and one with 25.6 g of protein can show 26. The difference between two products at 24 and 25 g per 100 calories is within that noise, so do not overthink it.
+          </p>
+
+          <p>
+            Labels also carry an allowed margin of error. Under FDA compliance rules, the real calorie content can be up to 20 percent above the declared figure before a product is considered misbranded, and protein must be at least 80 percent of the declared amount. Reputable brands land much closer than that, which is one reason we favor certified products, but it is a reason to treat label figures as good estimates rather than precise measurements. Our <a href="/how-much-protein-do-i-need/">how much protein do I need</a> guide helps you set a target that has room for that error.
+          </p>
+        </div>
+
+        <div id="lowest-calorie-type" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            4. Which Type of Protein Powder Is Lowest in Calories?
+          </h2>
+
+          <p>
+            Whey isolate is the lowest-calorie mainstream protein, typically 90 percent protein or more by weight, with almost no fat or lactose. Whey concentrate is usually 70 to 80 percent protein and brings a gram or two more fat and carbohydrate per scoop, which lowers it to about 18 to 20 g of protein per 100 calories. Casein sits around the same level as concentrate. Egg white powder is close to isolate on calories, though it is high in sodium.
+          </p>
+
+          <p>
+            Plant isolates can match whey on this measure. Pea protein isolate is around 80 to 85 percent protein, and Naked Pea's label of about 27 g in 120 calories puts it level with flavored whey isolates. Soy isolate is similar. Blends are where plant powders lose ground: added fiber, seed proteins, gums, flavors and sweeteners push most flavored plant blends down to 14 to 18 g per 100 calories. Hemp, almond and pumpkin seed proteins are lower still, because they keep fat and fiber from the seed.
+          </p>
+
+          <div class="bg-gray-900 text-white rounded-2xl p-6 lg:p-8 my-8">
+            <p class="text-xs font-black uppercase tracking-widest text-[#38BDF8] mb-3">A note on collagen</p>
+            <p class="text-xl font-bold text-white mb-3">High on the label, low on usefulness</p>
+            <p class="text-gray-300 leading-relaxed m-0">Collagen peptides list about 18 g of protein for roughly 70 calories, which looks like the best ratio of all. But collagen lacks tryptophan and is low in leucine, so it does not support muscle the way whey or pea does. Count it as a top-up, not as your low-calorie main protein.</p>
+          </div>
+
+          <p>
+            Clear whey drinks deserve a mention because they are often marketed as light. Most are whey isolate with flavor, so they land around 20 g of protein for 80 to 100 calories, which is excellent. Meal replacement shakes and mass gainers sit at the other end: they are designed to supply calories, so their protein per 100 calories is low by design. That is fine for their purpose but wrong for this one. Our <a href="/best-clear-protein-powder/">best clear protein powder</a> guide compares clear isolates in detail.
+          </p>
+        </div>
+
+        <div id="weight-loss" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            5. Is Low Calorie Protein Powder Good for Weight Loss?
+          </h2>
+
+          <p>
+            It can help, for three reasons supported by research, but none of them is the powder itself. First, protein is the most filling macronutrient per calorie in most studies, so a high-protein snack tends to curb appetite better than the same calories from carbohydrate or fat. Second, protein has the highest thermic effect of food: commonly cited estimates put the energy cost of digesting it at about 20 to 30 percent of its calories, against single digits for fat and carbohydrate.
+          </p>
+
+          <p>
+            Third, and most important, eating enough protein in a calorie deficit helps you keep muscle while losing fat. Reviews of dieting studies suggest higher intakes, often around 1.6 g per kilogram of body weight per day or more for people doing resistance training, protect lean mass better than lower intakes. A lean shake makes that target easier to hit without spending a large share of your calorie budget, which is the real advantage of a low-calorie powder over a richer one.
+          </p>
+
+          <p>
+            What protein powder will not do is cause weight loss on its own. Adding a 110-calorie shake to an unchanged diet adds 110 calories. The benefit comes when the shake replaces something less filling, such as a pastry, a sugary coffee or an afternoon snack, or when it helps you reach a protein target that keeps hunger under control. Products marketed as fat-burning protein add stimulants or extras that do little; our <a href="/best-fat-burning-protein-powder/">fat-burning protein powder</a> guide explains why plain isolate is usually the better buy.
+          </p>
+
+          <p>
+            If you are using a GLP-1 medication, eating very little, or managing diabetes, kidney disease or another condition, talk to your doctor or a registered dietitian about how much protein you need and how to get it. Our <a href="/best-protein-powder-for-glp-1/">best protein powder for GLP-1</a> guide covers that situation, and our sibling guide on <a href="/best-protein-powder-for-body-recomposition/">protein powder for body recomposition</a> covers losing fat while building muscle.
+          </p>
+        </div>
+
+        <div id="under-150-calories" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            6. How to Keep a Protein Shake Under 150 Calories
+          </h2>
+
+          <p>
+            The powder is often the smallest part of a shake's calories. A 100-calorie scoop can become a 400-calorie drink with whole milk, a banana and a spoon of peanut butter. None of those are bad foods, and a bigger shake can be a sensible meal, but if you bought a low-calorie powder to keep a snack light, the mixer and add-ins decide whether that happens. The table shows typical figures to plan around.
+          </p>
+
+          <div class="overflow-hidden border border-gray-200 rounded-2xl my-8">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Mixer or add-in</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Typical calories</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Protein added</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Water, 1 cup</td>
+                    <td class="px-4 py-4 text-gray-700">0</td>
+                    <td class="px-4 py-4 text-gray-700">0 g</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Unsweetened almond milk, 1 cup</td>
+                    <td class="px-4 py-4 text-gray-700">About 30-40</td>
+                    <td class="px-4 py-4 text-gray-700">About 1 g</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Unsweetened soy milk, 1 cup</td>
+                    <td class="px-4 py-4 text-gray-700">About 80</td>
+                    <td class="px-4 py-4 text-gray-700">About 7 g</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Skim milk, 1 cup</td>
+                    <td class="px-4 py-4 text-gray-700">About 80-90</td>
+                    <td class="px-4 py-4 text-gray-700">About 8 g</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">2% milk, 1 cup</td>
+                    <td class="px-4 py-4 text-gray-700">About 120</td>
+                    <td class="px-4 py-4 text-gray-700">About 8 g</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Oat milk, original, 1 cup</td>
+                    <td class="px-4 py-4 text-gray-700">About 120</td>
+                    <td class="px-4 py-4 text-gray-700">About 2-3 g</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Medium banana</td>
+                    <td class="px-4 py-4 text-gray-700">About 105</td>
+                    <td class="px-4 py-4 text-gray-700">About 1 g</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Peanut butter, 1 tbsp</td>
+                    <td class="px-4 py-4 text-gray-700">About 95</td>
+                    <td class="px-4 py-4 text-gray-700">About 4 g</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <p>
+            Figures are typical values; check your cartons, since brands vary. The leanest approach is water or unsweetened almond milk with ice, which keeps an isolate shake around 100 to 140 calories. Skim milk and unsweetened soy milk are good middle options because they add protein along with their calories, so protein per 100 calories stays high. Oat milk is the one to watch: it adds calories with little protein, which pulls the ratio down sharply.
+          </p>
+
+          <h3 class="text-2xl font-bold text-gray-900 mt-10 mb-4">Lean ways to add flavor and body</h3>
+
+          <p>
+            Unflavored isolates are leanest but bland. Unsweetened cocoa powder adds chocolate flavor for about 10 to 15 calories a tablespoon. Instant coffee, cinnamon, vanilla extract and a few frozen berries add taste for very little. Ice and a pinch of xanthan gum, or simply blending longer, make a thin isolate feel thicker without adding calories. For ideas, our <a href="/best-protein-powder-for-smoothies/">best protein powder for smoothies</a> guide covers blends that taste good without turning into dessert.
+          </p>
+        </div>
+
+        <div id="sweeteners" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            7. Do Low Calorie Protein Powders Use Artificial Sweeteners?
+          </h2>
+
+          <p>
+            Most flavored low-calorie powders do, because sugar costs calories and non-caloric sweeteners do not. Sucralose is the most common in mainstream whey isolates; stevia and monk fruit are used by brands marketing a cleaner label. Each adds sweetness for essentially zero calories, which is why flavored isolates can stay near 100 to 120 calories. If a low-calorie powder lists no sweetener at all and is flavored, check for sugar on the panel.
+          </p>
+
+          <p>
+            Whether those sweeteners matter is a personal call. Regulators in the US consider sucralose, stevia extracts and monk fruit extract acceptable at normal intakes, though research on long-term effects of non-sugar sweeteners continues and the World Health Organization has advised against relying on them for weight control. Some people also find they trigger cravings or digestive discomfort, and sugar alcohols such as erythritol can cause bloating in larger amounts.
+          </p>
+
+          <p>
+            If you would rather avoid them, the answer is unflavored isolate. Isopure Zero Carb Unflavored, Klean Isolate, NOW Sports Whey Isolate and Naked Pea all list no sweetener, and they are the leanest options on this page anyway. You add the flavor yourself with cocoa, coffee or fruit. Our <a href="/best-protein-powder-without-artificial-sweeteners/">best protein powder without artificial sweeteners</a> guide ranks more options, and our <a href="/best-sugar-free-protein-powder/">best sugar-free protein powder</a> guide covers the sugar side.
+          </p>
+        </div>
+
+        <div id="buying-on-amazon" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            8. Buying Low Calorie Protein Powder on Amazon: Do the Maths From the Label
+          </h2>
+
+          <p>
+            Amazon titles love calorie claims such as 100 calories or zero carb, and they are usually true for one flavor and one scoop size. Scroll through the images to the Nutrition Facts or Supplement Facts panel, check that it matches the flavor you have selected, and read three numbers: serving size in grams, calories and protein. Then divide protein by calories and multiply by 100. If that number is under about 18, the powder is not really low calorie in any useful sense.
+          </p>
+
+          <p>
+            Look out for flavor variation traps. A listing headed by an unflavored or vanilla panel at 100 calories may let you select a cookies and cream or peanut butter flavor at 130 to 150, and some brands' dessert flavors add a few grams of sugar or fat. Also check Ships from and Sold by under the Add to Cart button: you want the brand or Amazon. Third-party sellers raise the risk of old stock and counterfeits, and a counterfeit label tells you nothing about the calories inside. When the tub arrives, compare the printed panel with the listing and check the lot and best-by dates.
+          </p>
+
+          <h3 class="text-2xl font-bold text-gray-900 mt-10 mb-4">Size, price and Subscribe and Save</h3>
+
+          <p>
+            The price shown on Amazon often belongs to a different size from the one in the photos, so confirm the weight before comparing. Then work out cost per 25 g of protein: price divided by servings, divided by protein per serving, multiplied by 25. A lean isolate often costs more per gram than a concentrate, and that is the premium you pay for the lower calories. Our <a href="/tools/protein-cost-calculator/">protein cost calculator</a> does the sums.
+          </p>
+
+          <p>
+            Subscribe and Save typically knocks 5 percent off repeat orders, and up to 15 percent once you have five or more subscriptions in a month. For a staple isolate you buy every month, it closes some of the price gap with cheaper concentrates. Recheck the label image now and then, because reformulations can change calories without the listing title changing. Our <a href="/amazon-protein-powder/">Amazon protein powder</a> guide covers more of the listing traps.
+          </p>
+        </div>
+
+        <div id="how-we-picked" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            9. How We Picked
+          </h2>
+
+          <p>
+            We started from protein powders sold on Amazon US and calculated protein per 100 calories from each label or brand panel at the time of writing. Only products at 21 g or above made the list. We then ranked on that figure, third-party certification (NSF Certified for Sport, Informed Sport or Informed Choice where the brand lists it), complete amino acid profile, ingredient list and cost per 25 g. We excluded collagen as a main pick because it is an incomplete protein.
+          </p>
+
+          <p>
+            We did not test any product; taste and mixing notes are what buyers report. Where sources gave different calorie figures for the same product, we show the range. Our <a href="/methodology/">methodology</a> page explains how we rank from published data, and our sibling guide to the <a href="/best-low-sodium-protein-powder/">best low sodium protein powder</a> ranks many of the same isolates on a different label line.
+          </p>
+        </div>
+
+        <!-- Common Mistakes -->
+        <div id="mistakes" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            10. Common Mistakes to Avoid
+          </h2>
+
+          <div class="space-y-6 my-8">
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Comparing calories per scoop</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Scoops vary from about 15 g to 45 g, so calories per scoop says little. Divide protein by calories and multiply by 100. Anything above about 20 g of protein per 100 calories is excellent; below about 15 g, the powder is not really a low-calorie protein.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Undoing the powder with the mixer</h3>
+              <p class="text-gray-700 text-sm m-0">
+                A 100-calorie scoop in whole milk with a banana and peanut butter can pass 400 calories. Water or unsweetened almond milk keeps an isolate shake near 100 to 140. Skim or unsweetened soy milk add protein along with their calories, so they keep the ratio high.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Counting collagen as a lean main protein</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Collagen peptides list about 18 g of protein for roughly 70 calories, but collagen lacks tryptophan and is low in leucine. It does not support muscle like whey or pea. Use it as a top-up, not as the lean protein you rely on in a diet.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Assuming every flavor has the same calories</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Brands often lead listings with the leanest flavor. Dessert flavors can add sugar or fat and 20 to 40 calories per scoop. Check the panel for the exact flavor you select, not the one shown first in the photos.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Expecting the powder to cause weight loss</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Adding a shake to an unchanged diet adds calories. The benefit comes from replacing a less filling snack, or from reaching a protein target that controls hunger and protects muscle in a deficit. Plan where the shake fits before you buy it.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ -->
+        <div id="faq" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            11. Frequently Asked Questions
+          </h2>
+
+          <div class="faq-list">
+            <details class="faq-item">
+              <summary><h3>What is the lowest calorie protein powder?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  Isopure Zero Carb Unflavored lists about 25 g of protein for 100 calories per scoop, the practical ceiling, since protein counts as 4 calories per gram. Klean Isolate lists about 20 g for 85 calories. Among flavored powders, Isopure Infusions lists about 20 g for 90 calories, per labels at the time of writing.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>Which protein powder has the most protein per calorie?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  Unflavored whey isolates lead, at roughly 22 to 25 g of protein per 100 calories. Isopure Zero Carb Unflavored is about 25 g, Klean Isolate about 23.5 g and NOW Sports Whey Isolate about 22 g. Naked Pea, at about 22.5 g, is the best plant option we found.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>Is whey isolate lower in calories than whey concentrate?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  Yes, slightly. Isolate is typically 90 percent protein or more, while concentrate is about 70 to 80 percent, with a little more fat and lactose. That usually means 10 to 30 more calories per 25 g of protein for concentrate, or about 18 to 20 g of protein per 100 calories versus 22 to 25 g for isolate.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>Is low calorie protein powder good for weight loss?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  It can help. Protein is filling, costs more energy to digest than carbohydrate or fat, and helps preserve muscle in a calorie deficit. A lean shake makes a high protein target easier to hit within your calories. It only helps if it replaces something or fits your plan; adding it on top adds calories.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>How many calories should a protein shake have?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  For a snack, a shake made with an isolate and water or unsweetened almond milk lands around 100 to 140 calories. With skim milk, about 190 to 210. As a meal replacement, 300 to 400 calories with fruit, milk and a fat source is reasonable. The right number depends on your goals and the rest of your day.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>Is plant protein lower in calories than whey?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  Not usually. Pea protein isolate can match whey, and Naked Pea lists about 27 g of protein for 120 calories. Most flavored plant blends are higher in calories per gram of protein, around 14 to 18 g per 100 calories, because of added fiber, fats, flavors and seed proteins.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>Are there protein powders under 100 calories?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  Yes. Klean Isolate lists about 85 calories for 20 g of protein, Isopure Infusions about 90 for 20 g and Isopure Zero Carb about 100 for 25 g, per labels at the time of writing. Smaller scoops of other powders can also come in under 100, but check that protein per 100 calories stays above about 20 g.
+                </p>
+              </div>
+            </details>
+
+          </div>
+        </div>
+
+        <!-- Related Guides -->
+        <div class="mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">Related Guides</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <a href="/best-protein-powder-for-weight-loss/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#FF4500] font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Protein Powder for Weight Loss</h3>
+              <p class="text-gray-500 text-sm mt-2">Lean, filling powders for a calorie deficit.</p>
+            </a>
+            <a href="/best-protein-powder-for-body-recomposition/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#1E90FF] font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Protein Powder for Body Recomposition</h3>
+              <p class="text-gray-500 text-sm mt-2">Losing fat while building muscle: the protein evidence and picks.</p>
+            </a>
+            <a href="/best-whey-protein-isolate/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#10B981] font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Whey Protein Isolate</h3>
+              <p class="text-gray-500 text-sm mt-2">The isolates that lead on purity, testing and price.</p>
+            </a>
+          </div>
+        </div>
+
+        <!-- Closing -->
+        <div class="mt-16 bg-gray-900 text-white rounded-2xl p-6 md:p-8">
+          <h2 class="text-2xl font-black text-white mb-4">The Bottom Line</h2>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            The leanest protein powders are unflavored whey isolates, and the best way to compare them is protein per 100 calories, which tops out at 25 g. Isopure Zero Carb Unflavored sits on that ceiling, Klean Isolate adds NSF certification, NOW Sports is the value buy, Isopure Infusions and Dymatize ISO100 cover flavor, and Naked Pea keeps up for dairy-free buyers.
+          </p>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            Then protect the advantage you paid for: mix with water or an unsweetened milk, keep add-ins modest, and check the panel for the exact flavor you buy. A lean shake helps weight loss when it replaces something or helps you hit a protein target, not when it is added on top. If you have a medical condition or take medication that affects appetite, talk to your doctor or a registered dietitian first.
+          </p>
+        </div>
+
+        <MoreInCategory category="By Goal" links={moreInCategory} />
+
+        <AuthorBio />
+      </div>
+    </div>
+  </article>
+</Layout>
