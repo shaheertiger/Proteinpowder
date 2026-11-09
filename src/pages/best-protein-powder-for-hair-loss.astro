@@ -1,0 +1,855 @@
+---
+import Layout from "../layouts/Layout.astro";
+import ArticleHeader from "../components/ArticleHeader.astro";
+import TableOfContents from "../components/TableOfContents.astro";
+import ProductCard from "../components/ProductCard.astro";
+import MoreInCategory from "../components/MoreInCategory.astro";
+import { AUTHORS, DEFAULT_AUTHOR, authorSchema } from "../data/authors";
+import { SITE_NAME, SITE_URL } from "../data/site";
+import QuickPicks from "../components/QuickPicks.astro";
+import AuthorBio from "../components/AuthorBio.astro";
+import { pageDates } from "../data/dates";
+
+const moreInCategory = [
+  {
+    "title": "Best Protein Powder for Women",
+    "url": "/best-protein-powder-for-women/"
+  },
+  {
+    "title": "Best Protein Powder for Menopause",
+    "url": "/best-protein-powder-for-menopause/"
+  },
+  {
+    "title": "Best Protein Powder for Weight Loss",
+    "url": "/best-protein-powder-for-weight-loss/"
+  },
+  {
+    "title": "Best NSF Certified Protein Powder",
+    "url": "/best-nsf-certified-protein-powder/"
+  },
+  {
+    "title": "Best Whole Food Protein Powder",
+    "url": "/best-whole-food-protein-powder/"
+  }
+];
+const author = AUTHORS[DEFAULT_AUTHOR];
+const dates = pageDates(Astro.url.pathname, { published: "2026-11-09", modified: "2026-11-09" });
+const title = "Best Protein Powder for Hair Loss: When Protein Actually Helps";
+const description =
+  "The best protein powder for hair loss, and when protein actually helps: telogen effluvium, iron, biotin and zinc, the creatine and DHT study, and picks.";
+
+const PRODUCTS: {
+  id: string;
+  name: string;
+  brand?: string;
+  badge: string;
+  category: string;
+  description: string;
+  pros: string[];
+  cons: string[];
+  bottomLine: string;
+  specs?: Record<string, string>;
+  rating?: number;
+  reviewCount?: number;
+  amazonUrl?: string;
+}[] = [
+  {
+    "id": "thorne-whey-protein-isolate",
+    "name": "Thorne Whey Protein Isolate",
+    "brand": "Thorne",
+    "badge": "Best Overall",
+    "category": "Whey protein isolate",
+    "description": "Thorne's whey isolate pairs a short ingredient list with NSF Certified for Sport status, per the brand and NSF at the time of writing, which covers banned substances, label accuracy and contaminant screening. It delivers about 21 g of complete protein per scoop, with no creatine. That certification matters for this topic, because adulterated sports supplements are a known source of hidden anabolic ingredients that can speed up pattern hair loss.",
+    "pros": [
+      "NSF Certified for Sport, per the brand (check your lot)",
+      "Complete protein with no creatine",
+      "Isolate is low in lactose for most people"
+    ],
+    "cons": [
+      "Premium cost per 25 g of protein",
+      "About 21 g per scoop, less than some rivals",
+      "Not for milk allergy"
+    ],
+    "bottomLine": "The safest, simplest way to close a protein gap while your hair recovers.",
+    "specs": {
+      "Protein / serving": "About 21 g (label)",
+      "Creatine": "None",
+      "Certification": "NSF Certified for Sport (brand)",
+      "Best for": "Most people"
+    }
+  },
+  {
+    "id": "momentous-whey-protein-isolate",
+    "name": "Momentous Grass-Fed Whey Protein Isolate",
+    "brand": "Momentous",
+    "badge": "Best Low-Calorie",
+    "category": "Grass-fed whey protein isolate",
+    "description": "Momentous uses grass-fed whey isolate with an added enzyme blend, sweetened with monk fruit and stevia in flavored versions. The Chocolate label lists 20 g of protein and 90 calories in a 26.4 g scoop, per the label at the time of writing, which makes it efficient for anyone eating less during weight loss. It is NSF Certified for Sport, per the brand. The price is the drawback: it is one of the most expensive whey isolates per gram.",
+    "pros": [
+      "20 g of protein in about 90 calories, per the label",
+      "NSF Certified for Sport, per the brand",
+      "No artificial sweeteners in flavored versions"
+    ],
+    "cons": [
+      "Among the highest cost per 25 g of protein",
+      "Stevia and monk fruit aftertaste for some buyers",
+      "Small tubs run out quickly"
+    ],
+    "bottomLine": "The best protein per calorie for people dieting carefully.",
+    "specs": {
+      "Protein / serving": "20 g (label)",
+      "Creatine": "None",
+      "Certification": "NSF Certified for Sport (brand)",
+      "Best for": "Low-calorie diets"
+    }
+  },
+  {
+    "id": "optimum-nutrition-gold-standard-100-whey",
+    "name": "Optimum Nutrition Gold Standard 100% Whey",
+    "brand": "Optimum Nutrition",
+    "badge": "Best Budget",
+    "category": "Whey blend (isolate, concentrate, peptides)",
+    "description": "The best-selling whey on Amazon by most estimates. Per the label at the time of writing, a scoop of about 30 to 31 g provides about 24 g of protein and 120 calories, with about 1 g of sugar. Optimum Nutrition promotes it as Informed Choice certified. The standard version has no creatine, but the brand also sells a Gold Standard with added creatine, so check the product name on the label image before you buy.",
+    "pros": [
+      "About 24 g of protein per scoop at a budget cost per gram",
+      "Informed Choice certified, per the brand",
+      "Huge flavor range and frequent discounts"
+    ],
+    "cons": [
+      "A creatine version sits in some of the same listings",
+      "Contains whey concentrate, so more lactose than isolate",
+      "Sweetened with sucralose and acesulfame potassium"
+    ],
+    "bottomLine": "The best value for a long recovery, as long as you buy the creatine-free version.",
+    "specs": {
+      "Protein / serving": "About 24 g (label)",
+      "Creatine": "None in the standard version",
+      "Certification": "Informed Choice (brand; confirm flavor)",
+      "Best for": "Budget"
+    }
+  },
+  {
+    "id": "premier-protein-100-whey-chocolate-milkshake",
+    "name": "Premier Protein 100% Whey Protein Powder, Chocolate Milkshake",
+    "brand": "Premier Protein",
+    "badge": "Most Protein per Serving",
+    "category": "Whey isolate and concentrate blend",
+    "description": "Per the label at the time of writing, a two-scoop serving provides 30 g of protein, about 150 calories and 1 g of sugar, from whey protein isolate and concentrate, sweetened with sucralose and acesulfame potassium. A large single serving is useful for people who struggle to hit a protein target, and the brand is familiar to many bariatric and GLP-1 patients from its ready-to-drink shakes.",
+    "pros": [
+      "30 g of protein per serving, the most here",
+      "Familiar taste and low sugar, per the label",
+      "Budget-to-mid cost per gram"
+    ],
+    "cons": [
+      "Two-scoop serving can be a lot for small appetites",
+      "Artificial sweeteners",
+      "No sport certification we could confirm"
+    ],
+    "bottomLine": "The easiest big protein hit when you need to catch up.",
+    "specs": {
+      "Protein / serving": "30 g per 2 scoops (label)",
+      "Creatine": "None listed",
+      "Certification": "Check certifier databases",
+      "Best for": "Big single servings"
+    }
+  },
+  {
+    "id": "naked-nutrition-naked-egg",
+    "name": "Naked Egg White Protein (Unflavored)",
+    "brand": "Naked Nutrition",
+    "badge": "Best Dairy-Free",
+    "category": "Dried egg white protein",
+    "description": "Naked Egg is dried egg white and nothing else in the unflavored version, per the brand. A two-scoop serving of about 31 g delivers about 25 g of protein in about 110 calories, fat-free and unsweetened. Egg white is a complete, high-quality protein, which makes it the best option here for people who avoid dairy but still want an animal protein, and the plain base disappears into smoothies, oats or baking.",
+    "pros": [
+      "Complete protein with one ingredient",
+      "Dairy-free and unsweetened",
+      "Versatile in cooking and smoothies"
+    ],
+    "cons": [
+      "Not for egg allergy",
+      "Plain taste in water",
+      "No sport certification we could confirm"
+    ],
+    "bottomLine": "The best complete protein for dairy-free diets.",
+    "specs": {
+      "Protein / serving": "About 25 g per 2 scoops (brand)",
+      "Creatine": "None",
+      "Certification": "No sport certification confirmed",
+      "Best for": "Dairy-free"
+    }
+  },
+  {
+    "id": "truvani-organic-plant-based-protein",
+    "name": "Truvani Organic Plant Based Protein Powder",
+    "brand": "Truvani",
+    "badge": "Best Vegan",
+    "category": "Organic pea, pumpkin seed and chia protein",
+    "description": "Truvani's vanilla lists organic pea protein, organic vanilla, organic pumpkin seed protein, organic monk fruit and organic chia seed protein, with about 20 g of protein in roughly 120 to 140 calories per serving, per retailer listings at the time of writing. Vegans are among the groups more likely to run low on protein, iron and zinc, and a pea-based blend is the most practical way to add a complete plant protein. The brand says it publishes third-party test results.",
+    "pros": [
+      "Plant blend with a short organic ingredient list",
+      "No artificial sweeteners or added hair vitamins",
+      "Brand publishes third-party test results"
+    ],
+    "cons": [
+      "About 20 g of protein per serving",
+      "Premium cost per 25 g",
+      "Plant protein needs slightly more per day than whey for the same muscle effect"
+    ],
+    "bottomLine": "The best plant option for vegans whose protein intake has slipped.",
+    "specs": {
+      "Protein / serving": "About 20 g (listing)",
+      "Creatine": "None",
+      "Certification": "Brand third-party testing",
+      "Best for": "Vegan diets"
+    }
+  }
+];
+
+const schema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Home",
+          item: `${SITE_URL}/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Best Lists",
+          item: `${SITE_URL}/best-of/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 3,
+          name: "Best Protein Powder for Hair Loss",
+          item: `${SITE_URL}/best-protein-powder-for-hair-loss/`,
+        },
+      ],
+    },
+    {
+      "@type": "FAQPage",
+      mainEntity: [
+        {
+          "@type": "Question",
+          "name": "Can protein powder help with hair loss?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Only if your hair loss is linked to low protein or calorie intake, such as telogen effluvium after crash dieting, bariatric surgery or rapid weight loss. In that case, a complete protein powder can help you reach your target. It will not help pattern baldness or alopecia areata, and it will not change anything if you already eat enough protein."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does whey protein cause hair loss?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "There is no good evidence that it does. Whey does not contain hormones, and no human study has shown it raises DHT. The real risk is contaminated supplements spiked with anabolic ingredients, which can speed pattern hair loss in people prone to it. A third-party certified whey avoids that risk."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does creatine cause hair loss?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The evidence does not show that it does. A small 2009 study found creatine raised DHT in rugby players but did not measure hair, and it has not been replicated. A small 2025 trial found no meaningful change in DHT or hair measures. If you are worried or treating pattern hair loss, discuss it with your dermatologist."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What protein deficiency causes hair loss?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Not eating enough total protein, often alongside too few calories, can push many hair follicles into their resting phase at once, causing telogen effluvium about two to three months later. Severe deficiency can also make hair thin, dry and brittle. It is most likely after surgery, crash dieting, eating disorders or rapid weight loss."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is collagen good for hair loss?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "There is no good-quality trial evidence that collagen supplements treat hair loss. Collagen counts toward your protein intake, but it is incomplete, lacking tryptophan, so it is a weaker way to fix a protein shortfall than whey, egg or a complete plant blend. Treat hair claims on collagen products as marketing."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How long does it take for hair to grow back after protein deficiency?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Shedding usually settles within about six to nine months after the cause is fixed, and visible regrowth follows over several more months because scalp hair grows only around a centimeter a month. If shedding continues beyond six months or you see patches or scalp changes, see a dermatologist for assessment."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Should I take biotin with protein powder for hair?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Not unless a doctor finds you are deficient, which is rare. Biotin has no proven benefit for hair in people with normal levels, and high doses can interfere with lab tests. If your protein powder or multivitamin already contains biotin, avoid adding a separate hair supplement and tell your doctor before blood tests."
+          }
+        }
+      ],
+    },
+    {
+      "@type": "Article",
+      headline: title,
+      author: authorSchema(),
+      datePublished: dates.published,
+      dateModified: dates.modified,
+      publisher: { "@type": "Organization", name: SITE_NAME, url: SITE_URL },
+    },
+    {
+      "@type": "ItemList",
+      name: title,
+      numberOfItems: PRODUCTS.length,
+      itemListElement: PRODUCTS.map((product, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name: product.name,
+        url: new URL(`#${product.id}`, Astro.url).toString(),
+      })),
+    },
+    ...PRODUCTS.map((product) => ({
+      "@type": "Product",
+      name: product.name,
+      description: product.description,
+      brand: {
+        "@type": "Brand",
+        name: product.brand ?? product.name.split(" ")[0],
+      },
+    })),
+  ],
+};
+---
+
+<Layout
+  title={title}
+  description={description}
+  ogType="article"
+  article={{
+    publishedTime: dates.published,
+    modifiedTime: dates.modified,
+    author: author.name,
+    section: "By Goal",
+    tags: [
+      "protein powder for hair loss",
+      "best protein powder for hair loss",
+      "does whey protein cause hair loss",
+      "protein deficiency hair loss"
+    ],
+  }}
+  jsonLd={schema}
+>
+  <article class="relative overflow-hidden">
+    <ArticleHeader kicker={"Buyer's Guide"} badge={"Updated November 2026"} author={author} dates={dates} mobileAd={false}>
+      <Fragment slot="title">Best Protein Powder for Hair Loss</Fragment>
+      Six certified, creatine-free powders for people whose hair shedding may be linked to low protein intake, plus what the research says about whey, creatine, DHT, biotin, iron and zinc.
+    </ArticleHeader>
+
+    <TableOfContents>
+      <a href="#quick-comparison">Quick Comparison</a>
+      <a href="#top-picks">Our Top Picks</a>
+      <a href="#can-protein-help">Can Protein Help Hair Loss?</a>
+      <a href="#telogen-effluvium">Telogen Effluvium</a>
+      <a href="#does-whey-cause-hair-loss">Whey, Creatine and DHT</a>
+      <a href="#iron-biotin-zinc">Iron, Biotin and Zinc</a>
+      <a href="#how-much-protein">How Much Protein for Hair</a>
+      <a href="#buying-on-amazon">Buying on Amazon</a>
+      <a href="#how-we-picked">How We Picked</a>
+      <a href="#mistakes">Common Mistakes</a>
+      <a href="#faq">FAQ</a>
+    </TableOfContents>
+
+    <!-- Content -->
+    <div class="max-w-3xl mx-auto px-4 pb-16 lg:pb-24">
+      <div class="prose prose-lg prose-blue max-w-none text-gray-700 leading-relaxed">
+        <p class="lede">
+          The best protein powder for hair loss is a plain, third-party-certified whey isolate such as Thorne Whey Protein Isolate, because it fills a protein gap efficiently with no creatine, no megadose biotin and a low risk of contamination. Be clear on what it can do: protein helps only when shedding is linked to not eating enough protein or calories, as after crash dieting, bariatric surgery or rapid weight loss on GLP-1 medication. It will not reverse pattern baldness or alopecia areata, so if your hair is thinning, see a dermatologist first.
+        </p>
+
+        <QuickPicks products={PRODUCTS} />
+
+        <div id="quick-comparison" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            1. Quick Comparison: The Best Protein Powders for Hair Loss
+          </h2>
+
+          <p>
+            The short version: if your diet is short on protein, a complete protein powder is an easy way to close the gap, and the best ones for this job are certified, creatine-free and free of hair-vitamin megadoses. Whey isolate is the most efficient. Egg white and a pea-based plant blend cover dairy-free diets. If you already eat enough protein, a powder will not change your hair, and your next step is a dermatologist, not a different tub.
+          </p>
+
+          <div class="overflow-hidden border border-gray-200 rounded-2xl my-8">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Product</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Protein per serving</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Creatine or added biotin?</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Best for</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Thorne Whey Protein Isolate</td>
+                    <td class="px-4 py-4 text-gray-700">About 21 g</td>
+                    <td class="px-4 py-4 text-gray-700">No creatine (check label for vitamins)</td>
+                    <td class="px-4 py-4 text-gray-700">Most people</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Momentous Grass-Fed Whey Isolate</td>
+                    <td class="px-4 py-4 text-gray-700">20 g</td>
+                    <td class="px-4 py-4 text-gray-700">No creatine</td>
+                    <td class="px-4 py-4 text-gray-700">Low calorie, NSF certified</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Optimum Nutrition Gold Standard 100% Whey</td>
+                    <td class="px-4 py-4 text-gray-700">About 24 g</td>
+                    <td class="px-4 py-4 text-gray-700">Standard version has none</td>
+                    <td class="px-4 py-4 text-gray-700">Budget, Informed Choice</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Premier Protein 100% Whey (Chocolate Milkshake)</td>
+                    <td class="px-4 py-4 text-gray-700">30 g (2 scoops)</td>
+                    <td class="px-4 py-4 text-gray-700">None listed</td>
+                    <td class="px-4 py-4 text-gray-700">Big servings after surgery or GLP-1</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Naked Egg White Protein</td>
+                    <td class="px-4 py-4 text-gray-700">About 25 g (2 scoops)</td>
+                    <td class="px-4 py-4 text-gray-700">None</td>
+                    <td class="px-4 py-4 text-gray-700">Dairy-free animal protein</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Truvani Organic Plant Based Protein</td>
+                    <td class="px-4 py-4 text-gray-700">About 20 g</td>
+                    <td class="px-4 py-4 text-gray-700">None</td>
+                    <td class="px-4 py-4 text-gray-700">Vegan diets</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <p>
+            Figures are per the label at the time of writing and vary by flavor. Optimum Nutrition also sells a version of Gold Standard with added creatine, so check the name on the listing if you want to avoid it. Certifications are per the brand or certifier; check the exact product in the certifier's database. None of these is a hair treatment, and nothing on this page replaces an examination by a doctor or dermatologist.
+          </p>
+        </div>
+
+        <!-- Picks -->
+        <div id="top-picks" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            2. The Best Protein Powders for Hair Loss, Ranked
+          </h2>
+
+          <p>
+            These six are ranked on protein per serving and quality, third-party certification against contamination and banned substances, the absence of creatine and megadose biotin, and how easily each fits a reduced-calorie diet. None is ranked on a hair claim, because no protein powder has trial evidence for regrowing hair. Picks rest on label analysis and certifications rather than hands-on testing; see <a href="/how-we-test/">how we test</a>. Figures are per the label at the time of writing and vary by flavor.
+          </p>
+
+          {PRODUCTS.map((product, index) => (
+            <ProductCard product={product} rank={index + 1} />
+          ))}
+        </div>
+
+        <div id="can-protein-help" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            3. Can Protein Powder Help With Hair Loss?
+          </h2>
+
+          <p>
+            Sometimes, and only for one kind of hair loss. Hair is made mostly of keratin, a protein, and the cells at the base of each hair follicle divide faster than almost any others in the body. When protein or calories run short, the body prioritizes vital functions over hair growth, and more follicles than usual can move from the growing phase into the resting phase at once. A few months later those hairs fall out together. This is called telogen effluvium, and it is the hair loss most clearly tied to diet.
+          </p>
+
+          <p>
+            Severe protein deficiency is uncommon in the United States, but low intake is not. The people most likely to fall short are those on very-low-calorie diets, people recovering from bariatric surgery, people losing weight quickly on GLP-1 medications such as semaglutide or tirzepatide, older adults with small appetites, people with eating disorders, and vegans or vegetarians whose diets are poorly planned. In those situations, a protein powder is a practical way to get intake back up, and our <a href="/how-much-protein-do-i-need/">how much protein do I need</a> guide shows how to set a target.
+          </p>
+
+          <h3 class="text-2xl font-bold text-gray-900 mt-10 mb-4">What protein cannot do</h3>
+
+          <p>
+            Most hair loss is not caused by diet. Male and female pattern hair loss, called androgenetic alopecia, is driven by genetics and the hormone dihydrotestosterone (DHT), and it progresses whether or not you eat plenty of protein. Alopecia areata is autoimmune, producing patchy loss. Thyroid disease, iron deficiency, hormonal changes after pregnancy or menopause, some medications and scalp conditions cause hair loss too. None of these respond to extra protein in someone who already eats enough.
+          </p>
+
+          <p>
+            That is why the first step is diagnosis, not shopping. A dermatologist can tell the difference between shedding and pattern thinning, and a doctor can check for thyroid problems, iron deficiency and other causes with simple blood tests. Proven treatments for pattern hair loss exist, including topical minoxidil and, for men, finasteride, and a dermatologist can also discuss newer options. Starting those early matters more than any supplement.
+          </p>
+
+          <div class="bg-gray-900 text-white rounded-2xl p-6 lg:p-8 my-8">
+            <p class="text-xs font-black uppercase tracking-widest text-[#38BDF8] mb-3">The Rule</p>
+            <p class="text-xl font-bold text-white mb-3">Protein fixes a protein shortfall, not hair loss in general.</p>
+            <p class="text-gray-300 leading-relaxed m-0">If your shedding started two to three months after a crash diet, surgery, illness or rapid weight loss, and your protein intake has been low, adding protein makes sense alongside medical advice. If you already eat enough protein, more will not regrow hair.</p>
+          </div>
+        </div>
+
+        <div id="telogen-effluvium" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            4. Telogen Effluvium: Hair Loss After Dieting, Surgery or GLP-1s
+          </h2>
+
+          <p>
+            Each hair follicle cycles through a long growing phase called anagen, which lasts years on the scalp, a short transition phase, and a resting phase called telogen, which lasts around three months before the hair sheds. At any time most scalp hairs are growing and a minority are resting, and losing roughly 50 to 100 hairs a day is normal. A shock to the body can push a large share of follicles into telogen at the same time, and the shedding shows up about two to three months later.
+          </p>
+
+          <div class="bg-gray-900 text-white rounded-2xl p-6 lg:p-8 my-8">
+            <p class="text-xs font-black uppercase tracking-widest text-[#38BDF8] mb-4">Hair Shedding by the Numbers</p>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+              <div>
+                <p class="text-3xl font-black text-white">50-100</p>
+                <p class="text-gray-400 text-xs mt-1">Hairs shed a day that the American Academy of Dermatology describes as normal</p>
+              </div>
+              <div>
+                <p class="text-3xl font-black text-[#38BDF8]">2-3 mo</p>
+                <p class="text-gray-400 text-xs mt-1">Typical delay between a trigger and telogen effluvium shedding</p>
+              </div>
+              <div>
+                <p class="text-3xl font-black text-white">~3 mo</p>
+                <p class="text-gray-400 text-xs mt-1">Approximate length of the resting (telogen) phase</p>
+              </div>
+              <div>
+                <p class="text-3xl font-black text-[#38BDF8]">6-9 mo</p>
+                <p class="text-gray-400 text-xs mt-1">Common time for shedding to settle once the trigger is gone</p>
+              </div>
+            </div>
+          </div>
+
+          <p>
+            Common triggers include major surgery, high fever or serious illness, childbirth, severe emotional stress, starting or stopping some medications, and rapid weight loss or very low calorie and protein intake. The delay is what makes it confusing: by the time hair starts coming out in the shower, the diet or illness that caused it may be long over. Telogen effluvium does not cause baldness on its own, and once the trigger is removed, shedding usually settles and regrowth follows over months, though it can take a year to look normal again.
+          </p>
+
+          <h3 class="text-2xl font-bold text-gray-900 mt-10 mb-4">Bariatric surgery</h3>
+
+          <p>
+            Hair shedding is common in the first months after weight-loss surgery, when calorie intake is very low and protein targets are hard to meet. Bariatric programs set daily protein goals and often recommend protein shakes to reach them, and they monitor iron, zinc and other nutrients after surgery. Follow your program's targets rather than any general number, and see our <a href="/best-protein-powder-for-bariatric-surgery/">protein powder for bariatric surgery</a> guide for options suited to small, frequent servings.
+          </p>
+
+          <h3 class="text-2xl font-bold text-gray-900 mt-10 mb-4">GLP-1 medications</h3>
+
+          <p>
+            Hair loss was reported more often with semaglutide and tirzepatide than with placebo in clinical trials, generally in a small percentage of participants and more often among those losing weight fastest. The most likely explanation is telogen effluvium from rapid weight loss and reduced intake rather than a direct drug effect, though that is still being studied. Eating enough protein while appetite is suppressed is one of the few things you can control; our <a href="/best-protein-powder-for-glp-1/">protein powder for GLP-1</a> guide covers how to hit a target with low appetite. Mention shedding to your prescriber.
+          </p>
+        </div>
+
+        <div id="does-whey-cause-hair-loss" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            5. Does Whey Protein or Creatine Cause Hair Loss?
+          </h2>
+
+          <p>
+            There is no good evidence that whey protein causes hair loss. The worry comes from gym forums and from a link people draw between bodybuilding, hormones and receding hairlines. Whey does not contain testosterone or DHT, and we found no human study showing whey raises DHT or speeds up pattern hair loss. The real risk with sports supplements is contamination: products that are illegally spiked with anabolic steroids or prohormones can accelerate pattern hair loss in people who are genetically prone to it. Choosing a powder certified by NSF Certified for Sport or Informed Choice guards against that.
+          </p>
+
+          <h3 class="text-2xl font-bold text-gray-900 mt-10 mb-4">The creatine and DHT study</h3>
+
+          <p>
+            Creatine is the supplement with an actual study behind the worry. In 2009, a small trial in 20 college-age rugby players in South Africa found that after a week of creatine loading at 25 g a day, DHT levels rose by about 56 percent, and they remained about 40 percent above baseline after two weeks of a 5 g maintenance dose. Testosterone did not change. The study did not measure hair at all, and it has not been replicated.
+          </p>
+
+          <p>
+            A 12-week randomized, placebo-controlled trial published in 2025, again small at 45 resistance-trained men, gave 5 g of creatine a day and found no meaningful changes in DHT or in hair measures compared with placebo. Taken together, the evidence does not show that creatine causes hair loss, but it is thin in both directions. If you have a strong family history of pattern baldness or are already treating it, it is reasonable to discuss creatine with your dermatologist, or to choose a protein powder without it, which is why every pick here is creatine-free. Our <a href="/best-protein-powder-with-creatine/">protein powder with creatine</a> guide covers the products that include it.
+          </p>
+
+          <p>
+            Collagen is the other ingredient marketed for hair. Collagen peptides are a real protein, but they are incomplete, missing tryptophan, and we found no good-quality trials showing collagen supplements improve hair loss. If a collagen product helps you hit your protein target it is not harmful, but it is not a hair treatment, and a complete protein does more for total intake. Our <a href="/best-collagen-protein-powder/">collagen protein powder</a> guide explains what collagen can and cannot do.
+          </p>
+        </div>
+
+        <div id="iron-biotin-zinc" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            6. Iron, Biotin and Zinc: Do Hair Vitamins Help?
+          </h2>
+
+          <p>
+            Several nutrients are genuinely needed for hair growth, and deficiencies can cause shedding. The catch is that supplementing them helps only if you are actually low, and some cause harm in excess. This is why a dermatologist will usually order blood tests before recommending anything.
+          </p>
+
+          <div class="overflow-hidden border border-gray-200 rounded-2xl my-8">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Nutrient</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Link to hair loss</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Take extra only if</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Caution</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Iron (ferritin)</td>
+                    <td class="px-4 py-4 text-gray-700">Low iron stores are associated with shedding, especially in women; evidence is mixed</td>
+                    <td class="px-4 py-4 text-gray-700">Blood tests show deficiency</td>
+                    <td class="px-4 py-4 text-gray-700">Excess iron is harmful; keep out of reach of children</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Biotin</td>
+                    <td class="px-4 py-4 text-gray-700">Deficiency causes hair loss but is rare</td>
+                    <td class="px-4 py-4 text-gray-700">A doctor confirms deficiency</td>
+                    <td class="px-4 py-4 text-gray-700">High doses can distort lab tests, including heart tests</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Zinc</td>
+                    <td class="px-4 py-4 text-gray-700">Deficiency is associated with hair loss</td>
+                    <td class="px-4 py-4 text-gray-700">Intake is low or levels are low</td>
+                    <td class="px-4 py-4 text-gray-700">Too much can cause copper deficiency</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Vitamin D</td>
+                    <td class="px-4 py-4 text-gray-700">Low levels associated with some hair loss conditions</td>
+                    <td class="px-4 py-4 text-gray-700">Levels are low</td>
+                    <td class="px-4 py-4 text-gray-700">Excess raises calcium</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Vitamin A and selenium</td>
+                    <td class="px-4 py-4 text-gray-700">Too much of either can cause hair loss</td>
+                    <td class="px-4 py-4 text-gray-700">Rarely needed as supplements</td>
+                    <td class="px-4 py-4 text-gray-700">Avoid stacking hair supplements</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <h3 class="text-2xl font-bold text-gray-900 mt-10 mb-4">Iron</h3>
+
+          <p>
+            Iron deficiency is the nutrient problem most often discussed with hair loss, particularly in women with heavy periods, people who eat little meat and people after bariatric surgery. Studies on whether low ferritin without anemia causes shedding are mixed, but checking it is routine, and treating a confirmed deficiency is worthwhile for its own sake. Do not take iron supplements without a test; excess iron is harmful, and overdoses are dangerous for children.
+          </p>
+
+          <h3 class="text-2xl font-bold text-gray-900 mt-10 mb-4">Biotin</h3>
+
+          <p>
+            Biotin is the most heavily marketed hair vitamin, and the evidence for it is weakest. Biotin deficiency is rare, and there is no good evidence that biotin helps hair in people who are not deficient. Hair supplements often contain 5,000 to 10,000 mcg, against an adequate intake for adults of 30 mcg. The FDA has warned that high-dose biotin can interfere with some lab tests, including tests for heart attacks and thyroid function, so tell your doctor if you take it. Protein powders marketed for hair, skin and nails sometimes add biotin; check the label.
+          </p>
+
+          <h3 class="text-2xl font-bold text-gray-900 mt-10 mb-4">Zinc</h3>
+
+          <p>
+            Low zinc is associated with hair loss, and people with digestive conditions, after bariatric surgery or on very restricted diets can run low. Supplementing beyond your needs is not helpful, and long-term intakes above the adult upper limit of 40 mg a day can cause copper deficiency, which brings its own problems. Food sources and a test are the sensible route; pumpkin seeds, meat and dairy all contribute.
+          </p>
+        </div>
+
+        <div id="how-much-protein" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            7. How Much Protein Do You Need to Stop Hair Shedding?
+          </h2>
+
+          <p>
+            There is no hair-specific protein target. The recommended dietary allowance for adults is 0.8 g per kilogram of body weight a day, and that is the floor for avoiding deficiency, not an optimal intake. Many researchers suggest 1.0 to 1.2 g per kilogram for older adults, and higher intakes, around 1.2 to 1.6 g per kilogram, during weight loss to preserve muscle. For a 70 kg adult, that is about 56 g a day at the minimum and 85 to 110 g during a diet.
+          </p>
+
+          <p>
+            Spread it out. Getting roughly 25 to 30 g of protein at each meal is easier on appetite than one large serving and supports muscle across the day. If you are eating very little because of surgery or a GLP-1, it can help to use smaller servings of a powder several times a day, mixed into milk, yogurt or soup, rather than forcing one big shake.
+          </p>
+
+          <p>
+            Calories matter as much as protein. Telogen effluvium after dieting is often a sign of losing weight too fast overall, not just of low protein. If you are losing more than about 1 percent of body weight a week for a sustained period, or eating well under 1,200 calories a day without medical supervision, talk to your doctor or a registered dietitian about slowing down.
+          </p>
+
+          <p>
+            Then be patient. Because of the two- to three-month delay, shedding can continue for weeks after you fix your diet, and regrowth takes months to become visible. Judge whether a change worked over six months or so, not six weeks, and take photos in the same light to compare. If shedding continues beyond six months, or you see patches, scarring, scalp redness or a widening part, see a dermatologist. Our <a href="/protein-calculator/">protein calculator</a> gives a personal daily target.
+          </p>
+        </div>
+
+        <div id="buying-on-amazon" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            8. Buying Protein Powder for Hair Loss on Amazon: Avoiding the Hair-Claim Traps
+          </h2>
+
+          <p>
+            Search Amazon for protein powder for hair and you will find products built around the claim: collagen with biotin, hair, skin and nails blends, and powders loaded with vitamins. The checks below help you buy a plain, effective protein instead of a marketing story.
+          </p>
+
+          <h3 class="text-2xl font-bold text-gray-900 mt-10 mb-4">Ignore the hair claims in titles and bullets</h3>
+
+          <p>
+            Listing titles and bullet copy are written for search, and phrases like supports thicker hair are structure and function claims that do not need trial evidence for the finished product. Go to the listing images and find the Supplement Facts or Nutrition Facts panel. Check the protein per serving, the protein source and whether biotin, zinc, vitamin A or selenium are added and in what amounts. If you already take a multivitamin or a hair supplement, stacking another source of those nutrients can push you over safe limits.
+          </p>
+
+          <h3 class="text-2xl font-bold text-gray-900 mt-10 mb-4">Watch for creatine and size or flavor variations</h3>
+
+          <p>
+            Several big brands now sell a version of their whey with creatine added, often in the same listing as the standard product, and the variation picker is the only difference. If you want to avoid creatine, check the product name on the label image, not just the thumbnail. The price shown is also often for a different size than the one pictured, so select the exact size and flavor before you compare.
+          </p>
+
+          <h3 class="text-2xl font-bold text-gray-900 mt-10 mb-4">Seller, certification and dates</h3>
+
+          <p>
+            Buy from listings sold by the brand or by Amazon. Third-party sellers raise the risk of counterfeits, and counterfeit or adulterated sports supplements are exactly where hidden anabolic ingredients turn up. If a product is NSF Certified for Sport or Informed Choice, check the lot number on the tub you receive against the certifier's database. When it arrives, confirm the seal is intact and the best-by date is well in the future.
+          </p>
+
+          <h3 class="text-2xl font-bold text-gray-900 mt-10 mb-4">Subscribe and Save and cost per 25 g</h3>
+
+          <p>
+            Telogen effluvium recovery takes months, so you may be buying several tubs. Subscribe and Save typically takes 5 percent off, rising to as much as 15 percent with five or more subscriptions in a month. To compare products, work out cost per 25 g of protein: divide the price by the total grams of protein in the tub (servings multiplied by protein per serving) and multiply by 25. Collagen hair blends often look cheap per tub but cost far more per 25 g of complete protein. Our <a href="/tools/protein-cost-calculator/">protein cost calculator</a> does it for you.
+          </p>
+        </div>
+
+        <div id="how-we-picked" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            9. How We Picked
+          </h2>
+
+          <p>
+            We started from complete proteins sold on Amazon US and screened out products with added creatine, megadose biotin or hair-vitamin blends, plus collagen-only products, because none of those add anything a complete protein does not and some add risk. We ranked the rest on protein per serving, NSF Certified for Sport or Informed Choice status, published heavy-metal results and suitability for low-calorie diets. We did not run lab tests or taste trials; flavor and mixing notes are buyer reports. We excluded Garden of Life Sport and Huel Black Edition because of their 2025 lead results.
+          </p>
+
+          <p>
+            If you are choosing a powder for a related goal, our sibling guides to <a href="/best-anti-inflammatory-protein-powder/">anti-inflammatory protein powder</a> and <a href="/best-whole-food-protein-powder/">whole food protein powder</a> use the same evidence-first approach, and our <a href="/best-protein-powder-for-women/">protein powder for women</a> and <a href="/best-protein-powder-for-menopause/">protein powder for menopause</a> guides cover life stages where hair changes are common. Anyone who is pregnant, has kidney disease or takes medication should check protein and supplement plans with a doctor.
+          </p>
+        </div>
+
+        <!-- Common Mistakes -->
+        <div id="mistakes" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            10. Common Mistakes to Avoid
+          </h2>
+
+          <div class="space-y-6 my-8">
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Expecting protein to reverse pattern baldness</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Androgenetic alopecia is driven by genetics and DHT, not diet. Extra protein will not slow it in someone who already eats enough. Treatments such as minoxidil and finasteride work best when started early, so see a dermatologist rather than waiting to see whether a powder helps.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Megadosing biotin</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Biotin deficiency is rare, and there is no good evidence biotin helps people who are not deficient. Hair products often contain hundreds of times the adequate intake, and the FDA warns high doses can distort lab tests, including heart and thyroid tests. Check every supplement you take for hidden biotin.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Taking iron or zinc without a test</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Both can help when you are deficient and both cause harm in excess. Too much iron is toxic and too much zinc can cause copper deficiency. Ask your doctor to check ferritin and other levels before starting supplements, especially after bariatric surgery.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Buying uncertified gym supplements</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Products spiked with anabolic steroids or prohormones can accelerate pattern hair loss in people prone to it. Choose NSF Certified for Sport or Informed Choice products, buy from the brand or Amazon directly, and check the lot number in the certifier's database.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Giving up after six weeks</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Telogen effluvium shows up two to three months after its trigger, and shedding can continue for weeks after you fix the cause. Regrowth takes months to see. Judge progress over about six months, and see a dermatologist if shedding persists beyond that.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ -->
+        <div id="faq" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            11. Frequently Asked Questions
+          </h2>
+
+          <div class="faq-list">
+            <details class="faq-item">
+              <summary><h3>Can protein powder help with hair loss?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  Only if your hair loss is linked to low protein or calorie intake, such as telogen effluvium after crash dieting, bariatric surgery or rapid weight loss. In that case, a complete protein powder can help you reach your target. It will not help pattern baldness or alopecia areata, and it will not change anything if you already eat enough protein.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>Does whey protein cause hair loss?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  There is no good evidence that it does. Whey does not contain hormones, and no human study has shown it raises DHT. The real risk is contaminated supplements spiked with anabolic ingredients, which can speed pattern hair loss in people prone to it. A third-party certified whey avoids that risk.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>Does creatine cause hair loss?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  The evidence does not show that it does. A small 2009 study found creatine raised DHT in rugby players but did not measure hair, and it has not been replicated. A small 2025 trial found no meaningful change in DHT or hair measures. If you are worried or treating pattern hair loss, discuss it with your dermatologist.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>What protein deficiency causes hair loss?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  Not eating enough total protein, often alongside too few calories, can push many hair follicles into their resting phase at once, causing telogen effluvium about two to three months later. Severe deficiency can also make hair thin, dry and brittle. It is most likely after surgery, crash dieting, eating disorders or rapid weight loss.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>Is collagen good for hair loss?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  There is no good-quality trial evidence that collagen supplements treat hair loss. Collagen counts toward your protein intake, but it is incomplete, lacking tryptophan, so it is a weaker way to fix a protein shortfall than whey, egg or a complete plant blend. Treat hair claims on collagen products as marketing.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>How long does it take for hair to grow back after protein deficiency?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  Shedding usually settles within about six to nine months after the cause is fixed, and visible regrowth follows over several more months because scalp hair grows only around a centimeter a month. If shedding continues beyond six months or you see patches or scalp changes, see a dermatologist for assessment.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>Should I take biotin with protein powder for hair?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  Not unless a doctor finds you are deficient, which is rare. Biotin has no proven benefit for hair in people with normal levels, and high doses can interfere with lab tests. If your protein powder or multivitamin already contains biotin, avoid adding a separate hair supplement and tell your doctor before blood tests.
+                </p>
+              </div>
+            </details>
+
+          </div>
+        </div>
+
+        <!-- Related Guides -->
+        <div class="mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">Related Protein Guides by Goal</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <a href="/best-protein-powder-for-glp-1/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#FF4500] font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Protein Powder for GLP-1</h3>
+              <p class="text-gray-500 text-sm mt-2">Hitting a protein target when appetite is low.</p>
+            </a>
+            <a href="/best-protein-powder-for-bariatric-surgery/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#1E90FF] font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Protein Powder for Bariatric Surgery</h3>
+              <p class="text-gray-500 text-sm mt-2">Small, tolerable servings for recovery.</p>
+            </a>
+            <a href="/best-anti-inflammatory-protein-powder/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#10B981] font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Anti-Inflammatory Protein Powder</h3>
+              <p class="text-gray-500 text-sm mt-2">What the evidence supports, and the labels worth choosing.</p>
+            </a>
+          </div>
+        </div>
+
+        <!-- Closing -->
+        <div class="mt-16 bg-gray-900 text-white rounded-2xl p-6 md:p-8">
+          <h2 class="text-2xl font-black text-white mb-4">The Bottom Line</h2>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            A protein powder can help hair loss in one situation: when shedding is telogen effluvium triggered by eating too little protein or too few calories, as after crash dieting, surgery or rapid weight loss on GLP-1 medication. For that job, a certified, creatine-free complete protein such as Thorne Whey Protein Isolate is the cleanest choice, with egg white or a pea-based blend for dairy-free and vegan diets.
+          </p>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            For pattern hair loss, alopecia areata or shedding with no obvious dietary cause, protein is not the answer. See a dermatologist, get iron and thyroid checked, avoid megadose biotin, and start proven treatments early. Diet supports recovery; it does not replace diagnosis.
+          </p>
+        </div>
+
+        <MoreInCategory category="By Goal" links={moreInCategory} />
+
+        <AuthorBio />
+      </div>
+    </div>
+  </article>
+</Layout>

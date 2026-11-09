@@ -1,0 +1,803 @@
+---
+import Layout from "../layouts/Layout.astro";
+import ArticleHeader from "../components/ArticleHeader.astro";
+import TableOfContents from "../components/TableOfContents.astro";
+import ProductCard from "../components/ProductCard.astro";
+import MoreInCategory from "../components/MoreInCategory.astro";
+import { AUTHORS, DEFAULT_AUTHOR, authorSchema } from "../data/authors";
+import { SITE_NAME, SITE_URL } from "../data/site";
+import QuickPicks from "../components/QuickPicks.astro";
+import AuthorBio from "../components/AuthorBio.astro";
+import { pageDates } from "../data/dates";
+
+const moreInCategory = [
+  {
+    "title": "Best Unflavored Protein Powder",
+    "url": "/best-unflavored-protein-powder/"
+  },
+  {
+    "title": "Best Whey Protein Isolate",
+    "url": "/best-whey-protein-isolate/"
+  },
+  {
+    "title": "Best Hemp Protein Powder",
+    "url": "/best-hemp-protein-powder/"
+  },
+  {
+    "title": "Best Protein Powder for Diabetics",
+    "url": "/best-protein-powder-for-diabetics/"
+  },
+  {
+    "title": "Best Clean Protein Powder",
+    "url": "/best-clean-protein-powder/"
+  }
+];
+const author = AUTHORS[DEFAULT_AUTHOR];
+const dates = pageDates(Astro.url.pathname, { published: "2026-11-09", modified: "2026-11-09" });
+const title = "Best Low Sodium Protein Powder: Picks Under 50 mg";
+const description =
+  "The best low sodium protein powder, ranked by mg of sodium per serving and per 25 g of protein, with why pea protein runs high and what to check on Amazon.";
+
+const PRODUCTS: {
+  id: string;
+  name: string;
+  brand?: string;
+  badge: string;
+  category: string;
+  description: string;
+  pros: string[];
+  cons: string[];
+  bottomLine: string;
+  specs?: Record<string, string>;
+  rating?: number;
+  reviewCount?: number;
+  amazonUrl?: string;
+}[] = [
+  {
+    "id": "now-sports-whey-protein-isolate",
+    "name": "NOW Sports Whey Protein Isolate (Unflavored)",
+    "brand": "NOW Sports",
+    "badge": "Best Overall",
+    "category": "Unflavored whey protein isolate",
+    "description": "NOW's unflavored isolate is the simplest low-sodium protein to buy and keep buying. Per the label at the time of writing, a 28 g scoop gives 24 g of protein for about 110 calories and about 45 mg of sodium, roughly 47 mg per 25 g of protein. There is no sweetener, salt or flavor added, so the sodium is what comes with the whey. It is sold in large tubs at a value price per gram, and NOW lists Informed Sport on the label.",
+    "pros": [
+      "About 45 mg of sodium per 24 g of protein, per the label",
+      "No added salt, sweetener or flavor",
+      "Value cost per 25 g in the 5 lb tub"
+    ],
+    "cons": [
+      "Unflavored whey tastes faintly milky on its own",
+      "Contains dairy, so not for milk allergy",
+      "Informed Sport listing is a label claim; confirm in the registry"
+    ],
+    "bottomLine": "The low-sodium default: cheap, plain and about as close to pure protein as a sodium budget allows.",
+    "specs": {
+      "Protein / serving": "24 g (label)",
+      "Sodium / serving": "About 45 mg",
+      "Sodium per 25 g protein": "About 47 mg",
+      "Best for": "Daily shakes on a sodium limit"
+    }
+  },
+  {
+    "id": "klean-athlete-klean-isolate",
+    "name": "Klean Athlete Klean Isolate (Unflavored)",
+    "brand": "Klean Athlete",
+    "badge": "Best Certified",
+    "category": "Unflavored whey protein isolate",
+    "description": "Klean Isolate pairs one of the lowest sodium figures among whey powders with NSF Certified for Sport status, per the brand. The unflavored pouch lists about 20 g of protein, roughly 85 calories and about 30 mg of sodium per 22 g scoop at the time of writing, all from the whey itself. That is under the FDA's very low sodium threshold. The flavored versions list more sodium, so the unflavored pouch is the one to buy if sodium is the reason you are here.",
+    "pros": [
+      "About 30 mg of sodium per scoop, per the brand's label",
+      "NSF Certified for Sport, per the brand",
+      "Whey isolate plus a little lecithin, nothing else"
+    ],
+    "cons": [
+      "Only about 20 g of protein per scoop",
+      "Premium cost per 25 g",
+      "Flavored versions are noticeably higher in sodium"
+    ],
+    "bottomLine": "The pick for athletes or anyone who wants a certified, very-low-sodium isolate and will pay for it.",
+    "specs": {
+      "Protein / serving": "About 20 g (label)",
+      "Sodium / serving": "About 30 mg (unflavored)",
+      "Sodium per 25 g protein": "About 38 mg",
+      "Best for": "Tested athletes, strict limits"
+    }
+  },
+  {
+    "id": "naked-nutrition-naked-whey",
+    "name": "Naked Whey (Unflavored)",
+    "brand": "Naked Nutrition",
+    "badge": "Best Single-Ingredient",
+    "category": "Unflavored grass-fed whey concentrate",
+    "description": "Naked Whey has one ingredient, whey protein concentrate from grass-fed cows, which the brand says comes from US farms. Per its label at the time of writing, a two-scoop serving gives about 25 g of protein for roughly 120 calories and about 45 mg of sodium, so it matches the isolates on sodium per gram despite being a concentrate. It is unflavored and unsweetened, and it is sold in large bags on Amazon at a reasonable cost per 25 g.",
+    "pros": [
+      "About 45 mg of sodium per 25 g of protein, per the label",
+      "One ingredient, no added salt",
+      "Creamier than isolate in smoothies, buyers report"
+    ],
+    "cons": [
+      "Concentrate carries more lactose than isolate",
+      "No sport certification we could confirm",
+      "Plain taste needs your own flavoring"
+    ],
+    "bottomLine": "A clean, low-sodium base for smoothies if you tolerate a little lactose.",
+    "specs": {
+      "Protein / serving": "About 25 g (label)",
+      "Sodium / serving": "About 45 mg",
+      "Sodium per 25 g protein": "About 45 mg",
+      "Best for": "Smoothies, minimal labels"
+    }
+  },
+  {
+    "id": "isopure-infusions",
+    "name": "Isopure Infusions",
+    "brand": "Isopure",
+    "badge": "Best Flavored",
+    "category": "Clear whey protein isolate drink",
+    "description": "Most flavored powders add salt; fruit-flavored clear whey does not need to. Isopure Infusions lists about 20 g of protein in roughly 90 calories with about 10 to 15 mg of sodium per 25 g scoop, depending on flavor and printing, per retail labels at the time of writing. That makes it the lowest-sodium flavored powder we found. It mixes into a light, juice-like drink rather than a milkshake, which suits people who find creamy shakes heavy.",
+    "pros": [
+      "About 10-15 mg of sodium per scoop, per retail labels",
+      "Flavored without the salt dessert flavors use",
+      "About 90 calories for 20 g of protein"
+    ],
+    "cons": [
+      "Contains artificial sweetener; check the label",
+      "Juice-like drink, not a creamy shake",
+      "Higher cost per 25 g than unflavored tubs"
+    ],
+    "bottomLine": "The one to buy if you need low sodium but cannot face unflavored whey.",
+    "specs": {
+      "Protein / serving": "About 20 g (label)",
+      "Sodium / serving": "About 10-15 mg",
+      "Sodium per 25 g protein": "About 13-19 mg",
+      "Best for": "Flavor without the salt"
+    }
+  },
+  {
+    "id": "bobs-red-mill-almond-protein-powder",
+    "name": "Bob's Red Mill Almond Protein Powder",
+    "brand": "Bob's Red Mill",
+    "badge": "Best Dairy-Free",
+    "category": "Single-ingredient almond protein (defatted almond flour)",
+    "description": "Bob's Red Mill makes its almond protein by pressing most of the oil out of almonds and milling what is left, with no chemical solvents per the brand, so it keeps the low sodium of the nut. Per the label at the time of writing, a one-third cup (44 g) serving gives about 20 g of protein, 180 calories, 6 g of fiber and about 25 mg of sodium. It is the best dairy-free answer here, though the calories per gram of protein are far higher than any whey isolate.",
+    "pros": [
+      "About 25 mg of sodium per 20 g of protein, per the label",
+      "One ingredient, no salt or sweetener",
+      "6 g of fiber per serving"
+    ],
+    "cons": [
+      "About 180 calories per serving, double an isolate",
+      "Tree nut allergen",
+      "Grainy texture in water, buyers report"
+    ],
+    "bottomLine": "The best low-sodium choice if you avoid dairy and do not want the sodium load of pea isolate.",
+    "specs": {
+      "Protein / serving": "About 20 g (label)",
+      "Sodium / serving": "About 25 mg",
+      "Sodium per 25 g protein": "About 31 mg",
+      "Best for": "Dairy-free, smoothies, baking"
+    }
+  },
+  {
+    "id": "nutiva-organic-hemp-protein",
+    "name": "Nutiva Organic Hemp Protein",
+    "brand": "Nutiva",
+    "badge": "Lowest Sodium",
+    "category": "Organic cold-pressed hemp seed protein",
+    "description": "Nutiva's hemp protein is milled, cold-pressed hemp seed with nothing added, and retail copies of its label list sodium at or near 0 mg per serving at the time of writing. A 30 g serving gives about 15 g of protein and roughly 90 to 110 calories, plus around 6 to 8 g of fiber. It is USDA Organic. The catch is the low protein density: you need two servings to match one scoop of whey, and the earthy, grassy taste is something buyers either accept or mask.",
+    "pros": [
+      "Sodium at or near zero per the label",
+      "USDA Organic, one ingredient",
+      "Fiber and omega fats from the seed"
+    ],
+    "cons": [
+      "Only about 15 g of protein per serving",
+      "Earthy taste and gritty texture, buyers report",
+      "Lower leucine than whey for muscle building"
+    ],
+    "bottomLine": "The lowest-sodium option on the page, best as a smoothie booster rather than a main protein source.",
+    "specs": {
+      "Protein / serving": "About 15 g (label)",
+      "Sodium / serving": "About 0 mg (label)",
+      "Sodium per 25 g protein": "Under 10 mg",
+      "Best for": "Vegan, very strict limits"
+    }
+  }
+];
+
+const schema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Home",
+          item: `${SITE_URL}/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Best Lists",
+          item: `${SITE_URL}/best-of/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 3,
+          name: "Best Low Sodium Protein Powder",
+          item: `${SITE_URL}/best-low-sodium-protein-powder/`,
+        },
+      ],
+    },
+    {
+      "@type": "FAQPage",
+      mainEntity: [
+        {
+          "@type": "Question",
+          "name": "What is the best low sodium protein powder?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "For most people, NOW Sports Whey Protein Isolate Unflavored, at about 45 mg of sodium per 24 g of protein per the label, is the best balance of low sodium, price and availability. Klean Isolate is lower at about 30 mg and NSF Certified for Sport, per the brand. For dairy-free, Bob's Red Mill Almond Protein lists about 25 mg."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Which protein powder has the least sodium?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Hemp protein is the lowest we found: Nutiva's label lists sodium at or near 0 mg per 30 g serving, though it gives only about 15 g of protein. Among flavored powders, Isopure Infusions lists about 10 to 15 mg per scoop. Unflavored whey isolates typically land between about 30 and 50 mg per serving."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Why does pea protein have so much sodium?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Pea protein isolate is usually made by dissolving the protein at high pH, precipitating it with acid and neutralizing it again, and sodium hydroxide is commonly used for those steps, so sodium remains in the powder. Levels vary by supplier, from roughly 100 mg to several hundred milligrams per serving. Flavored blends may add salt too."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is whey protein high in sodium?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Unflavored whey is not. Isolates and concentrates usually list about 30 to 60 mg per serving, because milk naturally contains a little sodium. Flavored whey is often higher, around 100 to 200 mg, because chocolate and dessert flavors add salt. Check the panel for the exact flavor you plan to buy."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How much sodium is low for a protein powder?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The FDA allows a low sodium claim at 140 mg or less per serving, very low sodium at 35 mg or less and sodium free under 5 mg. For a protein powder, we treat 50 mg or less per serving as genuinely low, and we compare products on sodium per 25 g of protein."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I use protein powder if I have high blood pressure?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "A low-sodium powder is generally easy to fit into a sodium-restricted diet, since a 45 mg scoop is a small share of a 1,500 to 2,300 mg daily limit. If you take blood pressure medication, have heart failure or a sodium target from your doctor, check with them or a registered dietitian first, and count the shake in your total."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is low sodium protein powder safe for kidney disease?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Not automatically. People with chronic kidney disease may need to limit total protein, potassium and phosphorus as well as sodium, while some on dialysis need more protein. Those targets depend on your stage and lab results, so ask your nephrologist or a renal dietitian whether any protein powder suits you before buying one."
+          }
+        }
+      ],
+    },
+    {
+      "@type": "Article",
+      headline: title,
+      author: authorSchema(),
+      datePublished: dates.published,
+      dateModified: dates.modified,
+      publisher: { "@type": "Organization", name: SITE_NAME, url: SITE_URL },
+    },
+    {
+      "@type": "ItemList",
+      name: title,
+      numberOfItems: PRODUCTS.length,
+      itemListElement: PRODUCTS.map((product, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name: product.name,
+        url: new URL(`#${product.id}`, Astro.url).toString(),
+      })),
+    },
+    ...PRODUCTS.map((product) => ({
+      "@type": "Product",
+      name: product.name,
+      description: product.description,
+      brand: {
+        "@type": "Brand",
+        name: product.brand ?? product.name.split(" ")[0],
+      },
+    })),
+  ],
+};
+---
+
+<Layout
+  title={title}
+  description={description}
+  ogType="article"
+  article={{
+    publishedTime: dates.published,
+    modifiedTime: dates.modified,
+    author: author.name,
+    section: "Specialty Protein",
+    tags: [
+      "low sodium protein powder",
+      "protein powder low in sodium",
+      "sodium free protein powder",
+      "protein powder for high blood pressure"
+    ],
+  }}
+  jsonLd={schema}
+>
+  <article class="relative overflow-hidden">
+    <ArticleHeader kicker={"Buyer's Guide"} badge={"Updated November 2026"} author={author} dates={dates} mobileAd={false}>
+      <Fragment slot="title">Best Low Sodium Protein Powder</Fragment>
+      Six powders ranked on the sodium line of the label, per serving and per 25 g of protein, with the reason many plant powders run high and when to talk to your doctor first.
+    </ArticleHeader>
+
+    <TableOfContents>
+      <a href="#quick-comparison">Quick Comparison</a>
+      <a href="#top-picks">Our Top Picks</a>
+      <a href="#how-much-sodium">How Much Sodium Is Normal?</a>
+      <a href="#why-plant-high">Why Plant Protein Runs High</a>
+      <a href="#low-sodium-label">What Low Sodium Means</a>
+      <a href="#flavored-sodium">Flavored vs Unflavored</a>
+      <a href="#blood-pressure-kidney">Blood Pressure and Kidneys</a>
+      <a href="#buying-on-amazon">Buying on Amazon</a>
+      <a href="#how-we-picked">How We Picked</a>
+      <a href="#mistakes">Common Mistakes</a>
+      <a href="#faq">FAQ</a>
+    </TableOfContents>
+
+    <!-- Content -->
+    <div class="max-w-3xl mx-auto px-4 pb-16 lg:pb-24">
+      <div class="prose prose-lg prose-blue max-w-none text-gray-700 leading-relaxed">
+        <p class="lede">
+          The best low sodium protein powder for most people is <strong>NOW Sports Whey Protein Isolate (Unflavored)</strong>, at about 45 mg of sodium for 24 g of protein per the label, cheap per gram and easy to find on Amazon. If you need dairy-free, <strong>Bob's Red Mill Almond Protein Powder</strong> lists about 25 mg per 20 g serving, far below most pea proteins. Unflavored whey isolate is the reliable low-sodium default; many pea and egg white powders carry several times more.
+        </p>
+
+        <QuickPicks products={PRODUCTS} />
+
+        <div id="quick-comparison" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            1. Quick Comparison: The Best Low Sodium Protein Powders
+          </h2>
+
+          <p>
+            The short version: unflavored whey isolate is the easiest way to get 20 to 25 g of protein for under 50 mg of sodium, and two certified options, NOW Sports and Klean Isolate, sit at the top. Isopure Infusions is the lowest-sodium flavored powder we found, and almond and hemp proteins are the dairy-free routes that avoid the sodium load common in pea isolates. The right-hand column normalizes everything to 25 g of protein, which is the fairer comparison.
+          </p>
+
+          <div class="overflow-hidden border border-gray-200 rounded-2xl my-8">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Product</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Protein per serving</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Sodium per serving (label)</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Sodium per 25 g protein</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Best for</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">NOW Sports Whey Isolate (Unflavored)</td>
+                    <td class="px-4 py-4 text-gray-700">24 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 45 mg</td>
+                    <td class="px-4 py-4 text-gray-700">About 47 mg</td>
+                    <td class="px-4 py-4 text-gray-700">Best overall, value</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Klean Athlete Klean Isolate</td>
+                    <td class="px-4 py-4 text-gray-700">About 20 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 30 mg</td>
+                    <td class="px-4 py-4 text-gray-700">About 38 mg</td>
+                    <td class="px-4 py-4 text-gray-700">NSF Certified for Sport</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Naked Whey (Unflavored)</td>
+                    <td class="px-4 py-4 text-gray-700">About 25 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 45 mg</td>
+                    <td class="px-4 py-4 text-gray-700">About 45 mg</td>
+                    <td class="px-4 py-4 text-gray-700">One-ingredient concentrate</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Isopure Infusions</td>
+                    <td class="px-4 py-4 text-gray-700">About 20 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 10-15 mg</td>
+                    <td class="px-4 py-4 text-gray-700">About 13-19 mg</td>
+                    <td class="px-4 py-4 text-gray-700">Lowest-sodium flavored</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Bob's Red Mill Almond Protein</td>
+                    <td class="px-4 py-4 text-gray-700">About 20 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 25 mg</td>
+                    <td class="px-4 py-4 text-gray-700">About 31 mg</td>
+                    <td class="px-4 py-4 text-gray-700">Dairy-free, whole-food</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Nutiva Organic Hemp Protein</td>
+                    <td class="px-4 py-4 text-gray-700">About 15 g</td>
+                    <td class="px-4 py-4 text-gray-700">Close to 0 mg</td>
+                    <td class="px-4 py-4 text-gray-700">Under 10 mg</td>
+                    <td class="px-4 py-4 text-gray-700">Lowest sodium, lower protein</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <p>
+            Sodium figures are per the label at the time of writing and vary by flavor; the per-25 g column is our arithmetic from those labels. For context, the FDA lets a food call itself low sodium at 140 mg or less per serving, so every powder here clears that bar by a wide margin. If you are comparing other powders, our <a href="/best-whey-protein-isolate/">best whey protein isolate</a> guide covers more isolates, and our <a href="/best-unflavored-protein-powder/">best unflavored protein powder</a> guide covers the plain tubs that tend to be lowest in sodium.
+          </p>
+        </div>
+
+        <!-- Picks -->
+        <div id="top-picks" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            2. The Best Low Sodium Protein Powders, Ranked
+          </h2>
+
+          <p>
+            Every pick lists 50 mg of sodium or less per serving on its label at the time of writing, and we also worked out sodium per 25 g of protein so a small scoop cannot look better than it is. Figures come from each label or the brand's published panel and vary by flavor and size, so read the panel on the tub you actually buy. We did not test any product ourselves.
+          </p>
+
+          {PRODUCTS.map((product, index) => (
+            <ProductCard product={product} rank={index + 1} />
+          ))}
+        </div>
+
+        <div id="how-much-sodium" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            3. How Much Sodium Is in Protein Powder?
+          </h2>
+
+          <p>
+            Less than most people fear, but more than the front of the tub suggests. A typical scoop of unflavored whey isolate lists somewhere around 30 to 60 mg of sodium, flavored whey often lands between about 100 and 200 mg, and plant powders range widely, from close to zero for hemp and almond to a few hundred milligrams for some pea isolates. Isopure Zero Carb Unflavored, for example, lists about 160 mg per scoop on retail panels, which is still under the low-sodium threshold but more than three times NOW's unflavored isolate.
+          </p>
+
+          <p>
+            Some sodium is unavoidable because it is part of the source food. Milk naturally contains sodium, so whey carries a little through even after filtration. Egg whites are naturally salty: using USDA figures for a large egg white, about 3.6 g of protein comes with about 55 mg of sodium, which works out to roughly 380 mg for every 25 g of egg white protein before anything is added. That is why <a href="/best-egg-white-protein-powder/">egg white protein powders</a>, which are excellent for many people, are a poor fit for a strict sodium budget.
+          </p>
+
+          <h3 class="text-2xl font-bold text-gray-900 mt-10 mb-4">Why per 25 g of protein matters</h3>
+
+          <p>
+            Sodium per serving is the number on the label, but servings are not equal. A 20 g scoop with 30 mg of sodium and a 30 g scoop with 45 mg are identical per gram of protein. Dividing the sodium figure by the protein figure and multiplying by 25 gives you a fair comparison in a few seconds, and it stops small scoops from looking better than they are. It is the same logic we use for cost per 25 g of protein across the site.
+          </p>
+
+          <p>
+            In daily terms, the numbers here are small. The Dietary Guidelines for Americans advise adults to keep sodium under 2,300 mg a day, and the American Heart Association describes 1,500 mg as an ideal limit for most adults, especially those with high blood pressure. A 45 mg scoop is about 2 to 3 percent of those totals; a 400 mg plant scoop taken twice a day is more than half of the stricter one. That gap is why the sodium line is worth reading if your doctor has given you a target.
+          </p>
+        </div>
+
+        <div id="why-plant-high" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            4. Why Is Plant Protein Powder So High in Sodium?
+          </h2>
+
+          <p>
+            The main reason is processing, not the plant. Peas themselves are low in sodium. To turn them into an 80 percent protein isolate, manufacturers commonly use wet extraction: the flour is mixed with water and the pH is raised so the protein dissolves, the fiber and starch are separated, the protein is precipitated with acid, and the curd is then neutralized again before spray drying. The alkali used to raise and restore the pH is often sodium hydroxide, so some sodium ends up in the finished powder.
+          </p>
+
+          <p>
+            How much depends on the supplier and how thoroughly the curd is washed, which is why pea protein labels vary so much. We found unflavored pea powders listed from roughly 100 mg to several hundred milligrams of sodium per serving; Naked Pea, for example, shows about 110 mg per 30 g serving on database copies of its label. Flavored plant blends often add sea salt on top to round out the earthy taste, and that can push a serving past 300 mg. Treat any plant powder as unknown until you have read its panel.
+          </p>
+
+          <h3 class="text-2xl font-bold text-gray-900 mt-10 mb-4">The plant proteins that stay low</h3>
+
+          <p>
+            Proteins made by pressing and milling rather than chemical extraction tend to stay close to the sodium of the original seed or nut. Hemp protein is cold-pressed seed with most of the oil removed, and Nutiva's label lists negligible sodium per 30 g serving. Almond protein powder is defatted almond flour, and Bob's Red Mill lists about 25 mg per serving. Pumpkin seed protein is made the same way and is also typically low, though check the specific label, since we could not confirm every brand's figure.
+          </p>
+
+          <p>
+            The trade-off is protein density. Pressed proteins are around 45 to 60 percent protein rather than 80 to 90, so you get more fiber, fat and calories per gram of protein, and hemp in particular gives only about 15 g of protein per serving. For a dairy-free reader on a sodium limit, that is often still the better deal. Our <a href="/best-almond-protein-powder/">best almond protein powder</a> and <a href="/best-hemp-protein-powder/">best hemp protein powder</a> guides go deeper on each, and <a href="/best-pea-protein-powder/">best pea protein powder</a> covers the pea isolates if sodium is not your main concern.
+          </p>
+        </div>
+
+        <div id="low-sodium-label" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            5. What Does Low Sodium Mean on a Protein Powder Label?
+          </h2>
+
+          <p>
+            The FDA defines nutrient content claims for sodium, and they are tighter than most people expect. Sodium free means less than 5 mg per serving. Very low sodium means 35 mg or less. Low sodium means 140 mg or less. Reduced or less sodium only means at least 25 percent less than a comparable product, which can still be a lot. Few protein powders put these words on the tub, so in practice you read the number rather than look for a claim.
+          </p>
+
+          <div class="overflow-hidden border border-gray-200 rounded-2xl my-8">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Label claim</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">FDA threshold per serving</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Protein powders that fit</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Sodium free</td>
+                    <td class="px-4 py-4 text-gray-700">Under 5 mg</td>
+                    <td class="px-4 py-4 text-gray-700">Hemp protein, some almond protein</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Very low sodium</td>
+                    <td class="px-4 py-4 text-gray-700">35 mg or less</td>
+                    <td class="px-4 py-4 text-gray-700">Klean Isolate, Isopure Infusions, Bob's almond</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Low sodium</td>
+                    <td class="px-4 py-4 text-gray-700">140 mg or less</td>
+                    <td class="px-4 py-4 text-gray-700">Most unflavored whey isolates and concentrates</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">No claim allowed</td>
+                    <td class="px-4 py-4 text-gray-700">Over 140 mg</td>
+                    <td class="px-4 py-4 text-gray-700">Many flavored wheys, many pea isolates, egg white</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <p>
+            Watch for wording that sounds like a claim but is not. No salt added only means none was added; sodium from the protein itself or from processing still counts, which is exactly how an unsalted pea isolate can carry 200 mg or more. Electrolyte or mineral blends on sports formulas sometimes include sodium on purpose, as do powders flavored with Himalayan or sea salt. The Nutrition Facts or Supplement Facts panel lists total sodium regardless of source, so that panel is the only number to trust.
+          </p>
+
+          <p>
+            Two label rules are worth knowing. Sodium is rounded: below 140 mg, the FDA has labels round to the nearest 5 mg, so a powder showing 0 mg can contain up to just under 5 mg. And labels are allowed some error: for sodium, a product is considered compliant if the real amount is not more than 20 percent above the declared value. Neither makes a meaningful difference for powders in the 0 to 50 mg range, but both are reasons to leave a margin if you are close to a strict daily limit.
+          </p>
+        </div>
+
+        <div id="flavored-sodium" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            6. Does Flavored Protein Powder Have More Sodium?
+          </h2>
+
+          <p>
+            Usually, yes. Chocolate, cookies and cream and salted caramel flavors often add salt to sharpen the sweetness and mute bitterness, and cocoa itself contributes a little. It is common to see the same base powder list about 50 mg unflavored and 100 to 200 mg in a dessert flavor. Klean Isolate is a good example: the unflavored pouch lists about 30 mg, while its flavored versions list noticeably more, so the flavor you click on Amazon matters as much as the brand.
+          </p>
+
+          <p>
+            Clear whey drinks are the exception that proves the rule. Fruit flavors do not need salt to taste right, and Isopure Infusions lists only about 10 to 15 mg of sodium per 20 g scoop depending on the flavor and printing, which makes it the lowest-sodium flavored powder we found. If you dislike unflavored whey, a fruity clear isolate is a better low-sodium bet than a chocolate shake. Our <a href="/best-clear-protein-powder/">best clear protein powder</a> guide covers other options, though check each sodium line.
+          </p>
+
+          <h3 class="text-2xl font-bold text-gray-900 mt-10 mb-4">Flavor it yourself instead</h3>
+
+          <p>
+            The cheapest way to keep sodium down and still enjoy the shake is to buy unflavored and add the flavor yourself. Unsweetened cocoa powder, instant coffee, cinnamon, vanilla extract, frozen berries and a ripe banana all add taste with little or no sodium. Mixing with water rather than milk also matters: a cup of dairy milk adds roughly 100 mg of sodium, and many almond, oat and soy milks add a similar amount or more, so check the carton. Water or a homemade nut milk keeps the total close to the label figure.
+          </p>
+
+          <p>
+            The other place hidden sodium appears is in add-ins. Powdered peanut butter is often lightly salted, many granolas and baked recipes add salt, and protein pancake mixes typically include baking soda and baking powder, both sodium sources. If you are tracking closely, count the whole glass or plate, not just the scoop. For low-sodium shake building, our <a href="/best-protein-powder-for-smoothies/">best protein powder for smoothies</a> guide has more ideas.
+          </p>
+        </div>
+
+        <div id="blood-pressure-kidney" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            7. Is Protein Powder OK for High Blood Pressure or Kidney Disease?
+          </h2>
+
+          <p>
+            For high blood pressure, a low-sodium protein powder is generally easy to fit into a sodium-restricted diet, because most of your sodium comes from bread, cured meats, restaurant meals and packaged foods, not a 45 mg scoop. A shake can even replace a saltier snack. That said, if you take blood pressure medication, have heart failure or have been given a specific sodium target, check with your doctor or a registered dietitian before adding any supplement, and count the shake in your daily total rather than treating it as free.
+          </p>
+
+          <p>
+            Kidney disease is a different question, and the answer is not ours to give. People with chronic kidney disease are often advised to limit total protein, not just sodium, and may also need to watch potassium and phosphorus, which protein powders contain in varying amounts. Some people on dialysis need more protein, not less. Those targets depend on your stage of disease and lab results, so a renal dietitian or nephrologist should decide whether a protein powder belongs in your diet at all, and which one.
+          </p>
+
+          <div class="bg-gray-900 text-white rounded-2xl p-6 lg:p-8 my-8">
+            <p class="text-xs font-black uppercase tracking-widest text-[#38BDF8] mb-3">Medical note</p>
+            <p class="text-xl font-bold text-white mb-3">Low sodium is not the same as kidney-friendly</p>
+            <p class="text-gray-300 leading-relaxed m-0">A powder can be very low in sodium and still be wrong for someone with kidney disease because of its total protein, potassium or phosphorus. If you have kidney disease, heart failure, are pregnant, or take medication that affects sodium or potassium balance, ask your doctor or a registered dietitian before using any protein powder.</p>
+          </div>
+
+          <p>
+            For healthy kidneys, normal protein intakes are not shown to cause harm, and the sodium in the powders above is trivial. If you are older and using a shake to protect muscle, see our <a href="/best-protein-powder-for-seniors/">best protein powder for seniors</a> guide, and for blood sugar concerns our <a href="/best-protein-powder-for-diabetics/">best protein powder for diabetics</a> guide. Our <a href="/is-protein-powder-safe/">is protein powder safe</a> page covers contaminants and who should be careful.
+          </p>
+        </div>
+
+        <div id="buying-on-amazon" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            8. Buying Low Sodium Protein Powder on Amazon: Check the Panel, Not the Bullets
+          </h2>
+
+          <p>
+            Amazon listings rarely mention sodium in the title or bullet points, so the number you need is usually only in the label image. Scroll through the product photos until you find the Nutrition Facts or Supplement Facts panel and zoom in on the sodium line. Make sure the panel shows the same flavor you have selected: many listings reuse one flavor's label image across all variations, and since flavor is the biggest driver of sodium, a 45 mg unflavored panel can sit above a chocolate option with three times as much.
+          </p>
+
+          <p>
+            Next, check who is selling. Under the Add to Cart button, look for Ships from and Sold by. You want the brand's own store or Amazon itself; a third-party seller is not automatically a problem, but it raises the risk of old stock, poor storage and, occasionally, counterfeit tubs, and a counterfeit label tells you nothing about the sodium inside. When the tub arrives, compare the printed panel with the listing, and check the lot number and best-by date. Formulas change, and the printed tub is the version that counts.
+          </p>
+
+          <h3 class="text-2xl font-bold text-gray-900 mt-10 mb-4">Size traps and cost per 25 g</h3>
+
+          <p>
+            Prices on Amazon often default to one size while the photos show another, and a 1 lb tub can sit right next to a 5 lb tub in the size selector. Before comparing, work out cost per 25 g of protein: divide the price by the number of servings, then divide by protein per serving and multiply by 25. A low-sodium powder only helps if you keep buying it, so this step matters. Our <a href="/tools/protein-cost-calculator/">protein cost calculator</a> does the arithmetic for you.
+          </p>
+
+          <p>
+            Finally, Subscribe and Save typically takes 5 percent off a repeat order, and up to 15 percent once you have five or more subscriptions delivering in the same month. It is worth it for an unflavored staple you will buy every month, but set a reminder to recheck the label image occasionally, because a reformulation can change the sodium line without the listing title changing. Our <a href="/amazon-protein-powder/">Amazon protein powder</a> guide covers more of the listing traps.
+          </p>
+        </div>
+
+        <div id="how-we-picked" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            9. How We Picked
+          </h2>
+
+          <p>
+            We started from powders sold on Amazon US and kept only those listing 50 mg of sodium or less per serving on the label or brand panel at the time of writing. We then calculated sodium per 25 g of protein and ranked on that figure together with protein per serving, third-party certification (NSF Certified for Sport or Informed Sport where the brand lists it), ingredient list and cost per 25 g. Where sources disagreed on a sodium figure, we used the higher one and say so.
+          </p>
+
+          <p>
+            We excluded egg white powders on sodium and left out pea isolates whose labels we could not confirm under our cut-off. We did not test any product in a lab or in the kitchen; taste and mixing notes reflect what buyers report. Our <a href="/methodology/">methodology</a> page explains how we weigh labels and certifications, and a sibling guide, <a href="/best-low-calorie-protein-powder/">best low calorie protein powder</a>, ranks many of the same isolates on protein per 100 calories.
+          </p>
+        </div>
+
+        <!-- Common Mistakes -->
+        <div id="mistakes" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            10. Common Mistakes to Avoid
+          </h2>
+
+          <div class="space-y-6 my-8">
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Assuming plant protein is automatically lower in sodium</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Many pea protein isolates list a few hundred milligrams per serving because of how they are extracted and neutralized, and flavored plant blends often add sea salt. Hemp and almond proteins stay low, but pea, and blends built on it, need checking label by label.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Reading the bullets instead of the label image</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Amazon titles and bullets almost never state sodium. The figure only appears in the Nutrition Facts or Supplement Facts photo, and that photo may belong to a different flavor than the one selected. Zoom in and match the flavor before you buy.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Comparing sodium per serving without the protein</h3>
+              <p class="text-gray-700 text-sm m-0">
+                A 20 g scoop and a 30 g scoop are not comparable on sodium per serving. Divide sodium by protein and multiply by 25 to see sodium per 25 g of protein. It takes seconds and stops small scoops looking better than they are.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Forgetting what you mix it with</h3>
+              <p class="text-gray-700 text-sm m-0">
+                A cup of dairy milk adds roughly 100 mg of sodium, and many plant milks add similar amounts. Salted peanut butter, granola and pancake mixes add more. On a strict limit, count the whole shake or recipe, not just the scoop.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Treating low sodium as kidney-safe</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Kidney disease often calls for limits on total protein, potassium and phosphorus, not just sodium. A very-low-sodium powder can still be the wrong choice. Ask a nephrologist or renal dietitian before using any protein supplement.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ -->
+        <div id="faq" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            11. Frequently Asked Questions
+          </h2>
+
+          <div class="faq-list">
+            <details class="faq-item">
+              <summary><h3>What is the best low sodium protein powder?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  For most people, NOW Sports Whey Protein Isolate Unflavored, at about 45 mg of sodium per 24 g of protein per the label, is the best balance of low sodium, price and availability. Klean Isolate is lower at about 30 mg and NSF Certified for Sport, per the brand. For dairy-free, Bob's Red Mill Almond Protein lists about 25 mg.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>Which protein powder has the least sodium?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  Hemp protein is the lowest we found: Nutiva's label lists sodium at or near 0 mg per 30 g serving, though it gives only about 15 g of protein. Among flavored powders, Isopure Infusions lists about 10 to 15 mg per scoop. Unflavored whey isolates typically land between about 30 and 50 mg per serving.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>Why does pea protein have so much sodium?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  Pea protein isolate is usually made by dissolving the protein at high pH, precipitating it with acid and neutralizing it again, and sodium hydroxide is commonly used for those steps, so sodium remains in the powder. Levels vary by supplier, from roughly 100 mg to several hundred milligrams per serving. Flavored blends may add salt too.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>Is whey protein high in sodium?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  Unflavored whey is not. Isolates and concentrates usually list about 30 to 60 mg per serving, because milk naturally contains a little sodium. Flavored whey is often higher, around 100 to 200 mg, because chocolate and dessert flavors add salt. Check the panel for the exact flavor you plan to buy.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>How much sodium is low for a protein powder?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  The FDA allows a low sodium claim at 140 mg or less per serving, very low sodium at 35 mg or less and sodium free under 5 mg. For a protein powder, we treat 50 mg or less per serving as genuinely low, and we compare products on sodium per 25 g of protein.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>Can I use protein powder if I have high blood pressure?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  A low-sodium powder is generally easy to fit into a sodium-restricted diet, since a 45 mg scoop is a small share of a 1,500 to 2,300 mg daily limit. If you take blood pressure medication, have heart failure or a sodium target from your doctor, check with them or a registered dietitian first, and count the shake in your total.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>Is low sodium protein powder safe for kidney disease?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  Not automatically. People with chronic kidney disease may need to limit total protein, potassium and phosphorus as well as sodium, while some on dialysis need more protein. Those targets depend on your stage and lab results, so ask your nephrologist or a renal dietitian whether any protein powder suits you before buying one.
+                </p>
+              </div>
+            </details>
+
+          </div>
+        </div>
+
+        <!-- Related Guides -->
+        <div class="mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">Related Guides</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <a href="/best-low-calorie-protein-powder/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#1E90FF] font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Low Calorie Protein Powder</h3>
+              <p class="text-gray-500 text-sm mt-2">The isolates that give the most protein per 100 calories.</p>
+            </a>
+            <a href="/best-almond-protein-powder/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#10B981] font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Almond Protein Powder</h3>
+              <p class="text-gray-500 text-sm mt-2">Pure almond protein and almond blends, with the label numbers.</p>
+            </a>
+            <a href="/is-protein-powder-safe/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#FF4500] font-black text-xs uppercase tracking-widest mb-2">Safety Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Is Protein Powder Safe?</h3>
+              <p class="text-gray-500 text-sm mt-2">Heavy metals, undeclared drugs and who should talk to a doctor first.</p>
+            </a>
+          </div>
+        </div>
+
+        <!-- Closing -->
+        <div class="mt-16 bg-gray-900 text-white rounded-2xl p-6 md:p-8">
+          <h2 class="text-2xl font-black text-white mb-4">The Bottom Line</h2>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            The lowest-sodium protein powders are the plainest ones: unflavored whey isolate at around 30 to 50 mg per serving, and pressed plant proteins like hemp and almond at close to nothing. NOW Sports Whey Isolate is the best everyday buy, Klean Isolate the certified upgrade, and Bob's Red Mill Almond Protein the dairy-free choice that avoids the sodium common in pea isolates.
+          </p>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            Read the sodium line on the exact flavor you buy, compare per 25 g of protein, and count what you mix it with. If you have high blood pressure with a specific target, heart failure or kidney disease, talk to your doctor or a registered dietitian before adding any protein powder, because sodium is only one of the numbers that matters.
+          </p>
+        </div>
+
+        <MoreInCategory category="Specialty Protein" links={moreInCategory} />
+
+        <AuthorBio />
+      </div>
+    </div>
+  </article>
+</Layout>
