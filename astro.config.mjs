@@ -36,6 +36,17 @@ const pillarGuides = new Set([
 // sitemap priority than the 0.5 default so crawlers reach them sooner. The daily
 // publishing run adds each new slug here (see .claude/skills/daily-publish).
 const priorityGuides = new Set([
+  // November 2026: Amazon buyer's guide batch.
+  'best-protein-water',
+  'best-pumpkin-spice-protein-powder',
+  'best-creatine-monohydrate',
+  'best-portable-blender-for-protein-shakes',
+  'best-protein-powder-for-ninja-creami',
+  'best-protein-cereal',
+  'best-protein-cookies',
+  'best-protein-chips',
+  'best-protein-pasta',
+  'best-protein-hot-chocolate',
   // November 2026: Amazon buyer's guide batch (20 guides).
   'best-dairy-free-protein-powder',
   'best-soy-free-protein-powder',
