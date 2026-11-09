@@ -36,6 +36,27 @@ const pillarGuides = new Set([
 // sitemap priority than the 0.5 default so crawlers reach them sooner. The daily
 // publishing run adds each new slug here (see .claude/skills/daily-publish).
 const priorityGuides = new Set([
+  // November 2026: Amazon buyer's guide batch (20 guides).
+  'best-dairy-free-protein-powder',
+  'best-soy-free-protein-powder',
+  'best-kosher-protein-powder',
+  'best-low-fodmap-protein-powder',
+  'best-low-histamine-protein-powder',
+  'best-anti-inflammatory-protein-powder',
+  'best-protein-powder-for-hair-loss',
+  'best-whole-food-protein-powder',
+  'best-matcha-protein-powder',
+  'best-banana-protein-powder',
+  'best-cinnamon-protein-powder',
+  'best-protein-powder-without-stevia',
+  'best-protein-pancake-mix',
+  'best-protein-shaker-bottle',
+  'best-bulk-protein-powder',
+  'best-all-in-one-protein-powder',
+  'best-low-sodium-protein-powder',
+  'best-almond-protein-powder',
+  'best-low-calorie-protein-powder',
+  'best-protein-powder-for-body-recomposition',
   // November 2026: second buyer's guide batch.
   'best-protein-bars',
   'best-birthday-cake-protein-powder',
