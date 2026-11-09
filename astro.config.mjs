@@ -36,6 +36,17 @@ const pillarGuides = new Set([
 // sitemap priority than the 0.5 default so crawlers reach them sooner. The daily
 // publishing run adds each new slug here (see .claude/skills/daily-publish).
 const priorityGuides = new Set([
+  // November 2026: second buyer's guide batch.
+  'best-protein-bars',
+  'best-birthday-cake-protein-powder',
+  'best-protein-powder-with-creatine',
+  'best-protein-powder-with-fiber',
+  'best-protein-powder-with-probiotics',
+  'best-whey-protein-concentrate',
+  'best-protein-powder-for-vegetarians',
+  'best-pumpkin-seed-protein-powder',
+  'best-protein-powder-for-acne',
+  'best-greens-protein-powder',
   'how-much-protein-do-i-need',
   'protein-calculator',
   'whey-vs-whey-isolate',
