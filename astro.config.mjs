@@ -189,6 +189,11 @@ const priorityGuides = new Set([
   'best-walmart-protein-powder',
   'best-target-protein-powder',
   'best-aldi-protein-powder',
+  // Aldi cluster spokes (2026-11-11).
+  'aldi-vs-costco-protein-powder',
+  'how-many-servings-in-aldi-protein-powder',
+  'is-elevation-protein-powder-good',
+  'how-much-is-aldi-protein-powder',
   'best-meal-replacement-shake',
   'best-protein-powder-for-bariatric-surgery',
   'best-protein-powder-for-beginners',
