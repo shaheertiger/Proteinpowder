@@ -37,6 +37,7 @@ const pillarGuides = new Set([
 // publishing run adds each new slug here (see .claude/skills/daily-publish).
 const priorityGuides = new Set([
   // Daily batch (2026-11-15): brand reviews and the expiry guide.
+  'lgxnds-protein-powder-review',
   'wheybolic-protein-powder-review',
   'nutricost-protein-powder-review',
   'musclepharm-combat-protein-powder-review',
