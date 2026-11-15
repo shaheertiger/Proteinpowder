@@ -1,0 +1,969 @@
+---
+import Layout from "../layouts/Layout.astro";
+import ArticleHeader from "../components/ArticleHeader.astro";
+import TableOfContents from "../components/TableOfContents.astro";
+import ProductCard from "../components/ProductCard.astro";
+import MoreInCategory from "../components/MoreInCategory.astro";
+import { AUTHORS, DEFAULT_AUTHOR, authorSchema } from "../data/authors";
+import { SITE_NAME, SITE_URL } from "../data/site";
+import QuickPicks from "../components/QuickPicks.astro";
+import AuthorBio from "../components/AuthorBio.astro";
+import { pageDates } from "../data/dates";
+
+const moreInCategory = [
+  {
+    "title": "Muscle Milk Protein Powder Review",
+    "url": "/muscle-milk-protein-powder-review/"
+  },
+  {
+    "title": "Best Cheap Protein Powder",
+    "url": "/best-cheap-protein-powder/"
+  },
+  {
+    "title": "Whey vs Whey Isolate",
+    "url": "/whey-vs-whey-isolate/"
+  }
+];
+const author = AUTHORS[DEFAULT_AUTHOR];
+const dates = pageDates(Astro.url.pathname, { published: "2026-11-15", modified: "2026-11-15" });
+const title = "MusclePharm Combat Protein Powder Review: Blend or 100% Whey?";
+const description =
+  "MusclePharm Combat reviewed by label: 5-protein blend vs Combat 100% Whey, cost per 25 g on Amazon, Informed Sport status and how it compares to Gold Standard.";
+
+const PRODUCTS: {
+  id: string;
+  name: string;
+  brand?: string;
+  badge: string;
+  category: string;
+  description: string;
+  pros: string[];
+  cons: string[];
+  bottomLine: string;
+  specs?: Record<string, string>;
+  rating?: number;
+  reviewCount?: number;
+  amazonUrl?: string;
+}[] = [
+  {
+    "id": "musclepharm-combat-protein-powder-blend",
+    "name": "MusclePharm Combat Protein Powder (5-Protein Blend)",
+    "brand": "MusclePharm",
+    "badge": "Best Overall Combat",
+    "category": "Multi-source blend: whey concentrate, milk protein concentrate, whey isolate, whey hydrolysate, egg albumin",
+    "description": "The original Combat gives 25 g of protein, 140 calories, 4 g of sugar (0 g added) and 1.5 g of fat in a 37 g scoop of Chocolate Milk, per the label at the time of writing. The blend mixes fast whey with slower milk protein and egg white, adds protease and lactase enzymes, and is sweetened with sucralose and acesulfame potassium. Retailer listings claim Informed Sport and Informed Protein, and the product appears in the Informed Sport database. The 4.2 lb tub holds about 52 servings.",
+    "pros": [
+      "About $1.35 per 25 g in the 4.2 lb tub at the price we saw",
+      "Listed in the Informed Sport database for several flavors",
+      "Includes lactase and protease enzymes, per the label",
+      "380 mg of calcium per scoop from the milk proteins"
+    ],
+    "cons": [
+      "Contains milk, egg and soy, so it is out for egg allergies",
+      "Sucralose and acesulfame potassium, plus artificial flavors",
+      "Added free L-glutamine and BCAAs on the ingredient list"
+    ],
+    "bottomLine": "The Combat to buy for most people: certified, cheaper per gram than Gold Standard, and easier on lactose than the 100% whey.",
+    "specs": {
+      "Protein / serving": "25 g (label, Chocolate Milk)",
+      "Calories": "About 140",
+      "Third-party testing": "Informed Sport listed",
+      "Best for": "Value, all-day shakes"
+    },
+    "amazonUrl": "https://www.amazon.com/dp/B00CQ7U8SE"
+  },
+  {
+    "id": "musclepharm-combat-100-whey-5lb",
+    "name": "MusclePharm Combat 100% Whey",
+    "brand": "MusclePharm",
+    "badge": "Best Pure Whey Combat",
+    "category": "Whey concentrate and whey isolate blend",
+    "description": "Combat 100% Whey drops the egg and milk protein for whey concentrate and whey isolate only. A 34 g scoop of Chocolate Milk gives 24 g of protein, 140 calories, 2 g of sugar and 3.5 g of fat, per the label at the time of writing. It is thickened with xanthan, cellulose and guar gums and sweetened with sucralose and acesulfame potassium. It sells in a 5 lb tub of about 67 to 70 servings, and the Informed Sport database lists it, with batches tested after January 14, 2025 moving from Informed Choice to Informed Sport.",
+    "pros": [
+      "Whey only, with no egg or milk protein concentrate",
+      "About $1.40 per 25 g in the 5 lb tub at the price we saw",
+      "Informed Sport listed, per the program's database",
+      "Six flavors including Cappuccino and Banana Milk"
+    ],
+    "cons": [
+      "No lactase enzyme, unlike the original Combat",
+      "Three gums and a higher fat and cholesterol figure than the blend",
+      "Sold mainly in the 5 lb size"
+    ],
+    "bottomLine": "A cheap, certified whey for people who want whey alone. If lactose bothers you, the blend or an isolate is the safer pick.",
+    "specs": {
+      "Protein / serving": "24 g (label, Chocolate Milk)",
+      "Calories": "About 140",
+      "Third-party testing": "Informed Sport listed",
+      "Best for": "Whey-only buyers, no egg"
+    },
+    "amazonUrl": "https://www.amazon.com/dp/B01DOHWFGM"
+  },
+  {
+    "id": "musclepharm-rival-on-gold-standard-whey",
+    "name": "Optimum Nutrition Gold Standard 100% Whey",
+    "brand": "Optimum Nutrition",
+    "badge": "Best-Known Rival",
+    "category": "Whey isolate, concentrate and hydrolyzed whey blend",
+    "description": "Gold Standard is the whey every Combat buyer compares against. It gives 24 g of protein, about 120 calories and roughly 1 g of sugar in a 31 g scoop of Double Rich Chocolate, per the label at the time of writing, so it carries less filler per scoop than either Combat. It comes in far more flavors and mixes thin, per buyer feedback. ON calls it banned-substance tested on its US pages; check the exact flavor in the Informed Choice database if you compete.",
+    "pros": [
+      "Higher protein share per scoop than either Combat powder",
+      "Huge flavor range and consistent buyer feedback on mixing",
+      "Widely sold, so easy to find on sale"
+    ],
+    "cons": [
+      "About $1.49 per 25 g in the 5 lb tub at the price we saw",
+      "Certification varies by flavor and market"
+    ],
+    "bottomLine": "Pay the small premium if you want more flavors and a leaner scoop. Combat wins on price and on a clearly listed certification.",
+    "specs": {
+      "Protein / serving": "24 g (label)",
+      "Calories": "About 120",
+      "Third-party testing": "Banned-substance tested (brand)",
+      "Best for": "Flavor variety, easy mixing"
+    },
+    "amazonUrl": "https://www.amazon.com/dp/B000QSNYGI"
+  },
+  {
+    "id": "musclepharm-rival-dymatize-elite-whey",
+    "name": "Dymatize Elite 100% Whey",
+    "brand": "Dymatize",
+    "badge": "Rival With More Protein per Scoop",
+    "category": "Whey concentrate, isolate and hydrolyzed whey concentrate",
+    "description": "Dymatize Elite is the closest like-for-like rival to Combat 100% Whey. A 36 g scoop of Rich Chocolate gives 25 g of protein, about 140 calories, 2 g of sugar and 3 g of fat, per the label at the time of writing, with the same sucralose and acesulfame potassium sweetener pair. Retailer listings show the Informed Choice logo. Dymatize lists 2.7 g of leucine per serving on Amazon.",
+    "pros": [
+      "25 g of protein per scoop, 1 g more than Combat 100% Whey",
+      "Informed Choice logo on retailer listings",
+      "Dymatize has a long record of consistent labels"
+    ],
+    "cons": [
+      "About $1.74 per 25 g in the 5 lb tub at the price we saw",
+      "Not meaningfully leaner than Combat for the extra money"
+    ],
+    "bottomLine": "A good whey, but at the prices we saw it costs about 25 percent more per gram than Combat 100% Whey for a very similar label.",
+    "specs": {
+      "Protein / serving": "25 g (label)",
+      "Calories": "About 140",
+      "Third-party testing": "Informed Choice (retailer listing)",
+      "Best for": "Dymatize loyalists, flavor choice"
+    },
+    "amazonUrl": "https://www.amazon.com/dp/B00CUDYY2U"
+  },
+  {
+    "id": "musclepharm-rival-dymatize-iso100",
+    "name": "Dymatize ISO100 Hydrolyzed Whey Isolate",
+    "brand": "Dymatize",
+    "badge": "Best for Sensitive Stomachs",
+    "category": "Hydrolyzed whey isolate and whey isolate",
+    "description": "If whey concentrate gives you gas or bloating, neither Combat powder is the answer. ISO100 is pure hydrolyzed whey isolate and whey isolate, with 25 g of protein, about 120 calories, roughly 1 g of sugar and 1 g of fat in a 32 g scoop, per the label at the time of writing. Retailer listings show the Informed Choice logo. It costs much more per gram, so buy it for the stomach, not the value.",
+    "pros": [
+      "Pure isolate, so very little lactose",
+      "Leanest label in this lineup",
+      "Informed Choice logo on retailer listings"
+    ],
+    "cons": [
+      "About $2.16 per 25 g in the 5 lb tub at the price we saw",
+      "Sucralose plus stevia, which some buyers find sweet"
+    ],
+    "bottomLine": "The upgrade for lactose-sensitive lifters. Everyone else gets better value from Combat.",
+    "specs": {
+      "Protein / serving": "25 g (label)",
+      "Calories": "About 120",
+      "Third-party testing": "Informed Choice (retailer listing)",
+      "Best for": "Lactose sensitivity, lean diets"
+    },
+    "amazonUrl": "https://www.amazon.com/dp/B002N6F2UW"
+  }
+];
+
+const schema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Home",
+          item: `${SITE_URL}/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Best Lists",
+          item: `${SITE_URL}/best-of/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 3,
+          name: "MusclePharm Combat Protein Review",
+          item: `${SITE_URL}/musclepharm-combat-protein-powder-review/`,
+        },
+      ],
+    },
+    {
+      "@type": "FAQPage",
+      mainEntity: [
+        {
+          "@type": "Question",
+          "name": "Is MusclePharm Combat protein good?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, for the money. The original Combat gives 25 g of protein per scoop from a whey, milk protein and egg blend, includes lactase, and appears in the Informed Sport database. At about $1.35 per 25 g in the 4.2 lb tub at the price we saw, it is cheaper than Gold Standard. The trade-offs are sucralose, artificial flavors and a less efficient scoop."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the difference between Combat Protein and Combat 100% Whey?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Combat Protein is a five-source blend of whey concentrate, milk protein concentrate, whey isolate, whey hydrolysate and egg albumin, with lactase and protease enzymes and 25 g of protein per 37 g scoop. Combat 100% Whey uses whey concentrate and isolate only, has no enzymes and gives 24 g per 34 g scoop. Both use the same sweeteners."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is MusclePharm Combat third-party tested?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Both Combat powders appear in the Informed Sport database at the time of writing, which means certified batches are tested for banned substances. Combat 100% Whey batches tested before January 14, 2025 were Informed Choice certified. Retailers also claim Informed Protein for the blend, which we could not verify. Athletes should check their batch number."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is MusclePharm still in business?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, under new ownership. MusclePharm filed for Chapter 11 bankruptcy in December 2022, and FitLife Brands bought substantially all of its assets for about $18.5 million in October 2023. The brand now sells Combat Protein, Combat 100% Whey and the Combat Ready shake, mainly through Amazon, its own site and selected retailers."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does Combat protein have egg in it?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The original Combat Protein Powder does. Egg albumin is the fifth protein in the blend, and the label lists milk, egg and soy as allergens. Combat 100% Whey does not contain egg as an ingredient, but its allergen statement notes a shared facility that processes egg, so people with a severe egg allergy should check with their doctor."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is Combat good for weight loss?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It can fit a weight-loss diet. One scoop of the blend has about 140 calories with 25 g of protein, 4 g of sugar and 1.5 g of fat, per the label, so it is a filling, low-fat snack. Gold Standard and ISO100 are slightly leaner per scoop. What matters most for weight loss is your total daily calories and protein intake."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is Combat better than Gold Standard?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "On price and verifiable certification, yes: Combat costs about 10 percent less per 25 g in the big tubs at the prices we saw and is listed by Informed Sport. On flavor range, scoop efficiency and mixing feedback, Gold Standard is better. Buy Combat for value, Gold Standard for variety and a leaner, thinner shake."
+          }
+        }
+      ],
+    },
+    {
+      "@type": "Article",
+      headline: title,
+      author: authorSchema(),
+      datePublished: dates.published,
+      dateModified: dates.modified,
+      publisher: { "@type": "Organization", name: SITE_NAME, url: SITE_URL },
+    },
+    {
+      "@type": "ItemList",
+      name: title,
+      numberOfItems: PRODUCTS.length,
+      itemListElement: PRODUCTS.map((product, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name: product.name,
+        url: new URL(`#${product.id}`, Astro.url).toString(),
+      })),
+    },
+    ...PRODUCTS.map((product) => ({
+      "@type": "Product",
+      name: product.name,
+      description: product.description,
+      brand: {
+        "@type": "Brand",
+        name: product.brand ?? product.name.split(" ")[0],
+      },
+    })),
+  ],
+};
+---
+
+<Layout
+  title={title}
+  description={description}
+  ogType="article"
+  article={{
+    publishedTime: dates.published,
+    modifiedTime: dates.modified,
+    author: author.name,
+    section: "Brand Reviews",
+    tags: [
+      "musclepharm combat protein powder",
+      "musclepharm combat protein review",
+      "musclepharm combat 100% whey",
+      "is musclepharm combat protein good",
+      "musclepharm protein powder"
+    ],
+  }}
+  jsonLd={schema}
+  stickyCta={{
+    text: "See Our Top Whey Protein Picks",
+    link: "/best-whey-protein-powder/",
+  }}
+>
+  <article class="relative overflow-hidden">
+    <ArticleHeader kicker={"Brand Review"} badge={"Label-Checked"} author={author} dates={dates} mobileAd={false}>
+      <Fragment slot="title">MusclePharm Combat Protein Powder Review</Fragment>
+      Two Combat powders are left, a 5-protein blend and a 100% whey. Both are Informed Sport listed and both undercut Gold Standard per gram. Here is which one to buy.
+    </ArticleHeader>
+
+    <TableOfContents>
+      <a href="#verdict">The Short Verdict</a>
+      <a href="#the-brand">Who Makes MusclePharm Now</a>
+      <a href="#top-picks">Combat Powders and Rivals</a>
+      <a href="#combat-protein-label">Combat Protein: The 5-Protein Label</a>
+      <a href="#combat-whey-label">Combat 100% Whey: The Label</a>
+      <a href="#blend-vs-whey">Blend or Pure Whey?</a>
+      <a href="#cost-per-25g">Cost per 25 g of Protein</a>
+      <a href="#testing">Testing and Certification</a>
+      <a href="#taste">Taste, Mixing and Digestion</a>
+      <a href="#vs-rivals">Combat vs Gold Standard and Elite</a>
+      <a href="#who-should-skip">Who Should Skip Combat</a>
+      <a href="#mistakes">Common Mistakes</a>
+      <a href="#faq">FAQ</a>
+    </TableOfContents>
+
+    <!-- Content -->
+    <div class="max-w-3xl mx-auto px-4 pb-16 lg:pb-24">
+      <div class="prose prose-lg prose-blue max-w-none text-gray-700 leading-relaxed">
+        <p class="lede">
+          MusclePharm Combat is one of the cheapest certified proteins you can buy on Amazon right now. The original Combat Protein Powder blends five proteins (whey concentrate, milk protein concentrate, whey isolate, whey hydrolysate and egg white) into 25 g of protein per 37 g scoop, per the label at the time of writing. At the $69.99 we saw for the 4.2 lb tub, that is about $1.35 per 25 g of protein, roughly 10 percent cheaper than Optimum Nutrition Gold Standard. Buy the blend for value and its lactase enzyme; buy Combat 100% Whey only if you specifically want whey and no egg.
+        </p>
+
+        <QuickPicks products={PRODUCTS} />
+
+        <div id="verdict" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            1. The Short Verdict
+          </h2>
+
+          <p>
+            MusclePharm Combat is a good, cheap, certified protein, and it is better value than its reputation suggests. Both powders still on sale, the original Combat Protein Powder and Combat 100% Whey, cost about $1.30 to $1.40 per 25 g of protein in their big tubs at the Amazon prices we saw. That undercuts Optimum Nutrition Gold Standard and Dymatize Elite, and both Combat powders appear in the Informed Sport database, which few budget proteins can claim.
+          </p>
+
+          <p>
+            The original Combat Protein Powder is the one to buy for most people. It is a blend of five proteins, it includes lactase and protease enzymes, and its 4.2 lb and 6.2 lb tubs are the cheapest way into the range. Combat 100% Whey only makes sense if you specifically want a whey-only product, for example because you avoid egg, and even then it lacks the lactase enzyme the blend carries.
+          </p>
+
+          <p>
+            The trade-offs are real but modest. Both powders use sucralose and acesulfame potassium plus artificial flavors, so they are out for anyone avoiding artificial sweeteners. Both carry more non-protein material per scoop than Gold Standard: a 37 g scoop for 25 g of protein in the blend, a 34 g scoop for 24 g in the whey. And the blend contains milk, egg and soy, which rules it out for a lot of allergy profiles.
+          </p>
+
+          <p>
+            In short: buy Combat Protein Powder in the 4.2 lb or 6.2 lb tub if you want the cheapest certified protein on Amazon and you are fine with sucralose. Buy Gold Standard if you want more flavors and a leaner scoop for about 10 percent more. Buy a pure isolate if whey concentrate upsets your stomach. Our <a href="/best-whey-protein-powder/">best whey protein powder rankings</a> compare all of them side by side.
+          </p>
+
+          <div class="bg-gray-900 text-white rounded-2xl p-6 lg:p-8 my-8">
+            <p class="text-xs font-black uppercase tracking-widest text-[#38BDF8] mb-3">THE VERDICT</p>
+            <p class="text-xl font-bold text-white mb-3">Cheap, certified and better than its old reputation.</p>
+            <p class="text-gray-300 leading-relaxed m-0">Buy the original 5-protein Combat in the 4.2 lb or 6.2 lb tub. It costs about $1.30 to $1.35 per 25 g at the prices we saw, carries Informed Sport listing and includes lactase. Pick Combat 100% Whey only if you need whey without egg.</p>
+          </div>
+        </div>
+
+        <div id="the-brand" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            2. Who Makes MusclePharm Now
+          </h2>
+
+          <p>
+            MusclePharm was founded in Denver in 2008 by former NFL player Brad Pyatt and partners, and it grew fast on celebrity endorsements, including deals with Arnold Schwarzenegger and Tiger Woods, according to trade press coverage of the company. Combat Protein Powder became its best-known product, sold in big tubs at GNC, Costco, Walmart and grocery chains as well as online. Revenue peaked at about $166 million in 2015, the same year the company lost more than $51 million.
+          </p>
+
+          <p>
+            The corporate history after that was rough, and it is worth knowing if you remember the brand from a decade ago. MusclePharm paid $700,000 in 2015 to settle Securities and Exchange Commission charges over how it reported executive perks, Pyatt stepped down as chief executive in 2016, the SEC later charged executives over inflated quarterly revenue, and the company filed for Chapter 11 bankruptcy in Nevada in December 2022. None of that was about what was in the tub, but it explains why the brand faded from store shelves.
+          </p>
+
+          <p>
+            In October 2023 FitLife Brands, an Omaha, Nebraska supplement company, closed its purchase of substantially all of MusclePharm's assets out of bankruptcy for about $18.5 million, without taking on the old company's liabilities. FitLife said it planned to grow the brand through direct-to-consumer online sales. That is visible today: MusclePharm's own site lists only Combat Protein, Combat 100% Whey and the Combat Ready shake, and some of its product links now redirect straight to the Amazon listings.
+          </p>
+
+          <p>
+            So the Combat you buy today is the same product line under a new, smaller owner, sold mainly through Amazon and a handful of retailers such as Vitacost and Walmart. Older Combat spin-offs you may remember are not on the brand's current protein page, so treat any third-party listing for them with suspicion and check the date code. We have not tasted or tested any Combat product; nutrition figures in this review come from current labels and retailer listings, and taste notes are buyer feedback.
+          </p>
+        </div>
+
+        <!-- Picks -->
+        <div id="top-picks" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            3. The Combat Powders and the Rivals Worth Comparing
+          </h2>
+
+          <p>
+            MusclePharm's own protein page lists just two powders today, Combat Protein and Combat 100% Whey, plus the Combat Ready shake. Both powders are sold on Amazon, and the brand's site now sends some product links straight to its Amazon listings. We have added the two rivals Combat buyers compare it with most, plus a pure isolate for anyone whose stomach does not handle concentrate. Prices are the Amazon prices we saw at the time of writing and change often. We have not tasted these powders; figures come from labels and retailer listings.
+          </p>
+
+          {PRODUCTS.map((product, index) => (
+            <ProductCard product={product} rank={index + 1} />
+          ))}
+        </div>
+
+        <div id="combat-protein-label" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            4. Combat Protein Powder: The 5-Protein Label
+          </h2>
+
+          <p>
+            The original Combat is the product most people mean when they say MusclePharm Combat. Per the Chocolate Milk label at the time of writing, one 37 g scoop gives the figures below. Other flavors and older labels vary slightly; some listings show a 36 g scoop at 130 calories, so check the panel on your tub. Our <a href="/protein-powder/musclepharm-combat-protein/">Combat Protein label page</a> keeps the full record.
+          </p>
+
+          <div class="overflow-hidden border border-gray-200 rounded-2xl my-8">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Per 37 g scoop</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Chocolate Milk</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">What it means</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Protein</td>
+                    <td class="px-4 py-4 text-gray-700">25 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 68 percent of the scoop by weight</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Calories</td>
+                    <td class="px-4 py-4 text-gray-700">140</td>
+                    <td class="px-4 py-4 text-gray-700">Typical for a whey blend</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Carbs / sugar</td>
+                    <td class="px-4 py-4 text-gray-700">6 g / 4 g (0 g added)</td>
+                    <td class="px-4 py-4 text-gray-700">Sugar comes from the milk proteins and cocoa</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Fat</td>
+                    <td class="px-4 py-4 text-gray-700">1.5 g</td>
+                    <td class="px-4 py-4 text-gray-700">Low</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Sodium</td>
+                    <td class="px-4 py-4 text-gray-700">160 mg</td>
+                    <td class="px-4 py-4 text-gray-700">Higher than most wheys, from added sea salt</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Calcium</td>
+                    <td class="px-4 py-4 text-gray-700">380 mg (29% DV)</td>
+                    <td class="px-4 py-4 text-gray-700">A real bonus from milk protein concentrate</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">BCAAs / glutamine</td>
+                    <td class="px-4 py-4 text-gray-700">5 g / 5 g (brand)</td>
+                    <td class="px-4 py-4 text-gray-700">Partly from added free amino acids</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <p>
+            The protein comes from a microfiltered blend of whey protein concentrate, milk protein concentrate, whey protein isolate, whey protein hydrolysate and egg albumin, listed in that order. Order matters: concentrate leads, so this is mostly a concentrate-based product with isolate, hydrolysate and egg in supporting roles. Milk protein concentrate brings casein, which digests more slowly than whey, so the blend sits between a pure whey and a pure casein. If you want a slow protein for bedtime, a dedicated <a href="/best-casein-protein-powder/">casein powder</a> is still the better tool.
+          </p>
+
+          <p>
+            After the proteins come Dutch-process cocoa, natural and artificial flavors, inulin (a prebiotic fiber), sea salt, soy lecithin, sucralose, acesulfame potassium, L-glutamine, potassium citrate, L-leucine, the enzymes protease and lactase, L-isoleucine, L-valine and silica. The enzymes are a genuine plus. Lactase helps break down the lactose that concentrate carries, which is why some buyers who get bloated on cheap concentrate do better on Combat.
+          </p>
+
+          <p>
+            The free amino acids deserve a plain explanation. MusclePharm adds L-glutamine and the three branched-chain amino acids as separate ingredients, which is how it reaches 5 g of each per scoop. Free amino acids are not a problem in themselves, but if they were counted toward the 25 g protein figure they would inflate it, a practice called amino spiking. The label does not say how they are counted. Retailer listings claim the product carries Informed Protein, a newer program that checks protein label claims, which is reassuring, though we could not load its registry page to confirm.
+          </p>
+        </div>
+
+        <div id="combat-whey-label" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            5. Combat 100% Whey: The Label
+          </h2>
+
+          <p>
+            Combat 100% Whey is MusclePharm's answer to Gold Standard: whey only, no egg, no milk protein concentrate. Per the Chocolate Milk label at the time of writing, a 34 g scoop gives 24 g of protein and 140 calories, with 4 g of carbohydrate, 1 g of fiber, 2 g of sugar (0 g added), 3.5 g of fat including 2 g saturated, 125 mg of cholesterol and 70 mg of sodium. The 5 lb tub holds about 67 servings in chocolate and about 69 to 70 in most other flavors.
+          </p>
+
+          <p>
+            The ingredient list is shorter than the blend's: whey protein concentrate and isolate, cocoa, natural and artificial flavors, xanthan gum, cellulose gum, guar gum, sucralose, acesulfame potassium and a dried cream extract that includes maltodextrin, butter and buttermilk powder. The cream extract helps explain the higher fat and cholesterol figures compared with the blend. The retailer allergen statement lists milk and soy and notes a shared facility with egg, wheat, peanuts, tree nuts and shellfish.
+          </p>
+
+          <p>
+            Two details separate it from the original Combat. First, there are no added enzymes, so there is no lactase to help with the lactose in the concentrate. Second, there are three thickening gums, which is unusual for a plain whey and gives a thicker shake. The upside is that it has no added free amino acids on the ingredient list; the 4 g of glutamine the label shows is described as naturally occurring in the whey.
+          </p>
+
+          <p>
+            The protein share is about 71 percent of the scoop by weight, slightly better than the blend's 68 percent and a little below Gold Standard's roughly 77 percent. That gap is not a quality problem, it simply means more flavor, gum and cream per scoop. Flavors on Amazon at the time of writing include Chocolate Milk, Vanilla, Cookies 'N' Cream, Cappuccino, Strawberry Cream and Banana Milk, all in the 5 lb size.
+          </p>
+        </div>
+
+        <div id="blend-vs-whey" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            6. Blend or Pure Whey: Which Combat to Buy
+          </h2>
+
+          <p>
+            The blend versus pure whey argument is mostly marketing on both sides. A protein blend that pairs fast whey with slower casein and egg spreads amino acid delivery over a few more hours, which MusclePharm sells as fast and slow digesting. Pure whey hits the bloodstream faster and has slightly more leucine per gram. In practice, total daily protein matters far more than either effect, and research on timing shows only small differences when daily intake is adequate. Our guide to <a href="/how-much-protein-do-i-need/">how much protein you need</a> covers the targets.
+          </p>
+
+          <p>
+            So choose on the practical differences instead. The blend is cheaper per 25 g in its bigger tubs, it contains lactase, and it delivers 380 mg of calcium per scoop. The 100% whey avoids egg and milk protein concentrate, has no added free amino acids, and comes in more flavors in a single size. Both have the same sweeteners, the same certification status and a similar 140-calorie scoop.
+          </p>
+
+          <p>
+            Pick the blend if you want the best value, you drink shakes at random times of day rather than strictly after training, or you have mild lactose trouble with cheap concentrate. Pick Combat 100% Whey if you are allergic to egg, if you simply prefer a whey-only ingredient list, or if you want Cappuccino or Banana Milk, which the blend does not offer at the time of writing.
+          </p>
+
+          <p>
+            Pick neither if you are genuinely lactose intolerant. Both are concentrate-led products, and lactase in the blend reduces but does not remove the issue. A whey isolate such as Dymatize ISO100 or one of the options in our <a href="/best-lactose-free-protein-powder/">lactose-free protein powder guide</a> is the safer route, and our <a href="/whey-vs-whey-isolate/">whey vs whey isolate explainer</a> sets out how much lactose each form carries.
+          </p>
+
+          <div class="overflow-hidden border border-gray-200 rounded-2xl my-8">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm"></th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Combat Protein (blend)</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Combat 100% Whey</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Protein / scoop</td>
+                    <td class="px-4 py-4 text-gray-700">25 g in 37 g</td>
+                    <td class="px-4 py-4 text-gray-700">24 g in 34 g</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Protein sources</td>
+                    <td class="px-4 py-4 text-gray-700">Whey, milk protein, egg</td>
+                    <td class="px-4 py-4 text-gray-700">Whey only</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Enzymes</td>
+                    <td class="px-4 py-4 text-gray-700">Protease, lactase</td>
+                    <td class="px-4 py-4 text-gray-700">None</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Fat / cholesterol</td>
+                    <td class="px-4 py-4 text-gray-700">1.5 g / 45 mg</td>
+                    <td class="px-4 py-4 text-gray-700">3.5 g / 125 mg</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Allergens</td>
+                    <td class="px-4 py-4 text-gray-700">Milk, egg, soy</td>
+                    <td class="px-4 py-4 text-gray-700">Milk, soy (listing)</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Best price per 25 g seen</td>
+                    <td class="px-4 py-4 text-gray-700">$1.30 (6.2 lb)</td>
+                    <td class="px-4 py-4 text-gray-700">$1.34 to $1.40 (5 lb)</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div id="cost-per-25g" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            7. Cost per 25 g of Protein
+          </h2>
+
+          <p>
+            We work out cost per 25 g of protein because scoop sizes and serving counts vary too much for price per tub to mean anything. The formula is the price, divided by servings, divided by grams of protein per serving, multiplied by 25. The table uses the Amazon prices we saw at the time of writing for the main chocolate flavor; prices move often, so rerun the math on the day you buy.
+          </p>
+
+          <div class="overflow-hidden border border-gray-200 rounded-2xl my-8">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Product (size)</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Price seen</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Servings</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Protein</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Cost per 25 g</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Combat Protein (6.2 lb)</td>
+                    <td class="px-4 py-4 text-gray-700">$99.99</td>
+                    <td class="px-4 py-4 text-gray-700">77</td>
+                    <td class="px-4 py-4 text-gray-700">25 g</td>
+                    <td class="px-4 py-4 text-gray-700">$1.30</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Combat Protein (4.2 lb)</td>
+                    <td class="px-4 py-4 text-gray-700">$69.99</td>
+                    <td class="px-4 py-4 text-gray-700">52</td>
+                    <td class="px-4 py-4 text-gray-700">25 g</td>
+                    <td class="px-4 py-4 text-gray-700">$1.35</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Combat 100% Whey (5 lb)</td>
+                    <td class="px-4 py-4 text-gray-700">$89.99</td>
+                    <td class="px-4 py-4 text-gray-700">67</td>
+                    <td class="px-4 py-4 text-gray-700">24 g</td>
+                    <td class="px-4 py-4 text-gray-700">$1.40</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">ON Gold Standard (5 lb)</td>
+                    <td class="px-4 py-4 text-gray-700">$105.99</td>
+                    <td class="px-4 py-4 text-gray-700">About 74</td>
+                    <td class="px-4 py-4 text-gray-700">24 g</td>
+                    <td class="px-4 py-4 text-gray-700">About $1.49</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Combat Protein (2 lb)</td>
+                    <td class="px-4 py-4 text-gray-700">$42.99</td>
+                    <td class="px-4 py-4 text-gray-700">24</td>
+                    <td class="px-4 py-4 text-gray-700">25 g</td>
+                    <td class="px-4 py-4 text-gray-700">$1.79</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Dymatize Elite (5 lb)</td>
+                    <td class="px-4 py-4 text-gray-700">$109.61</td>
+                    <td class="px-4 py-4 text-gray-700">63</td>
+                    <td class="px-4 py-4 text-gray-700">25 g</td>
+                    <td class="px-4 py-4 text-gray-700">$1.74</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Dymatize ISO100 (5 lb)</td>
+                    <td class="px-4 py-4 text-gray-700">$163.92</td>
+                    <td class="px-4 py-4 text-gray-700">76</td>
+                    <td class="px-4 py-4 text-gray-700">25 g</td>
+                    <td class="px-4 py-4 text-gray-700">$2.16</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Combat Ready shake (12-pack)</td>
+                    <td class="px-4 py-4 text-gray-700">$49.99</td>
+                    <td class="px-4 py-4 text-gray-700">12</td>
+                    <td class="px-4 py-4 text-gray-700">40 g</td>
+                    <td class="px-4 py-4 text-gray-700">$2.60</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <p>
+            Three things stand out. First, size matters more than product: the 2 lb Combat costs about a third more per gram than the 4.2 lb tub, so the small tub only makes sense as a trial. Second, Combat 100% Whey in vanilla and some other flavors lists about 70 servings for the same $89.99, which works out to roughly $1.34 per 25 g, a touch cheaper than chocolate. Third, the gap to Gold Standard is real but small, about 10 to 20 cents per 25 g depending on which Combat tub you buy.
+          </p>
+
+          <p>
+            That gap adds up only for heavy users. At two shakes a day, Combat in the 6.2 lb tub saves roughly $0.38 a day over Gold Standard, a little over $11 a month. Against Dymatize Elite the saving is closer to $0.88 a day. If you are choosing between Combat and a store brand, our <a href="/best-cheap-protein-powder/">cheap protein powder rankings</a> and the <a href="/nutricost-protein-powder-review/">Nutricost review</a> show how the budget field compares; at the prices we saw we could not find a big-brand, certified whey on Amazon that beat Combat per gram.
+          </p>
+
+          <p>
+            The Combat Ready shake is a different product. Each bottle carries 40 g of protein per the listing, but at about $4.17 a bottle it costs roughly twice as much per gram as the powder. Buy it for convenience on travel days, not as your daily protein. And remember that a big tub only saves money if you finish it; our guide to <a href="/does-protein-powder-expire/">whether protein powder expires</a> explains how long an opened tub stays good.
+          </p>
+        </div>
+
+        <div id="testing" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            8. Testing, Certification and Trust
+          </h2>
+
+          <p>
+            Testing is Combat's quiet strength. Both powders appear in the Informed Sport database at the time of writing. Informed Sport is run by the anti-doping lab LGC and tests products for substances banned in sport, with each certified batch listed by number. The Combat 100% Whey entry notes that batches tested before January 14, 2025 were certified under the related Informed Choice program and batches tested after that date are Informed Sport, so older tubs may carry the Informed Choice logo instead.
+          </p>
+
+          <p>
+            For the original Combat, the Informed Sport database search results list Chocolate, Vanilla, Banana, Chocolate Milk, Cookies and Cream and Horchata in 2 lb and 4 lb sizes. Retailer listings also claim Informed Protein, LGC's program for checking protein content claims. An Informed Protein registry page for Combat Protein Powder exists, but it would not load for us, so treat that claim as the retailer's, not ours. MusclePharm's own pages still use older Informed Choice wording in places.
+          </p>
+
+          <p>
+            If you are a drug-tested athlete, do not rely on the logo on the tub or on this review. Look up the batch number printed on your container in the Informed Sport database before you use it, because certification covers specific batches, not a brand forever. Our <a href="/best-nsf-certified-protein-powder/">NSF certified protein powder guide</a> explains how NSF Certified for Sport and Informed Sport compare if your league names one of them.
+          </p>
+
+          <p>
+            We could not find a recent Labdoor, Clean Label Project or Consumer Reports test of either Combat powder, so we have no independent heavy-metal figures to report. That is not unusual for a budget whey; dairy-based proteins generally test lower for heavy metals than plant proteins. The corporate turmoil described above was about accounting and contracts, not product safety, and we found no recall of Combat powder in our searches. Being certified for banned substances does not mean a product is tested for every contaminant, so that gap is worth knowing.
+          </p>
+        </div>
+
+        <div id="taste" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            9. Taste, Mixing and Digestion: What Buyers Report
+          </h2>
+
+          <p>
+            We have not tasted Combat, so this section summarizes buyer feedback and published reviews. The original blend has long been known for dessert-style flavors and a creamy, slightly thick shake, helped by the milk protein concentrate and egg. Cookies 'N' Cream, Chocolate Milk and the newer Horchata come up most often as favorites in buyer reviews. Complaints focus on sweetness from the sucralose and on some foam after shaking.
+          </p>
+
+          <p>
+            Combat 100% Whey gets more mixed feedback on texture. One published review of the Chocolate Milk flavor described it as rich and malty, closer to dark chocolate than milk chocolate, good in milk but watery in water, and noted that it mixed only fine, with some granules and settling after a few minutes. The three gums make it thicker than most plain wheys, which some buyers like and others find gluey. A blender bottle with a mixing ball helps with both powders.
+          </p>
+
+          <p>
+            Digestion is where the two powders differ most. The blend's lactase and protease enzymes are there to ease lactose and protein breakdown, and buyers with mild sensitivity to concentrate often report fewer issues. Combat 100% Whey has no enzymes, and that same published review suggested people with lactose sensitivity avoid it. If you get gas or bloating from whey, try the blend first, then move to an isolate if it persists.
+          </p>
+
+          <p>
+            Sweetener sensitivity is the other common complaint. Both powders use sucralose plus acesulfame potassium, and both list artificial flavors. If that combination gives you stomach trouble, or you simply dislike the aftertaste, Combat is not for you, and our <a href="/best-protein-powder-without-artificial-sweeteners/">guide to protein powder without artificial sweeteners</a> lists stevia, monk fruit and unflavored options. For a cheap whey with a different flavor profile, the <a href="/body-fortress-protein-powder-review/">Body Fortress review</a> covers another budget alternative.
+          </p>
+        </div>
+
+        <div id="vs-rivals" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            10. Combat vs Gold Standard and Dymatize Elite
+          </h2>
+
+          <p>
+            Against <a href="/optimum-nutrition-protein-powder-review/">Optimum Nutrition Gold Standard</a>, Combat wins on price and on clearly listed certification, and loses on flavor range and scoop efficiency. Gold Standard gives 24 g of protein in a 31 g scoop with about 120 calories and roughly 1 g of sugar per the label on our <a href="/protein-powder/optimum-nutrition-gold-standard-whey/">Gold Standard label page</a>, and it comes in more than 20 flavors. Combat costs about 10 percent less per gram in the big tubs at the prices we saw.
+          </p>
+
+          <p>
+            ON describes Gold Standard as banned-substance tested and has promoted Informed Choice on many flavors, but certification varies by flavor and market. Combat's Informed Sport listing is easier to verify. If you are a casual lifter who wants a specific flavor such as Rocky Road or Cinnamon Roll, Gold Standard is worth the premium. If you want the cheapest certified tub and are happy with five or six flavors, buy Combat.
+          </p>
+
+          <p>
+            Against <a href="/dymatize-protein-powder-review/">Dymatize Elite 100% Whey</a>, the comparison is closer to like for like with Combat 100% Whey. Elite gives 25 g of protein in a 36 g scoop with about 140 calories, 3 g of fat and the same sucralose and acesulfame potassium sweeteners, per the label on our <a href="/protein-powder/dymatize-elite-100-whey/">Elite label page</a>. At the $109.61 we saw for 63 servings, Elite costs about $1.74 per 25 g, roughly 25 percent more than Combat 100% Whey, for one extra gram of protein per scoop.
+          </p>
+
+          <p>
+            Dymatize's stronger card is ISO100, a hydrolyzed whey isolate that suits lactose-sensitive buyers far better than any Combat product, at a much higher price. Against the other grocery-aisle blend, the <a href="/muscle-milk-protein-powder-review/">Muscle Milk review</a> shows a similar multi-protein approach with less clear certification. And if you want the egg part of the blend without the dairy, our <a href="/best-egg-white-protein-powder/">egg white protein guide</a> covers pure egg options, though none come close to Combat on price per gram.
+          </p>
+
+          <div class="overflow-hidden border border-gray-200 rounded-2xl my-8">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm"></th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Combat Protein</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Combat 100% Whey</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Gold Standard</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Dymatize Elite</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Protein / scoop</td>
+                    <td class="px-4 py-4 text-gray-700">25 g / 37 g</td>
+                    <td class="px-4 py-4 text-gray-700">24 g / 34 g</td>
+                    <td class="px-4 py-4 text-gray-700">24 g / 31 g</td>
+                    <td class="px-4 py-4 text-gray-700">25 g / 36 g</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Calories</td>
+                    <td class="px-4 py-4 text-gray-700">140</td>
+                    <td class="px-4 py-4 text-gray-700">140</td>
+                    <td class="px-4 py-4 text-gray-700">About 120</td>
+                    <td class="px-4 py-4 text-gray-700">About 140</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Cost per 25 g seen</td>
+                    <td class="px-4 py-4 text-gray-700">$1.30 to $1.35</td>
+                    <td class="px-4 py-4 text-gray-700">$1.34 to $1.40</td>
+                    <td class="px-4 py-4 text-gray-700">About $1.49</td>
+                    <td class="px-4 py-4 text-gray-700">$1.74</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Certification</td>
+                    <td class="px-4 py-4 text-gray-700">Informed Sport listed</td>
+                    <td class="px-4 py-4 text-gray-700">Informed Sport listed</td>
+                    <td class="px-4 py-4 text-gray-700">Banned-substance tested (brand)</td>
+                    <td class="px-4 py-4 text-gray-700">Informed Choice (listing)</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Sweeteners</td>
+                    <td class="px-4 py-4 text-gray-700">Sucralose, ace-K</td>
+                    <td class="px-4 py-4 text-gray-700">Sucralose, ace-K</td>
+                    <td class="px-4 py-4 text-gray-700">Ace-K</td>
+                    <td class="px-4 py-4 text-gray-700">Sucralose, ace-K</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div id="who-should-skip" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            11. Who Should Skip Combat
+          </h2>
+
+          <p>
+            Skip the original Combat if you have an egg allergy, a milk allergy or a soy allergy: the blend contains all three. Combat 100% Whey drops the egg but still contains milk, and its allergen statement lists soy and a shared facility with egg, peanuts, tree nuts, wheat and shellfish. Anyone with a severe allergy should read the current label on the tub rather than a retailer summary.
+          </p>
+
+          <p>
+            Skip both if you are lactose intolerant rather than mildly sensitive, if you avoid artificial sweeteners or flavors, or if you want a short, clean ingredient list. Combat is a mainstream gym protein with gums, sweeteners, added amino acids and flavoring, and it does not pretend to be anything else. A plain isolate or an unflavored whey will suit those buyers better and cost only a little more.
+          </p>
+
+          <p>
+            Skip the 2 lb tubs if you already know you like Combat. At about $1.79 per 25 g, the small tub costs more per gram than Gold Standard in a 5 lb tub, which wipes out Combat's main advantage. The same goes for the Combat Ready shakes as a daily habit; they are a convenience product priced like one.
+          </p>
+
+          <p>
+            Finally, health caveats apply as they do to any protein powder. This review is not medical advice. If you have kidney disease, are pregnant or breastfeeding, take prescription medication or have a diagnosed food allergy, talk to a doctor or registered dietitian before adding a protein supplement. For most healthy adults, one or two scoops a day to reach a sensible protein target is well within the normal range.
+          </p>
+        </div>
+
+        <!-- Common Mistakes -->
+        <div id="mistakes" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            12. Common Mistakes to Avoid
+          </h2>
+
+          <div class="space-y-6 my-8">
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Buying the 2 lb tub to save money</h3>
+              <p class="text-gray-700 text-sm m-0">
+                The 2 lb Combat tub costs about $1.79 per 25 g at the price we saw, a third more than the 4.2 lb tub and more than Gold Standard in a 5 lb tub. Buy the small tub only to test a flavor, then move to the 4.2 lb or 6.2 lb size.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Assuming Combat 100% Whey is easier on lactose</h3>
+              <p class="text-gray-700 text-sm m-0">
+                It sounds purer, but Combat 100% Whey is concentrate-led and has no lactase enzyme. The original blend includes lactase. If lactose is your issue, try the blend first, and if that still causes bloating, switch to a whey isolate.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Trusting an old certification logo</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Certification covers specific batches. Combat 100% Whey moved from Informed Choice to Informed Sport for batches tested after January 14, 2025. Drug-tested athletes should check the batch number on their own tub in the Informed Sport database before using it.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Ignoring the egg in the blend</h3>
+              <p class="text-gray-700 text-sm m-0">
+                The original Combat contains egg albumin as well as milk and soy. People with an egg allergy often miss it because the tub is marketed as a whey product. Combat 100% Whey is the egg-free option, but still read the shared-facility warning.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Comparing price per tub instead of per gram</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Tub prices hide serving counts and scoop sizes. Divide price by servings, then by grams of protein, and multiply by 25. Done that way, the $69.99 Combat tub beats a $105.99 Gold Standard tub, but only because it is the bigger, cheaper size.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ -->
+        <div id="faq" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            13. Frequently Asked Questions
+          </h2>
+
+          <div class="faq-list">
+            <details class="faq-item">
+              <summary><h3>Is MusclePharm Combat protein good?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  Yes, for the money. The original Combat gives 25 g of protein per scoop from a whey, milk protein and egg blend, includes lactase, and appears in the Informed Sport database. At about $1.35 per 25 g in the 4.2 lb tub at the price we saw, it is cheaper than Gold Standard. The trade-offs are sucralose, artificial flavors and a less efficient scoop.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>What is the difference between Combat Protein and Combat 100% Whey?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  Combat Protein is a five-source blend of whey concentrate, milk protein concentrate, whey isolate, whey hydrolysate and egg albumin, with lactase and protease enzymes and 25 g of protein per 37 g scoop. Combat 100% Whey uses whey concentrate and isolate only, has no enzymes and gives 24 g per 34 g scoop. Both use the same sweeteners.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>Is MusclePharm Combat third-party tested?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  Both Combat powders appear in the Informed Sport database at the time of writing, which means certified batches are tested for banned substances. Combat 100% Whey batches tested before January 14, 2025 were Informed Choice certified. Retailers also claim Informed Protein for the blend, which we could not verify. Athletes should check their batch number.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>Is MusclePharm still in business?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  Yes, under new ownership. MusclePharm filed for Chapter 11 bankruptcy in December 2022, and FitLife Brands bought substantially all of its assets for about $18.5 million in October 2023. The brand now sells Combat Protein, Combat 100% Whey and the Combat Ready shake, mainly through Amazon, its own site and selected retailers.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>Does Combat protein have egg in it?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  The original Combat Protein Powder does. Egg albumin is the fifth protein in the blend, and the label lists milk, egg and soy as allergens. Combat 100% Whey does not contain egg as an ingredient, but its allergen statement notes a shared facility that processes egg, so people with a severe egg allergy should check with their doctor.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>Is Combat good for weight loss?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  It can fit a weight-loss diet. One scoop of the blend has about 140 calories with 25 g of protein, 4 g of sugar and 1.5 g of fat, per the label, so it is a filling, low-fat snack. Gold Standard and ISO100 are slightly leaner per scoop. What matters most for weight loss is your total daily calories and protein intake.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>Is Combat better than Gold Standard?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  On price and verifiable certification, yes: Combat costs about 10 percent less per 25 g in the big tubs at the prices we saw and is listed by Informed Sport. On flavor range, scoop efficiency and mixing feedback, Gold Standard is better. Buy Combat for value, Gold Standard for variety and a leaner, thinner shake.
+                </p>
+              </div>
+            </details>
+
+          </div>
+        </div>
+
+        <!-- Related Guides -->
+        <div class="mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">Related Whey Protein Guides</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <a href="/best-whey-protein-powder/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#FF4500] font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Whey Protein Powder</h3>
+              <p class="text-gray-500 text-sm mt-2">Our full whey rankings, with Combat's main rivals compared by label and price.</p>
+            </a>
+            <a href="/optimum-nutrition-protein-powder-review/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#1E90FF] font-black text-xs uppercase tracking-widest mb-2">Brand Review</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Optimum Nutrition Review</h3>
+              <p class="text-gray-500 text-sm mt-2">Gold Standard, the whey Combat is most often compared with, reviewed by label.</p>
+            </a>
+            <a href="/dymatize-protein-powder-review/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#10B981] font-black text-xs uppercase tracking-widest mb-2">Brand Review</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Dymatize Protein Review</h3>
+              <p class="text-gray-500 text-sm mt-2">Elite 100% Whey and ISO100, the pricier rivals for whey and isolate buyers.</p>
+            </a>
+          </div>
+        </div>
+
+        <!-- Closing -->
+        <div class="mt-16 bg-gray-900 text-white rounded-2xl p-6 md:p-8">
+          <h2 class="text-2xl font-black text-white mb-4">The Bottom Line</h2>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            MusclePharm Combat survived a messy decade and came out as a better buy than many people assume. The original 5-protein Combat gives 25 g of protein per scoop, includes lactase, appears in the Informed Sport database and costs about $1.30 to $1.35 per 25 g in the big tubs at the prices we saw. Combat 100% Whey is the whey-only, egg-free alternative at about $1.40.
+          </p>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            Buy the blend for value, Gold Standard for flavor variety and a leaner scoop, and a whey isolate if lactose is a problem. For every leading option ranked side by side, read our <a href="/best-whey-protein-powder/">best whey protein powder</a> guide.
+          </p>
+        </div>
+
+        <MoreInCategory category="Brand Reviews" links={moreInCategory} />
+
+        <AuthorBio />
+      </div>
+    </div>
+  </article>
+</Layout>
