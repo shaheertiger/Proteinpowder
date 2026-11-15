@@ -36,6 +36,16 @@ const pillarGuides = new Set([
 // sitemap priority than the 0.5 default so crawlers reach them sooner. The daily
 // publishing run adds each new slug here (see .claude/skills/daily-publish).
 const priorityGuides = new Set([
+  // Daily batch (2026-11-15): brand reviews and the expiry guide.
+  'wheybolic-protein-powder-review',
+  'nutricost-protein-powder-review',
+  'musclepharm-combat-protein-powder-review',
+  'kirkland-protein-powder-review',
+  'does-protein-powder-expire',
+  'c4-protein-powder-review',
+  'bodytech-protein-powder-review',
+  'body-fortress-protein-powder-review',
+  'be-well-by-kelly-protein-powder-review',
   // November 2026: Amazon buyer's guide batch.
   'best-protein-water',
   'best-pumpkin-spice-protein-powder',
