@@ -36,6 +36,17 @@ const pillarGuides = new Set([
 // sitemap priority than the 0.5 default so crawlers reach them sooner. The daily
 // publishing run adds each new slug here (see .claude/skills/daily-publish).
 const priorityGuides = new Set([
+  // Daily batch (2026-11-16): 5 Google + 5 Bing articles.
+  'premier-protein-vs-ensure',
+  'muscle-milk-vs-premier-protein',
+  'best-premier-protein-flavor',
+  'inno-supps-protein-powder-review',
+  'promix-protein-powder-review',
+  'herbalife-protein-powder-review',
+  'mre-lite-protein-powder-review',
+  'arbonne-protein-powder-review',
+  'kos-protein-powder-review',
+  'trader-joes-protein-powder',
   // Daily batch (2026-11-15): brand reviews and the expiry guide.
   'lgxnds-protein-powder-review',
   'wheybolic-protein-powder-review',
