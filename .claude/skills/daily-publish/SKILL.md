@@ -148,6 +148,10 @@ need to second-guess which cluster it chose.
 
 ## 2. Turn each intent into a real article
 
+**Every page follows `ARTICLE-FORMAT.md` (in this folder):** page type A–E, the
+snippet formulas, the skeleton with "The Short Answer" first and question-phrased H2s,
+and the pre-publish checklist. Read it before writing the first spec.
+
 For each of the ten slots, decide the actual title, slug and angle. Rules:
 
 - **Search intent, not a rephrasing of the pillar.** `whey-protein-bloating` is a
