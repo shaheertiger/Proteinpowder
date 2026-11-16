@@ -1,12 +1,15 @@
 # Article format: built for Google, works on Bing
 
 This is the page format every daily article follows. It is based on the search data
-from two sites built on the same template:
+from three sites built on the same template:
 
 - **best-proteinpowder.com**: a Google Search Console export (24 h) and Bing Webmaster
   page and keyword reports (about 4 weeks). Files are in `content/search-console/2026-11-16/`.
 - **treadmillreviewsusa.com**: Bing Webmaster page and keyword reports (6,726
   impressions, 311 clicks), plus the HTML of its 16 best-performing pages.
+- **thehonestreviewers.com**: Bing Webmaster page and keyword reports (**444,880
+  impressions, 14,118 clicks**), plus the HTML of 9 winning and losing pages. This is
+  the most established of the three, and it shows what the format looks like at scale.
 
 The section-0 rules in `SKILL.md` decide **what** to write (5 Google + 5 Bing).
 This file decides **how every page is built**.
@@ -22,6 +25,11 @@ This file decides **how every page is built**.
 | **Brand and model reviews come second on Bing for both sites.** | 61% of protein Bing clicks; 19% of treadmill clicks. |
 | **Google rewards specific pages and buries broad ones.** | Protein comparison pages average #6.7 on Google; narrow guides sit at #3–7 (coffee, cookies & cream). Broad "best protein powder for muscle gain" sits at #48. |
 | **A snippet that doesn't answer the question gets zero clicks, even at #1.** | Ascent review: #1 on Bing for the casein question, 110 impressions, 0 clicks (snippet since fixed). |
+| **Topic depth wins: one hub, many spokes.** | Honest Reviewers' driveway-sealer cluster has about 20 pages: best sealer, asphalt, concrete, paver, crack filler, how to seal, cost, drying time, rain after sealing, oil vs water-based, Home Depot, Menards, pros and cons. The hub ranks #3.3 with 1,134 clicks at 5% CTR, and almost every spoke ranks on page one. |
+| **The same format fails on keywords big sites own.** | Honest Reviewers' "best portable power station" gets 52,560 impressions at #5 but a **0.26% CTR**; "best electric pressure washer" gets 0.12%. They are built exactly like the driveway-sealer hub. The difference is the keyword: brands, retailers and shopping results crowd the page. Niche categories (driveway sealer, garage epoxy, basement wall sealer, exterior caulk) get 4–5% CTR. |
+| **Cost pages and brand-vs-brand pages have the best CTR.** | Honest Reviewers: "How much does it cost to seal a driveway?" 7.2% CTR; cost pages overall 4.5%; brand-level X-vs-Y pages 5.5% (Milwaukee vs DeWalt 6.6% at #3). |
+| **Store-specific pages pull real traffic.** | "Driveway sealer Home Depot" 2,155 impressions; "Menards" 1,304. Protein: Walmart, Costco, Aldi and Target guides all click on Bing. |
+| **Top pages are kept fresh.** | Honest Reviewers' best pages were all modified within the last week (13–14 Nov) despite being published March–August. |
 | **Question-phrased headings beat generic numbered ones.** | The treadmill site's October pages use H2s like "How Much Does an Anti-Gravity Treadmill Session Cost?" and "Why Is My Treadmill Safety Key Not Working?". Its April pages use "1. Overview and Who It's For" and "4. Performance Deep Dive". The October pages carry the site's best CTRs. |
 
 ---
@@ -38,6 +46,27 @@ probably a broad head term, so don't write it.
 | **C. Head-to-head** | two named brands or products | `dymatize-iso100-vs-elite` | Google first |
 | **D. Narrow buyer's guide** | one flavour, one use, one type or one store | `best-protein-powder-for-coffee`, `best-walmart-protein-powder` | Both |
 | **E. Problem / fix** | something going wrong | `protein-powder-clumping`, `whey-protein-bloating` | Both (highest CTR on the treadmill site) |
+
+### Choose keywords you can win
+
+Before picking any topic, ask: **do big brands, retailers or national publishers own this
+search?** If yes ("best protein powder", "best whey protein"), the page will get
+impressions and almost no clicks, like Honest Reviewers' portable power station page
+(52,560 impressions, 0.26% CTR). Prefer:
+
+- specific brands and products (reviews, "is X good", brand vs brand);
+- one store (Walmart, Costco, Aldi, Target, Sam's Club, GNC, Trader Joe's);
+- one flavour, one use, one type or one diet;
+- cost, how-to and problem questions inside a cluster you already cover.
+
+### Build clusters, not islands
+
+Each new page should strengthen a hub. Honest Reviewers' driveway-sealer hub ranks
+because ~20 spokes around it answer every sub-question (cost, drying time, rain,
+types, store, how-to). For protein, the same shape works around a brand or a store:
+e.g. an Aldi hub with Elevation review, "is Elevation good", Aldi vs Costco, Aldi
+protein cost per 25 g, Aldi vegan protein. Every spoke links up to the hub and to two
+sibling spokes, and the hub's "Everything Else About …" grid links down to every spoke.
 
 Never write: broad "best protein powder for [goal or audience]", "ultimate guide to …",
 history or trivia pages with no buying link, or a page whose answer is one sentence.
@@ -59,11 +88,15 @@ This is the part searchers see before they decide to click. Get it right first.
 | A | `<Question>? <Answer-shaped promise>` | `Does Protein Powder Expire? Shelf Life, Signs and Storage` |
 | B | `<Brand> Protein Powder Review: <the brand's top question>` | `Ascent Protein Powder Review: Does Native Whey Contain Casein?` |
 | C | `<X> vs <Y>: <verdict promise>` | `Dymatize ISO100 vs Elite: Which Whey Is Worth It?` |
-| D | `Best <Narrow Thing>: <how ranked or the hook>` | `Best Protein Powder for Coffee: Picks That Won't Clump` |
+| D | `<N> Best <Narrow Thing> (2026): <how ranked or the hook>` | `7 Best Protein Powders for Coffee: Picks That Won't Clump` |
 | E | `<Problem>? <The fix promise>` | `Protein Powder Clumping? Six Fixes That Work` |
 
 - The exact query goes at the **start**.
 - Use "(2026)" only for reviews, roundups and deals, never for question pages.
+- Roundups lead with the count: "7 Best …". Honest Reviewers' roundups all do
+  ("7 Best Asphalt Driveway Sealers in 2026"), and roundups are 72% of its clicks.
+- Never put "Tested" in a title, or "we tested" in a description, unless the testing
+  really happened. Our pages say "label-checked" or "ranked by cost per 25 g".
 - No brand name of the site in the title; the layout adds it.
 
 ### Meta description (140–158 characters)
@@ -210,7 +243,8 @@ Each of the following must be on every page:
    Before writing, search the site for the query, and if a page already half-covers
    it, improve that page instead.
 4. **Fresh dates that mean something.** When a page's prices or facts are updated,
-   update `modified` too. Reviews, roundups and deals get re-checked monthly.
+   update `modified` too. Reviews, roundups and deals get re-checked monthly. Honest
+   Reviewers' top pages were all updated within the past week.
 5. **Structured data stays valid.** Article + FAQPage + BreadcrumbList on every page;
    Product + ItemList on pages with product cards. These come from the layout, so
    don't hand-edit JSON-LD.
@@ -223,7 +257,12 @@ Each of the following must be on every page:
    more often than Google does.
 2. **Brand name + question in the title and H2s**: "is X third-party tested",
    "is X healthy", "X reviews and complaints". These exact queries convert on Bing.
-3. **The page in the sitemap and submitted via IndexNow** (automatic on each production
+3. **Brand-vs-brand comparisons work on Bing** (Milwaukee vs DeWalt: 6.6% CTR at #3).
+   Write them at brand level ("Optimum Nutrition vs Dymatize"), not as another
+   product pair; the programmatic `/compare/` product pairs are the ones Bing ignores.
+4. **Store pages**: "<product> at <store>" and "best <store> protein powder" pull steady
+   Bing traffic.
+5. **The page in the sitemap and submitted via IndexNow** (automatic on each production
    deploy via `postbuild`).
 
 ---
