@@ -103,8 +103,12 @@ Mix: **4 brand reviews or "is X good" pages, 1 store-brand or type/flavour guide
    mass-gainer queries all land on `best-protein-powder-for-weight-gain`. Mass gainer
    brand reviews, "best mass gainer" and "mass gainer vs whey" are valid Bing slots
    (check for cannibalisation against that page first).
-6. **Comparison pages are not a Bing format yet.** Don't spend Bing slots on them
-   until Bing's page report shows `/compare/` URLs getting impressions.
+6. **Programmatic `/compare/` product pairs are not a Bing format yet**, but
+   **brand-vs-brand editorial comparisons are** ("Optimum Nutrition vs Dymatize").
+   On thehonestreviewers.com they have the best Bing CTR of any format (5.5%;
+   Milwaukee vs DeWalt 6.6% at #3), so one can take a Bing review slot.
+7. **Pick winnable keywords and build clusters.** See "Choose keywords you can win"
+   and "Build clusters, not islands" in `ARTICLE-FORMAT.md`.
 
 ### Both engines
 
@@ -147,6 +151,10 @@ The topic picker already accounts for demand if `demand.json` exists, so you do 
 need to second-guess which cluster it chose.
 
 ## 2. Turn each intent into a real article
+
+**Every page follows `ARTICLE-FORMAT.md` (in this folder):** page type A–E, the
+snippet formulas, the skeleton with "The Short Answer" first and question-phrased H2s,
+and the pre-publish checklist. Read it before writing the first spec.
 
 For each of the ten slots, decide the actual title, slug and angle. Rules:
 
