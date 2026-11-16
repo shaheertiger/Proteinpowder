@@ -1,0 +1,904 @@
+---
+import Layout from "../layouts/Layout.astro";
+import ArticleHeader from "../components/ArticleHeader.astro";
+import TableOfContents from "../components/TableOfContents.astro";
+import ProductCard from "../components/ProductCard.astro";
+import MoreInCategory from "../components/MoreInCategory.astro";
+import { AUTHORS, DEFAULT_AUTHOR, authorSchema } from "../data/authors";
+import { SITE_NAME, SITE_URL } from "../data/site";
+import QuickPicks from "../components/QuickPicks.astro";
+import AuthorBio from "../components/AuthorBio.astro";
+import { pageDates } from "../data/dates";
+
+const moreInCategory = [
+  {
+    "title": "Huel Protein Powder Review",
+    "url": "/huel-protein-powder-review/"
+  },
+  {
+    "title": "Premier Protein Powder Review",
+    "url": "/premier-protein-powder-review/"
+  },
+  {
+    "title": "Best Soy Protein Powder",
+    "url": "/best-soy-protein-powder/"
+  }
+];
+const author = AUTHORS[DEFAULT_AUTHOR];
+const dates = pageDates(Astro.url.pathname, { published: "2026-11-16", modified: "2026-11-16" });
+const title = "Herbalife Protein Powder Review: Formula 1, Formula 3 and Cost";
+const description =
+  "Herbalife protein powder gives 5 g of soy and whey protein per tablespoon; Formula 1 gives 9 g. Label facts, NSF status, cost per 25 g and Amazon risks.";
+
+const PRODUCTS: {
+  id: string;
+  name: string;
+  brand?: string;
+  badge: string;
+  category: string;
+  description: string;
+  pros: string[];
+  cons: string[];
+  bottomLine: string;
+  specs?: Record<string, string>;
+  rating?: number;
+  reviewCount?: number;
+  amazonUrl?: string;
+}[] = [
+  {
+    "id": "herbalife-review-formula-1-french-vanilla",
+    "name": "Herbalife Formula 1 Healthy Meal Nutritional Shake Mix, French Vanilla, 750 g",
+    "brand": "Herbalife",
+    "badge": "The Herbalife Shake",
+    "category": "Soy-based meal replacement shake mix",
+    "description": "Formula 1 is the shake the whole Herbalife system is built around. Per the US label at the time of writing, a 25 g serving (2 scoops) of French Vanilla gives 90 calories, 9 g of soy protein, 13 g of carbohydrate, 9 g of sugar (8 g added) and 3 g of fiber, with 30 servings per canister. Mixed with 8 fl oz of nonfat milk, Herbalife lists 170 calories and 17 g of protein. The main sweetener is fructose. Herbalife's US site listed it at $61.75.",
+    "pros": [
+      "21 vitamins and minerals per serving, per Herbalife",
+      "Gluten-free in most flavors, per Herbalife",
+      "Wide flavor range through distributors"
+    ],
+    "cons": [
+      "Only 9 g of protein per serving made with water",
+      "8 g of added sugar, mostly fructose",
+      "About $5.72 per 25 g of protein at Herbalife's retail price",
+      "No independent certification listed for the core shake"
+    ],
+    "bottomLine": "A vitamin-fortified, sugar-sweetened soy shake that needs milk or a second powder to reach a real protein dose.",
+    "specs": {
+      "Protein / serving": "9 g with water; 17 g with nonfat milk (label)",
+      "Calories": "90 (with water)",
+      "Third-party testing": "None listed for core Formula 1",
+      "Cost per 25 g": "About $5.72 (Herbalife US retail price)"
+    }
+  },
+  {
+    "id": "herbalife-review-personalized-protein-powder",
+    "name": "Herbalife Personalized Protein Powder, Unflavored, 12.7 oz (360 g)",
+    "brand": "Herbalife",
+    "badge": "The Herbalife Add-In",
+    "category": "Unflavored soy and whey protein booster",
+    "description": "This is the powder sold as Formula 3 outside the US. Per the US label at the time of writing, one level tablespoon (6 g) gives 20 calories, 5 g of protein, 0 g of carbohydrate and 50 mg of sodium, with 60 servings per canister. The ingredient list is short: soy protein isolate, whey protein concentrate, natural flavor and silicon dioxide, with no sweetener. Herbalife suggests women add up to 2 tablespoons and men up to 3 to each Formula 1 shake. Herbalife's US site listed it at $53.55.",
+    "pros": [
+      "Four-ingredient label with no sweetener or sugar",
+      "Easy to stir into Formula 1, yogurt or soup",
+      "Lets you dose protein in 5 g steps"
+    ],
+    "cons": [
+      "About $4.46 per 25 g of protein, roughly five times a plain soy isolate",
+      "Five tablespoons to reach 25 g of protein",
+      "No independent certification listed"
+    ],
+    "bottomLine": "A clean but tiny, expensive protein booster. A plain soy or whey isolate does the same job for a fraction of the price.",
+    "specs": {
+      "Protein / serving": "5 g per 6 g tablespoon (label)",
+      "Calories": "20",
+      "Third-party testing": "None listed",
+      "Cost per 25 g": "About $4.46 (Herbalife US retail price)"
+    }
+  },
+  {
+    "id": "herbalife-review-alt-orgain-organic-meal-vanilla",
+    "name": "Orgain Organic 20g Meal Protein Powder, Vanilla Bean, 2.01 lb",
+    "brand": "Orgain",
+    "badge": "Closest Amazon Alternative",
+    "category": "Plant-based meal replacement powder",
+    "description": "If what you wanted from Herbalife was a meal shake rather than a protein supplement, Orgain's Organic Meal is the nearest Amazon equivalent. Per the label at the time of writing, 2 scoops (57 g) give about 220 calories, 20 g of organic plant protein, prebiotic fiber and about 2 g of sugar, with 16 servings per tub, sweetened with organic erythritol and stevia. At the $28.09 we saw on Amazon, that is about $1.76 a meal and about $2.19 per 25 g of protein.",
+    "pros": [
+      "More than double Formula 1's protein per serving made with water",
+      "About 2 g of sugar against Formula 1's 9 g",
+      "USDA Organic and dairy-free, per the label"
+    ],
+    "cons": [
+      "Erythritol can upset sensitive stomachs",
+      "220 calories, so more than a Formula 1 shake with water",
+      "No sport certification found"
+    ],
+    "bottomLine": "The like-for-like swap for Formula 1: a real meal shake with more protein and less sugar, at well under half the cost per gram.",
+    "specs": {
+      "Protein / serving": "20 g (label)",
+      "Calories": "About 220",
+      "Third-party testing": "No sport cert found",
+      "Cost per 25 g": "About $2.19 (Amazon price seen)"
+    },
+    "amazonUrl": "https://www.amazon.com/dp/B00RWWOKL4"
+  },
+  {
+    "id": "herbalife-review-alt-now-sports-soy-isolate",
+    "name": "NOW Sports Soy Protein Isolate, Unflavored, 2 lb",
+    "brand": "NOW Sports",
+    "badge": "Closest Amazon Alternative to Formula 3",
+    "category": "Unflavored soy protein isolate",
+    "description": "Herbalife's Personalized Protein Powder is mostly soy protein isolate, so a plain soy isolate is the honest comparison. Per the label at the time of writing, a 24 g scoop (about 1/3 cup) of NOW Sports Soy Protein Isolate gives about 90 calories and 20 g of protein, with roughly 38 servings in the 2 lb tub and no sweetener. At the $26.99 we saw on Amazon, that works out to about $0.89 per 25 g of protein, against about $4.46 for the Herbalife powder.",
+    "pros": [
+      "Same main protein source as Herbalife's add-in",
+      "Unflavored and unsweetened, so it disappears into a shake",
+      "About one-fifth the cost per gram of the Herbalife version"
+    ],
+    "cons": [
+      "No whey in the blend, if you wanted that",
+      "Soy isolate can taste beany on its own",
+      "Bigger scoop than a tablespoon, so dose with care"
+    ],
+    "bottomLine": "The cheap way to do what Formula 3 does: add a scoop to any shake and get four times the protein of a Herbalife tablespoon.",
+    "specs": {
+      "Protein / serving": "20 g (label)",
+      "Calories": "About 90",
+      "Third-party testing": "No sport cert found",
+      "Cost per 25 g": "About $0.89 (Amazon price seen)"
+    },
+    "amazonUrl": "https://www.amazon.com/dp/B0013OSS4M"
+  },
+  {
+    "id": "herbalife-review-alt-optimum-nutrition-gold-standard-vanilla",
+    "name": "Optimum Nutrition Gold Standard 100% Whey, Vanilla Ice Cream, 5 lb",
+    "brand": "Optimum Nutrition",
+    "badge": "Higher-Protein Amazon Alternative",
+    "category": "Whey blend (isolate listed first)",
+    "description": "For buyers who want a real protein dose in one scoop rather than a meal shake, Gold Standard covers what Herbalife's Protein Drink Mix and Herbalife24 Enhanced Protein Powder do. Per the label at the time of writing, a 31 g scoop gives 24 g of protein and about 120 calories, with 73 servings in the 5 lb tub. At the $100.67 we saw on Amazon, that is about $1.44 per 25 g of protein, under half the cost of Herbalife24 Enhanced at Herbalife's retail price.",
+    "pros": [
+      "24 g of protein per scoop, the same dose as Herbalife24 Enhanced",
+      "Informed Choice banned-substance testing promoted by the brand (check your flavor)",
+      "Sold directly on Amazon, so no reseller guesswork"
+    ],
+    "cons": [
+      "Artificially sweetened",
+      "Whey concentrate in the blend, so some lactose",
+      "Not a meal replacement: few added vitamins"
+    ],
+    "bottomLine": "The straightforward protein powder for anyone who wanted 24 g per scoop and a testing badge without a distributor.",
+    "specs": {
+      "Protein / serving": "24 g (label)",
+      "Calories": "About 120",
+      "Third-party testing": "Informed Choice (brand)",
+      "Cost per 25 g": "About $1.44 (Amazon price seen)"
+    },
+    "amazonUrl": "https://www.amazon.com/dp/B000GISU1M"
+  }
+];
+
+const schema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Home",
+          item: `${SITE_URL}/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Best Lists",
+          item: `${SITE_URL}/best-of/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 3,
+          name: "Herbalife Protein Powder Review",
+          item: `${SITE_URL}/herbalife-protein-powder-review/`,
+        },
+      ],
+    },
+    {
+      "@type": "FAQPage",
+      mainEntity: [
+        {
+          "@type": "Question",
+          "name": "Is Herbalife third-party tested?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Only part of the range. Herbalife says Herbalife24 Formula 1 Sport, Rebuild Strength and Enhanced Protein Powder are NSF Certified for Sport, and NSF's database lists them. We found no independent certification for the regular Formula 1 shake, Protein Drink Mix or Personalized Protein Powder, whose US pages mention no NSF, Informed Sport or similar seal. Herbalife describes in-house quality testing for those products."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How much protein is in Herbalife Personalized Protein Powder?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Each level tablespoon (6 g) gives 5 g of protein and 20 calories, per Herbalife's US label at the time of writing, with 60 servings in the 360 g canister. Herbalife suggests women add up to 2 tablespoons (10 g of protein) and men up to 3 tablespoons (15 g) to each Formula 1 shake. Reaching 25 g of protein takes five tablespoons."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is Herbalife healthy or clean?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It depends on the product. The Personalized Protein Powder has a short, unsweetened label of soy isolate and whey concentrate. Formula 1 is a fortified shake with 21 vitamins and minerals but also 8 g of added sugar, mostly fructose, plus gums and carrageenan. It can fit a calorie-controlled diet, but it is a processed, sweetened shake rather than a clean-label product."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does Herbalife contain soy?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Soy protein isolate is the first ingredient in Formula 1, the Personalized Protein Powder and the Protein Drink Mix, per Herbalife's US labels, and all three also contain milk. Anyone with a soy or milk allergy should avoid them. Herbalife24 Enhanced Protein Powder is milk-based but lists soy lecithin, so it is not soy-free either."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Which Herbalife Formula 1 flavor is best?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Buyers most often name Cookies 'n Cream, French Vanilla and Dutch Chocolate as favorites in retail reviews and distributor feedback, and French Vanilla is a common pick for blending with fruit. We have not tasted them. Note that Herbalife says Cookies 'n Cream and Mint Chocolate are the two flavors that are not gluten-free."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What are the most common complaints about Herbalife?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Buyers most often complain about price, the low protein in a shake made with water, the added sugar, and distributor pressure to buy bundles or sign up for ongoing orders. People who avoid soy dislike the soy base. Buyers who ordered through Amazon resellers add complaints about short best-by dates and packaging that did not match what they expected."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can you mix Herbalife Formula 1 with the protein powder?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, that is how Herbalife designs them. Add 1 to 3 tablespoons of Personalized Protein Powder, or 2 scoops of Protein Drink Mix, to a Formula 1 serving. Herbalife says Protein Drink Mix with water brings the shake to 24 g of protein. Three tablespoons of Personalized Protein Powder with water gives about the same, 24 g in total."
+          }
+        }
+      ],
+    },
+    {
+      "@type": "Article",
+      headline: title,
+      author: authorSchema(),
+      datePublished: dates.published,
+      dateModified: dates.modified,
+      publisher: { "@type": "Organization", name: SITE_NAME, url: SITE_URL },
+    },
+    {
+      "@type": "ItemList",
+      name: title,
+      numberOfItems: PRODUCTS.length,
+      itemListElement: PRODUCTS.map((product, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name: product.name,
+        url: new URL(`#${product.id}`, Astro.url).toString(),
+      })),
+    },
+    ...PRODUCTS.map((product) => ({
+      "@type": "Product",
+      name: product.name,
+      description: product.description,
+      brand: {
+        "@type": "Brand",
+        name: product.brand ?? product.name.split(" ")[0],
+      },
+    })),
+  ],
+};
+---
+
+<Layout
+  title={title}
+  description={description}
+  ogType="article"
+  article={{
+    publishedTime: dates.published,
+    modifiedTime: dates.modified,
+    author: author.name,
+    section: "Brand Reviews",
+    tags: [
+      "herbalife protein powder",
+      "personalized protein powder herbalife",
+      "herbalife shake and protein powder",
+      "herbalife formula 3",
+      "herbalife formula 1",
+      "herbalife protein drink mix",
+      "is herbalife third party tested"
+    ],
+  }}
+  jsonLd={schema}
+  stickyCta={{
+    text: "See Our Top Meal Replacement Picks",
+    link: "/best-meal-replacement-shake/",
+  }}
+>
+  <article class="relative overflow-hidden">
+    <ArticleHeader kicker={"Brand Review"} badge={"Label-Checked"} author={author} dates={dates} mobileAd={false}>
+      <Fragment slot="title">Herbalife Protein Powder Review</Fragment>
+      For anyone handed a Herbalife shake plan by a distributor, or eyeing those tubs on Amazon, this settles what is in Formula 1 and the Personalized Protein Powder, what each gram of protein costs, and whether the core products are independently tested.
+    </ArticleHeader>
+
+    <TableOfContents>
+      <a href="#short-answer">Short Answer</a>
+      <a href="#top-picks">The Products</a>
+      <a href="#which-product">Formula 1 vs Formula 3</a>
+      <a href="#label">What Is in It</a>
+      <a href="#third-party-tested">Third-Party Testing</a>
+      <a href="#cost">Cost per 25 g</a>
+      <a href="#amazon">Amazon and Distributors</a>
+      <a href="#taste">Taste and Mixing</a>
+      <a href="#vs">Herbalife vs Alternatives</a>
+      <a href="#who">Who Should Buy It</a>
+      <a href="#mistakes">Common Mistakes</a>
+      <a href="#faq">FAQ</a>
+    </TableOfContents>
+
+    <!-- Content -->
+    <div class="max-w-3xl mx-auto px-4 pb-16 lg:pb-24">
+      <div class="prose prose-lg prose-blue max-w-none text-gray-700 leading-relaxed">
+        <p class="lede">
+          Herbalife protein powder is a low-dose soy and whey add-in: the Personalized Protein Powder gives 5 g of protein per 6 g tablespoon, and the Formula 1 shake it is meant for gives 9 g per serving with water, per Herbalife's US labels. The answer changes if you buy Herbalife24, the only line with NSF Certified for Sport products. Below: labels, sweeteners, testing, cost per 25 g, the distributor model and Amazon resellers.
+        </p>
+
+        <QuickPicks products={PRODUCTS} />
+
+        <div id="short-answer" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            1. Herbalife Protein Powder: The Short Answer
+          </h2>
+
+          <p>
+            Herbalife's protein powder is a small-dose booster, not a stand-alone protein shake. The Personalized Protein Powder (called Formula 3 in many countries) gives 5 g of soy and whey protein per tablespoon, and the Formula 1 shake it is designed for gives 9 g of soy protein per serving with water, per Herbalife's US labels at the time of writing. Stack them the way Herbalife suggests and you reach 17 to 24 g of protein, at well over $5 per 25 g at retail.
+          </p>
+
+          <p>
+            <strong>Buy it if</strong> you already work with a distributor you trust, you like the Formula 1 flavors, and the added vitamins and coaching matter more to you than price. <strong>Skip it if</strong> you want the most protein for your money, want an independently certified core product, or would be buying from an Amazon reseller with no idea where the tub has been.
+          </p>
+
+          <div class="overflow-hidden border border-gray-200 rounded-2xl my-8">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Herbalife product (US)</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Protein / serving</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Calories</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Sweetener</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Cost per 25 g*</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Formula 1 shake, French Vanilla</td>
+                    <td class="px-4 py-4 text-gray-700">9 g (water) / 17 g (nonfat milk)</td>
+                    <td class="px-4 py-4 text-gray-700">90 / 170</td>
+                    <td class="px-4 py-4 text-gray-700">Fructose</td>
+                    <td class="px-4 py-4 text-gray-700">About $5.72</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Personalized Protein Powder</td>
+                    <td class="px-4 py-4 text-gray-700">5 g per tablespoon</td>
+                    <td class="px-4 py-4 text-gray-700">20</td>
+                    <td class="px-4 py-4 text-gray-700">None</td>
+                    <td class="px-4 py-4 text-gray-700">About $4.46</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Protein Drink Mix, Vanilla</td>
+                    <td class="px-4 py-4 text-gray-700">15 g</td>
+                    <td class="px-4 py-4 text-gray-700">110</td>
+                    <td class="px-4 py-4 text-gray-700">Sucralose</td>
+                    <td class="px-4 py-4 text-gray-700">About $5.72</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Herbalife24 Enhanced Protein Powder</td>
+                    <td class="px-4 py-4 text-gray-700">24 g</td>
+                    <td class="px-4 py-4 text-gray-700">120</td>
+                    <td class="px-4 py-4 text-gray-700">Stevia</td>
+                    <td class="px-4 py-4 text-gray-700">About $3.83</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <p>
+            *Cost per 25 g uses the retail prices on Herbalife's US site at the time of writing and the protein figures on its US labels. Distributors and members pay less, so the price you are quoted may be lower. Only the Herbalife24 product in this table carries NSF Certified for Sport, per Herbalife and the NSF database.
+          </p>
+        </div>
+
+        <!-- Picks -->
+        <div id="top-picks" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            2. Herbalife's Two Core Powders and the Closest Amazon Alternatives
+          </h2>
+
+          <p>
+            The first two cards are Herbalife's own products, priced at the retail price on Herbalife's US site at the time of writing. They have no Amazon link because Herbalife does not authorize Amazon sales. The other three are Amazon products that do the same jobs for less money per gram of protein.
+          </p>
+
+          {PRODUCTS.map((product, index) => (
+            <ProductCard product={product} rank={index + 1} />
+          ))}
+        </div>
+
+        <div id="which-product" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            3. Is Herbalife Formula 3 the Same as the Personalized Protein Powder?
+          </h2>
+
+          <p>
+            Outside the US, yes: in the UK, Europe, Asia and much of Africa, Herbalife sells its unflavored whey and soy booster as Formula 3 Personalised Protein Powder. In the US, the same type of product is sold simply as Personalized Protein Powder, and the name Formula 3 belongs to Cell Activator, a capsule supplement. Herbalife's own US Formula 1 page recommends pairing the shake with Formula 2 Multivitamin Complex and Formula 3 Cell Activator, which shows how the US numbering works.
+          </p>
+
+          <p>
+            That naming split causes real confusion. People searching for "herbalife formula 3" from the US often expect a protein powder and end up on a pill, and Amazon resellers mix both naming systems in their titles. If the tub says Formula 3 and Personalised (British spelling) on it, you are almost certainly looking at an import made for another market, with a label written to that country's rules.
+          </p>
+
+          <p>
+            The formulas also differ by country. Herbalife's Namibia page lists its Formula 3 as about 75% soy protein isolate and 24.5% whey protein concentrate, while the US label lists soy protein isolate, whey protein concentrate, natural flavor and silicon dioxide without percentages. Sizes differ too: 240 g and 200 g tubs are common abroad, while the US canister is 12.7 oz (360 g) with 60 servings. The protein per tablespoon is about the same everywhere, roughly 5 g in 6 g of powder.
+          </p>
+
+          <h3 class="text-2xl font-bold text-gray-900 mt-10 mb-4">Where do Formula 1, Protein Drink Mix and Herbalife24 fit?</h3>
+
+          <p>
+            Herbalife sells four products people call its protein powder. Formula 1 is the meal shake. Personalized Protein Powder is the unflavored booster you stir into Formula 1. Protein Drink Mix is a flavored soy booster with 15 g of protein per 28 g serving, which Herbalife says lifts a Formula 1 shake to 24 g of protein when mixed with water. Herbalife24 is the sports line, and its Enhanced Protein Powder is the only one of the four built like a conventional protein powder, with 24 g of protein per 32 g serving from five milk proteins.
+          </p>
+
+          <p>
+            So the phrase "herbalife shake and protein powder" usually means Formula 1 plus one of the two boosters. Herbalife's own instructions pair them, and distributors often sell them as a bundle. The rest of this review treats that pair as the main product and brings in Herbalife24 where it changes the answer.
+          </p>
+        </div>
+
+        <div id="label" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            4. What Is in Herbalife Formula 1 and the Personalized Protein Powder?
+          </h2>
+
+          <p>
+            Formula 1 French Vanilla is mostly soy protein isolate and fructose, followed by fiber, flavor, minerals and a long vitamin premix, per the ingredient list on Herbalife's US site at the time of writing. A 25 g serving gives 90 calories, 1 g of fat, 13 g of carbohydrate, 3 g of fiber, 9 g of total sugar (8 g of it added), 95 mg of sodium and 9 g of protein. It lists 21 vitamins and minerals, most at 20 to 60% of the daily value per serving.
+          </p>
+
+          <p>
+            The protein comes mainly from soy, with some calcium caseinate and casein further down the list, so the shake contains both milk and soy. The thickeners and fibers include cellulose, corn bran, guar gum, carrageenan, inulin, psyllium and citrus pectin, and there is a small enzyme blend (protease, bromelain and papain). Herbalife says Formula 1 is gluten-free except for the Cookies 'n Cream and Mint Chocolate flavors.
+          </p>
+
+          <p>
+            The Personalized Protein Powder has the shortest label Herbalife sells: soy protein isolate, whey protein concentrate, natural flavor and silicon dioxide (an anti-caking agent). One 6 g tablespoon gives 20 calories, 0 g of fat, 0 g of carbohydrate, 50 mg of sodium and 5 g of protein, per the US label. It is unsweetened, which is why Herbalife suggests stirring it into soups, yogurt and sauces as well as shakes.
+          </p>
+
+          <h3 class="text-2xl font-bold text-gray-900 mt-10 mb-4">Which sweeteners does Herbalife use?</h3>
+
+          <p>
+            Formula 1 French Vanilla is sweetened mainly with fructose plus a little honey powder, per the US ingredient list, which is why it carries 8 g of added sugar per serving. The Protein Drink Mix uses sucralose, the same artificial sweetener found in many sports powders, and has 1 g of added sugar. The Personalized Protein Powder has no sweetener at all, and Herbalife24 Enhanced Protein Powder uses stevia leaf extract. Sweeteners vary by flavor, so check the panel on the exact canister you buy.
+          </p>
+
+          <div class="bg-gray-900 text-white rounded-2xl p-6 lg:p-8 my-8">
+            <p class="text-xs font-black uppercase tracking-widest text-[#38BDF8] mb-3">THE LABEL MATH</p>
+            <p class="text-xl font-bold text-white mb-3">9 g of protein, 9 g of sugar</p>
+            <p class="text-gray-300 leading-relaxed m-0">Made with water, a serving of Formula 1 French Vanilla has as many grams of sugar as grams of protein, per the US label. Mixing it with nonfat milk lifts protein to 17 g but also lifts total sugar to 22 g, since milk adds its own lactose.</p>
+          </div>
+
+          <p>
+            Herbalife's own page points out that 25 g of soy protein a day, as part of a diet low in saturated fat and cholesterol, may reduce the risk of heart disease, and that one serving of Formula 1 provides 9 g. It also cites one clinical study on US Formula 1, and others on similar products, showing that two shakes a day within a reduced-calorie diet plus moderate exercise helped people lose weight. That is a result for a calorie-controlled plan, not evidence that the shake is better than any other meal replacement.
+          </p>
+        </div>
+
+        <div id="third-party-tested" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            5. Is Herbalife Third-Party Tested?
+          </h2>
+
+          <p>
+            Some Herbalife products are; the core shake and protein boosters are not certified. Herbalife says Herbalife24 Formula 1 Sport, Herbalife24 Rebuild Strength and Herbalife24 Enhanced Protein Powder are NSF Certified for Sport, and the NSF Certified for Sport database lists US versions of all three, along with several other Herbalife24 products such as CR7 Drive, BCAAs and Achieve protein bars.
+          </p>
+
+          <p>
+            Herbalife spells out what that certification means on its product pages: tested to be clean of athletic-banned substances, verified to meet label claims and contaminant test criteria, and made in a facility audited for good manufacturing practice. That matches NSF's own description of the program. It is the strongest testing claim in Herbalife's range, and it is product-specific: the badge covers the listed Herbalife24 products, not the brand as a whole.
+          </p>
+
+          <p>
+            We did not find the regular Formula 1 shake, the Personalized Protein Powder or the Protein Drink Mix in the NSF Certified for Sport database, and their US product pages do not mention NSF, Informed Sport, Informed Choice or any other independent certification at the time of writing. Herbalife describes its own in-house quality testing, but that is the company testing itself. If independent verification matters to you, that distinction is the whole point.
+          </p>
+
+          <h3 class="text-2xl font-bold text-gray-900 mt-10 mb-4">Does Herbalife publish heavy metal results?</h3>
+
+          <p>
+            Not that we could find for its core shakes. Herbalife does not post batch results for lead, cadmium or arsenic on its US product pages, and the core products carry no third-party seal that would cover contaminants. NSF's contaminant screening applies to the certified Herbalife24 products only. If metals are your main worry, our guide to <a href="/best-protein-powder-without-heavy-metals/">protein powder without heavy metals</a> covers brands that publish their numbers, and <a href="/best-nsf-certified-protein-powder/">NSF-certified protein powders</a> lists the badge holders.
+          </p>
+
+          <p>
+            One more caveat applies to tubs bought outside Herbalife's own channels. Any testing Herbalife does only covers product that stayed in its supply chain. Herbalife has publicly warned about counterfeit and tampered product sold through unauthorized online sellers, so a certification or quality claim tells you nothing about a canister of unknown origin.
+          </p>
+        </div>
+
+        <div id="cost" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            6. How Much Does Herbalife Cost per 25 g of Protein?
+          </h2>
+
+          <p>
+            At the retail prices on Herbalife's US site, the core products cost between about $4.46 and $5.72 per 25 g of protein, two to six times a typical Amazon protein powder. The cheapest way to get protein from Herbalife is actually the sports line: Herbalife24 Enhanced Protein Powder works out to about $3.83 per 25 g.
+          </p>
+
+          <div class="overflow-hidden border border-gray-200 rounded-2xl my-8">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Product (Herbalife US retail)</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Price</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Servings x protein</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Total protein</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Cost per 25 g</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Formula 1, French Vanilla, 750 g</td>
+                    <td class="px-4 py-4 text-gray-700">$61.75</td>
+                    <td class="px-4 py-4 text-gray-700">30 x 9 g</td>
+                    <td class="px-4 py-4 text-gray-700">270 g</td>
+                    <td class="px-4 py-4 text-gray-700">About $5.72</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Personalized Protein Powder, 360 g</td>
+                    <td class="px-4 py-4 text-gray-700">$53.55</td>
+                    <td class="px-4 py-4 text-gray-700">60 x 5 g</td>
+                    <td class="px-4 py-4 text-gray-700">300 g</td>
+                    <td class="px-4 py-4 text-gray-700">About $4.46</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Protein Drink Mix, Vanilla, 616 g</td>
+                    <td class="px-4 py-4 text-gray-700">$75.55</td>
+                    <td class="px-4 py-4 text-gray-700">22 x 15 g</td>
+                    <td class="px-4 py-4 text-gray-700">330 g</td>
+                    <td class="px-4 py-4 text-gray-700">About $5.72</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Herbalife24 Enhanced Protein Powder, 640 g</td>
+                    <td class="px-4 py-4 text-gray-700">$73.50</td>
+                    <td class="px-4 py-4 text-gray-700">20 x 24 g</td>
+                    <td class="px-4 py-4 text-gray-700">480 g</td>
+                    <td class="px-4 py-4 text-gray-700">About $3.83</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <p>
+            The method is simple: price divided by total grams of protein, multiplied by 25. Formula 1 is $61.75 for 270 g of protein, so about $5.72 per 25 g. The Personalized Protein Powder is $53.55 for 300 g, about $4.46. Formula 1 is a meal replacement with vitamins and fiber, so cost per gram of protein flatters it less than it would a plain powder, but that is still a lot to pay for a 90-calorie shake.
+          </p>
+
+          <p>
+            Herbalife's suggested pairing makes the real cost clearer. A Formula 1 serving plus a serving of Protein Drink Mix gives 24 g of protein for about $2.06 plus $3.43, roughly $5.49 per shake at retail. Two of those a day, the pattern Herbalife's weight-loss studies use, comes to about $330 a month before tea, aloe or vitamins. A Formula 1 shake with 3 tablespoons of the Personalized Protein Powder (24 g of protein) costs about $4.74.
+          </p>
+
+          <h3 class="text-2xl font-bold text-gray-900 mt-10 mb-4">Do distributors pay less?</h3>
+
+          <p>
+            Yes. Herbalife's own compensation disclosures describe distributor discounts that start at 25% off suggested retail and can rise to 50% as a distributor's volume grows, and Herbalife also offers member and loyalty discounts. A distributor's price may therefore be well below the figures above. Even at a 50% discount, though, Formula 1 is about $2.86 per 25 g of protein, still above every Amazon alternative in this review.
+          </p>
+
+          <p>
+            Compare that with plain powders. NOW Sports Soy Protein Isolate, which shares the Personalized Protein Powder's main ingredient, was about $0.89 per 25 g at the Amazon price we saw. Optimum Nutrition Gold Standard was about $1.44, and Orgain's organic meal shake about $2.19. Our <a href="/best-cheap-protein-powder/">cheap protein powder guide</a> goes lower still.
+          </p>
+        </div>
+
+        <div id="amazon" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            7. Can You Buy Herbalife on Amazon, and Is It Safe?
+          </h2>
+
+          <p>
+            You can find Herbalife on Amazon, but Herbalife does not authorize those sales. Its US FAQ says independent distributors may not offer or facilitate sales through any auction or e-commerce site, naming eBay and Amazon, and may only sell online through platforms Herbalife creates, such as the free branded web stores it gives distributors. Every Herbalife listing on Amazon is therefore a third-party seller operating outside Herbalife's rules.
+          </p>
+
+          <p>
+            When we searched, Amazon had listings for Formula 1 French Vanilla at $65.96, Protein Drink Mix from $78.63 and a 200 g Personalized Protein Powder at $43.95. The French Vanilla price was above Herbalife's own $61.75 retail price, and 200 g is not the US canister size, which suggests an import. Bundles of Formula 1 with the protein powder ran $115 to $175.
+          </p>
+
+          <h3 class="text-2xl font-bold text-gray-900 mt-10 mb-4">What are the risks of buying from a reseller?</h3>
+
+          <p>
+            The main risks are age, storage and authenticity. A reseller's tub may be close to its best-by date, may have sat in a hot warehouse, or may be a version made for another country with different ingredients and a label in another language. Herbalife has issued public warnings about counterfeit and tampered product sold online, and says it pursues enforcement against unauthorized sellers. You also lose Herbalife's customer satisfaction and refund policy, which applies to product bought through its own channels.
+          </p>
+
+          <p>
+            If you want Herbalife, buy it from Herbalife's site, a distributor's Herbalife-hosted store or a distributor in person. If the point was simply a convenient meal or protein shake you can order on Amazon, a brand that sells there directly, such as Orgain or Optimum Nutrition, removes the guesswork.
+          </p>
+
+          <h3 class="text-2xl font-bold text-gray-900 mt-10 mb-4">How does the distributor model change the price?</h3>
+
+          <p>
+            Herbalife is a multi-level marketing company: products move through a network of independent distributors who earn retail margins and payments tied to the volume of the people they recruit. That structure is part of why the retail price is high. In 2016, Herbalife agreed to pay $200 million and restructure its US business in a settlement with the Federal Trade Commission, which had alleged that its compensation rewarded recruiting over retail sales. Buying a tub is not joining the business, but expect some distributors to pitch both.
+          </p>
+        </div>
+
+        <div id="taste" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            8. What Do Buyers Say About Herbalife Taste and Mixing?
+          </h2>
+
+          <p>
+            Buyers mostly like the taste of Formula 1, and flavor is the most common reason people say they keep buying it. In retail reviews and distributor feedback, Cookies 'n Cream, French Vanilla and Dutch Chocolate come up most often as favorites, and buyers often describe the shake as sweet and dessert-like, which fits a label led by soy protein and fructose. We have not tasted the products; this is what buyers report.
+          </p>
+
+          <p>
+            Mixing depends heavily on the liquid. Buyers who follow Herbalife's directions, 2 scoops in 8 fl oz of nonfat milk or soy milk, usually report a smooth, milkshake-like texture. Buyers who mix it with water often describe it as thin or slightly chalky, and some say it settles if left to stand. Herbalife itself recommends shaking the canister before use because the contents settle, and many distributors blend it with ice and fruit.
+          </p>
+
+          <p>
+            The Personalized Protein Powder gets fewer flavor comments because it is meant to disappear. Buyers report that one or two tablespoons stir into a Formula 1 shake without changing the taste much, and that larger amounts can make the shake thicker and slightly grainy. Some buyers notice a faint soy note when they use it in plain water or yogurt.
+          </p>
+
+          <h3 class="text-2xl font-bold text-gray-900 mt-10 mb-4">What do buyers complain about?</h3>
+
+          <p>
+            Price is the most common complaint, followed by the protein dose: buyers who compare labels are often surprised that a serving made with water has only 9 g. Other repeated complaints are the sugar content, the soy base for people avoiding soy, and pressure from distributors to buy bundles, add tea and aloe, or sign up for an ongoing order. Buyers who bought on Amazon add complaints about short dates and packaging that looked different from what they were used to.
+          </p>
+        </div>
+
+        <div id="vs" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            9. Herbalife vs Kachava, Huel and Orgain: Which Shake Is Better Value?
+          </h2>
+
+          <p>
+            For protein per dollar, all three beat Herbalife's core shake, and all three can be bought directly without a distributor. The difference that matters is what you want from the shake: a light, sweet, vitamin-fortified snack (Herbalife), a whole-food meal (Kachava or Huel), or a budget organic meal shake (Orgain).
+          </p>
+
+          <div class="overflow-hidden border border-gray-200 rounded-2xl my-8">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Shake</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Protein / serving</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Main protein</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Where sold</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Independent certification</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Herbalife Formula 1 (water)</td>
+                    <td class="px-4 py-4 text-gray-700">9 g</td>
+                    <td class="px-4 py-4 text-gray-700">Soy</td>
+                    <td class="px-4 py-4 text-gray-700">Distributors, Herbalife site</td>
+                    <td class="px-4 py-4 text-gray-700">None listed</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Herbalife Formula 1 + Protein Drink Mix</td>
+                    <td class="px-4 py-4 text-gray-700">24 g</td>
+                    <td class="px-4 py-4 text-gray-700">Soy</td>
+                    <td class="px-4 py-4 text-gray-700">Distributors, Herbalife site</td>
+                    <td class="px-4 py-4 text-gray-700">None listed</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Orgain Organic Meal</td>
+                    <td class="px-4 py-4 text-gray-700">20 g</td>
+                    <td class="px-4 py-4 text-gray-700">Organic plant blend</td>
+                    <td class="px-4 py-4 text-gray-700">Amazon, grocery</td>
+                    <td class="px-4 py-4 text-gray-700">No sport cert found</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Kachava</td>
+                    <td class="px-4 py-4 text-gray-700">25 g</td>
+                    <td class="px-4 py-4 text-gray-700">Plant blend</td>
+                    <td class="px-4 py-4 text-gray-700">Brand site, Amazon</td>
+                    <td class="px-4 py-4 text-gray-700">See our review</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Huel Black Edition</td>
+                    <td class="px-4 py-4 text-gray-700">40 g in about 400 calories</td>
+                    <td class="px-4 py-4 text-gray-700">Pea, brown rice</td>
+                    <td class="px-4 py-4 text-gray-700">Brand site, Amazon</td>
+                    <td class="px-4 py-4 text-gray-700">See our review</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <p>
+            <a href="/kachava-review/">Kachava</a> is the premium whole-food option, with more protein and a long list of plant extras, but it costs more per serving than many people expect. <a href="/huel-protein-powder-review/">Huel</a> is the most complete meal: a full 400-calorie serving with carbs, fats and fiber, at a lower cost per calorie than Herbalife. <a href="/orgain-protein-powder-review/">Orgain</a> is the easiest switch for most Herbalife users, with a meal shake that gives 20 g of protein for under $2 a serving at the Amazon price we saw.
+          </p>
+
+          <p>
+            Herbalife's case rests on things the others do not offer: the distributor's coaching and nutrition clubs, a very wide range of dessert-style flavors, and a structured plan. If that support is what helps you stick to a diet, it has value. If you only want the shake, our <a href="/best-meal-replacement-shake/">best meal replacement shake</a> guide ranks the alternatives by protein, sugar and cost per serving. Herbalife is not in our product database, so there is no ready-made <a href="/compare/">comparison page</a> for it yet.
+          </p>
+
+          <p>
+            Arbonne is the closest comparison on the business model, since it is also sold through independent consultants. Its shake is plant-based rather than soy-led and carries its own cost and certification questions, covered in our <a href="/arbonne-protein-powder-review/">Arbonne protein powder review</a>.
+          </p>
+        </div>
+
+        <div id="who" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            10. Who Should Buy Herbalife Protein Powder, and Who Should Skip It?
+          </h2>
+
+          <p>
+            Herbalife makes sense for a narrow group: people who already have a distributor they trust, enjoy the Formula 1 flavors, and value a structured plan with coaching more than the cost per gram. For that buyer, Formula 1 mixed with nonfat milk plus a tablespoon or two of the Personalized Protein Powder gives a sweet shake with 22 to 27 g of protein and a full vitamin premix.
+          </p>
+
+          <p>
+            Athletes who are drug-tested should only use the Herbalife24 products listed in the NSF Certified for Sport database, and should check the specific product and flavor there before buying. The core Formula 1 shake and the protein boosters carry no such certification.
+          </p>
+
+          <p>
+            Skip Herbalife if you are trying to keep protein cheap, want a high protein dose in one scoop, avoid soy, or want to limit added sugar. A plain soy isolate gives the Personalized Protein Powder's protein for about one-fifth of the price, and most whey powders give 24 g per scoop for under $1.50 per 25 g. Our <a href="/best-soy-protein-powder/">soy protein powder guide</a> lists options if you like the soy base.
+          </p>
+
+          <p>
+            Some people should check with a doctor or registered dietitian before using any meal-replacement plan, Herbalife included: people with kidney disease, anyone pregnant or breastfeeding, people with diabetes adjusting medication, and anyone with a soy or milk allergy (Formula 1 and the protein powders contain both). If you are unsure how much protein you need at all, our <a href="/how-much-protein-do-i-need/">protein calculator guide</a> is a better starting point than any shake plan.
+          </p>
+        </div>
+
+        <!-- Common Mistakes -->
+        <div id="mistakes" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            11. Common Mistakes to Avoid
+          </h2>
+
+          <div class="space-y-6 my-8">
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Assuming Formula 1 Is a High-Protein Shake</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Made with water, a Formula 1 serving has 9 g of protein, about a third of a standard whey scoop. The 17 to 24 g figures on Herbalife's marketing assume nonfat milk or a second powder. Read the per-serving column that matches how you actually mix it before counting it toward your protein goal.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Buying Formula 3 in the US Expecting Protein</h3>
+              <p class="text-gray-700 text-sm m-0">
+                In the US, Formula 3 is Cell Activator, a capsule, not a protein powder. The protein add-in is sold as Personalized Protein Powder. A tub labeled Formula 3 Personalised Protein Powder is an import made for another country, with that market's label and possibly a different formula.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Trusting an Amazon Listing Because the Brand Is Real</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Herbalife does not authorize any Amazon sales, so every listing is a third-party reseller. The tub could be old, heat-stored, imported or counterfeit, and Herbalife's refund policy will not cover it. If you want Herbalife, buy through Herbalife's site or a distributor's Herbalife-hosted store.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Treating the Herbalife24 NSF Badge as Brand-Wide</h3>
+              <p class="text-gray-700 text-sm m-0">
+                NSF Certified for Sport covers specific Herbalife24 products, such as Formula 1 Sport, Rebuild Strength and Enhanced Protein Powder. It does not cover the regular Formula 1 shake, Protein Drink Mix or Personalized Protein Powder. Drug-tested athletes should check the exact product in NSF's database.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Ignoring the Monthly Cost of the Full Plan</h3>
+              <p class="text-gray-700 text-sm m-0">
+                A Formula 1 shake plus Protein Drink Mix costs about $5.49 at Herbalife's retail prices. Two a day is roughly $330 a month before the tea, aloe and supplements distributors often add. Price the whole plan, and ask what discount applies, before committing to an ongoing order.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ -->
+        <div id="faq" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            12. Frequently Asked Questions
+          </h2>
+
+          <div class="faq-list">
+            <details class="faq-item">
+              <summary><h3>Is Herbalife third-party tested?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  Only part of the range. Herbalife says Herbalife24 Formula 1 Sport, Rebuild Strength and Enhanced Protein Powder are NSF Certified for Sport, and NSF's database lists them. We found no independent certification for the regular Formula 1 shake, Protein Drink Mix or Personalized Protein Powder, whose US pages mention no NSF, Informed Sport or similar seal. Herbalife describes in-house quality testing for those products.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>How much protein is in Herbalife Personalized Protein Powder?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  Each level tablespoon (6 g) gives 5 g of protein and 20 calories, per Herbalife's US label at the time of writing, with 60 servings in the 360 g canister. Herbalife suggests women add up to 2 tablespoons (10 g of protein) and men up to 3 tablespoons (15 g) to each Formula 1 shake. Reaching 25 g of protein takes five tablespoons.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>Is Herbalife healthy or clean?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  It depends on the product. The Personalized Protein Powder has a short, unsweetened label of soy isolate and whey concentrate. Formula 1 is a fortified shake with 21 vitamins and minerals but also 8 g of added sugar, mostly fructose, plus gums and carrageenan. It can fit a calorie-controlled diet, but it is a processed, sweetened shake rather than a clean-label product.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>Does Herbalife contain soy?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  Yes. Soy protein isolate is the first ingredient in Formula 1, the Personalized Protein Powder and the Protein Drink Mix, per Herbalife's US labels, and all three also contain milk. Anyone with a soy or milk allergy should avoid them. Herbalife24 Enhanced Protein Powder is milk-based but lists soy lecithin, so it is not soy-free either.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>Which Herbalife Formula 1 flavor is best?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  Buyers most often name Cookies 'n Cream, French Vanilla and Dutch Chocolate as favorites in retail reviews and distributor feedback, and French Vanilla is a common pick for blending with fruit. We have not tasted them. Note that Herbalife says Cookies 'n Cream and Mint Chocolate are the two flavors that are not gluten-free.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>What are the most common complaints about Herbalife?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  Buyers most often complain about price, the low protein in a shake made with water, the added sugar, and distributor pressure to buy bundles or sign up for ongoing orders. People who avoid soy dislike the soy base. Buyers who ordered through Amazon resellers add complaints about short best-by dates and packaging that did not match what they expected.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>Can you mix Herbalife Formula 1 with the protein powder?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  Yes, that is how Herbalife designs them. Add 1 to 3 tablespoons of Personalized Protein Powder, or 2 scoops of Protein Drink Mix, to a Formula 1 serving. Herbalife says Protein Drink Mix with water brings the shake to 24 g of protein. Three tablespoons of Personalized Protein Powder with water gives about the same, 24 g in total.
+                </p>
+              </div>
+            </details>
+
+          </div>
+        </div>
+
+        <!-- Related Guides -->
+        <div class="mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">Related Meal Replacement and Brand Guides</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <a href="/best-meal-replacement-shake/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#FF4500] font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Meal Replacement Shakes</h3>
+              <p class="text-gray-500 text-sm mt-2">The shakes that beat Formula 1 on protein, sugar and cost per serving.</p>
+            </a>
+            <a href="/arbonne-protein-powder-review/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#1E90FF] font-black text-xs uppercase tracking-widest mb-2">Brand Review</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Arbonne Protein Powder Review</h3>
+              <p class="text-gray-500 text-sm mt-2">Another consultant-sold shake, checked by label and cost per 25 g.</p>
+            </a>
+            <a href="/kachava-review/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#1E90FF] font-black text-xs uppercase tracking-widest mb-2">Brand Review</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Kachava Review</h3>
+              <p class="text-gray-500 text-sm mt-2">The premium whole-food meal shake, label-checked.</p>
+            </a>
+            <a href="/orgain-protein-powder-review/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#1E90FF] font-black text-xs uppercase tracking-widest mb-2">Brand Review</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Orgain Protein Powder Review</h3>
+              <p class="text-gray-500 text-sm mt-2">The budget organic shake most Herbalife switchers land on.</p>
+            </a>
+          </div>
+        </div>
+
+        <!-- Closing -->
+        <div class="mt-16 bg-gray-900 text-white rounded-2xl p-6 md:p-8">
+          <h2 class="text-2xl font-black text-white mb-4">The Bottom Line</h2>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            Herbalife's protein powder is a 5 g-per-tablespoon soy and whey booster built to top up a 9 g Formula 1 shake. Together they make a sweet, vitamin-fortified shake with 17 to 24 g of protein, at about $4.50 to $5.70 per 25 g at Herbalife's retail prices. Only the Herbalife24 sports products carry NSF Certified for Sport; the core shake and boosters do not.
+          </p>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            If you value a distributor's coaching and love the flavors, buy through Herbalife's own channels, never an Amazon reseller. If you just want a good shake, Orgain's organic meal shake, a plain soy isolate or a tested whey like Gold Standard gives more protein for far less, and our <a href="/best-meal-replacement-shake/">meal replacement shake guide</a> ranks the rest.
+          </p>
+        </div>
+
+        <MoreInCategory category="Brand Reviews" links={moreInCategory} />
+
+        <AuthorBio />
+      </div>
+    </div>
+  </article>
+</Layout>
