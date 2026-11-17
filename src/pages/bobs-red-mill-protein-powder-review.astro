@@ -1,0 +1,833 @@
+---
+import Layout from "../layouts/Layout.astro";
+import ArticleHeader from "../components/ArticleHeader.astro";
+import TableOfContents from "../components/TableOfContents.astro";
+import ProductCard from "../components/ProductCard.astro";
+import MoreInCategory from "../components/MoreInCategory.astro";
+import { AUTHORS, DEFAULT_AUTHOR, authorSchema } from "../data/authors";
+import { SITE_NAME, SITE_URL } from "../data/site";
+import QuickPicks from "../components/QuickPicks.astro";
+import AuthorBio from "../components/AuthorBio.astro";
+import { pageDates } from "../data/dates";
+
+const moreInCategory = [
+  {
+    "title": "Naked Nutrition Protein Powder Review",
+    "url": "/naked-nutrition-protein-powder-review/"
+  },
+  {
+    "title": "Best Protein Powder for Baking",
+    "url": "/best-protein-powder-for-baking/"
+  },
+  {
+    "title": "Best Unflavored Protein Powder",
+    "url": "/best-unflavored-protein-powder/"
+  }
+];
+const author = AUTHORS[DEFAULT_AUTHOR];
+const dates = pageDates(Astro.url.pathname, { published: "2026-11-17", modified: "2026-11-17" });
+const title = "Bob's Red Mill Protein Powder Review: Whey, Almond and Hemp";
+const description =
+  "Bob's Red Mill now sells 3 protein powders: whey (14 g), almond (20 g) and hemp (12 g). None claims sport third-party testing. Labels and cost per 25 g.";
+
+const PRODUCTS: {
+  id: string;
+  name: string;
+  brand?: string;
+  badge: string;
+  category: string;
+  description: string;
+  pros: string[];
+  cons: string[];
+  bottomLine: string;
+  specs?: Record<string, string>;
+  rating?: number;
+  reviewCount?: number;
+  amazonUrl?: string;
+}[] = [
+  {
+    "id": "bobs-red-mill-protein-powder-review-whey-concentrate-4pk",
+    "name": "Bob's Red Mill Whey Protein Concentrate, 12 oz (4 Pack)",
+    "brand": "Bob's Red Mill",
+    "badge": "Best Bob's Red Mill Powder",
+    "category": "Unflavored whey protein concentrate",
+    "description": "The whey is the most protein-dense powder Bob's Red Mill makes. Per the label at the time of writing, a 1/4 cup (19 g) serving gives 14 g of protein, 70 calories, 1 g of fat and 3 g of carbohydrate, with 0 g of added sugar. The ingredients are whey protein concentrate and sunflower lecithin, nothing else. It is unsweetened and unflavored, and the brand pitches it for shakes and baking. The product page shows a Kosher dairy badge but no gluten-free badge, and there is no sport certification.",
+    "pros": [
+      "Two ingredients, no sweetener, flavor or gums",
+      "About $1.61 per 25 g at the Amazon price we saw, the cheapest of the three Bob's Red Mill powders",
+      "Low in carbs and fat, so it disappears into recipes",
+      "Rated 4.9 out of 5 across 112 reviews on bobsredmill.com at the time of writing"
+    ],
+    "cons": [
+      "Only 14 g of protein per serving, so you need nearly two scoops for 25 g",
+      "Concentrate contains some lactose and milk allergen",
+      "No NSF, Informed Choice or other third-party sport testing published",
+      "Amazon sells it mainly in 2 and 4 bag packs"
+    ],
+    "bottomLine": "The best buy in the line: a clean, cheap-per-gram whey for baking and smoothies, as long as you accept small scoops and no third-party testing.",
+    "specs": {
+      "Protein / serving": "14 g per 19 g (label)",
+      "Calories": "70",
+      "Third-party testing": "None published",
+      "Cost per 25 g": "About $1.61 (Amazon price seen)"
+    },
+    "amazonUrl": "https://www.amazon.com/dp/B000EDG5CA"
+  },
+  {
+    "id": "bobs-red-mill-protein-powder-review-almond-4pk",
+    "name": "Bob's Red Mill Almond Protein Powder, 14 oz (4 Pack)",
+    "brand": "Bob's Red Mill",
+    "badge": "Best Vegan Option",
+    "category": "Defatted almond protein powder",
+    "description": "Almond Protein Powder is one ingredient: blanched almonds, ground and expeller pressed to remove most of the oil, with no chemical solvents, per Bob's Red Mill. Per the label at the time of writing, a 1/3 cup (44 g) serving gives 20 g of protein, 180 calories, 5 g of fat, 6 g of fiber and 246 mg of calcium, with 0 g of added sugar. The brand lists it as gluten free, vegan, Non-GMO Project Verified, paleo friendly and Kosher pareve.",
+    "pros": [
+      "The only Bob's Red Mill powder with a gluten-free badge on its product page",
+      "20 g of protein per serving, the most per scoop in the line",
+      "One ingredient, no added flavors, colors or sweeteners",
+      "Good source of calcium, potassium and fiber, per the label"
+    ],
+    "cons": [
+      "About $2.29 per 25 g at the Amazon 4-pack price we saw; about $2.73 for a single bag",
+      "180 calories per serving, far more than whey for the same protein",
+      "Tree nut allergen",
+      "No third-party sport testing published"
+    ],
+    "bottomLine": "The pick for vegan and gluten-free bakers who want a nutty, single-ingredient protein, not the cheapest way to hit a protein target.",
+    "specs": {
+      "Protein / serving": "20 g per 44 g (label)",
+      "Calories": "180",
+      "Third-party testing": "None published (Non-GMO Project Verified)",
+      "Cost per 25 g": "About $2.29 (Amazon price seen)"
+    },
+    "amazonUrl": "https://www.amazon.com/dp/B08KJWDPX4"
+  },
+  {
+    "id": "bobs-red-mill-protein-powder-review-hemp-4pk",
+    "name": "Bob's Red Mill Hemp Protein Powder, 16 oz (Pack of 4)",
+    "brand": "Bob's Red Mill",
+    "badge": "Best for Fiber",
+    "category": "Hemp seed protein powder",
+    "description": "Hemp Protein Powder is one ingredient, hemp protein powder, per Bob's Red Mill. Per the label at the time of writing, a 1/4 cup (31 g) serving gives 12 g of protein, 120 calories, 11 g of fiber and 6 mg of iron (35% of the Daily Value). The product page now carries a notice that this product is no longer produced gluten free, so treat older gluten-free claims on retailer listings with caution. It is vegan and, like all Bob's Red Mill products, kosher certified, per the brand.",
+    "pros": [
+      "11 g of fiber and a third of a day's iron per serving, per the label",
+      "One ingredient with nothing added",
+      "About $1.71 per 25 g at the Amazon 4-pack price we saw",
+      "The brand says it can replace up to 25% of the flour in baked goods"
+    ],
+    "cons": [
+      "No longer produced gluten free, per the brand's product page",
+      "Only 12 g of protein per 31 g scoop, the lowest protein density in the line",
+      "Buyers commonly mention an earthy taste and gritty texture",
+      "No third-party sport testing published"
+    ],
+    "bottomLine": "A fiber and iron booster for smoothies and baking that happens to contain protein. Skip it if you need gluten free or a high-protein shake.",
+    "specs": {
+      "Protein / serving": "12 g per 31 g (label)",
+      "Calories": "120",
+      "Third-party testing": "None published",
+      "Cost per 25 g": "About $1.71 (Amazon price seen)"
+    },
+    "amazonUrl": "https://www.amazon.com/dp/B003B0SKF8"
+  },
+  {
+    "id": "bobs-red-mill-protein-powder-review-alt-naked-whey-2lb",
+    "name": "Naked Whey Unflavored Grass-Fed Whey Protein, 2 lb",
+    "brand": "Naked Nutrition",
+    "badge": "Tested Alternative to the Whey",
+    "category": "Unflavored whey protein concentrate",
+    "description": "If you like the idea of Bob's Red Mill whey but want a third-party certificate, Naked Whey is the closest single-ingredient swap on Amazon. The unflavored version is one ingredient, grass-fed whey, per Naked. A two-scoop serving gives 25 g of protein, so one serving does the job that takes nearly two Bob's Red Mill scoops. Naked says the powder is NSF Contents Certified, which covers label accuracy and contaminants. The 2 lb bag holds about 30 servings.",
+    "pros": [
+      "NSF Contents Certified, per Naked",
+      "25 g of protein per serving",
+      "One ingredient, no sweetener or lecithin",
+      "Also sold in a 5 lb bag that cuts the cost per gram"
+    ],
+    "cons": [
+      "About $2.10 per 25 g at the Amazon 2 lb price we saw, more than Bob's Red Mill whey",
+      "Contains lactose and milk, like any concentrate",
+      "Unflavored whey tastes plain on its own"
+    ],
+    "bottomLine": "Pay about 50 cents more per 25 g than Bob's Red Mill whey and you get bigger scoops and a published contaminant certification.",
+    "specs": {
+      "Protein / serving": "25 g (brand)",
+      "Calories": "About 120",
+      "Third-party testing": "NSF Contents Certified (brand)",
+      "Cost per 25 g": "About $2.10 (Amazon price seen)"
+    },
+    "amazonUrl": "https://www.amazon.com/dp/B00XIKPUK4"
+  },
+  {
+    "id": "bobs-red-mill-protein-powder-review-alt-naked-pea-5lb",
+    "name": "Naked Pea Unflavored Pea Protein Isolate, 5 lb",
+    "brand": "Naked Nutrition",
+    "badge": "Replacement for Bob's Red Mill Pea Protein",
+    "category": "Unflavored pea protein isolate",
+    "description": "Bob's Red Mill no longer lists a pea protein powder on its website, and we could not find a current Bob's Red Mill pea listing on Amazon. Naked Pea is the single-ingredient replacement we would point former buyers to. It is protein from yellow split peas grown in the US and Canada, extracted with water, per the brand. A two-scoop serving gives 27 g of protein and about 120 calories, and Naked says it is NSF Contents Certified. The 5 lb bag holds 76 servings.",
+    "pros": [
+      "About $0.71 per 25 g at the Amazon price we saw, the cheapest powder on this page",
+      "27 g of protein per serving",
+      "NSF Contents Certified, per Naked",
+      "Dairy free, soy free and gluten free, per the listing"
+    ],
+    "cons": [
+      "5 lb is a lot of unflavored powder if you only bake occasionally",
+      "Pea protein has an earthy taste some buyers dislike",
+      "Not a Bob's Red Mill product, so no in-store pickup at grocery chains that stock the brand"
+    ],
+    "bottomLine": "The best value here by a wide margin, and the obvious stand-in for the discontinued Bob's Red Mill pea protein.",
+    "specs": {
+      "Protein / serving": "27 g (brand)",
+      "Calories": "About 120",
+      "Third-party testing": "NSF Contents Certified (brand)",
+      "Cost per 25 g": "About $0.71 (Amazon price seen)"
+    },
+    "amazonUrl": "https://www.amazon.com/dp/B00NBIUGA2"
+  }
+];
+
+const schema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Home",
+          item: `${SITE_URL}/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Best Lists",
+          item: `${SITE_URL}/best-of/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 3,
+          name: "Bob's Red Mill Protein Powder Review",
+          item: `${SITE_URL}/bobs-red-mill-protein-powder-review/`,
+        },
+      ],
+    },
+    {
+      "@type": "FAQPage",
+      mainEntity: [
+        {
+          "@type": "Question",
+          "name": "Is Bob's Red Mill protein powder third-party tested?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. None of Bob's Red Mill's protein powders lists NSF, Informed Choice, Informed Sport or Clean Label Project certification, and the brand does not publish heavy metal results for them. Bob's Red Mill does say its facilities are audited annually to the SQF food safety standard and that its products are kosher certified, but those programs do not test finished powders for banned substances or contaminants."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is Bob's Red Mill protein powder healthy?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It is a clean, simple ingredient by label standards. The whey has two ingredients, and the almond and hemp powders have one each, with no added sugar, sweeteners, flavors or gums, per the labels at the time of writing. The trade-off is lower protein per scoop than sports powders and no third-party testing. Whether it is healthy for you depends on your overall diet and protein needs."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does Bob's Red Mill whey protein contain lactose?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, it contains some lactose. The bag is whey protein concentrate, which keeps more milk sugar than whey isolate, and the label lists 1 g of total sugar per 19 g serving. Bob's Red Mill does not publish a separate lactose figure. It is also a milk allergen. If lactose gives you trouble, a whey isolate or a plant powder such as the almond protein is a safer choice."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is Bob's Red Mill hemp protein powder gluten free?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Not any more. The Bob's Red Mill product page states that the hemp protein powder is no longer produced gluten free, and it carries no gluten-free badge. Some older retailer listings still describe it as gluten free, so trust the current bag over the listing. Of the three current powders, only the almond protein powder shows a gluten-free badge on the brand's website."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Which Bob's Red Mill protein powder is best?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "For most people the whey is best: it has the highest protein density, about 74% by weight, and the lowest cost per 25 g of the three at about $1.61 at the Amazon price we saw. Buyers rate it 4.9 out of 5 on the brand's site. Choose the almond powder if you are vegan or need gluten free, and the hemp powder if fiber and iron are your priority."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What are the common complaints about Bob's Red Mill protein powder?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Buyers most often mention small servings, so it takes nearly two scoops of whey to reach 25 g of protein. Hemp buyers report an earthy taste and a gritty texture, and some were unhappy when it stopped being produced gluten free. A few whey buyers find the plain flavor raw in water. Others note the price is higher than bulk unflavored powders."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does Bob's Red Mill still make pea protein powder?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Bob's Red Mill pea protein powder is no longer listed on bobsredmill.com, and we found no current listing on Amazon when we checked in November 2026, so treat it as discontinued. The brand's current protein powders are whey concentrate, almond and hemp. For a similar single-ingredient pea protein, Naked Pea gives 27 g of protein per serving and costs about $0.71 per 25 g in its 5 lb bag."
+          }
+        }
+      ],
+    },
+    {
+      "@type": "Article",
+      headline: title,
+      author: authorSchema(),
+      datePublished: dates.published,
+      dateModified: dates.modified,
+      publisher: { "@type": "Organization", name: SITE_NAME, url: SITE_URL },
+    },
+    {
+      "@type": "ItemList",
+      name: title,
+      numberOfItems: PRODUCTS.length,
+      itemListElement: PRODUCTS.map((product, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name: product.name,
+        url: new URL(`#${product.id}`, Astro.url).toString(),
+      })),
+    },
+    ...PRODUCTS.map((product) => ({
+      "@type": "Product",
+      name: product.name,
+      description: product.description,
+      brand: {
+        "@type": "Brand",
+        name: product.brand ?? product.name.split(" ")[0],
+      },
+    })),
+  ],
+};
+---
+
+<Layout
+  title={title}
+  description={description}
+  ogType="article"
+  article={{
+    publishedTime: dates.published,
+    modifiedTime: dates.modified,
+    author: author.name,
+    section: "Brand Reviews",
+    tags: [
+      "bob's red mill protein powder",
+      "bob's red mill whey protein powder",
+      "bob's red mill almond protein powder",
+      "bob's red mill hemp protein powder",
+      "bob's red mill pea protein"
+    ],
+  }}
+  jsonLd={schema}
+  stickyCta={{
+    text: "See Our Top Protein Powder Picks",
+    link: "/best-protein-powder/",
+  }}
+>
+  <article class="relative overflow-hidden">
+    <ArticleHeader kicker={"Brand Review"} badge={"Label-Checked"} author={author} dates={dates} mobileAd={false}>
+      <Fragment slot="title">Bob's Red Mill Protein Powder Review</Fragment>
+      Bob's Red Mill makes plain, unsweetened protein powders for bakers and smoothie makers. Here is what is in each bag, what it really costs per 25 g of protein, and what the brand does and does not test.
+    </ArticleHeader>
+
+    <TableOfContents>
+      <a href="#short-answer">Short Answer</a>
+      <a href="#top-picks">The Products</a>
+      <a href="#whey">What Is in the Whey?</a>
+      <a href="#almond-hemp">Almond, Hemp and Pea</a>
+      <a href="#third-party-tested">Third-Party Testing</a>
+      <a href="#cost">Cost per 25 g</a>
+      <a href="#baking">Baking With It</a>
+      <a href="#taste">Taste and Mixing</a>
+      <a href="#vs">Bob's Red Mill vs Naked and PB2</a>
+      <a href="#who">Who Should Buy It</a>
+      <a href="#mistakes">Common Mistakes</a>
+      <a href="#faq">FAQ</a>
+    </TableOfContents>
+
+    <!-- Content -->
+    <div class="max-w-3xl mx-auto px-4 pb-16 lg:pb-24">
+      <div class="prose prose-lg prose-blue max-w-none text-gray-700 leading-relaxed">
+        <p class="lede">
+          Bob's Red Mill protein powder is a good single-ingredient pantry staple but a weak workout shake: the whey gives 14 g of protein per scoop, the almond 20 g and the hemp 12 g, none with sweeteners. Your goal decides whether that suits you. Below we cover every label, gluten-free status, testing, cost per 25 g and the discontinued pea protein.
+        </p>
+
+        <QuickPicks products={PRODUCTS} />
+
+        <div id="short-answer" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            1. Bob's Red Mill Protein Powder: The Short Answer
+          </h2>
+
+          <p>
+            Bob's Red Mill protein powder is worth buying as a plain baking and smoothie ingredient, not as a workout shake. The brand currently lists three powders on bobsredmill.com: Whey Protein Concentrate with 14 g of protein per 19 g serving, Almond Protein Powder with 20 g per 44 g, and Hemp Protein Powder with 12 g per 31 g, per the labels at the time of writing. None has added sweetener, flavor or gums, and none carries a third-party sport certification.
+          </p>
+
+          <p>
+            <strong>Buy it if</strong> you want an unsweetened, one- or two-ingredient powder to stir into oatmeal, muffins and pancakes, or you already shop the brand at your grocery store. <strong>Skip it if</strong> you want 25 g or more of protein in one scoop, a flavored shake, or a powder with NSF or Informed Choice testing. For those goals, our <a href="/best-protein-powder/">best protein powder</a> guide is the better starting point.
+          </p>
+
+          <div class="overflow-hidden border border-gray-200 rounded-2xl my-8">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Powder</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Protein / serving</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Calories</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Gluten-free badge</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Cost per 25 g</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Whey Protein Concentrate</td>
+                    <td class="px-4 py-4 text-gray-700">14 g per 19 g</td>
+                    <td class="px-4 py-4 text-gray-700">70</td>
+                    <td class="px-4 py-4 text-gray-700">No (Kosher dairy badge only)</td>
+                    <td class="px-4 py-4 text-gray-700">About $1.61</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Almond Protein Powder</td>
+                    <td class="px-4 py-4 text-gray-700">20 g per 44 g</td>
+                    <td class="px-4 py-4 text-gray-700">180</td>
+                    <td class="px-4 py-4 text-gray-700">Yes</td>
+                    <td class="px-4 py-4 text-gray-700">About $2.29</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Hemp Protein Powder</td>
+                    <td class="px-4 py-4 text-gray-700">12 g per 31 g</td>
+                    <td class="px-4 py-4 text-gray-700">120</td>
+                    <td class="px-4 py-4 text-gray-700">No, no longer produced gluten free</td>
+                    <td class="px-4 py-4 text-gray-700">About $1.71</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Pea Protein (old)</td>
+                    <td class="px-4 py-4 text-gray-700">No longer listed</td>
+                    <td class="px-4 py-4 text-gray-700">n/a</td>
+                    <td class="px-4 py-4 text-gray-700">n/a</td>
+                    <td class="px-4 py-4 text-gray-700">Discontinued</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Picks -->
+        <div id="top-picks" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            2. Bob's Red Mill Protein Powders and the Best Alternatives
+          </h2>
+
+          <p>
+            The three powders Bob's Red Mill still lists on its website, plus two single-ingredient alternatives on Amazon: a third-party-certified whey and a pea protein to replace the Bob's Red Mill pea powder that is no longer sold. Prices are the Amazon prices we saw on 17 November 2026 and will change.
+          </p>
+
+          {PRODUCTS.map((product, index) => (
+            <ProductCard product={product} rank={index + 1} />
+          ))}
+        </div>
+
+        <div id="whey" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            3. What Is in Bob's Red Mill Whey Protein Powder?
+          </h2>
+
+          <p>
+            Bob's Red Mill whey protein powder contains two ingredients, whey protein concentrate and sunflower lecithin, and gives 14 g of protein in a 1/4 cup (19 g) serving, per the label at the time of writing. That serving has 70 calories, 1 g of fat, 3 g of carbohydrate, 1 g of total sugar with 0 g added, 45 mg of sodium and 64 mg of calcium. There is no sweetener, no flavoring, no thickener and no added vitamins. The sunflower lecithin is there to help the powder wet and disperse in liquid, which is why the brand says it dissolves instantly.
+          </p>
+
+          <p>
+            The number that matters most is protein density. Fourteen grams of protein in 19 g of powder works out to about 74% protein by weight, which is typical for an unflavored whey concentrate and much higher than the almond or hemp powders. The catch is the scoop size. Most sports wheys use a 30 to 33 g scoop that delivers 24 to 25 g of protein. To get 25 g from Bob's Red Mill whey you need about 1.8 servings, roughly 34 g of powder and about 125 calories. That is not a problem in a recipe, where you measure by the cup anyway, but it is a surprise if you expect one scoop to make a full shake.
+          </p>
+
+          <p>
+            The bag is labelled whey protein concentrate rather than isolate, and that distinction matters for anyone sensitive to dairy. Concentrate keeps more of the milk sugar than isolate, so it is not lactose free, and it is a milk allergen. Bob's Red Mill does not publish a lactose figure. If lactose bothers you, an isolate is the safer choice; our <a href="/whey-vs-whey-isolate/">whey vs whey isolate</a> explainer covers the difference, and the <a href="/best-lactose-free-protein-powder/">best lactose-free protein powder</a> guide lists options.
+          </p>
+
+          <p>
+            Bob's Red Mill does not say where its whey is sourced, whether the cows are grass fed, or whether it is made from rBST-free milk on the product page we checked. It also does not publish an amino acid profile beyond saying whey is a complete protein containing all of the essential amino acids, which is true of whey in general. The bag now comes in a stand-up, resealable package, per the brand, and Amazon sells it mostly as 12 oz bags in packs of two or four.
+          </p>
+
+          <p>
+            In short, this is a simple, honest whey with a short ingredient list and modest scoops. People searching for Bob's Red Mill whey protein powder usually want exactly that: a plain dairy protein for cooking that will not make muffins taste like vanilla frosting. If you want it to work as a gym shake, plan on two scoops and some fruit or cocoa for flavor.
+          </p>
+        </div>
+
+        <div id="almond-hemp" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            4. What Is in Bob's Red Mill Almond and Hemp Protein Powder?
+          </h2>
+
+          <p>
+            Bob's Red Mill almond protein powder is one ingredient, defatted blanched almonds, and gives 20 g of protein per 1/3 cup (44 g); the hemp protein powder is one ingredient, hemp protein, and gives 12 g per 1/4 cup (31 g), per the labels at the time of writing. Both are whole-food style powders rather than isolates, which means they carry fiber, minerals and some fat alongside the protein. That makes them nutritious ingredients but less efficient protein sources than whey.
+          </p>
+
+          <h3 class="text-2xl font-bold text-gray-900 mt-10 mb-4">Almond Protein Powder label facts</h3>
+
+          <p>
+            The almond powder is made by grinding blanched almonds and expeller pressing them to remove the oil, without chemical solvents, per Bob's Red Mill. A 44 g serving has 180 calories, 5 g of fat, 14 g of carbohydrate, 6 g of fiber, 4 g of naturally occurring sugar with 0 g added, 246 mg of calcium (20% of the Daily Value), 3 mg of iron and 601 mg of potassium. Protein makes up about 45% of the powder by weight. The product page carries badges for gluten free, vegan, Non-GMO, paleo friendly and Kosher pareve. It is a tree nut product, so anyone with an almond allergy should avoid it. We compare it with other nut-based powders in our <a href="/best-almond-protein-powder/">best almond protein powder</a> guide.
+          </p>
+
+          <h3 class="text-2xl font-bold text-gray-900 mt-10 mb-4">Hemp Protein Powder label facts</h3>
+
+          <p>
+            A 31 g serving of the hemp powder has 120 calories, 2 g of fat, 13 g of carbohydrate, 11 g of fiber, 1 g of sugar, 6 mg of iron (35% of the Daily Value) and 391 mg of potassium, per the label. Only about 39% of the powder is protein, so getting 25 g takes roughly 65 g of powder, about 250 calories and 23 g of fiber. That much fiber in one sitting can cause bloating if you are not used to it. Bob's Red Mill calls hemp a complete protein containing all of the essential amino acids; hemp is generally lower in lysine than animal proteins, which is one reason plant blends often pair it with pea. Our <a href="/best-hemp-protein-powder/">best hemp protein powder</a> page compares it with organic and higher-protein hemp options.
+          </p>
+
+          <h3 class="text-2xl font-bold text-gray-900 mt-10 mb-4">What happened to Bob's Red Mill pea protein?</h3>
+
+          <p>
+            Bob's Red Mill pea protein is no longer listed on bobsredmill.com, and we found no current Bob's Red Mill pea protein listing on Amazon when we checked on 17 November 2026. The same goes for the older soy protein isolate and the flavored Protein Powder Nutritional Boosters: none appears in the brand's current product catalogue. Treat them as discontinued, and be wary of third-party sellers offering old stock at inflated prices. Our <a href="/best-pea-protein-powder/">best pea protein powder</a> and <a href="/best-soy-protein-powder/">best soy protein powder</a> guides list current single-ingredient replacements.
+          </p>
+        </div>
+
+        <div id="third-party-tested" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            5. Is Bob's Red Mill Protein Powder Third-Party Tested?
+          </h2>
+
+          <p>
+            No, Bob's Red Mill protein powder is not third-party tested for sport or contaminants in the way supplement buyers usually mean. None of the three powders lists NSF Certified for Sport, NSF Contents Certified, Informed Choice, Informed Sport or Clean Label Project status on its product page, and Bob's Red Mill does not publish heavy metal results for them. That is not unusual for a grocery brand that sells protein powder as a baking ingredient, but it matters if you are a tested athlete or you specifically want contaminant data.
+          </p>
+
+          <p>
+            What Bob's Red Mill does have is food-safety certification at the facility level. The company says it is audited every year against the Safe Quality Food (SQF) standard, a GFSI-benchmarked food safety program, and that it runs HACCP and Good Manufacturing Practice programs. It also says all of its products are certified kosher by OK Kosher and KOF-K, that more than 240 products are Non-GMO Project Verified, and that its organic products are certified by Quality Assurance International. Those certify how food is made and labelled. They do not test a finished protein powder for banned substances or verify its protein content.
+          </p>
+
+          <h3 class="text-2xl font-bold text-gray-900 mt-10 mb-4">Is Bob's Red Mill protein powder gluten free?</h3>
+
+          <p>
+            Only the almond protein powder carries a gluten-free badge on Bob's Red Mill's website at the time of writing. The brand runs a separate 58,200 square foot gluten-free facility and says it batch tests gluten-free products in its own laboratory with an ELISA gluten assay, with some products also certified by the Gluten-Free Certification Organization. The hemp protein page now states that the product is no longer produced gluten free, and the whey page shows only a Kosher dairy badge. If you have celiac disease, buy the almond powder or check that the bag you pick up carries the red GF logo and testing statement.
+          </p>
+
+          <div class="bg-gray-900 text-white rounded-2xl p-6 lg:p-8 my-8">
+            <p class="text-xs font-black uppercase tracking-widest text-[#38BDF8] mb-3">THE RULE</p>
+            <p class="text-xl font-bold text-white mb-3">Food-safety audits are not supplement testing</p>
+            <p class="text-gray-300 leading-relaxed m-0">SQF, kosher and Non-GMO marks tell you how a factory is run. Banned-substance and heavy-metal testing comes from programs such as NSF and Informed Choice. Bob's Red Mill has the first kind, not the second. If you need the second, see our guide to protein powder without heavy metals.</p>
+          </div>
+
+          <p>
+            If testing is the deciding factor, the swap is simple. Naked Whey and Naked Pea are similar single-ingredient powders that Naked says are NSF Contents Certified, and our <a href="/best-protein-powder-without-heavy-metals/">protein powder without heavy metals</a> guide covers more options. For a broader look at the risks, read <a href="/is-protein-powder-safe/">is protein powder safe</a>.
+          </p>
+        </div>
+
+        <div id="cost" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            6. How Much Does Bob's Red Mill Protein Powder Cost per 25 g of Protein?
+          </h2>
+
+          <p>
+            Bob's Red Mill whey protein powder costs about $1.61 per 25 g of protein at the Amazon price we saw, the hemp about $1.71 and the almond about $2.29. Those are mid-range figures: cheaper than many premium flavored wheys, but well above bulk unflavored powders. We work the cost out per 25 g rather than per serving because the three powders have very different scoop sizes and protein levels, so price per bag is misleading.
+          </p>
+
+          <p>
+            Here is the math, using the label serving sizes and the bag weights. The whey 4-pack (four 12 oz bags) was $64.80. Each 340 g bag holds about 18 servings of 14 g, so the pack gives about 1,008 g of protein, or 40.3 portions of 25 g, which is about $1.61 each. The hemp 4-pack (four 16 oz bags) was $48.00. Each 454 g bag holds about 14.6 servings of 12 g, so the pack gives about 703 g of protein, or 28.1 portions, which is about $1.71 each. The almond 4-pack (four 14 oz bags) was $66.03. Each 397 g bag holds 9 servings of 20 g, so the pack gives 720 g of protein, or 28.8 portions, about $2.29 each. A single almond bag at $19.65 works out to about $2.73.
+          </p>
+
+          <div class="overflow-hidden border border-gray-200 rounded-2xl my-8">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Product (Amazon pack)</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Price seen</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Total protein</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Cost per 25 g</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Bob's Red Mill Whey, 4 x 12 oz</td>
+                    <td class="px-4 py-4 text-gray-700">$64.80</td>
+                    <td class="px-4 py-4 text-gray-700">About 1,008 g</td>
+                    <td class="px-4 py-4 text-gray-700">About $1.61</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Bob's Red Mill Hemp, 4 x 16 oz</td>
+                    <td class="px-4 py-4 text-gray-700">$48.00</td>
+                    <td class="px-4 py-4 text-gray-700">About 703 g</td>
+                    <td class="px-4 py-4 text-gray-700">About $1.71</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Bob's Red Mill Almond, 4 x 14 oz</td>
+                    <td class="px-4 py-4 text-gray-700">$66.03</td>
+                    <td class="px-4 py-4 text-gray-700">720 g</td>
+                    <td class="px-4 py-4 text-gray-700">About $2.29</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Naked Whey, 2 lb</td>
+                    <td class="px-4 py-4 text-gray-700">$62.99</td>
+                    <td class="px-4 py-4 text-gray-700">750 g</td>
+                    <td class="px-4 py-4 text-gray-700">About $2.10</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Naked Pea, 5 lb</td>
+                    <td class="px-4 py-4 text-gray-700">$57.99</td>
+                    <td class="px-4 py-4 text-gray-700">About 2,052 g</td>
+                    <td class="px-4 py-4 text-gray-700">About $0.71</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <p>
+            Grocery prices can be better or worse than Amazon. Bob's Red Mill is stocked in many supermarkets, and single bags there are often priced higher per ounce than the Amazon multipacks, so do the per-gram math with the shelf tag. Prices also move week to week, so treat every figure here as a snapshot from 17 November 2026.
+          </p>
+
+          <p>
+            The surprise is that Bob's Red Mill whey is cheaper per gram of protein than Naked Whey at the prices we saw, even though Naked has the bigger scoop and the third-party certificate. The bigger surprise is how much cheaper bulk pea protein is than any of them. If cost per gram is your priority, our <a href="/best-cheap-protein-powder/">best cheap protein powder</a> guide ranks the lowest-cost options we have checked.
+          </p>
+        </div>
+
+        <div id="baking" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            7. Can You Bake With Bob's Red Mill Protein Powder?
+          </h2>
+
+          <p>
+            Yes, baking is what Bob's Red Mill protein powder does best, because none of the three powders has sweetener or flavoring to fight your recipe. The brand suggests adding the whey to yogurt, hot cereal, granola bars, pancakes, muffins, brownies, cakes and breads, and prints recipes such as Cinnamon Bran Muffins on the bag. It says the hemp powder can replace up to 25% of the flour in baked goods, and it markets the almond powder for smoothies, baked goods, sauces and even salad dressings.
+          </p>
+
+          <p>
+            Each powder behaves differently in a batter. Whey absorbs liquid quickly and can make baked goods dry or rubbery if you swap in too much flour, so start by replacing a small share of the flour and add a little extra liquid or fat. Almond protein powder behaves more like a nut flour: it adds richness, a mild nutty flavor and some fat, and it suits gluten-free muffins and pancakes. Hemp powder adds a green color, an earthy flavor and a lot of fiber, which works in dark recipes such as brownies, chocolate pancakes or banana bread where the color and taste are hidden.
+          </p>
+
+          <p>
+            Heat does not destroy protein in any way that matters nutritionally. Baking changes the shape of whey proteins, which affects texture, but the grams of protein and the amino acids remain. A muffin made with a quarter cup of Bob's Red Mill whey still contains roughly the 14 g the label promises, divided across however many muffins the batch makes.
+          </p>
+
+          <p>
+            Unflavored, unsweetened powders are the right tool for this job. Flavored sports proteins with sucralose or stevia can leave an aftertaste once baked and make it hard to control sweetness. Our <a href="/best-protein-powder-for-baking/">best protein powder for baking</a> guide covers which protein types hold up best in the oven, and the <a href="/best-unflavored-protein-powder/">best unflavored protein powder</a> guide lists more plain options for cooking, coffee and savory dishes.
+          </p>
+        </div>
+
+        <div id="taste" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            8. What Do Buyers Say About Taste and Mixing?
+          </h2>
+
+          <p>
+            Buyers mostly describe Bob's Red Mill whey as neutral and easy to mix, and Bob's Red Mill hemp as earthy and somewhat gritty. We have not tasted these powders ourselves, so this section summarizes ratings and buyer comments from retailer pages. At the time of writing, bobsredmill.com showed average ratings of 4.9 out of 5 for the whey across 112 reviews, 4.6 for the almond powder across 124 reviews and 4.6 for the hemp across 103 reviews.
+          </p>
+
+          <p>
+            For the whey, the common thread is that it has little taste of its own. Several buyers describe the flavor as mild or barely noticeable, and say it dissolves easily in water, milk or smoothies, though some note it does not mix quite as smoothly as heavily processed sports wheys and can feel slightly gritty. A minority find the flavor raw or milky when drunk with plain water. Some buyers mention it makes smoothies frothier, which fits the sunflower lecithin on the label.
+          </p>
+
+          <p>
+            For the hemp, the praise and the complaints come from the same place: it tastes like hemp seeds. Buyers and review roundups describe an earthy, nutty or grassy flavor and a coarser texture that smooths out in a blender but stays noticeable when shaken by hand. The other recurring complaint is not about taste at all. Some longtime buyers left low ratings after the product stopped being produced gluten free, which the brand now flags at the top of the product page.
+          </p>
+
+          <p>
+            The almond powder sits between the two. Because it is defatted ground almonds, it tastes of almonds and gives a thicker, slightly fuller body to smoothies, which suits shakes made with banana, cocoa or nut butter. None of the three is meant to taste like a dessert on its own. If you want a drinkable shake straight from a shaker bottle, a flavored powder will please you more.
+          </p>
+        </div>
+
+        <div id="vs" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            9. Bob's Red Mill vs Naked Nutrition and PB2: Which Single-Ingredient Powder Wins?
+          </h2>
+
+          <p>
+            Naked Nutrition beats Bob's Red Mill on testing and scoop size, while Bob's Red Mill wins on grocery-store availability and, for whey, on price per gram at the prices we saw. Both brands sell plain powders with very short ingredient lists, so the comparison comes down to what you value. Naked Whey gives 25 g of protein per serving and Naked says it is NSF Contents Certified. Bob's Red Mill whey gives 14 g per serving with no third-party certificate, but cost about $1.61 per 25 g against Naked's $2.10.
+          </p>
+
+          <p>
+            On the plant side, Naked has the edge. Naked Pea gives 27 g of protein per serving for about $0.71 per 25 g in the 5 lb bag, a fraction of the cost of Bob's Red Mill almond or hemp, and it fills the gap left by the discontinued Bob's Red Mill pea protein. Bob's Red Mill almond powder is the better pick only if you specifically want almond for flavor, or need a vegan powder with a gluten-free badge from a brand you can buy at the supermarket. Our <a href="/naked-nutrition-protein-powder-review/">Naked Nutrition protein powder review</a> covers its full line.
+          </p>
+
+          <p>
+            PB2 is a different kind of product but often lands in the same shopping basket. It is powdered peanut butter, plus a newer line of plant protein powders, aimed at people who want nut flavor with fewer calories. If you are choosing between nut-based powders for smoothies and baking, our sister review of <a href="/pb2-protein-powder-review/">PB2 protein powder</a> looks at its labels and costs the same way, and the <a href="/best-peanut-butter-protein-powder/">best peanut butter protein powder</a> guide lists flavored options.
+          </p>
+
+          <p>
+            For head-to-head numbers on popular products, our <a href="/compare/">protein powder comparison</a> pages line up protein, calories and price side by side. If you are still deciding between dairy and plant protein in the first place, <a href="/whey-vs-plant-protein/">whey vs plant protein</a> covers digestion, amino acids and cost.
+          </p>
+        </div>
+
+        <div id="who" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            10. Who Should Buy Bob's Red Mill Protein Powder, and Who Should Skip It?
+          </h2>
+
+          <p>
+            Buy Bob's Red Mill protein powder if you bake, cook or blend smoothies and want a plain, unsweetened protein with one or two ingredients. The whey is the best value in the line and the most protein-dense. The almond powder is the choice for vegan and gluten-free kitchens. The hemp powder suits people who want fiber and iron as much as protein. All three are easy to find in supermarkets that stock the brand, which helps if you prefer to buy groceries and protein in one trip.
+          </p>
+
+          <p>
+            Skip it if you want one scoop to deliver 25 g or more of protein, a ready-to-drink flavored shake, or third-party testing for banned substances and contaminants. Tested athletes in particular should choose a product with NSF Certified for Sport or Informed Sport status. Skip the hemp if you need gluten free, and skip the whey if you are sensitive to lactose.
+          </p>
+
+          <p>
+            Most healthy adults do not need protein powder at all if their diet covers their needs; our <a href="/how-much-protein-do-i-need/">how much protein do I need</a> guide gives targets by body weight. If you have kidney disease, are pregnant or breastfeeding, take medication, have a food allergy, or are an older adult managing a medical condition, talk to a doctor or registered dietitian before adding protein supplements. The almond powder contains tree nuts and the whey contains milk, both major allergens.
+          </p>
+
+          <p>
+            If none of these powders fits, the <a href="/best-plant-based-protein-powder/">best plant-based protein powder</a> guide covers flavored vegan blends with more protein per scoop, and the <a href="/best-whey-protein-powder/">best whey protein powder</a> guide covers tested sports wheys.
+          </p>
+        </div>
+
+        <!-- Common Mistakes -->
+        <div id="mistakes" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            11. Common Mistakes to Avoid
+          </h2>
+
+          <div class="space-y-6 my-8">
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Expecting a full shake from one scoop</h3>
+              <p class="text-gray-700 text-sm m-0">
+                A 19 g scoop of Bob's Red Mill whey gives 14 g of protein, and a hemp scoop gives 12 g. If you are used to 25 g sports scoops, one serving will leave you short. Weigh or measure two servings of whey, or one and a quarter of almond, to reach about 25 g.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Assuming every bag is gluten free</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Bob's Red Mill is known for gluten-free foods, but only the almond protein powder carries a gluten-free badge on its site right now. The hemp page says it is no longer produced gluten free. People with celiac disease should check each bag for the red GF logo before buying.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Treating SQF or kosher marks as supplement testing</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Facility audits and kosher certification confirm how food is made, not what a finished powder contains. Bob's Red Mill publishes no NSF, Informed Choice or heavy metal results for its protein powders. If you need contaminant or banned-substance testing, buy a powder that carries a recognized sport or contents certificate.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Swapping all the flour for protein powder</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Protein powder is not flour. Replacing too much flour with whey makes baked goods dry and rubbery, and too much hemp turns them dense and green. The brand suggests replacing up to 25% of the flour with hemp; start lower with whey and add extra liquid or fat.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Paying collector prices for discontinued powders</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Bob's Red Mill pea protein, soy protein isolate and the flavored Nutritional Boosters no longer appear on the brand's site. Third-party listings for old stock can be overpriced and close to their best-by date. A current single-ingredient pea protein costs far less per 25 g and has a known freshness date.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ -->
+        <div id="faq" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            12. Frequently Asked Questions
+          </h2>
+
+          <div class="faq-list">
+            <details class="faq-item">
+              <summary><h3>Is Bob's Red Mill protein powder third-party tested?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  No. None of Bob's Red Mill's protein powders lists NSF, Informed Choice, Informed Sport or Clean Label Project certification, and the brand does not publish heavy metal results for them. Bob's Red Mill does say its facilities are audited annually to the SQF food safety standard and that its products are kosher certified, but those programs do not test finished powders for banned substances or contaminants.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>Is Bob's Red Mill protein powder healthy?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  It is a clean, simple ingredient by label standards. The whey has two ingredients, and the almond and hemp powders have one each, with no added sugar, sweeteners, flavors or gums, per the labels at the time of writing. The trade-off is lower protein per scoop than sports powders and no third-party testing. Whether it is healthy for you depends on your overall diet and protein needs.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>Does Bob's Red Mill whey protein contain lactose?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  Yes, it contains some lactose. The bag is whey protein concentrate, which keeps more milk sugar than whey isolate, and the label lists 1 g of total sugar per 19 g serving. Bob's Red Mill does not publish a separate lactose figure. It is also a milk allergen. If lactose gives you trouble, a whey isolate or a plant powder such as the almond protein is a safer choice.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>Is Bob's Red Mill hemp protein powder gluten free?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  Not any more. The Bob's Red Mill product page states that the hemp protein powder is no longer produced gluten free, and it carries no gluten-free badge. Some older retailer listings still describe it as gluten free, so trust the current bag over the listing. Of the three current powders, only the almond protein powder shows a gluten-free badge on the brand's website.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>Which Bob's Red Mill protein powder is best?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  For most people the whey is best: it has the highest protein density, about 74% by weight, and the lowest cost per 25 g of the three at about $1.61 at the Amazon price we saw. Buyers rate it 4.9 out of 5 on the brand's site. Choose the almond powder if you are vegan or need gluten free, and the hemp powder if fiber and iron are your priority.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>What are the common complaints about Bob's Red Mill protein powder?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  Buyers most often mention small servings, so it takes nearly two scoops of whey to reach 25 g of protein. Hemp buyers report an earthy taste and a gritty texture, and some were unhappy when it stopped being produced gluten free. A few whey buyers find the plain flavor raw in water. Others note the price is higher than bulk unflavored powders.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>Does Bob's Red Mill still make pea protein powder?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  Bob's Red Mill pea protein powder is no longer listed on bobsredmill.com, and we found no current listing on Amazon when we checked in November 2026, so treat it as discontinued. The brand's current protein powders are whey concentrate, almond and hemp. For a similar single-ingredient pea protein, Naked Pea gives 27 g of protein per serving and costs about $0.71 per 25 g in its 5 lb bag.
+                </p>
+              </div>
+            </details>
+
+          </div>
+        </div>
+
+        <!-- Related Guides -->
+        <div class="mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">Related Single-Ingredient Protein Guides</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <a href="/best-protein-powder/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#FF4500] font-black text-xs uppercase tracking-widest mb-2">Pillar Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Protein Powder</h3>
+              <p class="text-gray-500 text-sm mt-2">Our top picks across whey, plant and tested powders, ranked by label and cost per 25 g.</p>
+            </a>
+            <a href="/best-almond-protein-powder/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#1E90FF] font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Almond Protein Powder</h3>
+              <p class="text-gray-500 text-sm mt-2">Bob's Red Mill almond against the other nut-based powders on the market.</p>
+            </a>
+            <a href="/best-hemp-protein-powder/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#22C55E] font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Hemp Protein Powder</h3>
+              <p class="text-gray-500 text-sm mt-2">Organic, higher-protein and gluten-free hemp options compared by label.</p>
+            </a>
+            <a href="/pb2-protein-powder-review/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#A855F7] font-black text-xs uppercase tracking-widest mb-2">Brand Review</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">PB2 Protein Powder Review</h3>
+              <p class="text-gray-500 text-sm mt-2">Powdered peanut butter and PB2's plant protein line, checked label by label.</p>
+            </a>
+          </div>
+        </div>
+
+        <!-- Closing -->
+        <div class="mt-16 bg-gray-900 text-white rounded-2xl p-6 md:p-8">
+          <h2 class="text-2xl font-black text-white mb-4">The Bottom Line</h2>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            Bob's Red Mill protein powder is a good pantry ingredient and an average protein supplement. The whey, at 14 g of protein per scoop and about $1.61 per 25 g at the Amazon price we saw, is the one most people should buy. The almond powder is the vegan, gluten-free choice, and the hemp is a fiber and iron booster that is no longer produced gluten free.
+          </p>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            What the brand does not offer is third-party supplement testing or big scoops. If those matter, Naked Whey and Naked Pea give you the same simple ingredient lists with an NSF Contents certificate, per Naked, and our <a href="/best-protein-powder/">best protein powder</a> guide covers the rest of the field.
+          </p>
+        </div>
+
+        <MoreInCategory category="Brand Reviews" links={moreInCategory} />
+
+        <AuthorBio />
+      </div>
+    </div>
+  </article>
+</Layout>

@@ -1,0 +1,955 @@
+---
+import Layout from "../layouts/Layout.astro";
+import ArticleHeader from "../components/ArticleHeader.astro";
+import TableOfContents from "../components/TableOfContents.astro";
+import ProductCard from "../components/ProductCard.astro";
+import MoreInCategory from "../components/MoreInCategory.astro";
+import { AUTHORS, DEFAULT_AUTHOR, authorSchema } from "../data/authors";
+import { SITE_NAME, SITE_URL } from "../data/site";
+import QuickPicks from "../components/QuickPicks.astro";
+import AuthorBio from "../components/AuthorBio.astro";
+import { pageDates } from "../data/dates";
+
+const moreInCategory = [
+  {
+    "title": "Best Premier Protein Flavor",
+    "url": "/best-premier-protein-flavor/"
+  },
+  {
+    "title": "Muscle Milk vs Premier Protein",
+    "url": "/muscle-milk-vs-premier-protein/"
+  },
+  {
+    "title": "How Much Protein Do I Need?",
+    "url": "/how-much-protein-do-i-need/"
+  }
+];
+const author = AUTHORS[DEFAULT_AUTHOR];
+const dates = pageDates(Astro.url.pathname, { published: "2026-11-17", modified: "2026-11-17" });
+const title = "Best Protein Drink for Seniors: 7 Shakes Ranked by Need (2026)";
+const description =
+  "Ensure Max Protein suits most seniors: 30 g protein, 150 calories, 1 g sugar. Picks for weight loss, diabetes and lactose, plus kidney and warfarin cautions.";
+
+const PRODUCTS: {
+  id: string;
+  name: string;
+  brand?: string;
+  badge: string;
+  category: string;
+  description: string;
+  pros: string[];
+  cons: string[];
+  bottomLine: string;
+  specs?: Record<string, string>;
+  rating?: number;
+  reviewCount?: number;
+  amazonUrl?: string;
+}[] = [
+  {
+    "id": "best-protein-drink-for-seniors-ensure-max-protein",
+    "name": "Ensure Max Protein Milk Chocolate Shake, 30g Protein, 11 fl oz, 12 Pack",
+    "brand": "Ensure (Abbott)",
+    "badge": "Best Overall",
+    "category": "Lean high-protein shake",
+    "description": "Ensure Max Protein gives 30 g of protein, 150 calories, 6 g of carbohydrate, 4 g of fiber and 1 g of total sugar (0 g added) per 11 fl oz shake, per Abbott's label at the time of writing. The protein is milk protein concentrate and calcium caseinate, sweetened with sucralose and acesulfame potassium. Abbott lists 25 vitamins and minerals and calls it gluten-free and suitable for lactose intolerance. At $27.97 for 12 on Amazon, it is about $2.33 a shake and $1.94 per 25 g of protein.",
+    "pros": [
+      "30 g of protein, the per-meal target in the PROT-AGE paper",
+      "1 g of sugar and 4 g of fiber per shake",
+      "Suitable for lactose intolerance, per Abbott",
+      "Sold in nearly every pharmacy and supermarket"
+    ],
+    "cons": [
+      "Only 150 calories, so it will not stop weight loss on its own",
+      "Uses sucralose and acesulfame potassium",
+      "11 fl oz can be a lot to finish for a small appetite",
+      "Contains milk and soy"
+    ],
+    "bottomLine": "The default daily protein top-up for an older adult who eats reasonably well but falls short on protein.",
+    "specs": {
+      "Protein / serving": "30 g (label)",
+      "Calories": "150",
+      "Sugar": "1 g total, 0 g added",
+      "Cost per shake": "About $2.33 ($27.97 for 12)",
+      "Cost per 25 g": "About $1.94 (Amazon price seen)"
+    },
+    "amazonUrl": "https://www.amazon.com/dp/B0791Y2LMB"
+  },
+  {
+    "id": "best-protein-drink-for-seniors-premier-protein-30g",
+    "name": "Premier Protein 30g High Protein Shake, Chocolate, 11 oz, 12 Pack",
+    "brand": "Premier Protein",
+    "badge": "Best Value",
+    "category": "Lean high-protein shake",
+    "description": "Premier Protein's classic shake gives 30 g of protein, 160 calories and 1 g of sugar with no added sugar per 11 oz carton, per the label at the time of writing. The protein comes from milk protein concentrate and calcium caseinate, sweetened with sucralose and acesulfame potassium, and the brand lists 24 vitamins and minerals. At the $25.49 we saw for 12 on Amazon, it is about $2.12 a shake and $1.77 per 25 g of protein, the cheapest protein on this page.",
+    "pros": [
+      "Lowest cost per 25 g of protein of the seven picks",
+      "30 g of protein for 160 calories",
+      "No added sugar, per the label",
+      "The widest flavor range, which helps with taste fatigue"
+    ],
+    "cons": [
+      "Premier does not call it lactose-free on the listing we checked",
+      "Sucralose and acesulfame potassium",
+      "Low calorie, so not a weight-gain drink",
+      "Contains milk and soy"
+    ],
+    "bottomLine": "Practically a label twin of Ensure Max Protein for less money; pick it on price or flavor.",
+    "specs": {
+      "Protein / serving": "30 g (label)",
+      "Calories": "160",
+      "Sugar": "1 g total, 0 g added",
+      "Cost per shake": "About $2.12 ($25.49 for 12)",
+      "Cost per 25 g": "About $1.77 (Amazon price seen)"
+    },
+    "amazonUrl": "https://www.amazon.com/dp/B008JGIZGS"
+  },
+  {
+    "id": "best-protein-drink-for-seniors-ensure-plus",
+    "name": "Ensure Plus Dark Chocolate Nutrition Shake, 8 fl oz, 24 Pack",
+    "brand": "Ensure (Abbott)",
+    "badge": "Best for Unwanted Weight Loss",
+    "category": "Calorie-dense nutrition shake",
+    "description": "Ensure Plus is built for older adults who are eating too little: 350 calories, 16 g of protein, 11 g of fat and 47 g of carbohydrate in an 8 fl oz bottle of the dark chocolate flavor, per Abbott's label at the time of writing. It carries 19 g of total sugar (18 g added) and 27 vitamins and minerals. At $48.86 for 24 on Amazon, a bottle costs about $2.04, or about $3.18 per 25 g of protein, but only about 58 cents per 100 calories.",
+    "pros": [
+      "350 calories in a small 8 fl oz bottle",
+      "Abbott markets it as clinically shown to help adults gain weight",
+      "Cheap calories: about 58 cents per 100",
+      "Smaller bottle than the 30 g shakes"
+    ],
+    "cons": [
+      "19 g of sugar, a poor fit for diabetes without medical advice",
+      "Only 16 g of protein",
+      "Costs nearly twice as much per gram of protein as Premier",
+      "Contains milk and soy"
+    ],
+    "bottomLine": "The pick when the problem is calories and weight, not just protein.",
+    "specs": {
+      "Protein / serving": "16 g (label)",
+      "Calories": "350",
+      "Sugar": "19 g total, 18 g added",
+      "Cost per shake": "About $2.04 ($48.86 for 24)",
+      "Cost per 25 g": "About $3.18 (Amazon price seen)"
+    },
+    "amazonUrl": "https://www.amazon.com/dp/B001TDL55Q"
+  },
+  {
+    "id": "best-protein-drink-for-seniors-boost-very-high-calorie",
+    "name": "BOOST Very High Calorie Nutritional Drink, Chocolate, 8 fl oz, 24 Pack",
+    "brand": "BOOST (Nestle Health Science)",
+    "badge": "Most Calories per Bottle",
+    "category": "Very high-calorie nutrition shake",
+    "description": "BOOST Very High Calorie packs 530 calories and 22 g of protein into one 8 fl oz bottle, per Nestle. The chocolate label we checked lists 26 g of fat, 52 g of carbohydrate, 13 g of sugar (all added), 290 mg of sodium and 60 mcg of vitamin K, half the daily value. It is described as gluten-free and suitable for lactose intolerance. At $60.94 for 24 on Amazon, a bottle costs about $2.54, or about $2.89 per 25 g of protein.",
+    "pros": [
+      "530 calories, the most of any drink here",
+      "22 g of protein in only 8 fl oz",
+      "Suits very small appetites where volume is the problem",
+      "Suitable for lactose intolerance, per the label listing"
+    ],
+    "cons": [
+      "60 mcg of vitamin K per bottle matters for warfarin users",
+      "26 g of fat and 13 g of added sugar",
+      "Too rich for anyone not trying to gain weight",
+      "Contains milk and soy"
+    ],
+    "bottomLine": "For frail older adults losing weight fast, ideally on a dietitian's advice.",
+    "specs": {
+      "Protein / serving": "22 g (label)",
+      "Calories": "530",
+      "Sugar": "13 g total, 13 g added",
+      "Cost per shake": "About $2.54 ($60.94 for 24)",
+      "Cost per 25 g": "About $2.89 (Amazon price seen)"
+    },
+    "amazonUrl": "https://www.amazon.com/dp/B0B1HJL9QK"
+  },
+  {
+    "id": "best-protein-drink-for-seniors-boost-high-protein-fiber",
+    "name": "BOOST High Protein with Fiber Nutritional Shake, Vanilla, 8 fl oz, 24 Pack",
+    "brand": "BOOST (Nestle Health Science)",
+    "badge": "Best Middle Ground",
+    "category": "Balanced high-protein nutrition shake",
+    "description": "BOOST High Protein sits between a lean shake and a calorie drink: 20 g of protein and 250 calories per 8 fl oz bottle, per Nestle, and the fiber version adds 3 g of fiber, per its Amazon listing. Nestle lists milk protein concentrate and soy protein isolate as the proteins, sugar and stevia as sweeteners, and calls the line gluten-free and suitable for lactose intolerance. At $44.00 for 24 on Amazon, a bottle costs about $1.83, or about $2.29 per 25 g.",
+    "pros": [
+      "Cheapest per bottle of the seven at the price we saw",
+      "20 g of protein plus 250 calories in a small bottle",
+      "3 g of fiber in this version",
+      "Suitable for lactose intolerance, per Nestle"
+    ],
+    "cons": [
+      "Contains added sugar; Nestle does not print a figure for this version on the pages we could reach",
+      "Less protein per bottle than the 30 g shakes",
+      "Vanilla price varies more than other flavors",
+      "Contains milk and soy"
+    ],
+    "bottomLine": "A sensible daily shake for someone who needs a little more of everything, not just protein.",
+    "specs": {
+      "Protein / serving": "20 g (label)",
+      "Calories": "250",
+      "Fiber": "3 g (listing)",
+      "Cost per shake": "About $1.83 ($44.00 for 24)",
+      "Cost per 25 g": "About $2.29 (Amazon price seen)"
+    },
+    "amazonUrl": "https://www.amazon.com/dp/B084HFV4MM"
+  },
+  {
+    "id": "best-protein-drink-for-seniors-glucerna-protein-smart",
+    "name": "Glucerna Protein Smart Shake, Chocolate, 30g Protein, 11 fl oz, 12 Pack",
+    "brand": "Glucerna (Abbott)",
+    "badge": "Best for Diabetes",
+    "category": "Diabetes-specific protein shake",
+    "description": "Glucerna Protein Smart is Abbott's 30 g shake for people managing blood sugar: 30 g of protein and 150 calories per 11 fl oz carton, per Glucerna. The chocolate label we checked lists 7 g of carbohydrate, 4 g of fiber, 3 g of sugar (2 g added), 1.5 g of fat, 150 mg of sodium and 25% of the daily value for vitamin K. It is sweetened with sucralose, acesulfame potassium and fructose. At $37.94 for 12 on Amazon, it is about $3.16 a shake and $2.63 per 25 g.",
+    "pros": [
+      "Under one carb choice per carton, per Glucerna",
+      "30 g of protein for 150 calories",
+      "4 g of fiber",
+      "Made for diabetes meal plans"
+    ],
+    "cons": [
+      "About 69 cents more per 25 g than Ensure Max Protein",
+      "Its carbohydrate profile is close to Ensure Max Protein's anyway",
+      "Vitamin K at 25% DV",
+      "Contains milk"
+    ],
+    "bottomLine": "Worth it if a diabetes educator recommends the brand; otherwise Ensure Max Protein is a similar label for less.",
+    "specs": {
+      "Protein / serving": "30 g (label)",
+      "Calories": "150",
+      "Sugar": "3 g total, 2 g added",
+      "Cost per shake": "About $3.16 ($37.94 for 12)",
+      "Cost per 25 g": "About $2.63 (Amazon price seen)"
+    },
+    "amazonUrl": "https://www.amazon.com/dp/B08YNJ7BJ7"
+  },
+  {
+    "id": "best-protein-drink-for-seniors-fairlife-core-power",
+    "name": "Fairlife Core Power 26g Protein Milk Shake, Chocolate, 14 fl oz, 12 Pack",
+    "brand": "fairlife",
+    "badge": "Best Real-Milk Shake",
+    "category": "Ultra-filtered milk protein shake",
+    "description": "Core Power is ultra-filtered milk rather than a formulated supplement: 26 g of protein, 170 calories, 8 g of carbohydrate and 5 g of sugar with 0 g added per 14 fl oz bottle, per fairlife's label at the time of writing. It adds lactase enzyme, which breaks down milk sugar, and supplies 670 mg of calcium. It also has 860 mg of potassium, a caution for kidney disease. At $41.88 for 12 on Amazon, it is about $3.49 a bottle and $3.36 per 25 g.",
+    "pros": [
+      "Short ingredient list built on filtered milk",
+      "Lactase enzyme added, which helps with lactose",
+      "670 mg of calcium, half the daily value",
+      "No added sugar, per fairlife"
+    ],
+    "cons": [
+      "14 fl oz is the largest bottle here",
+      "Most expensive per 25 g of the seven",
+      "860 mg of potassium per bottle",
+      "Fewer added vitamins than Ensure or BOOST"
+    ],
+    "bottomLine": "For older adults who prefer something that tastes like milk and can manage a big bottle.",
+    "specs": {
+      "Protein / serving": "26 g (label)",
+      "Calories": "170",
+      "Sugar": "5 g total, 0 g added",
+      "Cost per shake": "About $3.49 ($41.88 for 12)",
+      "Cost per 25 g": "About $3.36 (Amazon price seen)"
+    },
+    "amazonUrl": "https://www.amazon.com/dp/B07LD2NV9X"
+  }
+];
+
+const schema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Home",
+          item: `${SITE_URL}/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Best Lists",
+          item: `${SITE_URL}/best-of/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 3,
+          name: "Protein Drinks for Seniors",
+          item: `${SITE_URL}/best-protein-drink-for-seniors/`,
+        },
+      ],
+    },
+    {
+      "@type": "FAQPage",
+      mainEntity: [
+        {
+          "@type": "Question",
+          "name": "What is the best protein drink for seniors?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "For most seniors, Ensure Max Protein is the best protein drink: 30 g of protein, 150 calories and 1 g of sugar per 11 fl oz shake, per Abbott's label. Premier Protein 30 g is a cheaper near-twin at about $1.77 per 25 g. Seniors who are losing weight usually need a calorie-dense drink such as Ensure Plus instead, ideally on a dietitian's advice."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How much protein should a 70-year-old drink in a shake?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "About 25 to 30 g per shake is the amount the PROT-AGE Study Group suggests per meal for older adults, which is why many senior-focused drinks carry 30 g. Total daily protein matters more: roughly 1.0 to 1.2 g per kilogram of body weight for healthy adults over 65, or about 70 to 84 g for a 154 lb person, unless a doctor sets a different target."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is Ensure or Boost better for the elderly?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Neither brand is better across the board; the right product line matters more than the brand. Ensure Max Protein and Premier suit stable weight, while Ensure Plus and BOOST Very High Calorie suit unwanted weight loss. BOOST High Protein, at 20 g of protein and 250 calories, sits between. Compare the calorie and protein lines, then pick the flavor the person will actually drink."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can seniors drink a protein shake every day?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Most healthy seniors can drink one protein shake a day, and many benefit because their diets fall short of the 1.0 to 1.2 g/kg protein target. Daily use needs a doctor's input for anyone with kidney disease, diabetes on insulin, a fluid restriction or warfarin treatment. A shake should top up meals, not replace them, unless a dietitian advises it."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Are protein drinks good for elderly people with diabetes?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Low-sugar protein drinks can fit a diabetes plan. Glucerna Protein Smart lists 3 g of sugar and 7 g of carbohydrate, and Ensure Max Protein lists 1 g of sugar and 6 g of carbohydrate, per their labels. Calorie-dense drinks such as Ensure Plus carry about 47 g of carbohydrate, so they need to be counted carefully with a diabetes educator's help."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What protein drink is best for a senior with no appetite?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "A small, calorie-dense bottle usually works best for a senior with very little appetite. BOOST Very High Calorie gives 530 calories and 22 g of protein in 8 fl oz, and Ensure Plus gives 350 calories and 16 g of protein, per their labels. Sipping through the day helps. Persistent loss of appetite or weight should always be checked by a doctor."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Do protein shakes cause constipation in older adults?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Protein shakes do not usually cause constipation on their own, but replacing fiber-rich food with low-fiber drinks, plus low fluid intake, can. Ensure Max Protein and Glucerna Protein Smart list 4 g of fiber per shake, and BOOST High Protein with Fiber lists 3 g. Drinking water through the day helps too. Ongoing bowel changes deserve a conversation with a doctor."
+          }
+        }
+      ],
+    },
+    {
+      "@type": "Article",
+      headline: title,
+      author: authorSchema(),
+      datePublished: dates.published,
+      dateModified: dates.modified,
+      publisher: { "@type": "Organization", name: SITE_NAME, url: SITE_URL },
+    },
+    {
+      "@type": "ItemList",
+      name: title,
+      numberOfItems: PRODUCTS.length,
+      itemListElement: PRODUCTS.map((product, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name: product.name,
+        url: new URL(`#${product.id}`, Astro.url).toString(),
+      })),
+    },
+    ...PRODUCTS.map((product) => ({
+      "@type": "Product",
+      name: product.name,
+      description: product.description,
+      brand: {
+        "@type": "Brand",
+        name: product.brand ?? product.name.split(" ")[0],
+      },
+    })),
+  ],
+};
+---
+
+<Layout
+  title={title}
+  description={description}
+  ogType="article"
+  article={{
+    publishedTime: dates.published,
+    modifiedTime: dates.modified,
+    author: author.name,
+    section: "Protein Drinks",
+    tags: [
+      "best protein drink for seniors",
+      "best protein drinks for seniors",
+      "best protein shakes for elderly",
+      "best protein drink for elderly"
+    ],
+  }}
+  jsonLd={schema}
+  stickyCta={{
+    text: "See Our Top Protein Drink Picks",
+    link: "/best-protein-drink/",
+  }}
+>
+  <article class="relative overflow-hidden">
+    <ArticleHeader kicker={"Buyer's Guide"} badge={"Label-Checked"} author={author} dates={dates} mobileAd={false}>
+      <Fragment slot="title">Best Protein Drink for Seniors</Fragment>
+      Seven ready-to-drink shakes for older adults, matched to the real situations: a small appetite, unwanted weight loss, diabetes, lactose trouble and a tight budget. Ranked by label and cost per 25 g of protein, not by taste tests.
+    </ArticleHeader>
+
+    <TableOfContents>
+      <a href="#short-answer">Short Answer</a>
+      <a href="#top-picks">The 7 Drinks</a>
+      <a href="#protein-needs">Protein Needs</a>
+      <a href="#muscle-loss">Muscle Loss</a>
+      <a href="#protein-vs-calories">Protein or Calories?</a>
+      <a href="#diabetes">Diabetes</a>
+      <a href="#kidney-disease">Kidney Disease</a>
+      <a href="#lactose-swallowing">Lactose and Swallowing</a>
+      <a href="#medications">Medications</a>
+      <a href="#cost-and-method">Cost and Method</a>
+      <a href="#mistakes">Common Mistakes</a>
+      <a href="#faq">FAQ</a>
+    </TableOfContents>
+
+    <!-- Content -->
+    <div class="max-w-3xl mx-auto px-4 pb-16 lg:pb-24">
+      <div class="prose prose-lg prose-blue max-w-none text-gray-700 leading-relaxed">
+        <p class="lede">
+          Ensure Max Protein is the best protein drink for most seniors: 30 g of protein, 150 calories and 1 g of sugar in an 11 fl oz shake, per Abbott's label. The right answer changes if the person is losing weight, has diabetes or has kidney disease. This guide covers protein targets for older adults, seven label-checked shakes, cost per 25 g and the medical cautions.
+        </p>
+
+        <QuickPicks products={PRODUCTS} />
+
+        <div id="short-answer" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            1. Best Protein Drink for Seniors: The Short Answer
+          </h2>
+
+          <p>
+            The best protein drink for most seniors is <strong>Ensure Max Protein</strong>, which gives 30 g of protein with 150 calories and 1 g of sugar per shake, per Abbott's label. Premier Protein 30 g is the near-identical cheaper option at about $1.77 per 25 g. If the older adult is losing weight without trying, a calorie-dense drink such as Ensure Plus (350 calories) or BOOST Very High Calorie (530 calories) matters more than protein per gram. For diabetes, Glucerna Protein Smart is the diabetes-branded 30 g option. Anyone with kidney disease should ask their doctor before using any of them.
+          </p>
+
+          <div class="overflow-hidden border border-gray-200 rounded-2xl my-8">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Situation</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Best pick</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Protein / calories</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Cost per 25 g</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Eats fairly well, needs more protein</td>
+                    <td class="px-4 py-4 text-gray-700">Ensure Max Protein</td>
+                    <td class="px-4 py-4 text-gray-700">30 g / 150</td>
+                    <td class="px-4 py-4 text-gray-700">About $1.94</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Same, on a tighter budget</td>
+                    <td class="px-4 py-4 text-gray-700">Premier Protein 30 g</td>
+                    <td class="px-4 py-4 text-gray-700">30 g / 160</td>
+                    <td class="px-4 py-4 text-gray-700">About $1.77</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Losing weight, small appetite</td>
+                    <td class="px-4 py-4 text-gray-700">Ensure Plus</td>
+                    <td class="px-4 py-4 text-gray-700">16 g / 350</td>
+                    <td class="px-4 py-4 text-gray-700">About $3.18</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Losing weight fast, very small appetite</td>
+                    <td class="px-4 py-4 text-gray-700">BOOST Very High Calorie</td>
+                    <td class="px-4 py-4 text-gray-700">22 g / 530</td>
+                    <td class="px-4 py-4 text-gray-700">About $2.89</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Needs a bit more of everything</td>
+                    <td class="px-4 py-4 text-gray-700">BOOST High Protein with Fiber</td>
+                    <td class="px-4 py-4 text-gray-700">20 g / 250</td>
+                    <td class="px-4 py-4 text-gray-700">About $2.29</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Type 2 diabetes</td>
+                    <td class="px-4 py-4 text-gray-700">Glucerna Protein Smart</td>
+                    <td class="px-4 py-4 text-gray-700">30 g / 150</td>
+                    <td class="px-4 py-4 text-gray-700">About $2.63</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Prefers plain milk, lactose-sensitive</td>
+                    <td class="px-4 py-4 text-gray-700">Fairlife Core Power</td>
+                    <td class="px-4 py-4 text-gray-700">26 g / 170</td>
+                    <td class="px-4 py-4 text-gray-700">About $3.36</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Picks -->
+        <div id="top-picks" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            2. The 7 Best Protein Drinks for Seniors
+          </h2>
+
+          <p>
+            Every card below is a ready-to-drink shake with a live Amazon listing. Label figures are per the brand's label at the time of writing and vary slightly by flavor; prices are what we saw on Amazon on 17 November 2026 and change often. Powders are covered separately in our <a href="/best-protein-powder-for-seniors/">best protein powder for seniors</a> guide.
+          </p>
+
+          {PRODUCTS.map((product, index) => (
+            <ProductCard product={product} rank={index + 1} />
+          ))}
+        </div>
+
+        <div id="protein-needs" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            3. How Much Protein Do Seniors Need Each Day?
+          </h2>
+
+          <p>
+            Healthy adults over 65 need about 1.0 to 1.2 g of protein per kilogram of body weight a day, according to the 2013 <a href="https://pubmed.ncbi.nlm.nih.gov/23867520/">PROT-AGE Study Group position paper</a> in the Journal of the American Medical Directors Association. That is 25 to 50% more than the 0.8 g/kg US Recommended Dietary Allowance, which was set for adults in general and is widely considered too low to protect muscle in later life. The same paper suggests 1.2 to 1.5 g/kg for older people with an acute or chronic illness, and up to 2.0 g/kg for those with severe illness, injury or marked malnutrition.
+          </p>
+
+          <p>
+            European clinical nutrition experts reached the same range. The <a href="https://pubmed.ncbi.nlm.nih.gov/24814383/">ESPEN Expert Group recommendations</a> (Clinical Nutrition, 2014) call for at least 1.0 to 1.2 g/kg a day for healthy older people and 1.2 to 1.5 g/kg for those who are malnourished or at risk because of illness, alongside daily physical activity and resistance exercise where possible. The later <a href="https://pubmed.ncbi.nlm.nih.gov/30005900/">ESPEN guideline on clinical nutrition and hydration in geriatrics</a> (2019) uses about 1 g/kg as a guiding value to be adjusted for each person's health.
+          </p>
+
+          <p>
+            The PROT-AGE group also made a per-meal point that explains why 30 g shakes exist: older muscle seems to need a bigger dose at one sitting to respond, and the paper suggests 25 to 30 g of protein per meal. Many seniors eat a light breakfast and lunch and most of their protein at dinner, so a single 30 g shake at breakfast fixes the weakest meal of the day rather than piling more onto the strongest.
+          </p>
+
+          <div class="overflow-hidden border border-gray-200 rounded-2xl my-8">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Body weight</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">1.0 g/kg per day</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">1.2 g/kg per day</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Per meal at 1.2 g/kg (3 meals)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">120 lb (54 kg)</td>
+                    <td class="px-4 py-4 text-gray-700">54 g</td>
+                    <td class="px-4 py-4 text-gray-700">65 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 22 g</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">140 lb (64 kg)</td>
+                    <td class="px-4 py-4 text-gray-700">64 g</td>
+                    <td class="px-4 py-4 text-gray-700">76 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 25 g</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">160 lb (73 kg)</td>
+                    <td class="px-4 py-4 text-gray-700">73 g</td>
+                    <td class="px-4 py-4 text-gray-700">87 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 29 g</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">180 lb (82 kg)</td>
+                    <td class="px-4 py-4 text-gray-700">82 g</td>
+                    <td class="px-4 py-4 text-gray-700">98 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 33 g</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">200 lb (91 kg)</td>
+                    <td class="px-4 py-4 text-gray-700">91 g</td>
+                    <td class="px-4 py-4 text-gray-700">109 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 36 g</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <p>
+            These are starting points, not prescriptions. Our <a href="/how-much-protein-do-i-need/">how much protein do I need</a> guide and <a href="/protein-calculator/">protein calculator</a> show the arithmetic for other weights. The figures above do not apply to anyone with chronic kidney disease, for whom PROT-AGE and every kidney guideline advise a different, individually set target.
+          </p>
+        </div>
+
+        <div id="muscle-loss" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            4. Do Protein Shakes Help Seniors Prevent Muscle Loss?
+          </h2>
+
+          <p>
+            Protein shakes help prevent age-related muscle loss only when they close a real protein gap, and they work best combined with strength exercise. Sarcopenia, the progressive loss of muscle strength and mass with age, is defined in the <a href="https://pubmed.ncbi.nlm.nih.gov/30312372/">revised European consensus (EWGSOP2, Age and Ageing, 2019)</a> primarily by low muscle strength, confirmed by low muscle quantity or quality, and graded severe when physical performance such as walking speed also falls. It raises the risk of falls, fractures and losing independence.
+          </p>
+
+          <p>
+            Protein supplies the building blocks, but muscle grows in response to load. Both the PROT-AGE and ESPEN papers pair their protein targets with exercise: resistance training two or three times a week, even with light bands or chair-based routines, plus everyday walking. A shake drunk on the sofa by someone who already eats 1.2 g/kg is unlikely to add muscle; a shake that lifts someone from 0.7 g/kg to 1.1 g/kg, combined with a physiotherapist's program, is much more likely to help.
+          </p>
+
+          <p>
+            Two other supplements come up in this conversation. Creatine has a growing research base in older adults doing resistance training; our <a href="/creatine-vs-protein-powder/">creatine vs protein powder</a> comparison explains how the two differ and why they are often combined. Casein, the slower-digesting milk protein that makes up most of the protein in Ensure, Premier and Glucerna, is sometimes suggested at bedtime; our <a href="/casein-vs-whey-protein-powder/">casein vs whey</a> guide covers what the evidence on that actually shows.
+          </p>
+
+          <div class="bg-gray-900 text-white rounded-2xl p-6 lg:p-8 my-8">
+            <p class="text-xs font-black uppercase tracking-widest text-[#38BDF8] mb-3">THE RULE</p>
+            <p class="text-xl font-bold text-white mb-3">Protein feeds muscle; exercise tells it to grow.</p>
+            <p class="text-gray-300 leading-relaxed m-0">A daily 30 g shake is a tool for closing a protein gap. For muscle and strength, pair it with resistance exercise that a doctor or physiotherapist has cleared.</p>
+          </div>
+        </div>
+
+        <div id="protein-vs-calories" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            5. Should Seniors Choose a High-Protein or a High-Calorie Shake?
+          </h2>
+
+          <p>
+            Choose a lean 30 g protein shake if weight is stable, and a high-calorie drink if the person is losing weight without trying. This is the single most important decision on this page, and it is the one most families get wrong, because the drinks share a brand name. Ensure Max Protein and Ensure Plus sit side by side on the shelf but do opposite jobs: one gives 30 g of protein for 150 calories, the other 16 g of protein for 350 calories.
+          </p>
+
+          <p>
+            Unintentional weight loss in older adults is a medical sign, not a diet win, and it should be reported to a doctor. Appetite often shrinks with age, medications, dental problems, depression or illness, and a person who eats half their meals loses both protein and energy. In that situation, a 150-calorie shake can quietly replace food that would have provided more calories. Ensure Plus, at 350 calories in 8 fl oz, and BOOST Very High Calorie, at 530 calories in 8 fl oz, are designed to add energy in a small volume, and the extra fat and carbohydrate are the point rather than a flaw.
+          </p>
+
+          <p>
+            The middle option is BOOST High Protein, at 20 g of protein and 250 calories per 8 fl oz bottle, per Nestle. It suits someone whose weight is drifting slowly downward or who skips one meal most days. For a full meal substitute rather than a supplement, our <a href="/best-meal-replacement-shake/">best meal replacement shake</a> guide compares more complete options, though for older adults a dietitian's plan beats any single product.
+          </p>
+
+          <h3 class="text-2xl font-bold text-gray-900 mt-10 mb-4">A quick way to decide</h3>
+
+          <p>
+            If the bathroom scale is steady and the person eats three meals, buy the 30 g lean shake. If they have lost more than a few pounds in recent months, or a doctor has mentioned malnutrition, use a calorie-dense drink and ask for a referral to a registered dietitian. If they cannot finish an 11 fl oz carton, smaller 8 fl oz bottles with more calories per sip usually work better, and sipping across the morning counts just as much as drinking it at once.
+          </p>
+        </div>
+
+        <div id="diabetes" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            6. What Is the Best Protein Drink for Elderly People With Diabetes?
+          </h2>
+
+          <p>
+            For older adults with diabetes, the best protein drink is a low-sugar 30 g shake: Glucerna Protein Smart (3 g of sugar, 7 g of carbohydrate) or Ensure Max Protein (1 g of sugar, 6 g of carbohydrate), per their labels. Glucerna is marketed specifically for blood sugar management and lists under one carbohydrate choice per carton. Ensure Max Protein is not branded for diabetes, but its carbohydrate and sugar figures are just as low, and at the prices we saw it costs about 69 cents less per 25 g of protein.
+          </p>
+
+          <p>
+            The drinks to avoid without medical advice are the calorie-dense ones. Ensure Plus carries 47 g of carbohydrate and 19 g of total sugar per bottle, and BOOST Very High Calorie carries 52 g of carbohydrate, per their labels. Those figures are similar to a large sweet dessert, and for someone on insulin or a sulfonylurea they need to be planned into the day's carbohydrate count rather than added on top.
+          </p>
+
+          <p>
+            That creates a real conflict for an older adult who has both diabetes and unwanted weight loss. Abbott also sells Glucerna Original and Hunger Smart versions with 10 g and 15 g of protein respectively at 180 calories, per their Amazon listings, which sit between the two extremes. The right choice depends on medication, kidney function and blood sugar logs, so this is a decision for the person's doctor, diabetes educator or registered dietitian.
+          </p>
+
+          <p>
+            Diabetes and kidney disease often occur together, which is another reason not to assume that more protein is automatically better. If the person's doctor has mentioned reduced kidney function or protein in the urine, read the next section before buying any shake.
+          </p>
+        </div>
+
+        <div id="kidney-disease" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            7. Are Protein Shakes Safe for Seniors With Kidney Disease?
+          </h2>
+
+          <p>
+            Seniors with chronic kidney disease should not start a high-protein shake without their nephrologist's or renal dietitian's approval. The PROT-AGE paper itself makes the exception explicit: older people with severe kidney disease (an eGFR below 30) who are not on dialysis are advised to limit protein, while those on dialysis generally need more protein, not less, because dialysis removes it. The same person can need a restriction one year and extra protein the next, so a general guide cannot set the number.
+          </p>
+
+          <p>
+            For people on dialysis, Abbott makes Nepro, a renal-specific shake with 19 g of protein and 420 calories per 8 fl oz serving, per its Amazon listings, formulated to replace protein lost during dialysis. It is a medical nutrition product meant to be used under a renal care team's direction, so it is mentioned here rather than ranked. Standard shakes are not designed around the potassium, phosphorus and fluid limits that dialysis patients often follow.
+          </p>
+
+          <p>
+            Potassium is the overlooked number. Fairlife Core Power lists 860 mg of potassium per 14 fl oz bottle, per fairlife's label, which is a meaningful share of a restricted daily allowance. Many shakes also add phosphorus. If a kidney diet is in place, take the actual carton to the renal dietitian and let them read the full nutrition panel.
+          </p>
+
+          <div class="bg-gray-900 text-white rounded-2xl p-6 lg:p-8 my-8">
+            <p class="text-xs font-black uppercase tracking-widest text-[#38BDF8] mb-3">HEALTH CAVEAT</p>
+            <p class="text-xl font-bold text-white mb-3">Kidney disease changes the protein target completely.</p>
+            <p class="text-gray-300 leading-relaxed m-0">Nothing on this page is medical advice. Anyone with kidney disease, liver disease, heart failure with a fluid limit, or a planned surgery should ask their doctor or a registered dietitian which drink, if any, fits their treatment.</p>
+          </div>
+        </div>
+
+        <div id="lactose-swallowing" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            8. Which Protein Drinks Work for Lactose Intolerance and Swallowing Problems?
+          </h2>
+
+          <p>
+            Most mainstream nutrition shakes are suitable for lactose intolerance: Abbott says so for Ensure Max Protein and Ensure Plus, and Nestle says so for its BOOST drinks, per their product pages and listings. They are made from milk protein but contain little lactose. They are not suitable for a milk allergy or galactosemia, and most also contain soy. Fairlife Core Power takes a different route, adding lactase enzyme to filtered milk to break the milk sugar down.
+          </p>
+
+          <p>
+            Fairlife's 30 g Nutrition Plan shake is often recommended for seniors for the same reason, but on the day we checked it was sold on Amazon only through third-party resellers with repackaged listings, so we have not given it a card. It is widely stocked in supermarkets, and its label figures are compared in our <a href="/best-protein-powder-for-seniors/">seniors protein powder</a> guide. For a dairy-free route, our <a href="/best-lactose-free-protein-powder/">best lactose-free protein powder</a> guide covers plant and isolate options.
+          </p>
+
+          <h3 class="text-2xl font-bold text-gray-900 mt-10 mb-4">Swallowing difficulties need a specialist</h3>
+
+          <p>
+            If an older adult coughs, chokes or clears their throat when drinking, or has had a stroke or a diagnosis of dysphagia, do not choose a shake on your own. Thin liquids, which includes every drink on this page, can be the hardest texture to swallow safely. A speech-language pathologist can assess swallowing and say whether drinks need thickening and to what level, usually described using the <a href="https://iddsi.org/">IDDSI framework</a>. Pre-thickened supplements and thickeners exist, but the level must come from that assessment, not guesswork.
+          </p>
+
+          <p>
+            For people who can swallow safely but tire easily, small practical changes help: the 8 fl oz bottles are easier to finish than 11 or 14 fl oz cartons, a straw and a chilled drink reduce effort, and splitting one bottle across two sittings still delivers the protein.
+          </p>
+        </div>
+
+        <div id="medications" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            9. Can Protein Shakes Interact With Medications Like Warfarin?
+          </h2>
+
+          <p>
+            Protein shakes can interact with some medications, and warfarin is the best-known example because most nutrition drinks contain added vitamin K. Vitamin K helps blood clot, and warfarin works by opposing it. The <a href="https://ods.od.nih.gov/factsheets/VitaminK-HealthProfessional/">NIH Office of Dietary Supplements</a> notes that people on warfarin are usually advised to keep their vitamin K intake consistent day to day rather than avoid it, so a sudden new daily shake, or stopping one, can shift INR results.
+          </p>
+
+          <p>
+            The amounts are not trivial. BOOST Very High Calorie lists 60 mcg of vitamin K per bottle, 50% of the daily value, and Glucerna Protein Smart lists 25% of the daily value, per the labels we checked. That does not mean these drinks are banned for warfarin users; it means the prescriber or anticoagulation clinic should know before the shake starts, and the person should drink it regularly rather than occasionally. Newer anticoagulants such as apixaban do not interact with vitamin K in the same way, but the doctor should still have a full list of supplements.
+          </p>
+
+          <p>
+            Calcium and minerals can matter too. Calcium-rich drinks can reduce the absorption of some medicines taken at the same time, including levothyroxine for thyroid conditions and certain antibiotics, so pharmacists often advise spacing them by a few hours. Fairlife Core Power, with 670 mg of calcium per bottle, is the most calcium-dense drink here. A five-minute conversation with the pharmacist, carton in hand, settles this better than any article can.
+          </p>
+
+          <p>
+            Caffeine is the last thing to check. Premier Protein's coffee flavors contain caffeine, as our <a href="/best-premier-protein-flavor/">best Premier Protein flavor</a> guide explains, which can disturb sleep or interact with some heart medicines. For older adults, the plain chocolate, vanilla and strawberry flavors are the safer default.
+          </p>
+        </div>
+
+        <div id="cost-and-method" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            10. How Did We Pick These Drinks, and What Do They Cost per 25 g?
+          </h2>
+
+          <p>
+            We ranked these drinks on their labels, not on hands-on testing: protein per serving, calories, sugar, suitability for lactose intolerance, bottle size and cost per 25 g of protein at the Amazon price we saw on 17 November 2026. Label figures come from the brands' own pages and listings and vary slightly by flavor. Taste notes elsewhere on the site are buyer reports, never our own tasting.
+          </p>
+
+          <p>
+            Cost per 25 g is the price divided by the number of 25 g protein portions in the pack. For Premier Protein, 12 shakes of 30 g give 360 g of protein, or 14.4 portions of 25 g, so $25.49 works out to about $1.77 each. For the calorie drinks, cost per 100 calories can be a fairer measure: Ensure Plus costs about 58 cents per 100 calories and BOOST Very High Calorie about 48 cents, which is why they win for weight gain despite a higher protein cost.
+          </p>
+
+          <div class="overflow-hidden border border-gray-200 rounded-2xl my-8">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Drink</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Pack price seen</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Per shake</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Per 25 g protein</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Premier Protein 30 g</td>
+                    <td class="px-4 py-4 text-gray-700">$25.49 / 12</td>
+                    <td class="px-4 py-4 text-gray-700">$2.12</td>
+                    <td class="px-4 py-4 text-gray-700">$1.77</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Ensure Max Protein</td>
+                    <td class="px-4 py-4 text-gray-700">$27.97 / 12</td>
+                    <td class="px-4 py-4 text-gray-700">$2.33</td>
+                    <td class="px-4 py-4 text-gray-700">$1.94</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">BOOST High Protein with Fiber</td>
+                    <td class="px-4 py-4 text-gray-700">$44.00 / 24</td>
+                    <td class="px-4 py-4 text-gray-700">$1.83</td>
+                    <td class="px-4 py-4 text-gray-700">$2.29</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Glucerna Protein Smart</td>
+                    <td class="px-4 py-4 text-gray-700">$37.94 / 12</td>
+                    <td class="px-4 py-4 text-gray-700">$3.16</td>
+                    <td class="px-4 py-4 text-gray-700">$2.63</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">BOOST Very High Calorie</td>
+                    <td class="px-4 py-4 text-gray-700">$60.94 / 24</td>
+                    <td class="px-4 py-4 text-gray-700">$2.54</td>
+                    <td class="px-4 py-4 text-gray-700">$2.89</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Ensure Plus</td>
+                    <td class="px-4 py-4 text-gray-700">$48.86 / 24</td>
+                    <td class="px-4 py-4 text-gray-700">$2.04</td>
+                    <td class="px-4 py-4 text-gray-700">$3.18</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Fairlife Core Power 26 g</td>
+                    <td class="px-4 py-4 text-gray-700">$41.88 / 12</td>
+                    <td class="px-4 py-4 text-gray-700">$3.49</td>
+                    <td class="px-4 py-4 text-gray-700">$3.36</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <p>
+            For context, a protein powder usually costs less per 25 g than any ready-to-drink shake, which is why the <a href="/best-protein-powder-for-seniors/">powder guide for seniors</a> exists. Bottles win on convenience: nothing to measure, no shaker, no clumps, and no help needed for someone with arthritis in their hands. Our main <a href="/best-protein-drink/">best protein drink</a> roundup covers more ready-to-drink options for all ages, and the <a href="/premier-protein-vs-ensure/">Premier Protein vs Ensure</a> comparison goes line by line through the two biggest brands.
+          </p>
+
+          <p>
+            Prices on these products swing by several dollars a week, and subscribe-and-save, pharmacy loyalty programs and warehouse clubs often beat the prices above. Some Medicare Advantage plans include over-the-counter allowances that cover nutrition shakes, and a doctor's prescription for a medical nutrition product can sometimes help with cost, so it is worth asking the plan before paying full price.
+          </p>
+        </div>
+
+        <!-- Common Mistakes -->
+        <div id="mistakes" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            11. Common Mistakes to Avoid
+          </h2>
+
+          <div class="space-y-6 my-8">
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Buying Ensure Plus for a Healthy Weight</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Ensure Plus and Ensure Max Protein look alike on the shelf, but Plus delivers 350 calories and 19 g of sugar for 16 g of protein. For an older adult with a stable weight who just needs more protein, that adds calories and sugar without much benefit. Check the protein and calorie lines before buying a case.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Treating Weight Loss as Good News</h3>
+              <p class="text-gray-700 text-sm m-0">
+                When an older adult loses weight without trying, swapping meals for a 150-calorie lean shake can make it worse. Unexplained weight loss deserves a doctor's visit, and the drink should usually be a calorie-dense one such as Ensure Plus or BOOST Very High Calorie, chosen with a dietitian where possible.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Ignoring Kidney Function</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Adding 30 g of protein a day is fine for most seniors but not for someone with advanced kidney disease who is not on dialysis. Kidney function often declines quietly with age and diabetes, so ask the doctor about recent eGFR results before starting a daily high-protein drink.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Starting a Shake Without Telling the Warfarin Clinic</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Many shakes contain added vitamin K, some at half the daily value per bottle. People on warfarin can usually still drink them, but the intake has to be steady and the anticoagulation clinic needs to know. Starting or stopping a daily shake without a word can push INR results out of range.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Expecting the Shake to Do the Exercise's Job</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Protein alone does little to rebuild lost strength. The research behind the 1.0 to 1.2 g/kg target pairs it with regular activity and resistance exercise. A shake plus a simple, approved strength routine, two or three times a week, is what actually protects muscle in later life.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ -->
+        <div id="faq" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            12. Frequently Asked Questions
+          </h2>
+
+          <div class="faq-list">
+            <details class="faq-item">
+              <summary><h3>What is the best protein drink for seniors?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  For most seniors, Ensure Max Protein is the best protein drink: 30 g of protein, 150 calories and 1 g of sugar per 11 fl oz shake, per Abbott's label. Premier Protein 30 g is a cheaper near-twin at about $1.77 per 25 g. Seniors who are losing weight usually need a calorie-dense drink such as Ensure Plus instead, ideally on a dietitian's advice.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>How much protein should a 70-year-old drink in a shake?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  About 25 to 30 g per shake is the amount the PROT-AGE Study Group suggests per meal for older adults, which is why many senior-focused drinks carry 30 g. Total daily protein matters more: roughly 1.0 to 1.2 g per kilogram of body weight for healthy adults over 65, or about 70 to 84 g for a 154 lb person, unless a doctor sets a different target.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>Is Ensure or Boost better for the elderly?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  Neither brand is better across the board; the right product line matters more than the brand. Ensure Max Protein and Premier suit stable weight, while Ensure Plus and BOOST Very High Calorie suit unwanted weight loss. BOOST High Protein, at 20 g of protein and 250 calories, sits between. Compare the calorie and protein lines, then pick the flavor the person will actually drink.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>Can seniors drink a protein shake every day?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  Most healthy seniors can drink one protein shake a day, and many benefit because their diets fall short of the 1.0 to 1.2 g/kg protein target. Daily use needs a doctor's input for anyone with kidney disease, diabetes on insulin, a fluid restriction or warfarin treatment. A shake should top up meals, not replace them, unless a dietitian advises it.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>Are protein drinks good for elderly people with diabetes?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  Low-sugar protein drinks can fit a diabetes plan. Glucerna Protein Smart lists 3 g of sugar and 7 g of carbohydrate, and Ensure Max Protein lists 1 g of sugar and 6 g of carbohydrate, per their labels. Calorie-dense drinks such as Ensure Plus carry about 47 g of carbohydrate, so they need to be counted carefully with a diabetes educator's help.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>What protein drink is best for a senior with no appetite?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  A small, calorie-dense bottle usually works best for a senior with very little appetite. BOOST Very High Calorie gives 530 calories and 22 g of protein in 8 fl oz, and Ensure Plus gives 350 calories and 16 g of protein, per their labels. Sipping through the day helps. Persistent loss of appetite or weight should always be checked by a doctor.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>Do protein shakes cause constipation in older adults?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  Protein shakes do not usually cause constipation on their own, but replacing fiber-rich food with low-fiber drinks, plus low fluid intake, can. Ensure Max Protein and Glucerna Protein Smart list 4 g of fiber per shake, and BOOST High Protein with Fiber lists 3 g. Drinking water through the day helps too. Ongoing bowel changes deserve a conversation with a doctor.
+                </p>
+              </div>
+            </details>
+
+          </div>
+        </div>
+
+        <!-- Related Guides -->
+        <div class="mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">Related Protein Drink Guides</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <a href="/best-protein-drink/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#FF4500] font-black text-xs uppercase tracking-widest mb-2">Pillar Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Protein Drink</h3>
+              <p class="text-gray-500 text-sm mt-2">Our main ranking of ready-to-drink protein shakes for every age and goal.</p>
+            </a>
+            <a href="/best-protein-powder-for-seniors/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#1E90FF] font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Protein Powder for Seniors</h3>
+              <p class="text-gray-500 text-sm mt-2">Powders and unflavored proteins that stir into food, for lower cost per gram.</p>
+            </a>
+            <a href="/premier-protein-vs-ensure/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#22C55E] font-black text-xs uppercase tracking-widest mb-2">Head-to-Head</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Premier Protein vs Ensure</h3>
+              <p class="text-gray-500 text-sm mt-2">Every Ensure line compared with Premier's 30 g shake, label by label.</p>
+            </a>
+            <a href="/casein-vs-whey-protein-powder/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#A855F7] font-black text-xs uppercase tracking-widest mb-2">Head-to-Head</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Casein vs Whey Protein</h3>
+              <p class="text-gray-500 text-sm mt-2">The slow and fast milk proteins behind most senior shakes, compared.</p>
+            </a>
+          </div>
+        </div>
+
+        <!-- Closing -->
+        <div class="mt-16 bg-gray-900 text-white rounded-2xl p-6 md:p-8">
+          <h2 class="text-2xl font-black text-white mb-4">The Bottom Line</h2>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            For most older adults, the best protein drink is a 30 g shake with little sugar: Ensure Max Protein as the default, or Premier Protein 30 g to save about 17 cents per 25 g of protein. One shake at the lightest meal of the day closes the gap between a typical senior diet and the 1.0 to 1.2 g/kg that the PROT-AGE and ESPEN experts recommend, especially when paired with strength exercise.
+          </p>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            Switch to Ensure Plus or BOOST Very High Calorie when weight is falling, consider Glucerna Protein Smart for diabetes, and talk to a doctor first about kidney disease, warfarin or swallowing problems. The best drink is the one that fits the person's health, and that they will actually finish every day.
+          </p>
+        </div>
+
+        <MoreInCategory category="Protein Drinks" links={moreInCategory} />
+
+        <AuthorBio />
+      </div>
+    </div>
+  </article>
+</Layout>
