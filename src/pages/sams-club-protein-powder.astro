@@ -1,0 +1,879 @@
+---
+import Layout from "../layouts/Layout.astro";
+import ArticleHeader from "../components/ArticleHeader.astro";
+import TableOfContents from "../components/TableOfContents.astro";
+import ProductCard from "../components/ProductCard.astro";
+import MoreInCategory from "../components/MoreInCategory.astro";
+import { AUTHORS, DEFAULT_AUTHOR, authorSchema } from "../data/authors";
+import { SITE_NAME, SITE_URL } from "../data/site";
+import QuickPicks from "../components/QuickPicks.astro";
+import AuthorBio from "../components/AuthorBio.astro";
+import { pageDates } from "../data/dates";
+
+const moreInCategory = [
+  {
+    "title": "Kirkland Protein Powder Review",
+    "url": "/kirkland-protein-powder-review/"
+  },
+  {
+    "title": "Trader Joe's Protein Powder",
+    "url": "/trader-joes-protein-powder/"
+  },
+  {
+    "title": "Best Target Protein Powder",
+    "url": "/best-target-protein-powder/"
+  }
+];
+const author = AUTHORS[DEFAULT_AUTHOR];
+const dates = pageDates(Astro.url.pathname, { published: "2026-11-17", modified: "2026-11-17" });
+const title = "Sam's Club Protein Powder: What's Stocked and the Real Cost";
+const description =
+  "Sam's Club sells no Member's Mark protein powder; it stocks Gold Standard, Muscle Milk, RAW and Orgain. Cost per 25 g, testing and Costco math inside.";
+
+const PRODUCTS: {
+  id: string;
+  name: string;
+  brand?: string;
+  badge: string;
+  category: string;
+  description: string;
+  pros: string[];
+  cons: string[];
+  bottomLine: string;
+  specs?: Record<string, string>;
+  rating?: number;
+  reviewCount?: number;
+  amazonUrl?: string;
+}[] = [
+  {
+    "id": "sams-club-protein-powder-on-gold-standard",
+    "name": "Optimum Nutrition Gold Standard 100% Whey, Vanilla Ice Cream, 5 lb",
+    "brand": "Optimum Nutrition",
+    "badge": "Best Overall",
+    "category": "Whey blend (isolate, concentrate, hydrolyzed)",
+    "description": "Gold Standard is the anchor of the Sam's Club powder aisle, sold there in warehouse sizes of 5.47 lb (Vanilla Ice Cream) and 5.64 lb (Extreme Milk Chocolate). Per the label at the time of writing, a roughly 31 g scoop gives 24 g of protein for about 120 calories, and a 5 lb tub holds about 73 servings; varies by flavor. ON describes it as banned-substance tested and has promoted Informed Choice certification on many flavors. On Amazon the 5 lb tub came to about $1.44 per 25 g at the price we saw.",
+    "pros": [
+      "The most widely trusted whey on the Sam's shelf, with a long label history",
+      "24 g of protein in about 120 calories, per the label",
+      "Banned-substance tested per ON; Informed Choice on many flavors"
+    ],
+    "cons": [
+      "About $1.44 per 25 g at the Amazon price we saw, roughly double a good Sam's member price",
+      "Sam's hides its member price unless you sign in",
+      "Contains sucralose and acesulfame potassium"
+    ],
+    "bottomLine": "The default pick at Sam's. Buy it in club when the member price lands near $50 for the big bag; on Amazon it is a convenience buy, not a bargain.",
+    "specs": {
+      "Protein / serving": "24 g",
+      "Calories": "About 120",
+      "Third-party testing": "Banned-substance tested (per ON)",
+      "Cost per 25 g": "About $1.44 (Amazon price seen)"
+    },
+    "amazonUrl": "https://www.amazon.com/dp/B000GISU1M"
+  },
+  {
+    "id": "sams-club-protein-powder-muscle-milk-genuine",
+    "name": "Muscle Milk Genuine Protein Powder, Vanilla Creme, 4.94 lb",
+    "brand": "Muscle Milk",
+    "badge": "Best for Calories",
+    "category": "Milk protein blend",
+    "description": "Muscle Milk Genuine is the powder with a visible Sam's Club price: the 2.47 lb tub was listed at $30.48 in our research. Per the label at the time of writing, a two-scoop serving gives 32 g of protein with about 2 g of sugar and roughly 270 to 280 calories, so it works as a calorie top-up rather than a lean shake; varies by flavor. The brand lists it as NSF Certified for Sport. The 4.94 lb tub on Amazon worked out to about $1.45 per 25 g at the price we saw.",
+    "pros": [
+      "NSF Certified for Sport, per the brand and the Amazon listing",
+      "32 g of protein per serving with about 2 g of sugar",
+      "Sam's lists its price openly, so you can do the math before you go"
+    ],
+    "cons": [
+      "Roughly 270 to 280 calories per serving, too many for most cutting diets",
+      "A milk-protein blend, not a pure whey",
+      "One Sam's reviewer reported a changed recipe and grainy texture"
+    ],
+    "bottomLine": "The pick for drug-tested athletes and anyone trying to add calories. At about $1.45 per 25 g it costs the same as Gold Standard on Amazon.",
+    "specs": {
+      "Protein / serving": "32 g",
+      "Calories": "About 270-280",
+      "Third-party testing": "NSF Certified for Sport (per brand)",
+      "Cost per 25 g": "About $1.45 (Amazon price seen)"
+    },
+    "amazonUrl": "https://www.amazon.com/dp/B002DUD6R4"
+  },
+  {
+    "id": "sams-club-protein-powder-raw-whey-isolate",
+    "name": "RAW Whey Isolate Protein Powder, Dark Chocolate, 25 Servings",
+    "brand": "RAW Nutrition",
+    "badge": "Best Isolate",
+    "category": "Grass-fed whey isolate",
+    "description": "This is the RAW protein powder people search for at Sam's: the Sam's Club listing for the 1.97 lb Dark Chocolate tub shows 25 servings with 25 g of protein each, and Sam's has also listed a 1.56 lb Milk and Cookies tub. Per the Amazon listing at the time of writing, it is a 100% grass-fed whey isolate, naturally flavored and sweetened, low in fat and carbohydrate. The listing does not name a banned-substance certification. At the Amazon price we saw it costs about $2.40 per 25 g, the most of any card here.",
+    "pros": [
+      "Whey isolate, so less lactose and fat than a concentrate blend",
+      "25 g of protein per serving in this flavor, per the Sam's listing",
+      "Sam's has historically priced it well below RAW's own store"
+    ],
+    "cons": [
+      "About $2.40 per 25 g at the Amazon price we saw",
+      "No named certification on the listing",
+      "A Sam's reviewer complained a tub looked half full"
+    ],
+    "bottomLine": "Buy it at Sam's if you want an isolate and the club price is near the $43.98 reported at launch. On Amazon it is a premium-priced choice.",
+    "specs": {
+      "Protein / serving": "25 g (Dark Chocolate)",
+      "Calories": "About 110 (flavor-dependent)",
+      "Third-party testing": "No named certification listed",
+      "Cost per 25 g": "About $2.40 (Amazon price seen)"
+    },
+    "amazonUrl": "https://www.amazon.com/dp/B09S3W3FJY"
+  },
+  {
+    "id": "sams-club-protein-powder-orgain-organic-vegan",
+    "name": "Orgain Organic Vegan Protein Powder, Vanilla Bean, 2.03 lb",
+    "brand": "Orgain",
+    "badge": "Best Plant-Based",
+    "category": "Organic plant protein (pea, brown rice, chia)",
+    "description": "Sam's Club carries Orgain's organic plant protein in a 2.74 lb club size, plus Orgain Simple and Orgain Protein + Superfoods. Per the label at the time of writing, a two-scoop serving gives 21 g of protein for about 150 calories, with no added sugar and 4 to 7 g of fiber depending on flavor; it blends pea, brown rice and chia protein. Orgain does not publish a sport certification for this product. The 2.03 lb tub on Amazon, about 20 servings, came to about $1.90 per 25 g at the price we saw.",
+    "pros": [
+      "The dairy-free option Sam's reliably stocks",
+      "USDA Organic, no added sugar, per the label",
+      "Sam's reviewers often praise the club-size value"
+    ],
+    "cons": [
+      "About $1.90 per 25 g at the Amazon price we saw",
+      "Two scoops for 21 g of protein",
+      "Some Sam's reviewers call it gritty"
+    ],
+    "bottomLine": "The plant-based choice at Sam's. Buy the 2.74 lb club tub in store; Amazon's smaller tub costs more per gram.",
+    "specs": {
+      "Protein / serving": "21 g",
+      "Calories": "About 150",
+      "Third-party testing": "None published",
+      "Cost per 25 g": "About $1.90 (Amazon price seen)"
+    },
+    "amazonUrl": "https://www.amazon.com/dp/B00J074W7Q"
+  },
+  {
+    "id": "sams-club-protein-powder-premier-protein-shake",
+    "name": "Premier Protein 30g High Protein Shake, Chocolate, 11 oz, 12 Pack",
+    "brand": "Premier Protein",
+    "badge": "Closest Amazon Alternative",
+    "category": "Ready-to-drink protein shake (stand-in for Member's Mark)",
+    "description": "Member's Mark makes a 30 g high-protein shake, not a powder, and it is sold only at Sam's Club. Per the Sam's listing, each 11 oz Member's Mark bottle has 30 g of milk and whey protein, 160 calories and 1 g of sugar. Premier Protein is the closest match you can buy on Amazon: per its listing, 30 g of protein, 160 calories and no added sugar in an 11 oz bottle. At the Amazon price we saw, this 12-pack works out to about $1.77 per 25 g.",
+    "pros": [
+      "Same 30 g and 160 calorie profile as the Member's Mark shake",
+      "No mixing, shelf-stable",
+      "Widely sold, including at Sam's in larger packs"
+    ],
+    "cons": [
+      "About $1.77 per 25 g at the Amazon price we saw, dearer than any tub",
+      "Contains milk protein, so not for dairy allergies",
+      "No sport certification published"
+    ],
+    "bottomLine": "Buy this only if you want the Member's Mark shake and cannot get to a club. Powder is cheaper per gram.",
+    "specs": {
+      "Protein / serving": "30 g",
+      "Calories": "160",
+      "Third-party testing": "None published",
+      "Cost per 25 g": "About $1.77 (Amazon price seen)"
+    },
+    "amazonUrl": "https://www.amazon.com/dp/B008JGIZGS"
+  }
+];
+
+const schema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Home",
+          item: `${SITE_URL}/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Best Lists",
+          item: `${SITE_URL}/best-of/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 3,
+          name: "Sam's Club Protein Powder",
+          item: `${SITE_URL}/sams-club-protein-powder/`,
+        },
+      ],
+    },
+    {
+      "@type": "FAQPage",
+      mainEntity: [
+        {
+          "@type": "Question",
+          "name": "Is Sam's Club protein powder third-party tested?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It depends on the brand, because Sam's Club has no house powder and does not certify products itself. Muscle Milk is listed by the brand as NSF Certified for Sport. Optimum Nutrition calls Gold Standard banned-substance tested and promotes Informed Choice on many flavors. RAW's isolate listing names no certifier, and Orgain publishes no sport certification. Check the certifier's database for your exact flavor."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does Sam's Club sell a Member's Mark protein powder?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Not that we could find as of November 2026. Sam's Club's protein powder aisle is name brands such as Optimum Nutrition, Muscle Milk, RAW, Dymatize and Orgain. The only Member's Mark protein product we found is a 30 g high-protein chocolate shake in 18-packs of 11 oz bottles, with 160 calories and 1 g of sugar per bottle, per the Sam's listing."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is Sam's Club protein powder healthy?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The main powders are ordinary, reasonably clean products. Gold Standard gives 24 g of protein in about 120 calories; Orgain is organic plant protein with no added sugar; RAW is a low-fat whey isolate. Muscle Milk Genuine has about 270 to 280 calories per serving, which suits weight gain more than dieting. People with kidney disease or other conditions should ask a doctor first."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does Sam's Club protein powder contain dairy or lactose?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Most of it does. Gold Standard, RAW isolate and Muscle Milk are milk-based, and the Member's Mark shake lists milk protein concentrate. Isolate such as RAW has less lactose than concentrate but is not lactose-free. Orgain's organic plant protein is the dairy-free choice Sam's reliably stocks. Anyone with a milk allergy should avoid the dairy products entirely."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the cheapest protein powder at Sam's Club?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Optimum Nutrition Gold Standard is usually the cheapest per gram when Sam's runs its member price near the $49.98 that deal posters have reported for the 5.47 and 5.64 lb bags. That works out to about $0.65 per 25 g. Muscle Milk Genuine, listed at $30.48 for 2.47 lb, is about $1.49 per 25 g. Prices change, so check the app."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Which flavor is best at Sam's Club?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Buyers most often recommend Gold Standard's chocolate flavors, including the Extreme Milk Chocolate that Sam's sells in the 5.64 lb bag, and Vanilla Ice Cream as a mixer for smoothies. RAW buyers tend to favor its dessert-style flavors. Orgain buyers are split: some like the vanilla bean, others find the chocolate gritty. These reflect buyer reviews, not our tasting."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What are the common complaints about protein powder at Sam's Club?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The main complaints in Sam's buyer reviews are hidden prices online, tubs that look half full on opening, recipe changes and texture. One Muscle Milk Genuine reviewer reported a changed formula and grainy texture; some Orgain buyers call it gritty; a RAW buyer questioned the serving count. Stock also varies by club, so a product online may be missing in store."
+          }
+        }
+      ],
+    },
+    {
+      "@type": "Article",
+      headline: title,
+      author: authorSchema(),
+      datePublished: dates.published,
+      dateModified: dates.modified,
+      publisher: { "@type": "Organization", name: SITE_NAME, url: SITE_URL },
+    },
+    {
+      "@type": "ItemList",
+      name: title,
+      numberOfItems: PRODUCTS.length,
+      itemListElement: PRODUCTS.map((product, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name: product.name,
+        url: new URL(`#${product.id}`, Astro.url).toString(),
+      })),
+    },
+    ...PRODUCTS.map((product) => ({
+      "@type": "Product",
+      name: product.name,
+      description: product.description,
+      brand: {
+        "@type": "Brand",
+        name: product.brand ?? product.name.split(" ")[0],
+      },
+    })),
+  ],
+};
+---
+
+<Layout
+  title={title}
+  description={description}
+  ogType="article"
+  article={{
+    publishedTime: dates.published,
+    modifiedTime: dates.modified,
+    author: author.name,
+    section: "Store Brands",
+    tags: [
+      "sam's club protein powder",
+      "protein powder sam's",
+      "protein powder at sam's club",
+      "member's mark protein powder",
+      "raw protein powder sams"
+    ],
+  }}
+  jsonLd={schema}
+  stickyCta={{
+    text: "See Our Top Cheap Protein Picks",
+    link: "/best-cheap-protein-powder/",
+  }}
+>
+  <article class="relative overflow-hidden">
+    <ArticleHeader kicker={"Buyer's Guide"} badge={"Label-Checked"} author={author} dates={dates} mobileAd={false}>
+      <Fragment slot="title">Sam's Club Protein Powder</Fragment>
+      What Sam's Club actually stocks, whether Member's Mark makes a protein powder, what each tub costs per 25 g of protein and how Sam's stacks up against Costco, Walmart and Aldi.
+    </ArticleHeader>
+
+    <TableOfContents>
+      <a href="#short-answer">Short Answer</a>
+      <a href="#top-picks">The Products</a>
+      <a href="#what-sams-sells">What Sam's Sells</a>
+      <a href="#members-mark">Member's Mark</a>
+      <a href="#cost">Cost per 25 g</a>
+      <a href="#raw">RAW at Sam's</a>
+      <a href="#third-party">Third-Party Testing</a>
+      <a href="#membership">Is Membership Worth It</a>
+      <a href="#vs-stores">vs Costco, Walmart, Aldi</a>
+      <a href="#amazon">On Amazon?</a>
+      <a href="#mistakes">Common Mistakes</a>
+      <a href="#faq">FAQ</a>
+    </TableOfContents>
+
+    <!-- Content -->
+    <div class="max-w-3xl mx-auto px-4 pb-16 lg:pb-24">
+      <div class="prose prose-lg prose-blue max-w-none text-gray-700 leading-relaxed">
+        <p class="lede">
+          Sam's Club does not sell a Member's Mark protein powder right now; its powder aisle is name brands, led by Optimum Nutrition Gold Standard, Muscle Milk, RAW whey isolate and Orgain, and the only Member's Mark protein product is a 30 g shake. Value depends on member prices you see only when signed in. Below: the shelf, the labels, cost per 25 g and the Costco math.
+        </p>
+
+        <QuickPicks products={PRODUCTS} />
+
+        <div id="short-answer" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            1. Sam's Club Protein Powder: The Short Answer
+          </h2>
+
+          <p>
+            Sam's Club is a good place to buy name-brand protein powder in big sizes, but it has no house-brand powder: Member's Mark currently makes a 30 g protein shake, not a tub of powder. The best buy on the shelf for most people is <a href="/optimum-nutrition-protein-powder-review/">Optimum Nutrition Gold Standard</a> in the 5.47 or 5.64 lb bag. If members see it near the $49.98 that deal posters have reported, that is about $0.65 per 25 g of protein, close to Kirkland territory at Costco.
+          </p>
+
+          <p>
+            Buy at Sam's if you already hold a membership and want Gold Standard, Muscle Milk, RAW or Orgain in a warehouse size. Skip it if you want a cheap own-brand whey: Costco's Kirkland, Aldi's Elevation and Walmart's Equate all exist, and Sam's has nothing like them in powder form.
+          </p>
+
+          <div class="overflow-hidden border border-gray-200 rounded-2xl my-8">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Product at Sam's</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Sam's size</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Protein / serving</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Sam's price seen</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Cost per 25 g</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Optimum Nutrition Gold Standard</td>
+                    <td class="px-4 py-4 text-gray-700">5.47-5.64 lb</td>
+                    <td class="px-4 py-4 text-gray-700">24 g</td>
+                    <td class="px-4 py-4 text-gray-700">Member price hidden ($49.98 reported by deal posters)</td>
+                    <td class="px-4 py-4 text-gray-700">About $0.65 if $49.98</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Muscle Milk Genuine</td>
+                    <td class="px-4 py-4 text-gray-700">2.47 lb</td>
+                    <td class="px-4 py-4 text-gray-700">32 g</td>
+                    <td class="px-4 py-4 text-gray-700">$30.48</td>
+                    <td class="px-4 py-4 text-gray-700">About $1.49</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">RAW Whey Isolate</td>
+                    <td class="px-4 py-4 text-gray-700">1.56-1.97 lb</td>
+                    <td class="px-4 py-4 text-gray-700">25 g</td>
+                    <td class="px-4 py-4 text-gray-700">$29.98 (1.56 lb, 20 servings)</td>
+                    <td class="px-4 py-4 text-gray-700">About $1.50</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Orgain Organic Plant Protein</td>
+                    <td class="px-4 py-4 text-gray-700">2.74 lb</td>
+                    <td class="px-4 py-4 text-gray-700">21 g</td>
+                    <td class="px-4 py-4 text-gray-700">Member price hidden</td>
+                    <td class="px-4 py-4 text-gray-700">Check in club</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Member's Mark 30 g shake</td>
+                    <td class="px-4 py-4 text-gray-700">18 x 11 oz</td>
+                    <td class="px-4 py-4 text-gray-700">30 g</td>
+                    <td class="px-4 py-4 text-gray-700">About $1.48 a bottle (2024 buyer report)</td>
+                    <td class="px-4 py-4 text-gray-700">About $1.23</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Picks -->
+        <div id="top-picks" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            2. Sam's Club Protein Powders and Their Amazon Equivalents
+          </h2>
+
+          <p>
+            Sam's Club sells these powders in club and on samsclub.com, often in warehouse-only sizes. Each card links to the same name-brand product on Amazon (a different tub size in most cases), with the live price we saw and the cost per 25 g of protein worked out from the label. The last card stands in for the Member's Mark shake, which is a Sam's Club exclusive and not sold on Amazon.
+          </p>
+
+          {PRODUCTS.map((product, index) => (
+            <ProductCard product={product} rank={index + 1} />
+          ))}
+        </div>
+
+        <div id="what-sams-sells" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            3. What Protein Powders Does Sam's Club Sell?
+          </h2>
+
+          <p>
+            Sam's Club's protein powder range is almost entirely name brands, and the core names are Optimum Nutrition, Muscle Milk, RAW Nutrition, Dymatize and Orgain. Our research across samsclub.com listings found Gold Standard 100% Whey in a 5.47 lb Vanilla Ice Cream bag and a 5.64 lb Extreme Milk Chocolate bag, Muscle Milk Genuine and Muscle Milk Pro Series, RAW Whey Isolate, Dymatize ISO100 and ISO100 Clear, MuscleTech Grass Fed 100% Whey, Levels Grass Fed Whey, and three Orgain plant powders.
+          </p>
+
+          <p>
+            The smaller and newer brands rotate. Sam's has listed MRE Lite, a whole-food protein powder in 30-serving tubs, Purely Inspired Organic plant protein, and Clean Simple Eats, a collagen-and-whey blend. These come and go by season and by club, so treat them as possible finds rather than permanent stock. The big three, Gold Standard, Muscle Milk and Orgain, are the ones that show up most consistently in the listings and in buyer reviews.
+          </p>
+
+          <p>
+            Some brands people expect at Sam's we could not confirm. We found no current samsclub.com listing for Body Fortress or Garden of Life powders, even though both are easy to find at Walmart. Premier Protein is a strong presence at Sam's, but mostly as ready-to-drink shakes; if you want its powder, our <a href="/premier-protein-powder-review/">Premier Protein powder review</a> covers what is in the tub. Our <a href="/body-fortress-protein-powder-review/">Body Fortress review</a> and <a href="/garden-of-life-protein-powder-review/">Garden of Life review</a> cover those brands if your club does carry them.
+          </p>
+
+          <p>
+            Sizes are the real difference from a supermarket. Sam's sells Gold Standard in a bag slightly larger than the standard 5 lb tub, Orgain in a 2.74 lb club tub instead of the usual 2.03 lb, and Muscle Milk Genuine in a 2.47 lb size. Bigger packs usually mean a lower price per gram, but only if you finish the bag before it goes stale and only if you like the flavor. A 5.64 lb bag holds roughly 80 scoops.
+          </p>
+
+          <h3 class="text-2xl font-bold text-gray-900 mt-10 mb-4">Online versus in club</h3>
+
+          <p>
+            Samsclub.com shows many products as a members-only price that you see only when signed in, and prices can differ between the website and your local club. Several powders are ship-only, and some club-only items never appear online. If you are making a special trip for one product, check the app for your club's stock first.
+          </p>
+        </div>
+
+        <div id="members-mark" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            4. Is There a Member's Mark Protein Powder?
+          </h2>
+
+          <p>
+            No, we could not find a Member's Mark protein powder on sale at Sam's Club as of November 2026. Searches of samsclub.com listings turned up name-brand powders only, and the one Member's Mark protein product that appears is the Member's Mark 30 g High Protein Shake in chocolate, sold in an 18-pack of 11 oz bottles.
+          </p>
+
+          <p>
+            That shake is worth knowing about, because it is the closest thing to a Sam's Club own-brand protein. Per the Sam's listing at the time of writing, each bottle has 30 g of milk and whey protein, 160 calories, 1 g of sugar and 2 g of net carbs, with milk protein concentrate high in the ingredient list. That is the same nutrition profile as Premier Protein and Costco's Kirkland shake, and it competes with both on price.
+          </p>
+
+          <p>
+            On price, the only figure we could find was a 2024 Sam's buyer review that put the shakes at about $1.48 a bottle in the 18-pack, or roughly $26.64 a case. If that still holds, 30 g of protein for $1.48 works out to about $1.23 per 25 g. That is cheap for a ready-to-drink shake but still dearer than a big bag of whey, which is the usual trade: you pay for the bottle, the liquid and the convenience. We could not confirm the current shelf price, so check your club.
+          </p>
+
+          <p>
+            Why no Member's Mark powder? Sam's has not said. Costco has Kirkland whey, Aldi has Elevation and Walmart, which owns Sam's, sells Equate whey, so the gap is unusual. Until Sam's launches one, the practical answer for Sam's shoppers who want a house-brand price is to buy Gold Standard on a member deal, or to read our <a href="/kirkland-protein-powder-review/">Kirkland protein powder review</a> if you also have a Costco card.
+          </p>
+
+          <div class="bg-gray-900 text-white rounded-2xl p-6 lg:p-8 my-8">
+            <p class="text-xs font-black uppercase tracking-widest text-[#38BDF8] mb-3">WATCH FOR</p>
+            <p class="text-xl font-bold text-white mb-3">Older posts may describe Member's Mark products that are not on sale now</p>
+            <p class="text-gray-300 leading-relaxed m-0">Store-brand ranges change. If you see a Member's Mark powder in your club, read the panel for protein per scoop, the protein source and the serving count before assuming it beats Gold Standard.</p>
+          </div>
+        </div>
+
+        <div id="cost" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            5. How Much Is Protein Powder at Sam's Club per 25 g?
+          </h2>
+
+          <p>
+            Protein powder at Sam's Club runs from roughly $0.65 to about $1.50 per 25 g of protein, based on the few prices Sam's or buyers have published. The cheap end is Gold Standard on a member deal; the dear end is RAW isolate and Muscle Milk Genuine at their listed prices. Cost per 25 g is the honest comparison because scoop sizes, protein per scoop and bag weights all differ.
+          </p>
+
+          <p>
+            The math is simple: divide the price by the number of servings, then scale to 25 g. Muscle Milk Genuine's 2.47 lb tub was listed at $30.48 and holds about 16 servings of 32 g, which is 512 g of protein in the tub, or 20.5 lots of 25 g. That is about $1.49 per 25 g. The RAW Milk and Cookies isolate tub was listed at $29.98 for 20 servings; if each carries the 25 g the line lists, that is about $1.50 per 25 g.
+          </p>
+
+          <p>
+            Gold Standard is the one that makes Sam's worth a visit. Sam's hides the member price online, but deal posters have reported the 5.64 lb Extreme Milk Chocolate and 5.47 lb Vanilla Ice Cream bags at $49.98 for members. Costco's listing of the same 5.47 lb bag shows 80 servings of 24 g, which is 1,920 g of protein. At $49.98 that comes to about $0.65 per 25 g, a price the brand's own 5 lb tub never gets near on Amazon, where we saw it at about $1.44.
+          </p>
+
+          <div class="overflow-hidden border border-gray-200 rounded-2xl my-8">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Product</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Price used</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Servings x protein</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Cost per 25 g</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Gold Standard 5.47 lb (Sam's, deal price reported)</td>
+                    <td class="px-4 py-4 text-gray-700">$49.98</td>
+                    <td class="px-4 py-4 text-gray-700">80 x 24 g</td>
+                    <td class="px-4 py-4 text-gray-700">About $0.65</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Member's Mark 30 g shake (buyer report)</td>
+                    <td class="px-4 py-4 text-gray-700">About $1.48 a bottle</td>
+                    <td class="px-4 py-4 text-gray-700">1 x 30 g</td>
+                    <td class="px-4 py-4 text-gray-700">About $1.23</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Muscle Milk Genuine 2.47 lb (Sam's listing)</td>
+                    <td class="px-4 py-4 text-gray-700">$30.48</td>
+                    <td class="px-4 py-4 text-gray-700">16 x 32 g</td>
+                    <td class="px-4 py-4 text-gray-700">About $1.49</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">RAW Isolate Milk and Cookies 1.56 lb (Sam's listing)</td>
+                    <td class="px-4 py-4 text-gray-700">$29.98</td>
+                    <td class="px-4 py-4 text-gray-700">20 x 25 g</td>
+                    <td class="px-4 py-4 text-gray-700">About $1.50</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Gold Standard 5 lb (Amazon)</td>
+                    <td class="px-4 py-4 text-gray-700">$100.67</td>
+                    <td class="px-4 py-4 text-gray-700">73 x 24 g</td>
+                    <td class="px-4 py-4 text-gray-700">About $1.44</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Muscle Milk Genuine 4.94 lb (Amazon)</td>
+                    <td class="px-4 py-4 text-gray-700">$59.29</td>
+                    <td class="px-4 py-4 text-gray-700">32 x 32 g</td>
+                    <td class="px-4 py-4 text-gray-700">About $1.45</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <p>
+            Two cautions. First, these are snapshot prices: Sam's changes member prices often, and the Gold Standard figure comes from deal reports rather than a price we saw on the listing. Second, a low price per 25 g only matters if you use the tub. If you rarely drink shakes, a smaller tub at a slightly higher price per gram can waste less money. For a wider ranking of budget tubs, our <a href="/best-cheap-protein-powder/">best cheap protein powder</a> guide sorts every option by the same cost per 25 g measure.
+          </p>
+        </div>
+
+        <div id="raw" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            6. Is RAW Protein Powder at Sam's Club a Good Buy?
+          </h2>
+
+          <p>
+            RAW Whey Isolate at Sam's Club is a good isolate at a fair club price, but it is not the cheapest protein in the building. The Sam's listing for the 1.97 lb Dark Chocolate tub shows 25 servings of 25 g, and Sam's has also listed a smaller 1.56 lb Milk and Cookies tub at $29.98 for 20 servings.
+          </p>
+
+          <p>
+            When RAW launched at Sam's in November 2023, Stack3d reported the 25-serving isolate at $43.98, which it said was more than $10 less than RAW's own website. At that price the tub costs about $1.76 per 25 g. On Amazon we saw the same Dark Chocolate 25-serving tub at $59.98, or about $2.40 per 25 g, so the club price, if it is still in that range, is a real saving for RAW fans.
+          </p>
+
+          <p>
+            What you get for the premium over Gold Standard is a pure grass-fed whey isolate rather than a blend, with low fat and carbohydrate per scoop. Isolate carries less lactose than concentrate, which can help people who get mild bloating from cheaper whey, though it is not lactose-free. Our <a href="/whey-vs-whey-isolate/">whey vs whey isolate</a> guide explains when that difference is worth paying for, and our <a href="/cbum-protein-powder-review/">CBUM protein powder review</a> goes through RAW's flavors and labels in detail.
+          </p>
+
+          <p>
+            Buyer reviews on Sam's are mixed in the way club reviews usually are. Many buyers praise the flavors, especially the dessert-style ones. Complaints center on value: one reviewer described a container as about half full on opening, which is normal settling for powder but feels poor when the tub is large, and another questioned the serving count. If cost per gram is your priority, Gold Standard on a member deal beats RAW by more than half.
+          </p>
+        </div>
+
+        <div id="third-party" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            7. Is Sam's Club Protein Powder Third-Party Tested?
+          </h2>
+
+          <p>
+            Some of it is: Muscle Milk is listed by the brand as NSF Certified for Sport, and Optimum Nutrition describes Gold Standard as banned-substance tested, with Informed Choice certification promoted on many flavors. Sam's Club itself does not test or certify the powders it sells, and there is no Member's Mark powder to check.
+          </p>
+
+          <p>
+            The rest of the shelf is less clear. The RAW Whey Isolate listing we checked does not name a banned-substance certification program, and other retail listings describe it only as tested for potency and purity. Orgain does not publish a sport certification for its organic plant protein. We found no certification published for the Member's Mark shake. None of that means these products are unsafe; it means you are relying on the brand's own quality control rather than an outside certifier.
+          </p>
+
+          <p>
+            If you are a drug-tested athlete, the rule is simple: buy a product carrying NSF Certified for Sport or Informed Choice, and confirm the exact product, flavor and lot in the certifier's online database before you open it. At Sam's, Muscle Milk Genuine and Pro Series are the easiest route to that. Certifications are flavor- and market-specific, so a logo on one Gold Standard flavor does not cover every bag.
+          </p>
+
+          <p>
+            Heavy metals are a separate question from banned substances, and plant powders tend to test higher for lead than whey because the plants take it up from soil. Our <a href="/is-protein-powder-safe/">is protein powder safe</a> guide covers what the testing programs do and do not check. If you have kidney disease, are pregnant, take medication or have a dairy allergy, ask a doctor or registered dietitian before adding any protein supplement.
+          </p>
+        </div>
+
+        <div id="membership" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            8. Is a Sam's Club Membership Worth It Just for Protein Powder?
+          </h2>
+
+          <p>
+            Not on protein powder alone for most people. A Sam's Club membership costs $60 a year for Club and $120 for Plus after the increase that took effect on May 1, 2026, so you need to save at least $60 a year on powder before the card pays for itself.
+          </p>
+
+          <p>
+            Here is the arithmetic. If Gold Standard costs about $0.65 per 25 g on a member deal and about $1.44 on Amazon, the saving is roughly $0.79 per 25 g. Someone drinking one 25 g shake a day uses about 365 servings a year, so the saving could be close to $290, well past the fee. Someone drinking two or three shakes a week saves closer to $100, which still covers the Club fee but not by much once you add the drive.
+          </p>
+
+          <p>
+            The catch is that the cheap figure depends on a deal price, and Sam's member prices move. Walmart sells Gold Standard and several budget whey brands with no membership at all, and Amazon Subscribe and Save sometimes narrows the gap. If you only buy powder, compare the price on the shelf that week against our <a href="/best-walmart-protein-powder/">best Walmart protein powder</a> picks before you renew.
+          </p>
+
+          <p>
+            Where the membership does make sense is when protein is one item among many. If you already shop Sam's for groceries and fuel, the powder savings are a bonus. Plus members also get free shipping on many orders and Sam's Cash rewards, which by 2026 had risen to a $750 annual cap, though neither changes the math on a single tub much.
+          </p>
+        </div>
+
+        <div id="vs-stores" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            9. How Does Sam's Club Compare With Costco, Walmart and Aldi?
+          </h2>
+
+          <p>
+            Sam's Club wins on name-brand bulk sizes, Costco wins on own-brand value and Aldi wins on price with no membership. For pure cost per 25 g, Costco's <a href="/kirkland-protein-powder-review/">Kirkland Signature whey</a> at roughly $0.70 per 25 g and Aldi's Elevation at roughly $0.80 to $0.95 are the benchmarks, and Gold Standard at Sam's only matches them on a member deal.
+          </p>
+
+          <div class="overflow-hidden border border-gray-200 rounded-2xl my-8">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Store</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Own-brand powder</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Membership</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Typical cost per 25 g</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Sam's Club</td>
+                    <td class="px-4 py-4 text-gray-700">None (Member's Mark shake only)</td>
+                    <td class="px-4 py-4 text-gray-700">$60 Club / $120 Plus</td>
+                    <td class="px-4 py-4 text-gray-700">About $0.65 (Gold Standard deal) to $1.50</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Costco</td>
+                    <td class="px-4 py-4 text-gray-700">Kirkland Signature Whey</td>
+                    <td class="px-4 py-4 text-gray-700">$65 / $130</td>
+                    <td class="px-4 py-4 text-gray-700">About $0.70 (Kirkland)</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Aldi</td>
+                    <td class="px-4 py-4 text-gray-700">Elevation whey</td>
+                    <td class="px-4 py-4 text-gray-700">None</td>
+                    <td class="px-4 py-4 text-gray-700">About $0.80 to $0.95</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Walmart</td>
+                    <td class="px-4 py-4 text-gray-700">Equate whey</td>
+                    <td class="px-4 py-4 text-gray-700">None (Walmart+ optional)</td>
+                    <td class="px-4 py-4 text-gray-700">Varies; Six Star and Body Fortress compete</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Trader Joe's</td>
+                    <td class="px-4 py-4 text-gray-700">Collagen only</td>
+                    <td class="px-4 py-4 text-gray-700">None</td>
+                    <td class="px-4 py-4 text-gray-700">About $1.78 (Orgain Boost)</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <p>
+            Costco is the closest rival. Its membership costs $65 and $130 a year, slightly more than Sam's, but it gives you a cheap house whey that Sam's does not have, plus Gold Standard and Orgain. Our <a href="/best-costco-protein-powder/">best Costco protein powder</a> guide ranks that shelf, and our <a href="/aldi-vs-costco-protein-powder/">Aldi vs Costco protein powder</a> comparison shows how close Elevation runs to Kirkland without any membership.
+          </p>
+
+          <p>
+            Walmart, Sam's parent company, needs no card and stocks a wider range of budget brands such as Six Star and Body Fortress, plus its own Equate whey. Prices per gram are usually a little higher than a Sam's deal on Gold Standard, but you can buy a small tub and walk out. Trader Joe's sits at the other end: as our <a href="/trader-joes-protein-powder/">Trader Joe's protein powder</a> page found, it lists Orgain plant protein and a collagen powder, and nothing cheap per gram.
+          </p>
+
+          <p>
+            One more comparison is useful: blended shakes. If you like Muscle Milk's creamy, milk-protein style, BSN's Syntha-6 is the other big name in that category; our <a href="/syntha-6-protein-powder-review/">Syntha-6 protein powder review</a> covers its label and cost. For a whey-focused alternative with a transparent formula, see our <a href="/pro-jym-protein-powder-review/">Pro JYM review</a>. Neither is a confirmed Sam's staple, so you would likely buy them online.
+          </p>
+        </div>
+
+        <div id="amazon" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            10. Can You Buy Sam's Club Protein Powder on Amazon?
+          </h2>
+
+          <p>
+            You can buy every name-brand powder Sam's stocks on Amazon, but not in the same sizes and rarely at the same price, and the Member's Mark shake is not sold there at all. Member's Mark is Sam's Club's own label, so anything with that name on Amazon is a third-party reseller listing, usually at a markup and with uncertain storage history.
+          </p>
+
+          <p>
+            For the name brands, Amazon is the convenient option rather than the cheap one. The 5 lb Gold Standard tub we saw at $100.67 works out to about $1.44 per 25 g, more than double the member deal price reported at Sam's. Muscle Milk Genuine's 4.94 lb tub at $59.29 came to about $1.45 per 25 g, close to Sam's listed price for the smaller tub. RAW isolate and Orgain were both cheaper per gram at their Sam's prices than on Amazon.
+          </p>
+
+          <p>
+            For the Member's Mark shake, the closest Amazon alternative is Premier Protein's 30 g shake, which has the same 30 g of protein and 160 calories per bottle. At $25.49 for a 12-pack of 11 oz bottles, it costs about $1.77 per 25 g, more than the Member's Mark price buyers reported. Our <a href="/muscle-milk-vs-premier-protein/">Muscle Milk vs Premier Protein</a> comparison covers both brands' shakes side by side.
+          </p>
+
+          <p>
+            Our advice: if you hold a Sam's card and live near a club, buy Gold Standard, RAW and Orgain there. If you do not, buy on Amazon in the largest size you will finish, use Subscribe and Save where offered, and compare the cost per 25 g with the cheapest options in our <a href="/best-cheap-protein-powder/">cheap protein powder rankings</a> before checking out.
+          </p>
+        </div>
+
+        <!-- Common Mistakes -->
+        <div id="mistakes" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            11. Common Mistakes to Avoid
+          </h2>
+
+          <div class="space-y-6 my-8">
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Assuming Member's Mark makes a protein powder</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Sam's own label currently makes a 30 g ready-to-drink shake, not a powder. Older blog posts and resellers can blur that line. If you see a Member's Mark tub online, check the seller, the label and the date before buying, because a reseller listing may be old stock at a markup.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Comparing tub prices instead of cost per 25 g</h3>
+              <p class="text-gray-700 text-sm m-0">
+                A $30 tub and a $50 bag are not comparable until you divide by servings and protein per serving. Muscle Milk Genuine's $30.48 tub costs more per gram than a $49.98 Gold Standard bag, despite the smaller sticker price. Do the per-25 g math on your phone in the aisle.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Buying a membership only for protein</h3>
+              <p class="text-gray-700 text-sm m-0">
+                At $60 a year for Club, Sam's only pays off on powder if you drink shakes often and catch member deals. Someone using a tub every two months may save less than the fee. Price the same products at Walmart and Aldi, which charge nothing to walk in.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Treating every Sam's powder as third-party tested</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Only some brands publish certifications: Muscle Milk is NSF Certified for Sport per the brand, and ON says Gold Standard is banned-substance tested. RAW's listing names no certifier and Orgain publishes none. Drug-tested athletes should check the certifier's database for the exact flavor and lot.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Buying the biggest bag in an untried flavor</h3>
+              <p class="text-gray-700 text-sm m-0">
+                A 5.47 or 5.64 lb bag is about 80 shakes. If you dislike the flavor, the low cost per gram is wasted. Try a small tub of the same flavor first, or stick to the flavors buyers rate most often, such as Gold Standard's chocolate options, before committing to a warehouse size.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ -->
+        <div id="faq" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            12. Frequently Asked Questions
+          </h2>
+
+          <div class="faq-list">
+            <details class="faq-item">
+              <summary><h3>Is Sam's Club protein powder third-party tested?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  It depends on the brand, because Sam's Club has no house powder and does not certify products itself. Muscle Milk is listed by the brand as NSF Certified for Sport. Optimum Nutrition calls Gold Standard banned-substance tested and promotes Informed Choice on many flavors. RAW's isolate listing names no certifier, and Orgain publishes no sport certification. Check the certifier's database for your exact flavor.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>Does Sam's Club sell a Member's Mark protein powder?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  Not that we could find as of November 2026. Sam's Club's protein powder aisle is name brands such as Optimum Nutrition, Muscle Milk, RAW, Dymatize and Orgain. The only Member's Mark protein product we found is a 30 g high-protein chocolate shake in 18-packs of 11 oz bottles, with 160 calories and 1 g of sugar per bottle, per the Sam's listing.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>Is Sam's Club protein powder healthy?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  The main powders are ordinary, reasonably clean products. Gold Standard gives 24 g of protein in about 120 calories; Orgain is organic plant protein with no added sugar; RAW is a low-fat whey isolate. Muscle Milk Genuine has about 270 to 280 calories per serving, which suits weight gain more than dieting. People with kidney disease or other conditions should ask a doctor first.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>Does Sam's Club protein powder contain dairy or lactose?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  Most of it does. Gold Standard, RAW isolate and Muscle Milk are milk-based, and the Member's Mark shake lists milk protein concentrate. Isolate such as RAW has less lactose than concentrate but is not lactose-free. Orgain's organic plant protein is the dairy-free choice Sam's reliably stocks. Anyone with a milk allergy should avoid the dairy products entirely.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>What is the cheapest protein powder at Sam's Club?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  Optimum Nutrition Gold Standard is usually the cheapest per gram when Sam's runs its member price near the $49.98 that deal posters have reported for the 5.47 and 5.64 lb bags. That works out to about $0.65 per 25 g. Muscle Milk Genuine, listed at $30.48 for 2.47 lb, is about $1.49 per 25 g. Prices change, so check the app.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>Which flavor is best at Sam's Club?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  Buyers most often recommend Gold Standard's chocolate flavors, including the Extreme Milk Chocolate that Sam's sells in the 5.64 lb bag, and Vanilla Ice Cream as a mixer for smoothies. RAW buyers tend to favor its dessert-style flavors. Orgain buyers are split: some like the vanilla bean, others find the chocolate gritty. These reflect buyer reviews, not our tasting.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>What are the common complaints about protein powder at Sam's Club?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  The main complaints in Sam's buyer reviews are hidden prices online, tubs that look half full on opening, recipe changes and texture. One Muscle Milk Genuine reviewer reported a changed formula and grainy texture; some Orgain buyers call it gritty; a RAW buyer questioned the serving count. Stock also varies by club, so a product online may be missing in store.
+                </p>
+              </div>
+            </details>
+
+          </div>
+        </div>
+
+        <!-- Related Guides -->
+        <div class="mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">Related Store-Brand Protein Guides</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <a href="/best-cheap-protein-powder/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#FF4500] font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Cheap Protein Powder</h3>
+              <p class="text-gray-500 text-sm mt-2">Every budget powder ranked by real cost per 25 g of protein.</p>
+            </a>
+            <a href="/best-costco-protein-powder/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#38BDF8] font-black text-xs uppercase tracking-widest mb-2">Store Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Costco Protein Powder</h3>
+              <p class="text-gray-500 text-sm mt-2">Kirkland, Gold Standard, Orgain and more at Costco, ranked by price per gram.</p>
+            </a>
+            <a href="/best-walmart-protein-powder/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#FF4500] font-black text-xs uppercase tracking-widest mb-2">Store Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Walmart Protein Powder</h3>
+              <p class="text-gray-500 text-sm mt-2">No membership needed: Walmart's shelf ranked by cost per 25 g.</p>
+            </a>
+            <a href="/aldi-vs-costco-protein-powder/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#38BDF8] font-black text-xs uppercase tracking-widest mb-2">Head-to-Head</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Aldi vs Costco Protein Powder</h3>
+              <p class="text-gray-500 text-sm mt-2">Elevation whey against Kirkland, gram for gram.</p>
+            </a>
+          </div>
+        </div>
+
+        <!-- Closing -->
+        <div class="mt-16 bg-gray-900 text-white rounded-2xl p-6 md:p-8">
+          <h2 class="text-2xl font-black text-white mb-4">The Bottom Line</h2>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            Sam's Club protein powder means name brands in warehouse sizes: Optimum Nutrition Gold Standard, Muscle Milk, RAW, Dymatize and Orgain, with no Member's Mark powder on the shelf. The best value is Gold Standard on a member deal, at about $0.65 per 25 g if the reported $49.98 price holds, which is as cheap as Kirkland at Costco.
+          </p>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            If you already have a Sam's card, buy Gold Standard, RAW and Orgain there and check the app for member prices. If you do not, Walmart and Aldi are cheaper to walk into, Costco has a real house whey, and Amazon carries the same name brands at about $1.44 to $2.40 per 25 g. Whichever you choose, compare by cost per 25 g, not by the sticker.
+          </p>
+        </div>
+
+        <MoreInCategory category="Store Brands" links={moreInCategory} />
+
+        <AuthorBio />
+      </div>
+    </div>
+  </article>
+</Layout>
