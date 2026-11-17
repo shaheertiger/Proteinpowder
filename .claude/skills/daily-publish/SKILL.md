@@ -43,9 +43,22 @@ page's primary keyword, whichever engine it is for.
 
 ### Rules for Google (5 articles)
 
-Mix: **2 comparisons, 2 brand reviews, 1 narrow guide.**
+Mix: **3 comparisons, 1 brand review, 1 narrow guide.**
 
-1. **Comparisons (2): "X vs Y" between well-known brands or products** (e.g.
+Why 3 comparisons: the second Google export (2026-11-17, in
+`content/search-console/2026-11-17/google/`) repeated the first. Comparison pages
+took 3 of 4 clicks at an average position of 6.1, with 18 of them in the top 10.
+Brand reviews sat around position 15 and broad "best" guides around position 47.
+
+**Keep the product database's `demand` field filled in.** The programmatic
+`/compare/<a>-vs-<b>/` pages are only indexable when *both* products have
+`demand >= 1000` (Semrush US volume for the product or brand's "<name> protein
+powder" query; see `DEMAND` in `scripts/db/import-research.mjs`). When a batch adds
+or reviews a brand that is in `src/data/db/products.json`, set its demand from the
+newest keyword export in both places. Each product that crosses 1,000 unlocks a
+comparison page against every other indexable product in its protein family.
+
+1. **Comparisons (3): "X vs Y" between well-known brands or products** (e.g.
    "Dymatize ISO100 vs Elite", "Orgain vs Vega", "Optimum Nutrition vs Body Fortress").
    This is Google's best format on the site. Rules:
    - Pick pairs people actually search (keyword export, or "vs" queries in the Google
@@ -57,7 +70,7 @@ Mix: **2 comparisons, 2 brand reviews, 1 narrow guide.**
      matching `/compare/` page from the body when one exists.
    - Use `scaffold-roundup.mjs` with one product card per side. Kicker
      "Head-to-Head", section "Comparisons". Give a clear verdict for each kind of buyer.
-2. **Brand reviews (2): brands or products searched by name that have no page yet.**
+2. **Brand review (1): a brand or product searched by name that has no page yet.**
    Same format as the Bing reviews below. For Google, lean toward brands with
    striking-distance impressions in the Google Queries file (positions 8-30).
 3. **One narrow guide (1): one flavour, one use or one type** (like

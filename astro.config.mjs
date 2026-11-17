@@ -120,7 +120,6 @@ const priorityGuides = new Set([
   'when-to-take-protein-powder',
   // October 2026: keyword-research batch — goal, flavor, format and brand pages.
   'protein-powder-comparison',
-  'protein-powder-brands',
   'do-protein-supplements-build-muscle',
   'best-protein-powder-for-men',
   'best-protein-powder-for-weight-gain',
