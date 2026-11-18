@@ -1,0 +1,864 @@
+---
+import Layout from "../layouts/Layout.astro";
+import ArticleHeader from "../components/ArticleHeader.astro";
+import TableOfContents from "../components/TableOfContents.astro";
+import ProductCard from "../components/ProductCard.astro";
+import MoreInCategory from "../components/MoreInCategory.astro";
+import { AUTHORS, DEFAULT_AUTHOR, authorSchema } from "../data/authors";
+import { SITE_NAME, SITE_URL } from "../data/site";
+import QuickPicks from "../components/QuickPicks.astro";
+import AuthorBio from "../components/AuthorBio.astro";
+import { pageDates } from "../data/dates";
+
+const moreInCategory = [
+  {
+    "title": "Premier Protein Powder Review",
+    "url": "/premier-protein-powder-review/"
+  },
+  {
+    "title": "Dymatize Protein Powder Review",
+    "url": "/dymatize-protein-powder-review/"
+  },
+  {
+    "title": "1UP Protein Powder Review",
+    "url": "/1up-protein-powder-review/"
+  }
+];
+const author = AUTHORS[DEFAULT_AUTHOR];
+const dates = pageDates(Astro.url.pathname, { published: "2026-11-18", modified: "2026-11-18" });
+const title = "Swanson Senior Muscle Retention Protein Powder Review (2026)";
+const description =
+  "Not independently certified: Swanson cites third-party lab testing but shows no NSF or Informed seal. 25 g protein, 180 calories, about $3.44 per 25 g.";
+
+const PRODUCTS: {
+  id: string;
+  name: string;
+  brand?: string;
+  badge: string;
+  category: string;
+  description: string;
+  pros: string[];
+  cons: string[];
+  bottomLine: string;
+  specs?: Record<string, string>;
+  rating?: number;
+  reviewCount?: number;
+  amazonUrl?: string;
+}[] = [
+  {
+    "id": "swanson-senior-review-vanilla-1-06-lb",
+    "name": "Swanson Senior Muscle Retention Protein, Vanilla, 1.06 lb",
+    "brand": "Swanson",
+    "badge": "Best Swanson Flavor for Mixing",
+    "category": "Whey concentrate blend with organic grains",
+    "description": "Per Swanson's label at the time of writing, two scoops (48 g) give 25 g of protein from whey protein concentrate, pea protein and whole goat milk, with 180 calories, 3.5 g of fat (all saturated), 60 mg of cholesterol, 11 g of carbs, 3.5 g of fiber and 2.5 g of total sugar with none added. It is sweetened with stevia (rebaudioside A) and the allergen line reads milk, goat milk, wheat and soy. The 480 g tub holds 10 servings, about $3.48 per 25 g at the Amazon price we saw. Swanson's own site listed vanilla as sold out when we checked.",
+    "pros": [
+      "25 g of protein per serving with 0 g of added sugar",
+      "Stevia only, no sucralose or acesulfame potassium",
+      "Neutral flavor that blends into coffee, oatmeal or a smoothie"
+    ],
+    "cons": [
+      "About $3.48 per 25 g at the Amazon price we saw, roughly double mainstream whey",
+      "Only 10 servings per tub",
+      "Contains wheat and soy, so not gluten-free"
+    ],
+    "bottomLine": "The more versatile of the two flavors. Good if you like the idea of grains and fiber in the scoop, expensive if you only want protein.",
+    "specs": {
+      "Protein / serving": "25 g (label)",
+      "Calories": "180",
+      "Third-party testing": "Swanson cites third-party labs; no NSF/Informed seal",
+      "Cost per 25 g": "About $3.48 (Amazon price seen)"
+    },
+    "amazonUrl": "https://www.amazon.com/dp/B07CFWHKNZ"
+  },
+  {
+    "id": "swanson-senior-review-chocolate-1-06-lb",
+    "name": "Swanson Senior Muscle Retention Whey Protein, Chocolate, 1.06 lb",
+    "brand": "Swanson",
+    "badge": "Chocolate Option",
+    "category": "Whey concentrate blend with organic grains",
+    "description": "The chocolate tub shares vanilla's core numbers. Per Swanson's label at the time of writing, two scoops (48 g) give 25 g of protein, 180 calories, 3.5 g of saturated fat, 60 mg of cholesterol, 11 g of carbs, 3.5 g of fiber, 2.5 g of total sugar and 0 g added, plus 310 mg of potassium, more than vanilla's 175 mg because of the Dutch cocoa. Sweetener is stevia. Swanson's allergen line reads dairy, wheat (gluten) and soy. With 10 servings per tub, it works out to about $3.44 per 25 g at the Amazon price we saw.",
+    "pros": [
+      "Same 25 g dose and 0 g added sugar as vanilla",
+      "Dutch cocoa adds iron, magnesium and copper on the panel",
+      "Slightly cheaper than vanilla on Amazon the day we checked"
+    ],
+    "cons": [
+      "About $3.44 per 25 g at the Amazon price we saw",
+      "Not gluten-free, per Swanson's own allergen statement",
+      "More potassium than vanilla, which matters on a kidney diet"
+    ],
+    "bottomLine": "Pick it if you will drink it plain with milk and prefer chocolate. Check the potassium line with your doctor if you have kidney disease.",
+    "specs": {
+      "Protein / serving": "25 g (label)",
+      "Calories": "180",
+      "Third-party testing": "Swanson cites third-party labs; no NSF/Informed seal",
+      "Cost per 25 g": "About $3.44 (Amazon price seen)"
+    },
+    "amazonUrl": "https://www.amazon.com/dp/B07316BXKJ"
+  },
+  {
+    "id": "swanson-senior-review-alt-swanson-grass-fed-whey",
+    "name": "Swanson Grass-Fed Whey Protein with Aminogen, Vanilla, 14.8 oz",
+    "brand": "Swanson",
+    "badge": "Cheaper Swanson Alternative",
+    "category": "Grass-fed whey concentrate",
+    "description": "Swanson's plain grass-fed whey uses the same type of whey concentrate without the grains, pea protein, goat milk or MCT oil. Per Swanson's label at the time of writing, one 23 g scoop gives 17 g of protein, 90 calories, 2 g of carbs, 1.5 g of fat and 0 g of added sugar, with about 18 scoops per tub. It is sweetened with xylitol and monk fruit (lo han guo), and the only allergen listed is milk. At the $28.09 we saw on Amazon, that is about $2.29 per 25 g, roughly a third cheaper than the senior formula.",
+    "pros": [
+      "About $2.29 per 25 g, cheaper than the senior blend",
+      "Only milk on the allergen line, no wheat or soy",
+      "Lower in calories and saturated fat per gram of protein"
+    ],
+    "cons": [
+      "17 g per scoop, so you need about 1.5 scoops to match 25 g",
+      "Xylitol can upset some stomachs, and it is toxic to dogs",
+      "No added fiber or grains if you wanted those"
+    ],
+    "bottomLine": "The same brand and whey for less money. Use one and a half scoops to hit the 25 g mark.",
+    "specs": {
+      "Protein / serving": "17 g (label)",
+      "Calories": "90",
+      "Third-party testing": "Swanson cites third-party labs; no NSF/Informed seal",
+      "Cost per 25 g": "About $2.29 (Amazon price seen)"
+    },
+    "amazonUrl": "https://www.amazon.com/dp/B002AU3SRU"
+  },
+  {
+    "id": "swanson-senior-review-alt-dymatize-iso100-vanilla",
+    "name": "Dymatize ISO100 Whey Isolate, Gourmet Vanilla, 1.3 lb (20 Servings)",
+    "brand": "Dymatize",
+    "badge": "Gluten-Free, Certified Alternative",
+    "category": "Hydrolyzed whey isolate",
+    "description": "If the wheat, soy or testing questions put you off Swanson, ISO100 is the cleanest swap at a similar tub size. Per the label at the time of writing, each scoop gives 25 g of protein from hydrolyzed whey isolate and whey isolate in roughly 110 to 120 calories, with very little fat, lactose or sugar, and the Amazon listing calls it gluten-free. Dymatize states it carries Informed Choice certification. The 20-serving bag was $42.48 on Amazon, about $2.12 per 25 g.",
+    "pros": [
+      "Informed Choice certification, per Dymatize",
+      "Isolate, so far less lactose than a concentrate blend",
+      "About $2.12 per 25 g, well under Swanson Senior"
+    ],
+    "cons": [
+      "Sweetened with sucralose in most flavors (check your flavor label)",
+      "No fiber, grains or minerals added",
+      "Thin texture compared with a shake made with milk"
+    ],
+    "bottomLine": "The pick for older adults who want a tested, gluten-free, low-lactose 25 g scoop for less money.",
+    "specs": {
+      "Protein / serving": "25 g (label)",
+      "Calories": "About 110-120",
+      "Third-party testing": "Informed Choice (brand)",
+      "Cost per 25 g": "About $2.12 (Amazon price seen)"
+    },
+    "amazonUrl": "https://www.amazon.com/dp/B099J2SWXV"
+  },
+  {
+    "id": "swanson-senior-review-alt-ensure-max-protein",
+    "name": "Ensure Max Protein Milk Chocolate Shake, 30 g Protein, 11 fl oz, 12 Pack",
+    "brand": "Ensure (Abbott)",
+    "badge": "Ready-to-Drink Alternative",
+    "category": "High-protein senior shake",
+    "description": "For anyone who would rather not scoop and shake, Ensure Max Protein is the senior shake to compare against. Per Abbott's label at the time of writing, each 11 fl oz bottle gives 30 g of protein from milk protein concentrate and calcium caseinate, 150 calories, 4 g of fiber and 1 g of sugar, with 25 vitamins and minerals. Abbott calls it gluten-free and suitable for lactose intolerance. At $27.97 for 12 on Amazon, it is about $2.33 a shake and $1.94 per 25 g of protein.",
+    "pros": [
+      "30 g of protein per bottle, more than a Swanson serving",
+      "Gluten-free and suitable for lactose intolerance, per Abbott",
+      "About $1.94 per 25 g, the cheapest option here"
+    ],
+    "cons": [
+      "Sucralose and acesulfame potassium",
+      "An 11 oz bottle can be a lot for a small appetite",
+      "Bulky to store compared with a powder"
+    ],
+    "bottomLine": "The cheaper, simpler choice for most seniors who just need more protein in the day.",
+    "specs": {
+      "Protein / serving": "30 g (label)",
+      "Calories": "150",
+      "Third-party testing": "No sport certification claimed",
+      "Cost per 25 g": "About $1.94 (Amazon price seen)"
+    },
+    "amazonUrl": "https://www.amazon.com/dp/B0791Y2LMB"
+  }
+];
+
+const schema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Home",
+          item: `${SITE_URL}/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Best Lists",
+          item: `${SITE_URL}/best-of/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 3,
+          name: "Swanson Senior Protein Review",
+          item: `${SITE_URL}/swanson-senior-muscle-retention-protein-review/`,
+        },
+      ],
+    },
+    {
+      "@type": "FAQPage",
+      mainEntity: [
+        {
+          "@type": "Question",
+          "name": "Is Swanson Senior Muscle Retention protein third-party tested?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Swanson says it uses third-party pharmaceutical-grade testing for purity and potency and that its facility is cGMP certified by NSF. However, the Senior Muscle Retention powder is not listed as NSF Certified for Sport or Informed Choice, and Swanson does not publish batch test results or heavy-metal figures for it. You are relying on the company's own quality program."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is Swanson Senior Muscle Retention protein healthy?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "For most older adults it is a reasonable choice: 25 g of protein, 0 g of added sugar, 3.5 g of fiber and stevia instead of artificial sweeteners, per the label. The trade-offs are 3.5 g of saturated fat, 60 mg of cholesterol and 180 calories per serving, plus wheat and soy. Healthy depends on your diet and conditions."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does Swanson Senior protein contain gluten or lactose?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes to both. Swanson's allergen statement lists milk, goat milk, wheat and soy, and the chocolate page says dairy, wheat (gluten) and soy, so it is not gluten-free. It is mostly whey concentrate, which contains some lactose. People with lactose intolerance may do better with a whey isolate or a shake labeled suitable for lactose intolerance."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Which Swanson Senior protein flavor is best?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "There is no clear buyer favorite in the data we could see: Swanson shows a pooled 4.5-star rating from 107 reviews across the flavors. Vanilla is the more flexible choice because it blends into coffee, oatmeal and smoothies, while chocolate suits people who drink it plain with milk. Chocolate also has more potassium, which matters on a kidney diet."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What are the common complaints about Swanson Senior protein?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The biggest practical complaint is value: the tub holds only 10 servings and costs about $34, which works out to roughly $3.44 to $3.48 per 25 g at Amazon prices. Stevia aftertaste and a thicker texture from the grain blend are the other things buyers of similar shakes mention, so try one tub before subscribing."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How much protein is in Swanson Senior Muscle Retention protein?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Each two-scoop, 48 g serving gives 25 g of protein, per Swanson's label at the time of writing, from whey protein concentrate, pea protein and whole goat milk. That matches the 25 to 30 g per meal suggested for older adults by the PROT-AGE group. The 1.06 lb tub holds 10 servings, or 250 g of protein in total."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is Swanson Senior protein good for people on GLP-1 medications?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Swanson markets it that way, and getting enough protein while losing weight on drugs such as semaglutide does help protect muscle. The shake is low in sugar and gives 25 g of protein in 180 calories. Still, nausea, appetite and portion sizes vary on these medications, so agree on a protein plan with your prescriber or a registered dietitian first."
+          }
+        }
+      ],
+    },
+    {
+      "@type": "Article",
+      headline: title,
+      author: authorSchema(),
+      datePublished: dates.published,
+      dateModified: dates.modified,
+      publisher: { "@type": "Organization", name: SITE_NAME, url: SITE_URL },
+    },
+    {
+      "@type": "ItemList",
+      name: title,
+      numberOfItems: PRODUCTS.length,
+      itemListElement: PRODUCTS.map((product, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name: product.name,
+        url: new URL(`#${product.id}`, Astro.url).toString(),
+      })),
+    },
+    ...PRODUCTS.map((product) => ({
+      "@type": "Product",
+      name: product.name,
+      description: product.description,
+      brand: {
+        "@type": "Brand",
+        name: product.brand ?? product.name.split(" ")[0],
+      },
+    })),
+  ],
+};
+---
+
+<Layout
+  title={title}
+  description={description}
+  ogType="article"
+  article={{
+    publishedTime: dates.published,
+    modifiedTime: dates.modified,
+    author: author.name,
+    section: "Brand Reviews",
+    tags: [
+      "swanson senior muscle retention protein powder",
+      "swanson senior protein",
+      "swanson protein powder",
+      "swanson senior muscle retention whey",
+      "is swanson senior protein third party tested"
+    ],
+  }}
+  jsonLd={schema}
+  stickyCta={{
+    text: "See Our Top Senior Protein Picks",
+    link: "/best-protein-powder-for-seniors/",
+  }}
+>
+  <article class="relative overflow-hidden">
+    <ArticleHeader kicker={"Brand Review"} badge={"Label-Checked"} author={author} dates={dates} mobileAd={false}>
+      <Fragment slot="title">Swanson Senior Muscle Retention Protein Powder Review</Fragment>
+      A label-first look at Swanson's senior whey blend: what the 25 g scoop really contains, what Swanson says about testing, why it is not gluten-free, and whether it is worth about $3.44 per 25 g of protein.
+    </ArticleHeader>
+
+    <TableOfContents>
+      <a href="#short-answer">Short Answer</a>
+      <a href="#top-picks">The Products</a>
+      <a href="#label">What Is in It</a>
+      <a href="#testing">Third-Party Testing</a>
+      <a href="#cost">Cost per 25 g</a>
+      <a href="#compare">Vs Regular Whey and Shakes</a>
+      <a href="#reviews">Taste and Mixing</a>
+      <a href="#enough">Is 25 g Enough?</a>
+      <a href="#health">Health Caveats</a>
+      <a href="#who-should-buy">Who Should Buy It</a>
+      <a href="#mistakes">Common Mistakes</a>
+      <a href="#faq">FAQ</a>
+    </TableOfContents>
+
+    <!-- Content -->
+    <div class="max-w-3xl mx-auto px-4 pb-16 lg:pb-24">
+      <div class="prose prose-lg prose-blue max-w-none text-gray-700 leading-relaxed">
+        <p class="lede">
+          Swanson Senior Muscle Retention Protein is a decent 25 g whey blend with no added sugar, but it is expensive and not independently certified: the 10-serving tub costs about $3.44 to $3.48 per 25 g of protein at Amazon prices. The wheat and soy on its allergen line, and your health conditions, change the answer. This review covers the label, testing, cost, buyer feedback and safer alternatives.
+        </p>
+
+        <QuickPicks products={PRODUCTS} />
+
+        <div id="short-answer" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            1. Swanson Senior Muscle Retention Protein Powder: The Short Answer
+          </h2>
+
+          <p>
+            Swanson Senior Muscle Retention Protein is a reasonable whey-based shake for older adults, but it is one of the most expensive ways to buy 25 g of protein and it carries no independent certification seal. Per <a href="https://www.swansonvitamins.com/p/swanson-ultra-senior-muscle-retention-protein-powder-chocolate-1-06-lb-480-grams-pwdr">Swanson's label</a> at the time of writing, two scoops give 25 g of protein, 180 calories and 0 g of added sugar, and the 1.06 lb tub holds only 10 servings, which is about $3.44 to $3.48 per 25 g of protein at the Amazon prices we saw.
+          </p>
+
+          <p>
+            <strong>Buy it if</strong> you want a stevia-sweetened, no-added-sugar shake with a little fiber and whole grains in the scoop, you do not need it to be gluten-free, and price is not your main concern. <strong>Skip it if</strong> you have celiac disease or a wheat allergy, you need a product verified by NSF or Informed Choice, you are on a kidney diet, or you simply want the most protein per dollar. Our <a href="/best-protein-powder-for-seniors/">best protein powder for seniors</a> guide ranks cheaper and better-tested options.
+          </p>
+
+          <div class="bg-gray-900 text-white rounded-2xl p-6 lg:p-8 my-8">
+            <p class="text-xs font-black uppercase tracking-widest text-[#38BDF8] mb-4">Swanson Senior Muscle Retention, per the label</p>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+              <div>
+                <p class="text-3xl font-black text-white">25 g</p>
+                <p class="text-gray-400 text-xs mt-1">Protein per 2 scoops</p>
+              </div>
+              <div>
+                <p class="text-3xl font-black text-[#38BDF8]">180</p>
+                <p class="text-gray-400 text-xs mt-1">Calories</p>
+              </div>
+              <div>
+                <p class="text-3xl font-black text-white">10</p>
+                <p class="text-gray-400 text-xs mt-1">Servings per tub</p>
+              </div>
+              <div>
+                <p class="text-3xl font-black text-[#38BDF8]">$3.44</p>
+                <p class="text-gray-400 text-xs mt-1">Per 25 g protein (Amazon)</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Picks -->
+        <div id="top-picks" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            2. Both Swanson Senior Flavors and Three Alternatives
+          </h2>
+
+          <p>
+            The two Swanson Senior Muscle Retention tubs sold on Amazon, Swanson's own cheaper grass-fed whey, a gluten-free whey isolate and the senior shake most doctors' offices mention. Prices are the Amazon prices we saw on November 18, 2026, and they move often.
+          </p>
+
+          {PRODUCTS.map((product, index) => (
+            <ProductCard product={product} rank={index + 1} />
+          ))}
+        </div>
+
+        <div id="label" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            3. What Is in Swanson Senior Muscle Retention Protein?
+          </h2>
+
+          <p>
+            Swanson Senior Muscle Retention Protein is mostly whey protein concentrate, with small amounts of pea protein, whole goat milk, an organic six-grain blend, soluble fiber and MCT oil. Swanson's typical-analysis panel lists about 29.9 g of 80% whey concentrate per serving, 5.2 g of ModCarb organic grains (oat bran, amaranth, quinoa, buckwheat, millet and chia), 2.6 g of pea protein, 2 g of goat milk, Fibersol-2 soluble fiber and 1.3 to 1.7 g of an MCT blend, per the <a href="https://www.swansonvitamins.com/p/swanson-ultra-senior-muscle-retention-protein-powder-natural-vanilla-1-06-lb-480-grams-pwdr">vanilla</a> and chocolate product pages at the time of writing.
+          </p>
+
+          <p>
+            The nutrition panel is the same for both flavors on the headline numbers: 180 calories, 25 g of protein, 3.5 g of fat, 11 g of carbohydrate, 3.5 g of fiber, 2.5 g of total sugar and 0 g of added sugar per 48 g serving. Sodium is 120 mg. Chocolate lists 310 mg of potassium and vanilla 175 mg, and both list 150 mg of phosphorus and 133 mg of calcium. The minerals are mostly modest, apart from selenium (44% of the daily value) and molybdenum (80%).
+          </p>
+
+          <p>
+            Two lines deserve attention. All 3.5 g of fat is saturated, which is 18% of the daily value, and there is 60 mg of cholesterol, 20% of the daily value. That comes from the whey, goat milk and MCT oil, and it is higher than a whey isolate would give you. For most people it is a small share of the day, but anyone on a cholesterol-lowering diet should count it.
+          </p>
+
+          <h3 class="text-2xl font-bold text-gray-900 mt-10 mb-4">What sweetener does it use, and is there added leucine or vitamin D?</h3>
+
+          <p>
+            The only sweetener is rebaudioside A, a purified stevia extract, so there is no sucralose, acesulfame potassium or sugar alcohol. There is <strong>no added leucine and no vitamin D</strong> on either label at the time of writing, and Swanson does not publish an amino acid profile. That matters because the name promises muscle retention, and leucine and vitamin D are the two nutrients senior-specific formulas usually lean on. Whey is naturally rich in leucine, so 25 g of whey still supplies a useful amount, but the formula adds nothing beyond what any whey shake already gives you.
+          </p>
+
+          <p>
+            Swanson markets the powder as Non-GMO and vegetarian, and says the whey comes from grass-fed, hormone-free cows. It also shows a badge for clinically studied ingredients without naming the studies on the product page. The page now pitches the shake as a companion for people on GLP-1 medications, with a suggestion to spread 25 to 40 g of protein every three to four hours. We cover that use separately in our <a href="/best-protein-powder-for-glp-1/">protein powder for GLP-1 users</a> guide.
+          </p>
+        </div>
+
+        <div id="testing" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            4. Is Swanson Senior Muscle Retention Protein Third-Party Tested?
+          </h2>
+
+          <p>
+            Swanson says it uses third-party testing, but the Senior Muscle Retention powder carries no independent certification such as NSF Certified for Sport or Informed Choice. On its <a href="https://www.swansonvitamins.com/pages/quality">quality page</a>, Swanson says it uses "third-party pharmaceutical-grade testing to ensure purity, potency, and reliability," that its facility is cGMP certified by NSF, and that all products are tested in GMP-certified facilities. Neither product page mentions testing beyond those company-wide statements at the time of writing.
+          </p>
+
+          <p>
+            Those claims are not meaningless. An NSF GMP facility registration means an auditor checks the manufacturing system, and testing finished products against label claims is the right practice. But a GMP audit certifies the facility, not the product in the tub, and it does not involve screening each lot for banned substances or publishing results. Swanson does not offer a batch Certificate of Analysis lookup for this product, and we found no heavy-metal results published for it.
+          </p>
+
+          <p>
+            For most older adults, banned-substance screening is not the point. The questions that matter more are whether the protein content matches the label and whether lead or cadmium levels are low. On both, you are trusting Swanson's internal program rather than a public database. If you want a product a certifier has listed by name, the Dymatize ISO100 card above is the closest swap, and our <a href="/best-protein-powder-for-seniors/">senior protein powder</a> rankings flag the certified options.
+          </p>
+
+          <div class="bg-gray-900 text-white rounded-2xl p-6 lg:p-8 my-8">
+            <p class="text-xs font-black uppercase tracking-widest text-[#38BDF8] mb-3">THE RULE</p>
+            <p class="text-xl font-bold text-white mb-3">A certified facility is not a certified product</p>
+            <p class="text-gray-300 leading-relaxed m-0">NSF GMP registration audits how a factory works. NSF Certified for Sport and Informed Choice test the product itself and list it by name in a public database. Swanson Senior Muscle Retention has the first, per Swanson, and not the second.</p>
+          </div>
+        </div>
+
+        <div id="cost" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            5. How Much Does Swanson Senior Protein Cost per 25 g of Protein?
+          </h2>
+
+          <p>
+            Swanson Senior Muscle Retention Protein costs about $3.44 per 25 g of protein in chocolate and about $3.48 in vanilla at the Amazon prices we saw on November 18, 2026. The math is simple because one serving is exactly 25 g of protein: the $34.39 chocolate tub divided by 10 servings is $3.44, and the $34.79 vanilla tub divided by 10 is $3.48. Swanson's own site listed chocolate at the same $34.39 one-time price, or about $3.44 a serving.
+          </p>
+
+          <p>
+            That is expensive. Mainstream whey usually lands between about $1.20 and $2.20 per 25 g, and even Swanson's own grass-fed whey worked out to about $2.29 per 25 g on the day we checked. A daily Swanson Senior shake costs roughly $103 a month; the same 25 g from Ensure Max Protein would be about $58, and from Dymatize ISO100 about $64.
+          </p>
+
+          <div class="overflow-hidden border border-gray-200 rounded-2xl my-8">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Product</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Price seen</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Protein per tub or pack</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Cost per 25 g</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Swanson Senior, Chocolate (10 servings)</td>
+                    <td class="px-4 py-4 text-gray-700">$34.39</td>
+                    <td class="px-4 py-4 text-gray-700">250 g</td>
+                    <td class="px-4 py-4 text-gray-700">About $3.44</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Swanson Senior, Vanilla (10 servings)</td>
+                    <td class="px-4 py-4 text-gray-700">$34.79</td>
+                    <td class="px-4 py-4 text-gray-700">250 g</td>
+                    <td class="px-4 py-4 text-gray-700">About $3.48</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Swanson Grass-Fed Whey (18 scoops x 17 g)</td>
+                    <td class="px-4 py-4 text-gray-700">$28.09</td>
+                    <td class="px-4 py-4 text-gray-700">306 g</td>
+                    <td class="px-4 py-4 text-gray-700">About $2.29</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Dymatize ISO100 (20 servings x 25 g)</td>
+                    <td class="px-4 py-4 text-gray-700">$42.48</td>
+                    <td class="px-4 py-4 text-gray-700">500 g</td>
+                    <td class="px-4 py-4 text-gray-700">About $2.12</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Ensure Max Protein (12 x 30 g)</td>
+                    <td class="px-4 py-4 text-gray-700">$27.97</td>
+                    <td class="px-4 py-4 text-gray-700">360 g</td>
+                    <td class="px-4 py-4 text-gray-700">About $1.94</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <p>
+            Part of the premium pays for things that are not protein: the grain blend, soluble fiber, goat milk and MCT oil add 23 g of non-protein weight to every 48 g serving. Whether that is worth paying for depends on whether you would otherwise struggle to eat fiber and whole grains. Most people would get more value buying a plain whey and adding a spoon of oats to the blender.
+          </p>
+
+          <p>
+            Swanson's subscription offer changes the picture a little. The product page advertised 40% off the first subscription order and 30% off after that, which would bring the chocolate tub to roughly $2.41 per 25 g on repeat orders. That is closer to normal whey prices, but still not cheap, and a subscription only makes sense once you know you like the taste.
+          </p>
+        </div>
+
+        <div id="compare" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            6. How Does Swanson Senior Compare With Regular Whey and Senior Shakes?
+          </h2>
+
+          <p>
+            Compared with regular whey, Swanson Senior gives the same 25 g of protein with more calories, more fiber and more saturated fat, at roughly double the price. A typical whey concentrate or isolate scoop delivers 25 g of protein in 110 to 130 calories. Swanson's serving is 180 calories because of the grains, goat milk and MCT oil. For a senior who is losing weight unintentionally, those extra 50 to 70 calories are a plus; for one managing weight or blood sugar, they are not.
+          </p>
+
+          <div class="overflow-hidden border border-gray-200 rounded-2xl my-8">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm"></th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Swanson Senior</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Swanson Grass-Fed Whey</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Dymatize ISO100</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Ensure Max Protein</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Protein / serving</td>
+                    <td class="px-4 py-4 text-gray-700">25 g</td>
+                    <td class="px-4 py-4 text-gray-700">17 g</td>
+                    <td class="px-4 py-4 text-gray-700">25 g</td>
+                    <td class="px-4 py-4 text-gray-700">30 g</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Calories</td>
+                    <td class="px-4 py-4 text-gray-700">180</td>
+                    <td class="px-4 py-4 text-gray-700">90</td>
+                    <td class="px-4 py-4 text-gray-700">About 110-120</td>
+                    <td class="px-4 py-4 text-gray-700">150</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Added sugar</td>
+                    <td class="px-4 py-4 text-gray-700">0 g</td>
+                    <td class="px-4 py-4 text-gray-700">0 g</td>
+                    <td class="px-4 py-4 text-gray-700">0 g</td>
+                    <td class="px-4 py-4 text-gray-700">0 g</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Sweetener</td>
+                    <td class="px-4 py-4 text-gray-700">Stevia</td>
+                    <td class="px-4 py-4 text-gray-700">Xylitol, monk fruit</td>
+                    <td class="px-4 py-4 text-gray-700">Sucralose in most flavors</td>
+                    <td class="px-4 py-4 text-gray-700">Sucralose, acesulfame K</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Gluten-free</td>
+                    <td class="px-4 py-4 text-gray-700">No (contains wheat)</td>
+                    <td class="px-4 py-4 text-gray-700">Not stated</td>
+                    <td class="px-4 py-4 text-gray-700">Yes, per listing</td>
+                    <td class="px-4 py-4 text-gray-700">Yes, per Abbott</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Independent certification</td>
+                    <td class="px-4 py-4 text-gray-700">None</td>
+                    <td class="px-4 py-4 text-gray-700">None</td>
+                    <td class="px-4 py-4 text-gray-700">Informed Choice (brand)</td>
+                    <td class="px-4 py-4 text-gray-700">None</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Cost per 25 g</td>
+                    <td class="px-4 py-4 text-gray-700">About $3.44-$3.48</td>
+                    <td class="px-4 py-4 text-gray-700">About $2.29</td>
+                    <td class="px-4 py-4 text-gray-700">About $2.12</td>
+                    <td class="px-4 py-4 text-gray-700">About $1.94</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <p>
+            Against senior shakes such as Ensure Max Protein, Swanson loses on convenience and price and wins on sweetener. Ensure Max Protein gives 30 g of protein in 150 calories, needs no mixing, and cost about $1.94 per 25 g at the Amazon price we saw. It uses sucralose and acesulfame potassium, which some people prefer to avoid. If artificial sweeteners are the deal-breaker, Swanson is one of the few senior-branded options sweetened only with stevia. Our <a href="/best-protein-drink-for-seniors/">best protein drink for seniors</a> guide compares the ready-to-drink side in depth, and <a href="/premier-protein-vs-ensure/">Premier Protein vs Ensure</a> covers the two big shake brands.
+          </p>
+
+          <p>
+            There is also the question of protein type. Swanson is mostly whey concentrate, which digests quickly and is rich in leucine, the amino acid most linked to switching on muscle protein synthesis. Ensure Max Protein uses milk protein concentrate and caseinate, which digest more slowly. Neither is wrong; our <a href="/casein-vs-whey-protein-powder/">casein vs whey</a> explainer sets out when each one fits. If lactose is a problem, an isolate such as ISO100 is the gentler choice, as we explain in <a href="/whey-vs-whey-isolate/">whey vs whey isolate</a>.
+          </p>
+
+          <p>
+            If you are comparing Swanson with other value brands, today's <a href="/bulksupplements-protein-powder-review/">BulkSupplements protein review</a> shows how low the cost per 25 g can go when you buy plain, unflavored powder in bulk, and the <a href="/compare/">protein powder comparison tool</a> lines up other whey products side by side.
+          </p>
+        </div>
+
+        <div id="reviews" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            7. What Do Buyers Say About Swanson Senior Protein's Taste and Mixing?
+          </h2>
+
+          <p>
+            Buyer feedback on Swanson Senior Muscle Retention Protein is limited but positive overall: Swanson's site showed a 4.5-star average from 107 reviews when we checked, and the same figure appears on both flavor pages, so it looks like a pooled score. That is a small sample next to mainstream whey brands with tens of thousands of ratings, and we could not read the written reviews behind it, so treat the score as a rough signal rather than proof.
+          </p>
+
+          <p>
+            What we can say from the label is what to expect. Stevia-only shakes often have a lingering sweet aftertaste that some buyers of stevia products dislike, so if you have disliked stevia before, start with a single tub. The grain blend and soluble fiber add body, so expect a thicker, more porridge-like shake than plain whey, especially with milk. Swanson suggests 10 to 16 oz of water or milk for two scoops; using the larger amount helps if the shake feels heavy.
+          </p>
+
+          <p>
+            Which flavor is best? We cannot point to a clear buyer favorite from the data available. Vanilla is the more flexible of the two, because a neutral flavor works in coffee, oatmeal and smoothies, while chocolate suits people who drink it plain. Note that vanilla was sold out on Swanson's own site the day we checked, though Amazon still listed it.
+          </p>
+
+          <p>
+            The most common practical complaint for a product like this is likely to be value: 10 servings go quickly if you drink one a day, and a refill every ten days at about $34 adds up. If you like the formula, the subscription discount or a cheaper base whey with your own oats is the obvious workaround.
+          </p>
+        </div>
+
+        <div id="enough" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            8. Is 25 g of Protein Enough to Retain Muscle After 60?
+          </h2>
+
+          <p>
+            Yes, 25 g of protein in one sitting is a sensible dose for most older adults, and it lines up with what expert groups recommend per meal. The 2013 <a href="https://pubmed.ncbi.nlm.nih.gov/23867520/">PROT-AGE Study Group position paper</a> suggests 1.0 to 1.2 g of protein per kilogram of body weight a day for healthy adults over 65, spread across meals at roughly 25 to 30 g each. The <a href="https://pubmed.ncbi.nlm.nih.gov/24814383/">ESPEN Expert Group</a> reached a similar range in 2014.
+          </p>
+
+          <p>
+            For a 70 kg (154 lb) adult, that is about 70 to 84 g of protein a day. One Swanson shake covers about a third of that. The rest should come from food, and the shake is most useful at the meal where protein is usually lowest, which for many older adults is breakfast. Our <a href="/how-much-protein-do-i-need/">how much protein do I need</a> calculator works out your own target.
+          </p>
+
+          <p>
+            The protein alone will not protect muscle, though. Sarcopenia, defined in the <a href="https://pubmed.ncbi.nlm.nih.gov/30312372/">revised European consensus</a> as low muscle strength confirmed by low muscle quantity or quality, responds best to resistance exercise plus adequate protein. A shake taken without any strength work will help close a nutrition gap, but it will not by itself rebuild strength. Chair stands, resistance bands or supervised gym work make the protein count.
+          </p>
+
+          <p>
+            Leucine is the other factor. Research on older adults suggests aging muscle needs a larger leucine signal to respond, which is why some senior products add extra leucine. Swanson does not, and it does not list how much leucine its blend contains. A 25 g dose of mostly whey should still provide a meaningful amount, because whey is one of the richest leucine sources, but the formula has no specific edge over a plain whey on this point.
+          </p>
+        </div>
+
+        <div id="health" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            9. Is Swanson Senior Protein Safe for Seniors With Kidney Disease, Diabetes or on Medications?
+          </h2>
+
+          <p>
+            Swanson Senior Muscle Retention Protein is a food-type supplement that is safe for most healthy older adults, but anyone with kidney disease, diabetes, celiac disease or a long medication list should check with a doctor or registered dietitian before starting it. Swanson's own page says it is not intended to diagnose, treat, cure or prevent any disease, and this review is not medical advice.
+          </p>
+
+          <h3 class="text-2xl font-bold text-gray-900 mt-10 mb-4">Kidney disease</h3>
+
+          <p>
+            People with chronic kidney disease are often told to limit protein, potassium and phosphorus, and this shake adds all three. Each serving gives 25 g of protein, 150 mg of phosphorus and 175 mg (vanilla) to 310 mg (chocolate) of potassium. If you have been told to follow a renal diet, do not add a protein supplement without your nephrologist or renal dietitian setting the amount.
+          </p>
+
+          <h3 class="text-2xl font-bold text-gray-900 mt-10 mb-4">Diabetes and blood sugar</h3>
+
+          <p>
+            The 11 g of carbohydrate per serving includes 3.5 g of fiber and 0 g of added sugar, which is friendly to blood sugar compared with many meal shakes. Still, 11 g is more than a whey isolate provides, so count it in your carbohydrate plan, and talk to your care team if you take insulin or a sulfonylurea and plan to use the shake as a meal replacement.
+          </p>
+
+          <h3 class="text-2xl font-bold text-gray-900 mt-10 mb-4">Medications, allergies and GLP-1 drugs</h3>
+
+          <p>
+            Swanson markets the shake to people on GLP-1 medications such as semaglutide. Protein is genuinely important while losing weight on those drugs, but appetite, nausea and dosing should be discussed with your prescriber. Calcium-rich shakes can interfere with some antibiotics and thyroid medication if taken at the same time, so ask your pharmacist about spacing. And remember the allergen line: milk, goat milk, wheat and soy, so this is not suitable for celiac disease, a wheat allergy or a dairy allergy.
+          </p>
+        </div>
+
+        <div id="who-should-buy" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            10. Who Should Buy Swanson Senior Muscle Retention Protein, and Who Should Skip It?
+          </h2>
+
+          <p>
+            Swanson Senior Muscle Retention Protein suits an older adult who wants a no-added-sugar, stevia-sweetened whey shake with a little fiber, and who is happy to pay a premium for that. It fits people who avoid sucralose and acesulfame potassium, who are losing weight without trying and could use 180 calories from a shake, or who like the idea of grains and fiber in their protein.
+          </p>
+
+          <p>
+            It is a poor fit for anyone gluten-free, because Swanson lists wheat on the label, and for anyone on a kidney diet without medical guidance. It is also a weak choice if you want the most protein for the money, because it costs well over double the cheapest options here, or if you want a product with a named independent certification.
+          </p>
+
+          <p>
+            For most readers, the better value is one of three swaps. Swanson's own grass-fed whey costs about $2.29 per 25 g with only milk on the allergen line. Dymatize ISO100 is gluten-free, low in lactose and Informed Choice certified per Dymatize, at about $2.12 per 25 g. Ensure Max Protein needs no mixing and was about $1.94 per 25 g. All three appear in the product cards above.
+          </p>
+
+          <p>
+            If you are still deciding between formats, start with our <a href="/best-protein-powder-for-seniors/">best protein powder for seniors</a> roundup for powders, or the <a href="/best-protein-drink-for-seniors/">senior protein drink</a> guide if mixing a shake every day sounds like a chore. Both rank products by label quality, testing and cost per 25 g rather than marketing.
+          </p>
+        </div>
+
+        <!-- Common Mistakes -->
+        <div id="mistakes" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            11. Common Mistakes to Avoid
+          </h2>
+
+          <div class="space-y-6 my-8">
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Assuming the Senior Label Means a Special Formula</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Apart from a grain blend, soluble fiber and a little goat milk, this is a whey concentrate shake. There is no added leucine, vitamin D or HMB on the label at the time of writing. A plain whey at half the price delivers the same 25 g of muscle-building protein, so judge it on the label, not the name.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Buying It for a Gluten-Free Diet</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Swanson's allergen statement lists wheat, and the chocolate page spells out gluten, even though the named grains look gluten-free at a glance. Anyone with celiac disease or a wheat allergy should skip it and choose a powder labeled gluten-free, such as a whey isolate or the Ensure Max Protein shake.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Comparing Tub Prices Instead of Cost per 25 g</h3>
+              <p class="text-gray-700 text-sm m-0">
+                A $34 tub looks similar to many whey tubs until you notice it holds only 10 servings. At about $3.44 per 25 g it costs more than double some alternatives. Always divide the price by total grams of protein in the container, then multiply by 25, before deciding what is good value.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Adding Protein Without Checking a Kidney Diet</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Older adults with chronic kidney disease are often given a daily protein, potassium and phosphorus limit. One shake adds 25 g of protein, 150 mg of phosphorus and up to 310 mg of potassium. Ask your nephrologist or renal dietitian how it fits before adding it, rather than finding out at the next blood test.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Expecting the Shake to Replace Strength Training</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Protein supplements help preserve muscle mainly when paired with resistance exercise. Drinking a shake every morning while staying inactive will close a nutrition gap but will not rebuild lost strength. Two or three short sessions a week with bands, chair stands or light weights make every gram count.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ -->
+        <div id="faq" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            12. Frequently Asked Questions
+          </h2>
+
+          <div class="faq-list">
+            <details class="faq-item">
+              <summary><h3>Is Swanson Senior Muscle Retention protein third-party tested?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  Swanson says it uses third-party pharmaceutical-grade testing for purity and potency and that its facility is cGMP certified by NSF. However, the Senior Muscle Retention powder is not listed as NSF Certified for Sport or Informed Choice, and Swanson does not publish batch test results or heavy-metal figures for it. You are relying on the company's own quality program.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>Is Swanson Senior Muscle Retention protein healthy?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  For most older adults it is a reasonable choice: 25 g of protein, 0 g of added sugar, 3.5 g of fiber and stevia instead of artificial sweeteners, per the label. The trade-offs are 3.5 g of saturated fat, 60 mg of cholesterol and 180 calories per serving, plus wheat and soy. Healthy depends on your diet and conditions.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>Does Swanson Senior protein contain gluten or lactose?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  Yes to both. Swanson's allergen statement lists milk, goat milk, wheat and soy, and the chocolate page says dairy, wheat (gluten) and soy, so it is not gluten-free. It is mostly whey concentrate, which contains some lactose. People with lactose intolerance may do better with a whey isolate or a shake labeled suitable for lactose intolerance.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>Which Swanson Senior protein flavor is best?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  There is no clear buyer favorite in the data we could see: Swanson shows a pooled 4.5-star rating from 107 reviews across the flavors. Vanilla is the more flexible choice because it blends into coffee, oatmeal and smoothies, while chocolate suits people who drink it plain with milk. Chocolate also has more potassium, which matters on a kidney diet.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>What are the common complaints about Swanson Senior protein?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  The biggest practical complaint is value: the tub holds only 10 servings and costs about $34, which works out to roughly $3.44 to $3.48 per 25 g at Amazon prices. Stevia aftertaste and a thicker texture from the grain blend are the other things buyers of similar shakes mention, so try one tub before subscribing.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>How much protein is in Swanson Senior Muscle Retention protein?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  Each two-scoop, 48 g serving gives 25 g of protein, per Swanson's label at the time of writing, from whey protein concentrate, pea protein and whole goat milk. That matches the 25 to 30 g per meal suggested for older adults by the PROT-AGE group. The 1.06 lb tub holds 10 servings, or 250 g of protein in total.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>Is Swanson Senior protein good for people on GLP-1 medications?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  Swanson markets it that way, and getting enough protein while losing weight on drugs such as semaglutide does help protect muscle. The shake is low in sugar and gives 25 g of protein in 180 calories. Still, nausea, appetite and portion sizes vary on these medications, so agree on a protein plan with your prescriber or a registered dietitian first.
+                </p>
+              </div>
+            </details>
+
+          </div>
+        </div>
+
+        <!-- Related Guides -->
+        <div class="mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">Related Senior Protein Guides</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <a href="/best-protein-powder-for-seniors/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#FF4500] font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Protein Powder for Seniors</h3>
+              <p class="text-gray-500 text-sm mt-2">Every senior-friendly powder we rank, ordered by label quality, testing and cost per 25 g.</p>
+            </a>
+            <a href="/best-protein-drink-for-seniors/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#0b64c0] font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Protein Drink for Seniors</h3>
+              <p class="text-gray-500 text-sm mt-2">Ready-to-drink shakes for older adults compared on protein, sugar and price per bottle.</p>
+            </a>
+            <a href="/how-much-protein-do-i-need/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#16a34a] font-black text-xs uppercase tracking-widest mb-2">Calculator</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">How Much Protein Do I Need?</h3>
+              <p class="text-gray-500 text-sm mt-2">Work out your daily target by weight, age and activity level.</p>
+            </a>
+            <a href="/bulksupplements-protein-powder-review/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#9333ea] font-black text-xs uppercase tracking-widest mb-2">Brand Review</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">BulkSupplements Protein Powder Review</h3>
+              <p class="text-gray-500 text-sm mt-2">How plain, bulk protein powder compares on cost per 25 g and testing.</p>
+            </a>
+          </div>
+        </div>
+
+        <!-- Closing -->
+        <div class="mt-16 bg-gray-900 text-white rounded-2xl p-6 md:p-8">
+          <h2 class="text-2xl font-black text-white mb-4">The Bottom Line</h2>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            Swanson Senior Muscle Retention Protein does what its label says: 25 g of mostly whey protein, 0 g of added sugar and a stevia-only sweetener, with some fiber and whole grains added. What it does not do is justify its price. At about $3.44 to $3.48 per 25 g, with no named independent certification and wheat and soy on the allergen line, it is hard to recommend over a plain whey, a certified isolate or a ready-made senior shake.
+          </p>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            If the stevia-only formula and the added fiber are exactly what you want, it is a fair buy, ideally on Swanson's subscription discount. Everyone else will get the same muscle-supporting protein for less from the alternatives above. And if you have kidney disease, diabetes or a list of medications, settle your protein target with your doctor or a registered dietitian before adding any shake.
+          </p>
+        </div>
+
+        <MoreInCategory category="Brand Reviews" links={moreInCategory} />
+
+        <AuthorBio />
+      </div>
+    </div>
+  </article>
+</Layout>
