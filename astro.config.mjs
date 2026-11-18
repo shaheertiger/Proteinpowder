@@ -36,6 +36,17 @@ const pillarGuides = new Set([
 // sitemap priority than the 0.5 default so crawlers reach them sooner. The daily
 // publishing run adds each new slug here (see .claude/skills/daily-publish).
 const priorityGuides = new Set([
+  // Daily batch (2026-11-18): 5 Google + 5 Bing articles.
+  'collagen-vs-protein-powder',
+  'mass-gainer-vs-protein-powder',
+  'pure-protein-vs-premier-protein',
+  'muscletech-protein-powder-review',
+  'homemade-protein-powder',
+  'swanson-senior-muscle-retention-protein-review',
+  'serious-mass-protein-powder-review',
+  'bulksupplements-protein-powder-review',
+  '1up-protein-powder-review',
+  'sprouts-protein-powder',
   // Daily batch (2026-11-17): 5 Google + 5 Bing articles.
   'creatine-vs-protein-powder',
   'casein-vs-whey-protein-powder',
