@@ -118,6 +118,21 @@ const DEMAND = {
   'prodough-protein-powder': 1300,
   'ancient-nutrition-bone-broth-protein': 1000,
   'bsn-syntha-6': 1000,
+  // 2026-11-19: brands whose reviews already earn Google clicks, from the
+  // 2026-11-17 exports ('<brand> protein powder' unless noted).
+  'gnc-amp-wheybolic': 9900, // 'wheybolic protein powder'
+  'lgxnds-premium-whey-isolate': 9900,
+  'inno-supps-advanced-iso': 6600, // 'inno supps advanced iso protein powder'
+  'cellucor-c4-whey-protein': 5400, // 'c4 protein powder'
+  'kirkland-signature-whey-protein': 5400,
+  'swanson-senior-muscle-retention-protein': 5400,
+  'redcon1-mre-lite': 4400, // 'coach prime mre lite red velvet protein powder'
+  'bloom-whey-protein-isolate': 2900,
+  'arbonne-feelfit-protein': 2400,
+  '1up-iso-protein': 2400,
+  'bodytech-100-whey-isolate': 2400, // 'bodytech isolate whey protein powder'
+  '1st-phorm-level-1': 1900,
+  'oath-protein-powder': 1600,
 };
 
 // Rows held out of the index until a person checks the label in hand.

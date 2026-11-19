@@ -10,7 +10,7 @@
 // from (src/integrations/markdown-twins.mjs). Keep them when editing the card.
 import { amazonLink } from "../data/affiliate";
 import productImages from "../data/product-images.json";
-import { PRODUCT_BY_ALIAS } from "../lib/db.mjs";
+import { PRODUCT_BY_ALIAS, topComparisons } from "../lib/db.mjs";
 
 interface Product {
   id: string;
@@ -45,6 +45,8 @@ const top = rank === 1;
 const tabId = `tabs-${product.id}`;
 // The same product's page in the label database, when it has one.
 const dbRow: any = PRODUCT_BY_ALIAS.get(product.id);
+// Its strongest head-to-head pages, so readers (and crawlers) reach them from every roundup.
+const versus: any[] = dbRow ? topComparisons(dbRow, 3) : [];
 ---
 
 <section
@@ -124,6 +126,13 @@ const dbRow: any = PRODUCT_BY_ALIAS.get(product.id);
   {dbRow && (
     <p class="text-center text-sm m-0 mt-2">
       <a href={dbRow.url} class="font-bold text-[#0b64c0]">Full label and Label Score ({dbRow.score.total}/100)</a>
+    </p>
+  )}
+  {versus.length > 0 && (
+    <p class="text-center text-sm text-gray-600 m-0 mt-1.5">
+      Compare: {versus.map((c, i) => (
+        <>{i > 0 && " · "}<a href={c.url} class="font-semibold text-[#0b64c0]">vs {c.rival.brand} {c.rival.name}</a></>
+      ))}
     </p>
   )}
 

@@ -43,9 +43,38 @@ page's primary keyword, whichever engine it is for.
 
 ### Rules for Google (5 articles)
 
-Mix: **3 comparisons, 1 brand review, 1 narrow guide.**
+Mix: **2 comparisons, 2 brand reviews (each adds a database row), 1 narrow guide.**
 
-Why 3 comparisons: the second Google export (2026-11-17, in
+**Update from the 2026-11-18 export** (`content/search-console/2026-11-18/google/`, 7 days):
+
+| Page type | Pages seen | Clicks | Impressions | Avg. position | Pages in top 10 |
+|---|---|---|---|---|---|
+| Programmatic `/compare/` pairs | 148 | 21 | 1,466 | **7.8** | **114** |
+| Brand reviews | 45 | 21 | 1,965 | 15.5 | 6 (Ryse alone: 14 clicks) |
+| Brand hubs `/brands/<x>/` | 55 | 4 | 769 | 20.2 | 14 |
+| Broad `best-*` guides | 70 | 7 | 4,528 | **45.2** | 12 |
+
+The compare pairs that rank are the ones built from products with search demand
+(Levels, Ascent, Isopure, Premier, Clean Simple Eats, FlavCity, Jocko, Ryse). So the
+lever is **more products in the database**, and each new product unlocks a compare
+page against every other indexable product in its protein family (about 50 pages each).
+That is why brand reviews moved from 1 to 2: every Google brand review must also add
+its product to the database:
+
+- Pick brands with **`<brand> protein powder` volume of 1,000 or more** in the newest
+  keyword export that are **not yet in `src/data/db/products.json`**.
+- Write a label row in the `scripts/db/SCHEMA.md` format (real supplement-facts
+  numbers and the printed ingredient list, sources listed, `null` for anything you
+  couldn't confirm). Add its demand to `DEMAND`, and map the review's product-card
+  id to the row in `ALIASES` (both in `scripts/db/import-research.mjs`). Then run
+  `node scripts/db/import-research.mjs <batch.json>`.
+- Product cards whose id resolves to a database row automatically show "Compare: vs …"
+  links to that product's strongest compare pages (`topComparisons` in
+  `src/lib/db.mjs`), so the alias is what connects the review to its compare pages.
+- Editorial "X vs Y" articles (Nov 16-18) have barely been seen yet (2 pages, 6
+  impressions). Keep 2 a day until a later export shows how they do.
+
+History: the 3-comparison mix came from the second Google export (2026-11-17, in
 `content/search-console/2026-11-17/google/`) repeated the first. Comparison pages
 took 3 of 4 clicks at an average position of 6.1, with 18 of them in the top 10.
 Brand reviews sat around position 15 and broad "best" guides around position 47.
@@ -58,7 +87,7 @@ or reviews a brand that is in `src/data/db/products.json`, set its demand from t
 newest keyword export in both places. Each product that crosses 1,000 unlocks a
 comparison page against every other indexable product in its protein family.
 
-1. **Comparisons (3): "X vs Y" between well-known brands or products** (e.g.
+1. **Comparisons (2): "X vs Y" between well-known brands or products** (e.g.
    "Dymatize ISO100 vs Elite", "Orgain vs Vega", "Optimum Nutrition vs Body Fortress").
    This is Google's best format on the site. Rules:
    - Pick pairs people actually search (keyword export, or "vs" queries in the Google
@@ -70,8 +99,9 @@ comparison page against every other indexable product in its protein family.
      matching `/compare/` page from the body when one exists.
    - Use `scaffold-roundup.mjs` with one product card per side. Kicker
      "Head-to-Head", section "Comparisons". Give a clear verdict for each kind of buyer.
-2. **Brand review (1): a brand or product searched by name that has no page yet.**
-   Same format as the Bing reviews below. For Google, lean toward brands with
+2. **Brand reviews (2): brands or products searched by name (1,000+ volume) that have
+   no page and no database row yet.** Same format as the Bing reviews below, plus the
+   database row described above. For Google, lean toward brands with
    striking-distance impressions in the Google Queries file (positions 8-30).
 3. **One narrow guide (1): one flavour, one use or one type** (like
    `best-protein-powder-for-coffee` or `best-cookies-and-cream-protein-powder`, both
