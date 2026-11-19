@@ -36,6 +36,8 @@ const pillarGuides = new Set([
 // sitemap priority than the 0.5 default so crawlers reach them sooner. The daily
 // publishing run adds each new slug here (see .claude/skills/daily-publish).
 const priorityGuides = new Set([
+  // Chocolate whey guide (2026-11-19).
+  'best-chocolate-whey-protein-powder',
   // Daily batch (2026-11-19): 5 Google + 5 Bing articles.
   'optimum-nutrition-vs-body-fortress',
   'optimum-nutrition-vs-muscle-milk',

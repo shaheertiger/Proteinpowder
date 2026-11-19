@@ -72,7 +72,10 @@ const ALIASES = {
   'equate-whey-protein-powder': ['equate-protein-powder-equate-whey'],
   'glo-ours-protein-powder': ['glo-protein-powder-review-ours-salted-caramel'],
   'lineage-provisions-animal-based-complete': ['lineage-protein-powder-review-abc-original'],
-  'naked-mass': ['naked-mass-protein-powder-review-naked-mass-unflavored-8lb'],
+  'naked-mass': ['naked-mass-protein-powder-review-naked-mass-unflavored-8lb', 'serious-mass-review-naked-mass-8lb'],
+  'muscle-milk-pro-series': ['muscle-milk-pro-series-protein-powder', 'muscle-milk-vs-premier-muscle-milk-pro-series-powder-2lb', 'optimum-nutrition-vs-muscle-milk-pro-series-powder'],
+  'optimum-nutrition-serious-mass': ['serious-mass-review-on-serious-mass-6lb-vanilla', 'serious-mass-review-on-serious-mass-12lb-chocolate', 'mass-gainer-vs-protein-powder-on-serious-mass-12lb', 'naked-mass-protein-powder-review-on-serious-mass-6lb'],
+  'nutricost-casein-protein': ['nutricost-review-casein-chocolate-5lb'],
   'manitoba-harvest-hemp-pro-70': ['manitoba-harvest-hemp-yeah-max-protein'],
   'ballerina-farm-protein-powder': ['ballerina-farm-farmer-protein-vanilla-bean', 'ballerina-farm-farmer-protein-creamy-chocolate', 'ballerina-farm-farmer-protein-maple-cinnamon'],
   'happy-viking-superfood-protein': ['happy-viking-plant-protein-triple-chocolate', 'happy-viking-plant-protein-vanilla-bean'],
@@ -157,6 +160,13 @@ const DEMAND = {
   'ehplabs-blessed-plant-protein': 1600,
   'naked-mass': 1600,
   'equate-whey-protein-powder': 1300, // 'equate protein powder'
+  'muscle-milk-pro-series': 4400,
+  'optimum-nutrition-serious-mass': 2900,
+  'truvani-protein-greens': 2900,
+  'clean-simple-eats-clear-protein': 2400,
+  'nutricost-casein-protein': 2400,
+  'isopure-essentials': 2400,
+  'transparent-labs-organic-vegan-protein': 1300,
 };
 
 // Rows held out of the index until a person checks the label in hand.
@@ -169,6 +179,7 @@ const HOLD = {
 const REGISTRY_CHECKED = {
   // nsfsport.com, checked 2026-11-19: Double Rich Chocolate and Vanilla Ice Cream are listed.
   'optimum-nutrition-gold-standard-whey': ['NSF Certified for Sport'],
+  'muscle-milk-pro-series': ['NSF Certified for Sport'], // Knockout Chocolate listed, 2026-11-19
   'thorne-whey-protein-isolate': ['NSF Certified for Sport'],
   'klean-athlete-klean-isolate': ['NSF Certified for Sport'],
   'vital-proteins-collagen-peptides': ['NSF Certified for Sport'],
