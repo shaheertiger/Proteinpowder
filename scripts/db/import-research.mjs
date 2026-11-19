@@ -76,6 +76,12 @@ const ALIASES = {
   'muscle-milk-pro-series': ['muscle-milk-pro-series-protein-powder', 'muscle-milk-vs-premier-muscle-milk-pro-series-powder-2lb', 'optimum-nutrition-vs-muscle-milk-pro-series-powder'],
   'optimum-nutrition-serious-mass': ['serious-mass-review-on-serious-mass-6lb-vanilla', 'serious-mass-review-on-serious-mass-12lb-chocolate', 'mass-gainer-vs-protein-powder-on-serious-mass-12lb', 'naked-mass-protein-powder-review-on-serious-mass-6lb'],
   'nutricost-casein-protein': ['nutricost-review-casein-chocolate-5lb'],
+  'herbalife-personalized-protein-powder': ['herbalife-review-personalized-protein-powder'],
+  'bulksupplements-casein-protein': ['bulksupplements-protein-powder-review-casein-1kg'],
+  'bulksupplements-hydrolyzed-whey-isolate': ['bulksupplements-protein-powder-review-hydrolyzed-whey-isolate-500g'],
+  'be-well-by-kelly-beef-protein': ['be-well-by-kelly-beef-protein-vanilla', 'be-well-by-kelly-beef-protein-chocolate', 'be-well-by-kelly-beef-protein-unflavored', 'be-well-by-kelly-beef-protein-chai'],
+  'promix-whey-protein': ['promix-protein-powder-review-whey-unflavored-2-5lb', 'promix-protein-powder-review-whey-vanilla-2-5lb'],
+  'pb2-performance-peanut-protein': ['pb2-review-performance-peanut-cocoa-2lb'],
   'manitoba-harvest-hemp-pro-70': ['manitoba-harvest-hemp-yeah-max-protein'],
   'ballerina-farm-protein-powder': ['ballerina-farm-farmer-protein-vanilla-bean', 'ballerina-farm-farmer-protein-creamy-chocolate', 'ballerina-farm-farmer-protein-maple-cinnamon'],
   'happy-viking-superfood-protein': ['happy-viking-plant-protein-triple-chocolate', 'happy-viking-plant-protein-vanilla-bean'],
@@ -167,10 +173,18 @@ const DEMAND = {
   'nutricost-casein-protein': 2400,
   'isopure-essentials': 2400,
   'transparent-labs-organic-vegan-protein': 1300,
+  'herbalife-personalized-protein-powder': 2900, // 'herbalife protein powder'
+  'bulksupplements-casein-protein': 2900,
+  'be-well-by-kelly-beef-protein': 2900,
+  'myprotein-the-plant-protein': 2900,
+  'promix-whey-protein': 2400, // 'promix protein powder'
+  'pb2-performance-peanut-protein': 1900, // 'pb2 protein powder'
+  'bulksupplements-hydrolyzed-whey-isolate': 1300,
 };
 
 // Rows held out of the index until a person checks the label in hand.
 const HOLD = {
+  'herbalife-personalized-protein-powder': 'Soy isolate plus whey concentrate: no protein type fits (it would be filed as plant), and it is a 6 g add-in, not a shake powder.',
   'legion-whey-plus': "Brand page shows two different labels (22 g/100 kcal panel vs 20 g/90 kcal copy); confirm the current formula.",
   'myprotein-impact-whey': 'Brand page contradicts itself (19 g vs 22 g protein); no servings per container recorded.',
 };
@@ -180,6 +194,7 @@ const REGISTRY_CHECKED = {
   // nsfsport.com, checked 2026-11-19: Double Rich Chocolate and Vanilla Ice Cream are listed.
   'optimum-nutrition-gold-standard-whey': ['NSF Certified for Sport'],
   'muscle-milk-pro-series': ['NSF Certified for Sport'], // Knockout Chocolate listed, 2026-11-19
+  'bulksupplements-casein-protein': ['NSF Certified for Sport'], // nsfsport.com listing 1815488, 2026-11-19
   'thorne-whey-protein-isolate': ['NSF Certified for Sport'],
   'klean-athlete-klean-isolate': ['NSF Certified for Sport'],
   'vital-proteins-collagen-peptides': ['NSF Certified for Sport'],
