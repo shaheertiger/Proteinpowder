@@ -66,6 +66,13 @@ const ALIASES = {
   '1st-phorm-level-1': ['1st-phorm-protein-powder-review-level-1'],
   'arbonne-feelfit-protein': ['arbonne-review-feelfit-simply1-vanilla'],
   '1up-iso-protein': ['1up-protein-powder-review-iso-protein'],
+  // 2026-11-19 daily batch reviews.
+  'ehplabs-blessed-plant-protein': ['blessed-protein-powder-review-blessed-plant-protein-30'],
+  'flavcity-protein-smoothie': ['bobby-approved-protein-powder-review-flavcity-chocolate'],
+  'equate-whey-protein-powder': ['equate-protein-powder-equate-whey'],
+  'glo-ours-protein-powder': ['glo-protein-powder-review-ours-salted-caramel'],
+  'lineage-provisions-animal-based-complete': ['lineage-protein-powder-review-abc-original'],
+  'naked-mass': ['naked-mass-protein-powder-review-naked-mass-unflavored-8lb'],
   'manitoba-harvest-hemp-pro-70': ['manitoba-harvest-hemp-yeah-max-protein'],
   'ballerina-farm-protein-powder': ['ballerina-farm-farmer-protein-vanilla-bean', 'ballerina-farm-farmer-protein-creamy-chocolate', 'ballerina-farm-farmer-protein-maple-cinnamon'],
   'happy-viking-superfood-protein': ['happy-viking-plant-protein-triple-chocolate', 'happy-viking-plant-protein-vanilla-bean'],
@@ -143,6 +150,12 @@ const DEMAND = {
   'bodytech-100-whey-isolate': 2400, // 'bodytech isolate whey protein powder'
   '1st-phorm-level-1': 1900,
   'oath-protein-powder': 1600,
+  // 2026-11-19 daily batch (2026-11-17 exports).
+  'glo-ours-protein-powder': 2400, // 'glo protein powder'
+  'lineage-provisions-animal-based-complete': 1900,
+  'ehplabs-blessed-plant-protein': 1600,
+  'naked-mass': 1600,
+  'equate-whey-protein-powder': 1300, // 'equate protein powder'
 };
 
 // Rows held out of the index until a person checks the label in hand.

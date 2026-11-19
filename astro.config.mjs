@@ -36,6 +36,17 @@ const pillarGuides = new Set([
 // sitemap priority than the 0.5 default so crawlers reach them sooner. The daily
 // publishing run adds each new slug here (see .claude/skills/daily-publish).
 const priorityGuides = new Set([
+  // Daily batch (2026-11-19): 5 Google + 5 Bing articles.
+  'optimum-nutrition-vs-body-fortress',
+  'optimum-nutrition-vs-muscle-milk',
+  'glo-protein-powder-review',
+  'xo-jacqui-protein-powder-review',
+  'best-horchata-protein-powder',
+  'lineage-protein-powder-review',
+  'bobby-approved-protein-powder-review',
+  'blessed-protein-powder-review',
+  'naked-mass-protein-powder-review',
+  'equate-protein-powder',
   // Daily batch (2026-11-18): 5 Google + 5 Bing articles.
   'collagen-vs-protein-powder',
   'mass-gainer-vs-protein-powder',
