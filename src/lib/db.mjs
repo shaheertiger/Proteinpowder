@@ -314,6 +314,17 @@ export function comparisonFor(a, b) {
   return COMPARISON_BY_SLUG.get(`${x.slug}-vs-${y.slug}`) || null;
 }
 
+/** Build-time record of which page already shows a product's compare links. */
+export const SHOWN_COMPARE = new Set();
+
+/** The indexable head-to-head pages for a product, strongest rival demand first. */
+export function topComparisons(p, n = 3) {
+  return COMPARISONS.filter((c) => c.indexable && (c.a.slug === p.slug || c.b.slug === p.slug))
+    .map((c) => ({ ...c, rival: c.a.slug === p.slug ? c.b : c.a }))
+    .sort((x, y) => (y.rival.demand || 0) - (x.rival.demand || 0))
+    .slice(0, n);
+}
+
 /** The four compare blocks on a product page: five rows each, computed from the database. */
 export function compareBlocks(p) {
   const others = PRODUCTS.filter((o) => o.slug !== p.slug);
