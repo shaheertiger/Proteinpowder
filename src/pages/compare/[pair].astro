@@ -86,8 +86,12 @@ const buyText = [
   certWin ? `If you are tested in sport, buy ${certWin.name}.` : "",
 ].filter(Boolean).join(" ");
 
-const title = `${a.fullName} vs ${b.fullName}: Label Compared`;
-const description = `${a.name} vs ${b.name}, side by side: protein per scoop, calories, sugar, sweeteners, certification and cost per 25 g of protein. ${quickParts[0]}`.slice(0, 300);
+// Brand names first (that is how people search the pair), then the numbers that
+// answer it, so the snippet itself shows the difference.
+const pair = `${a.fullName} vs ${b.fullName}`;
+const title = pair.length <= 42 ? `${pair}: Which Is Better?` : pair.length <= 50 ? `${pair}: Compared` : pair;
+const facts = (p: any) => [`${fmt(p.proteinG)} g protein`, `${fmt(p.calories)} cal`, p.costPer25 != null ? `${money(p.costPer25)} per 25 g` : null].filter(Boolean).join(", ");
+const description = `${a.fullName}: ${facts(a)}. ${b.fullName}: ${facts(b)}. ${quickParts[0]} Sweeteners, testing and full label side by side.`;
 
 const faq: [string, string][] = [
   [`Which has more protein, ${a.name} or ${b.name}?`, `${a.name} has ${fmt(a.proteinG)} g per ${fmt(a.servingSizeG)} g serving (${Math.round(a.proteinPct * 100)}% protein); ${b.name} has ${fmt(b.proteinG)} g per ${fmt(b.servingSizeG)} g (${Math.round(b.proteinPct * 100)}%). Numbers are for the flavors shown and vary slightly by flavor.`],

@@ -314,6 +314,9 @@ export function comparisonFor(a, b) {
   return COMPARISON_BY_SLUG.get(`${x.slug}-vs-${y.slug}`) || null;
 }
 
+/** Build-time record of which page already shows a product's compare links. */
+export const SHOWN_COMPARE = new Set();
+
 /** The indexable head-to-head pages for a product, strongest rival demand first. */
 export function topComparisons(p, n = 3) {
   return COMPARISONS.filter((c) => c.indexable && (c.a.slug === p.slug || c.b.slug === p.slug))

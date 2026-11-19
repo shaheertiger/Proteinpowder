@@ -74,8 +74,8 @@ its product to the database:
 - Editorial "X vs Y" articles (Nov 16-18) have barely been seen yet (2 pages, 6
   impressions). Keep 2 a day until a later export shows how they do.
 
-History: the 3-comparison mix came from the second Google export (2026-11-17, in
-`content/search-console/2026-11-17/google/`) repeated the first. Comparison pages
+History: the earlier 3-comparison mix came from the second Google export (2026-11-17, in
+`content/search-console/2026-11-17/google/`), which repeated the first. Comparison pages
 took 3 of 4 clicks at an average position of 6.1, with 18 of them in the top 10.
 Brand reviews sat around position 15 and broad "best" guides around position 47.
 

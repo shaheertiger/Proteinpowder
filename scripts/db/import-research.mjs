@@ -56,6 +56,16 @@ const ALIASES = {
   'owyn-plant-protein-powder': ['owyn-pro-elite-protein-powder'],
   'kachava-superfood-shake': ['kachava-chocolate', 'kachava-vanilla', 'kachava-strawberry'],
   'anthonys-pea-protein': ['anthonys-premium-pea-protein'],
+  // 2026-11-19: review-page card ids for the brands added from their reviews.
+  'lgxnds-premium-whey-isolate': ['lgxnds-premium-whey-isolate-vanilla-ice-cream', 'lgxnds-premium-whey-isolate-chocolate-milkshake'],
+  'inno-supps-advanced-iso': ['inno-supps-review-advanced-iso-hot-cocoa-crunch'],
+  'cellucor-c4-whey-protein': ['c4-whey-protein-hersheys-milk-chocolate', 'c4-whey-protein-reeses-peanut-butter-chocolate', 'c4-whey-protein-vanilla-bean'],
+  'redcon1-mre-lite': ['mre-lite-review-redcon1-mre-lite-vanilla-milkshake', 'mre-lite-review-redcon1-mre-lite-banana-nut-bread'],
+  'swanson-senior-muscle-retention-protein': ['swanson-senior-review-vanilla-1-06-lb', 'swanson-senior-review-chocolate-1-06-lb'],
+  'bodytech-100-whey-isolate': ['bodytech-whey-protein-isolate'],
+  '1st-phorm-level-1': ['1st-phorm-protein-powder-review-level-1'],
+  'arbonne-feelfit-protein': ['arbonne-review-feelfit-simply1-vanilla'],
+  '1up-iso-protein': ['1up-protein-powder-review-iso-protein'],
   'manitoba-harvest-hemp-pro-70': ['manitoba-harvest-hemp-yeah-max-protein'],
   'ballerina-farm-protein-powder': ['ballerina-farm-farmer-protein-vanilla-bean', 'ballerina-farm-farmer-protein-creamy-chocolate', 'ballerina-farm-farmer-protein-maple-cinnamon'],
   'happy-viking-superfood-protein': ['happy-viking-plant-protein-triple-chocolate', 'happy-viking-plant-protein-vanilla-bean'],
@@ -138,7 +148,6 @@ const DEMAND = {
 // Rows held out of the index until a person checks the label in hand.
 const HOLD = {
   'legion-whey-plus': "Brand page shows two different labels (22 g/100 kcal panel vs 20 g/90 kcal copy); confirm the current formula.",
-  'gnc-amp-wheybolic': 'Label read from search snippets only; protein inferred from the product name. Confirm the panel.',
   'myprotein-impact-whey': 'Brand page contradicts itself (19 g vs 22 g protein); no servings per container recorded.',
 };
 

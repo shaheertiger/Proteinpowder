@@ -10,7 +10,7 @@
 // from (src/integrations/markdown-twins.mjs). Keep them when editing the card.
 import { amazonLink } from "../data/affiliate";
 import productImages from "../data/product-images.json";
-import { PRODUCT_BY_ALIAS, topComparisons } from "../lib/db.mjs";
+import { PRODUCT_BY_ALIAS, topComparisons, SHOWN_COMPARE } from "../lib/db.mjs";
 
 interface Product {
   id: string;
@@ -46,7 +46,11 @@ const tabId = `tabs-${product.id}`;
 // The same product's page in the label database, when it has one.
 const dbRow: any = PRODUCT_BY_ALIAS.get(product.id);
 // Its strongest head-to-head pages, so readers (and crawlers) reach them from every roundup.
-const versus: any[] = dbRow ? topComparisons(dbRow, 3) : [];
+// Shown once per product per page: several cards (flavors, sizes) can map to one row.
+const shownKey = dbRow ? `${Astro.url.pathname}|${dbRow.slug}` : "";
+const firstForPage = !!dbRow && !SHOWN_COMPARE.has(shownKey);
+if (firstForPage) SHOWN_COMPARE.add(shownKey);
+const versus: any[] = firstForPage ? topComparisons(dbRow, 3) : [];
 ---
 
 <section
