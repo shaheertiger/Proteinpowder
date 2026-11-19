@@ -180,6 +180,10 @@ const DEMAND = {
   'promix-whey-protein': 2400, // 'promix protein powder'
   'pb2-performance-peanut-protein': 1900, // 'pb2 protein powder'
   'bulksupplements-hydrolyzed-whey-isolate': 1300,
+  // 2026-11-19: from the Semrush organic positions export and keyword files.
+  'paleovalley-bone-broth-protein': 5400, // 'paleovalley bone broth protein' (site ranks #10)
+  'happy-viking-superfood-protein': 2400, // 'happy viking protein'
+  'now-sports-soy-isolate': 1000, // 'now soy protein isolate'
 };
 
 // Rows held out of the index until a person checks the label in hand.

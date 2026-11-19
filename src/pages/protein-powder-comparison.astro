@@ -7,6 +7,8 @@ import AuthorBio from "../components/AuthorBio.astro";
 import { AUTHORS, DEFAULT_AUTHOR, authorSchema } from "../data/authors";
 import { SITE_NAME, SITE_URL } from "../data/site";
 import { pageDates } from "../data/dates";
+import ProductTable from "../components/db/ProductTable.astro";
+import { PRODUCTS, COMPARISONS } from "../lib/db.mjs";
 
 const moreInCategory = [
   {
@@ -23,10 +25,14 @@ const moreInCategory = [
   }
 ];
 const author = AUTHORS[DEFAULT_AUTHOR];
-const dates = pageDates(Astro.url.pathname, { published: "2026-10-17", modified: "2026-10-17" });
-const title = "Protein Powder Comparison: 12 Popular Powders Side by Side";
+const dates = pageDates(Astro.url.pathname, { published: "2026-10-17", modified: "2026-11-19" });
+const title = `Protein Powder Comparison: ${PRODUCTS.length} Powders, Labels and Cost`;
+// The head-to-heads people search most: pairs where both products have real demand.
+const topPairs = COMPARISONS.filter((c: any) => c.indexable)
+  .sort((x: any, y: any) => Math.min(y.a.demand, y.b.demand) - Math.min(x.a.demand, x.b.demand))
+  .slice(0, 24);
 const description =
-  "A protein powder comparison of 12 well-known powders on protein per scoop, certification and sweetener, plus how to judge cost per 25 g and amino spiking.";
+  `Compare ${PRODUCTS.length} protein powders on protein per scoop, cost per 25 g, sweeteners and certification in one sortable table, plus the most-searched head-to-heads.`;
 
 const schema = {
   "@context": "https://schema.org",
@@ -159,6 +165,7 @@ const schema = {
 
     <TableOfContents>
       <a href="#table">The Comparison Table</a>
+      <a href="#all-powders">Every Powder Compared</a>
       <a href="#how-to-compare">How to Compare</a>
       <a href="#cost">Cost per 25 g</a>
       <a href="#types">Whey vs Isolate vs Plant vs Casein</a>
@@ -173,7 +180,7 @@ const schema = {
     <div class="max-w-3xl mx-auto px-4 pb-16 lg:pb-24">
       <div class="prose prose-lg prose-blue max-w-none text-gray-700 leading-relaxed">
         <p class="lede">
-          There is no single protein powder that is best for everyone. There is a best powder for a given goal, budget, stomach and sport, and most of the decision comes down to five numbers you can read off any label: protein per serving, protein as a share of the scoop, cost per 25 g of protein, the type of protein, and whether the specific product carries an independent certification. This page lines up twelve popular powders against those numbers and shows you how to run the same comparison on anything else you find.
+          There is no single protein powder that is best for everyone. There is a best powder for a given goal, budget, stomach and sport, and most of the decision comes down to five numbers you can read off any label: protein per serving, protein as a share of the scoop, cost per 25 g of protein, the type of protein, and whether the specific product carries an independent certification. This page lines up twelve popular powders against those numbers, then every powder in our label database in one sortable table, and shows you how to run the same comparison on anything else you find.
         </p>
 
         <div id="table" class="scroll-mt-24">
@@ -328,6 +335,23 @@ const schema = {
           <p>
             What the table cannot tell you is taste and mixability, which are the most common reasons people abandon a tub. We do not run taste panels. Buyer consensus, reflected across years of retailer reviews, is that Optimum Nutrition and Dymatize have broad, well-liked flavor lineups, that unflavored concentrates taste milky and are best hidden in smoothies or oats, and that plant blends have a thicker, earthier texture that some people never get used to. Treat any taste claim, including that summary, as a starting point rather than a guarantee.
           </p>
+        </div>
+
+        <div id="all-powders" class="scroll-mt-24">
+          <h3>Every Protein Powder in Our Database, Compared</h3>
+          <p>
+            The twelve above are the names people ask about most. The table below goes further: every one of the {PRODUCTS.length} powders in our label database, with protein per serving, protein as a share of the scoop, calories, sweeteners, sport certification and cost per 25 g of protein at the dated price on each product page. Click a column to sort, or filter by protein type and diet.
+          </p>
+          <ProductTable rows={PRODUCTS} filters id="comparison-table" caption={`All ${PRODUCTS.length} protein powders compared`} />
+          <h3>The Most-Searched Head-to-Heads</h3>
+          <p>
+            These are the pairs people search for by name. Each page puts the two labels side by side and says which wins on protein, calories, price and testing. For any other pair, use the <a href="/compare/">comparison tool</a>.
+          </p>
+          <ul class="not-prose grid sm:grid-cols-2 gap-3 list-none p-0 m-0 text-sm">
+            {topPairs.map((c: any) => (
+              <li><a href={c.url} class="block border border-gray-200 rounded-xl p-4 no-underline font-bold text-gray-900 hover:border-[#1E90FF]">{c.a.fullName} vs {c.b.fullName}</a></li>
+            ))}
+          </ul>
         </div>
 
         <div id="how-to-compare" class="scroll-mt-24">
