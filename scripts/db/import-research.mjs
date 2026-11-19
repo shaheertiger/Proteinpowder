@@ -150,6 +150,7 @@ const DEMAND = {
   'bodytech-100-whey-isolate': 2400, // 'bodytech isolate whey protein powder'
   '1st-phorm-level-1': 1900,
   'oath-protein-powder': 1600,
+  'optimum-nutrition-gold-standard-casein': 1600, // 'optimum nutrition 100 casein gold standard protein powder'
   // 2026-11-19 daily batch (2026-11-17 exports).
   'glo-ours-protein-powder': 2400, // 'glo protein powder'
   'lineage-provisions-animal-based-complete': 1900,
@@ -166,6 +167,8 @@ const HOLD = {
 
 // Certifications we found on the certifier's own registry for this product.
 const REGISTRY_CHECKED = {
+  // nsfsport.com, checked 2026-11-19: Double Rich Chocolate and Vanilla Ice Cream are listed.
+  'optimum-nutrition-gold-standard-whey': ['NSF Certified for Sport'],
   'thorne-whey-protein-isolate': ['NSF Certified for Sport'],
   'klean-athlete-klean-isolate': ['NSF Certified for Sport'],
   'vital-proteins-collagen-peptides': ['NSF Certified for Sport'],
