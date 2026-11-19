@@ -4,7 +4,7 @@
 // the rows.
 import Layout from "../../layouts/Layout.astro";
 import ProductTable from "../../components/db/ProductTable.astro";
-import { BRANDS, PRODUCTS, MEDIANS, TYPES, fmt, money } from "../../lib/db.mjs";
+import { BRANDS, PRODUCTS, MEDIANS, TYPES, fmt, money, topComparisons } from "../../lib/db.mjs";
 import { SITE_NAME, SITE_URL } from "../../data/site";
 
 export function getStaticPaths() {
@@ -83,6 +83,13 @@ const jsonLd = {
     },
   ],
 };
+// The brand's strongest indexable head-to-head pages (rivals with the most search demand first).
+const versus = rows
+  .flatMap((p: any) => topComparisons(p, 8).map((c: any) => ({ ...c, own: p })))
+  .sort((x: any, y: any) => (y.rival.demand || 0) - (x.rival.demand || 0))
+  .filter((c: any, i: number, all: any[]) => all.findIndex((d: any) => d.url === c.url) === i)
+  .slice(0, 8);
+
 ---
 
 <Layout title={title} description={description} jsonLd={jsonLd}>
@@ -128,6 +135,17 @@ const jsonLd = {
       {b.review && <p>Want the long version? Read our full <a href={b.review}>{b.name} review</a>.</p>}
       {b.website && <p>Brand site: <a href={b.website} rel="nofollow noopener" target="_blank">{b.website.replace(/^https?:\/\/(www\.)?/, "").replace(/\/$/, "")}</a></p>}
     </div>
+
+    {versus.length > 0 && (
+      <section class="max-w-3xl mt-12">
+        <h2 class="text-2xl font-black text-gray-900 mb-4">{b.name} head-to-head</h2>
+        <ul class="grid sm:grid-cols-2 gap-3 list-none p-0 m-0 text-sm">
+          {versus.map((c: any) => (
+            <li><a href={c.url} class="block border border-gray-200 rounded-xl p-4 no-underline font-bold text-gray-900 hover:border-[#1E90FF]">{c.own.fullName} vs {c.rival.fullName}</a></li>
+          ))}
+        </ul>
+      </section>
+    )}
 
     <section id="faq" class="max-w-3xl mt-12 scroll-mt-24">
       <h2 class="text-2xl font-black text-gray-900 mb-4">{b.name} FAQ</h2>
