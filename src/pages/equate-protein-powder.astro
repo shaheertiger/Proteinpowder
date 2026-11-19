@@ -1,0 +1,834 @@
+---
+import Layout from "../layouts/Layout.astro";
+import ArticleHeader from "../components/ArticleHeader.astro";
+import TableOfContents from "../components/TableOfContents.astro";
+import ProductCard from "../components/ProductCard.astro";
+import MoreInCategory from "../components/MoreInCategory.astro";
+import { AUTHORS, DEFAULT_AUTHOR, authorSchema } from "../data/authors";
+import { SITE_NAME, SITE_URL } from "../data/site";
+import QuickPicks from "../components/QuickPicks.astro";
+import AuthorBio from "../components/AuthorBio.astro";
+import { pageDates } from "../data/dates";
+
+const moreInCategory = [
+  {
+    "title": "Sprouts Protein Powder",
+    "url": "/sprouts-protein-powder/"
+  },
+  {
+    "title": "Trader Joe's Protein Powder",
+    "url": "/trader-joes-protein-powder/"
+  },
+  {
+    "title": "Best Target Protein Powder",
+    "url": "/best-target-protein-powder/"
+  }
+];
+const author = AUTHORS[DEFAULT_AUTHOR];
+const dates = pageDates(Astro.url.pathname, { published: "2026-11-19", modified: "2026-11-19" });
+const title = "Equate Protein Powder: Walmart Whey vs Plant, Cost per 25 g";
+const description =
+  "No: Equate protein powder has no third-party certification. Its whey gives 24 g a scoop at about $0.94 per 25 g; the plant tub 21 g. Labels, lead test, swaps.";
+
+const PRODUCTS: {
+  id: string;
+  name: string;
+  brand?: string;
+  badge: string;
+  category: string;
+  description: string;
+  pros: string[];
+  cons: string[];
+  bottomLine: string;
+  specs?: Record<string, string>;
+  rating?: number;
+  reviewCount?: number;
+  amazonUrl?: string;
+}[] = [
+  {
+    "id": "equate-protein-powder-equate-whey",
+    "name": "Equate Whey Protein Powder, Smooth Vanilla or Rich Chocolate, 24 oz",
+    "brand": "Equate",
+    "badge": "Best Value at Walmart",
+    "category": "Whey isolate and concentrate blend",
+    "description": "Equate's whey is a blend of whey protein isolate and whey protein concentrate, with isolate listed first. Per the label at the time of writing, a 31 g scoop of Smooth Vanilla gives 24 g of protein and about 120 calories, with 1.5 g of fat, 3 g of carbohydrate and 2 g of sugar. It is sweetened with sucralose and acesulfame potassium and contains carrageenan. Walmart listed the 24 oz, 22-serving tub at $19.87, which works out to about $0.94 per 25 g of protein. Varies by flavor.",
+    "pros": [
+      "About $0.94 per 25 g at the Walmart price we saw, cheaper than most name brands",
+      "24 g of protein in a lean 120-calorie scoop, per the label",
+      "Short ingredient list with whey isolate listed first"
+    ],
+    "cons": [
+      "No NSF, Informed Sport or other third-party certification",
+      "Sold only at Walmart and Walmart.com, in two flavors",
+      "Contains sucralose, acesulfame potassium and carrageenan"
+    ],
+    "bottomLine": "A Gold Standard-style whey at a store-brand price. The best protein-per-dollar buy in the Walmart aisle for recreational lifters.",
+    "specs": {
+      "Protein / serving": "24 g (31 g scoop)",
+      "Calories": "About 120",
+      "Third-party testing": "None published",
+      "Cost per 25 g": "About $0.94 (Walmart price seen)"
+    }
+  },
+  {
+    "id": "equate-protein-powder-equate-plant-based",
+    "name": "Equate Plant-Based Protein Powder, Rich Chocolate, 14.1 oz",
+    "brand": "Equate",
+    "badge": "Equate Plant Option",
+    "category": "Pea, rice and quinoa protein blend",
+    "description": "Equate's plant-based powder blends pea protein, rice protein and quinoa seed powder with added BCAAs. Per the label at the time of writing, a two-scoop, 40 g serving of Rich Chocolate gives 21 g of protein and about 150 calories, with 3 g of fiber, 0 g of sugar and 620 mg of sodium. It is sweetened with erythritol and sucralose. Walmart lists it as vegan, dairy-free and gluten-free. The 14.1 oz, 10-serving tub was $12.94, about $1.54 per 25 g of protein.",
+    "pros": [
+      "Dairy-free and vegan, with 21 g of protein per serving",
+      "Low entry price of $12.94 per tub at Walmart",
+      "No sugar per serving, per the label"
+    ],
+    "cons": [
+      "About $1.54 per 25 g, well above Equate's own whey",
+      "620 mg of sodium per serving is high for a protein powder",
+      "Only 10 servings per tub and no published testing"
+    ],
+    "bottomLine": "A fair starter tub if you need dairy-free protein from Walmart, but not a value buy per gram.",
+    "specs": {
+      "Protein / serving": "21 g (40 g, 2 scoops)",
+      "Calories": "About 150",
+      "Third-party testing": "None published",
+      "Cost per 25 g": "About $1.54 (Walmart price seen)"
+    }
+  },
+  {
+    "id": "equate-protein-powder-alt-on-gold-standard-5lb",
+    "name": "Optimum Nutrition Gold Standard 100% Whey, Double Rich Chocolate, 5 lb",
+    "brand": "Optimum Nutrition",
+    "badge": "Closest Amazon Alternative: Whey",
+    "category": "Whey isolate, concentrate and hydrolysate blend",
+    "description": "Gold Standard is the whey Equate's label most resembles: per the label at the time of writing, a 31 g scoop gives 24 g of protein and about 120 calories, with 3 g of carbohydrate and 1 g of sugar, from a blend led by whey isolate. Optimum Nutrition says it is banned-substance tested, without naming a certifier on the listing. The 5 lb tub holds about 73 scoops, so at the $105.99 we saw on Amazon it costs about $1.51 per 25 g of protein, more than Equate but with far more flavors.",
+    "pros": [
+      "Near-identical macros to Equate whey, per both labels",
+      "A dozen flavors versus Equate's two",
+      "Banned-substance tested, per Optimum Nutrition"
+    ],
+    "cons": [
+      "About $1.51 per 25 g at the Amazon price we saw, roughly 60% more than Equate",
+      "No NSF or Informed Sport certification named on the listing",
+      "Contains acesulfame potassium and soy lecithin in some flavors"
+    ],
+    "bottomLine": "The like-for-like swap when you want Equate's macros delivered, in more flavors, from a brand that tests for banned substances.",
+    "specs": {
+      "Protein / serving": "24 g (31 g scoop)",
+      "Calories": "About 120",
+      "Third-party testing": "Banned-substance tested (brand)",
+      "Cost per 25 g": "About $1.51 (Amazon price seen)"
+    },
+    "amazonUrl": "https://www.amazon.com/dp/B000QSNYGI"
+  },
+  {
+    "id": "equate-protein-powder-alt-orgain-organic-vegan-2lb",
+    "name": "Orgain Organic Vegan Protein Powder, Creamy Chocolate Fudge, 2.03 lb",
+    "brand": "Orgain",
+    "badge": "Closest Amazon Alternative: Plant",
+    "category": "Organic pea, brown rice and chia protein blend",
+    "description": "Orgain's plant powder matches Equate's on protein and calories and beats it on sodium and certification. Per the label at the time of writing, a two-scoop, 46 g serving gives 21 g of protein and about 150 calories, with 7 g of fiber and 390 mg of sodium, from organic pea, brown rice, mung bean and chia. It is USDA Organic and sweetened with stevia. The 2.03 lb tub holds 20 servings, so at the $31.98 we saw on Amazon it costs about $1.90 per 25 g.",
+    "pros": [
+      "USDA Organic, per Orgain",
+      "390 mg of sodium per serving versus 620 mg in Equate's plant tub",
+      "Stevia only, no sucralose, per the label"
+    ],
+    "cons": [
+      "About $1.90 per 25 g at the Amazon price we saw",
+      "Gums and a creamer base thicken it; some buyers find it chalky",
+      "Organic is a farming standard, not a contaminant test"
+    ],
+    "bottomLine": "The plant-based swap if you want an organic label and less sodium than Equate's plant tub, at a higher price per gram.",
+    "specs": {
+      "Protein / serving": "21 g (46 g, 2 scoops)",
+      "Calories": "About 150",
+      "Third-party testing": "USDA Organic only",
+      "Cost per 25 g": "About $1.90 (Amazon price seen)"
+    },
+    "amazonUrl": "https://www.amazon.com/dp/B00J074W94"
+  },
+  {
+    "id": "equate-protein-powder-alt-muscle-milk-genuine",
+    "name": "Muscle Milk Genuine Protein Powder, Vanilla Creme, 1.93 lb",
+    "brand": "Muscle Milk",
+    "badge": "Certified Pick Walmart Also Stocks",
+    "category": "Milk protein blend (whey, milk protein, casein)",
+    "description": "Muscle Milk Genuine is the pick when a verified certification matters more than calories. Per the label at the time of writing, a two-scoop serving of about 70 g gives 32 g of protein and roughly 270 to 280 calories, with about 9 g of fat and 2 g of sugar, from whey concentrate, milk protein concentrate and caseinates. Muscle Milk lists it as NSF Certified for Sport. At the $23.18 we saw on Amazon for a tub the listing puts at 12 servings, that is about $1.51 per 25 g.",
+    "pros": [
+      "NSF Certified for Sport, per Muscle Milk and NSF's registry",
+      "32 g of protein per serving",
+      "About $1.51 per 25 g at the Amazon price we saw"
+    ],
+    "cons": [
+      "Around 270 calories per serving, more than double Equate whey",
+      "Maltodextrin and creamer make it a heavier shake",
+      "Sucralose and acesulfame potassium, like Equate"
+    ],
+    "bottomLine": "Choose it over Equate if you are drug-tested or want an independent certification. Not a lean everyday whey.",
+    "specs": {
+      "Protein / serving": "32 g (about 70 g, 2 scoops)",
+      "Calories": "About 270-280",
+      "Third-party testing": "NSF Certified for Sport (brand)",
+      "Cost per 25 g": "About $1.51 (Amazon price seen)"
+    },
+    "amazonUrl": "https://www.amazon.com/dp/B0B5L5T76W"
+  }
+];
+
+const schema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Home",
+          item: `${SITE_URL}/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Best Lists",
+          item: `${SITE_URL}/best-of/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 3,
+          name: "Equate Protein Powder",
+          item: `${SITE_URL}/equate-protein-powder/`,
+        },
+      ],
+    },
+    {
+      "@type": "FAQPage",
+      mainEntity: [
+        {
+          "@type": "Question",
+          "name": "Is Equate protein powder third-party tested?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Equate protein powder carries no third-party certification: neither the whey nor the plant label lists NSF Certified for Sport, Informed Sport or a Clean Label Project award. Consumer Reports did lab-test the Rich Chocolate whey in January 2026 and found about 0.27 mcg of lead per serving, low enough for daily use by its measure, but that is a single independent test, not a certification."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is Equate protein powder healthy?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Equate whey is a lean, simple protein: 24 g of protein, about 120 calories and 2 g of sugar per scoop, per the label. Its ingredient list is short, though it uses sucralose, acesulfame potassium and carrageenan. The plant powder is sugar-free but high in sodium at 620 mg. People with kidney disease, allergies or other conditions should ask a doctor or dietitian first."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does Equate whey protein contain artificial sweeteners?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Equate whey protein powder is sweetened with sucralose and acesulfame potassium, per the label at the time of writing, and the plant-based powder uses erythritol and sucralose. Both are FDA-approved, but if you avoid artificial sweeteners you will need a different tub. The whey also contains milk and a small amount of lactose from its whey concentrate."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Which Equate protein flavor is best?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Buyers most consistently recommend Equate whey in Smooth Vanilla, describing a light flavor that mixes well into water, milk, smoothies and coffee. Rich Chocolate splits opinion: some reviewers like it, others call it thin or artificial, especially in water. For the plant powder, chocolate is the flavor with the most reviews. This reflects buyer reports, not our own tasting."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What are the common complaints about Equate protein powder?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The most common complaints are about flavor, not quality: some buyers find the chocolate whey thin or artificial, and only two flavors are offered for each powder. A few report small clumps in cold liquid unless shaken well. Plant-powder buyers sometimes mention a gritty texture or strong sweetness. Shoppers who want certified testing also note that none is published."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Who makes Equate protein powder?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Equate is Walmart's private-label brand, and Walmart does not name the contract manufacturer that produces its protein powders on the listing or label information we found. Supp.co lists the whey as made in the USA with globally sourced ingredients. That anonymity is normal for store brands, but it is one reason a third-party certification would add useful assurance here."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can you buy Equate protein powder on Amazon?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No, not from Walmart. Equate is sold in Walmart stores and on Walmart.com, which offers shipping and Walmart+ delivery. Any Equate tubs on third-party marketplaces come from resellers. If you prefer Amazon, Optimum Nutrition Gold Standard is the closest match to Equate whey on the label, and Orgain Organic Vegan is the closest to the Equate plant-based powder."
+          }
+        }
+      ],
+    },
+    {
+      "@type": "Article",
+      headline: title,
+      author: authorSchema(),
+      datePublished: dates.published,
+      dateModified: dates.modified,
+      publisher: { "@type": "Organization", name: SITE_NAME, url: SITE_URL },
+    },
+    {
+      "@type": "ItemList",
+      name: title,
+      numberOfItems: PRODUCTS.length,
+      itemListElement: PRODUCTS.map((product, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name: product.name,
+        url: new URL(`#${product.id}`, Astro.url).toString(),
+      })),
+    },
+    ...PRODUCTS.map((product) => ({
+      "@type": "Product",
+      name: product.name,
+      description: product.description,
+      brand: {
+        "@type": "Brand",
+        name: product.brand ?? product.name.split(" ")[0],
+      },
+    })),
+  ],
+};
+---
+
+<Layout
+  title={title}
+  description={description}
+  ogType="article"
+  article={{
+    publishedTime: dates.published,
+    modifiedTime: dates.modified,
+    author: author.name,
+    section: "Store Brands",
+    tags: [
+      "equate protein powder",
+      "equate whey protein powder",
+      "equate plant based protein powder",
+      "walmart equate protein",
+      "is equate protein powder good"
+    ],
+  }}
+  jsonLd={schema}
+  stickyCta={{
+    text: "See Our Top Walmart Protein Picks",
+    link: "/best-walmart-protein-powder/",
+  }}
+>
+  <article class="relative overflow-hidden">
+    <ArticleHeader kicker={"Buyer's Guide"} badge={"Label-Checked"} author={author} dates={dates} mobileAd={false}>
+      <Fragment slot="title">Equate Protein Powder</Fragment>
+      What Walmart sells under its Equate label, what is on each tub, what it costs per 25 g of protein, what independent lead testing found, and which name brands to buy instead when you shop on Amazon.
+    </ArticleHeader>
+
+    <TableOfContents>
+      <a href="#short-answer">Short Answer</a>
+      <a href="#top-picks">The Products</a>
+      <a href="#what-equate-sells">What Equate Sells</a>
+      <a href="#equate-whey">Equate Whey Label</a>
+      <a href="#equate-plant">Equate Plant Label</a>
+      <a href="#cost">Cost per 25 g</a>
+      <a href="#third-party">Third-Party Testing</a>
+      <a href="#buyers">Taste and Mixing</a>
+      <a href="#vs-name-brands">Equate vs Gold Standard</a>
+      <a href="#who-should-buy">Who Should Buy It</a>
+      <a href="#mistakes">Common Mistakes</a>
+      <a href="#faq">FAQ</a>
+    </TableOfContents>
+
+    <!-- Content -->
+    <div class="max-w-3xl mx-auto px-4 pb-16 lg:pb-24">
+      <div class="prose prose-lg prose-blue max-w-none text-gray-700 leading-relaxed">
+        <p class="lede">
+          Equate protein powder is Walmart's store brand, sold as a whey with 24 g of protein per 31 g scoop and a pea, rice and quinoa plant powder with 21 g per 40 g serving, per the labels at the time of writing. The whey is one of the cheapest proteins at Walmart, at about $0.94 per 25 g. Neither tub carries a third-party certification. Below: both labels, cost, a Consumer Reports lead result and Amazon swaps.
+        </p>
+
+        <QuickPicks products={PRODUCTS} />
+
+        <div id="short-answer" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            1. Equate Protein Powder: The Short Answer
+          </h2>
+
+          <p>
+            Equate protein powder is worth buying if you shop at Walmart and want cheap, lean whey: the 24 oz Equate whey gives 24 g of protein in a 120-calorie scoop for about $0.94 per 25 g of protein, per the label and the Walmart price we saw. That is cheaper per gram than almost every name brand on the same shelf, and the label reads almost exactly like Optimum Nutrition Gold Standard.
+          </p>
+
+          <p>
+            The Equate plant-based powder is a weaker buy. It gives 21 g of protein per two-scoop serving, but at about $1.54 per 25 g and 620 mg of sodium per serving it costs more than the whey and carries more salt than most plant tubs. Neither Equate powder publishes third-party testing, so <strong>buy it if</strong> you are a recreational lifter or just want more protein in your day, and <strong>skip it if</strong> you are a drug-tested athlete or want a certified label.
+          </p>
+
+          <div class="overflow-hidden border border-gray-200 rounded-2xl my-8">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Equate product</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Protein / serving</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Calories</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Price seen</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Cost per 25 g</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Equate Whey, 24 oz (22 servings)</td>
+                    <td class="px-4 py-4 text-gray-700">24 g (31 g scoop)</td>
+                    <td class="px-4 py-4 text-gray-700">About 120</td>
+                    <td class="px-4 py-4 text-gray-700">$19.87</td>
+                    <td class="px-4 py-4 text-gray-700">About $0.94</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Equate Plant-Based, Rich Chocolate, 14.1 oz (10 servings)</td>
+                    <td class="px-4 py-4 text-gray-700">21 g (40 g)</td>
+                    <td class="px-4 py-4 text-gray-700">About 150</td>
+                    <td class="px-4 py-4 text-gray-700">$12.94</td>
+                    <td class="px-4 py-4 text-gray-700">About $1.54</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Equate Collagen Peptides, 10 oz</td>
+                    <td class="px-4 py-4 text-gray-700">9 g</td>
+                    <td class="px-4 py-4 text-gray-700">Not confirmed</td>
+                    <td class="px-4 py-4 text-gray-700">$16.94</td>
+                    <td class="px-4 py-4 text-gray-700">Not a complete protein</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <p>
+            Figures are per the labels and Walmart's listings at the time of writing and vary by flavor and store. Equate is a Walmart-only brand, so you will not find it on Amazon; the cards below pair each Equate tub with the closest Amazon alternative. For the full Walmart aisle ranked by cost per gram, see our <a href="/best-walmart-protein-powder/">best Walmart protein powder</a> guide.
+          </p>
+        </div>
+
+        <!-- Picks -->
+        <div id="top-picks" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            2. Equate Protein Powder and the Closest Amazon Alternatives
+          </h2>
+
+          <p>
+            The first two cards are Equate's own whey and plant-based powders. Equate is a Walmart-only brand: it is sold in Walmart stores and on Walmart.com, not on Amazon, so those cards carry no Amazon link of their own. The other three are the closest Amazon alternatives we could verify, with the live Amazon price we saw and the cost per 25 g of protein worked out from the label.
+          </p>
+
+          {PRODUCTS.map((product, index) => (
+            <ProductCard product={product} rank={index + 1} />
+          ))}
+        </div>
+
+        <div id="what-equate-sells" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            3. What Protein Powders Does Equate Sell at Walmart?
+          </h2>
+
+          <p>
+            Walmart currently lists two Equate protein powders, a whey and a plant-based blend, plus an Equate collagen peptides powder that is often shelved beside them. Equate is Walmart's private label for health and personal care, the same name you see on pain relievers, vitamins and first-aid kits. The protein line is small next to the name brands it sits with, but it covers the two choices most shoppers are making: dairy whey or dairy-free plant protein.
+          </p>
+
+          <p>
+            The <strong>Equate Whey Protein Powder</strong> comes in a 24 oz tub of 22 servings in Smooth Vanilla and Rich Chocolate. Walmart's listing describes it as 24 g of protein and 5.5 g of BCAAs per serving, with whey protein isolate as the first ingredient. It is the product most people mean when they search for Equate protein powder, and the one with by far the most Walmart reviews.
+          </p>
+
+          <p>
+            The <strong>Equate Plant-Based Protein Powder</strong> is sold in Rich Chocolate (14.1 oz) and Smooth Vanilla (13.4 oz), both listed at $12.94 when we checked, and Walmart also shows a larger 2 lb Rich Chocolate tub. Listings for the 2 lb size quote different protein figures from the small tub, so read the panel on the container you pick up rather than trusting the product title. The <strong>Equate Grass Fed Hydrolyzed Bovine Collagen Peptides</strong> come unflavored in 10 oz and 20 oz sizes, with 9 g of protein per serving per Walmart's listing.
+          </p>
+
+          <p>
+            You may also find older Equate whey listings, including a larger tub with 30 g of protein per two-scoop serving and maltodextrin in the ingredients. Those appear to be an earlier formula. And Equate sells ready-to-drink protein shakes in 11 fl oz bottles, which turn up in the same search results but are not powder. We cover them briefly in the cost section below, and our <a href="/best-protein-drink/">best protein drink</a> guide ranks shakes properly.
+          </p>
+
+          <div class="bg-gray-900 text-white rounded-2xl p-6 lg:p-8 my-8">
+            <p class="text-xs font-black uppercase tracking-widest text-[#38BDF8] mb-3">WHAT TO CHECK ON THE TUB</p>
+            <p class="text-xl font-bold text-white mb-3">Equate labels change between sizes and formulas.</p>
+            <p class="text-gray-300 leading-relaxed m-0">Old and new Equate whey tubs list different scoop sizes, protein and ingredients. Before you compare prices, confirm the serving size, grams of protein and servings per container on the supplement-facts panel of the exact tub on the shelf.</p>
+          </div>
+        </div>
+
+        <div id="equate-whey" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            4. What Is in Equate Whey Protein Powder?
+          </h2>
+
+          <p>
+            Equate whey protein powder is a blend of whey protein isolate and whey protein concentrate, flavored, thickened with carrageenan and sweetened with sucralose and acesulfame potassium. Per the Smooth Vanilla label at the time of writing, one 31 g scoop provides 24 g of protein, about 120 calories, 1.5 g of fat (0.5 g saturated), 3 g of carbohydrate, 2 g of total sugar with no added sugar, 35 mg of cholesterol, 130 mg of sodium and 140 mg of calcium. Rich Chocolate figures differ slightly.
+          </p>
+
+          <p>
+            The full ingredient list is short: protein blend (whey protein isolate, whey protein concentrate), natural flavors, sunflower lecithin, salt, carrageenan, sucralose and acesulfame potassium. It is labeled as containing milk. There is no soy lecithin, no maltodextrin filler and no added creatine or vitamins, which makes it a plain everyday whey rather than a mass gainer or meal replacement.
+          </p>
+
+          <p>
+            The number that matters most is protein density. Equate gets 24 g of protein from 31 g of powder, about 77% protein by weight. Budget blends such as Six Star and Body Fortress give 30 g of protein from scoops of roughly 45 g or more, which is a lower share of protein and more calories per serving. Optimum Nutrition Gold Standard gives the same 24 g per 31 g scoop as Equate, which is why the two are compared so often.
+          </p>
+
+          <p>
+            Isolate first does not mean pure isolate. Because the label lists a blend, it contains some concentrate, which carries a little more lactose and fat than isolate alone. Most people with mild lactose sensitivity handle a blend like this fine in a single scoop, but if whey concentrate gives you trouble, a pure isolate is the safer bet; our <a href="/whey-vs-whey-isolate/">whey vs whey isolate</a> guide explains the difference.
+          </p>
+
+          <p>
+            The additives are the main reason some shoppers pass. Sucralose and acesulfame potassium are FDA-approved sweeteners, but people avoiding artificial sweeteners will want a different tub; our <a href="/best-protein-powder-without-artificial-sweeteners/">protein powder without artificial sweeteners</a> guide lists options. Carrageenan is an approved thickener that some people prefer to avoid. Anyone with a milk allergy, kidney disease or a medical condition that limits protein should check with a doctor or registered dietitian before adding a daily shake.
+          </p>
+        </div>
+
+        <div id="equate-plant" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            5. What Is in Equate Plant-Based Protein Powder?
+          </h2>
+
+          <p>
+            Equate plant-based protein powder is a pea, rice and quinoa blend with added BCAAs, sweetened with erythritol and sucralose. Per the Rich Chocolate label at the time of writing, a two-scoop, 40 g serving gives 21 g of protein, about 150 calories, 3.5 g of fat, 11 g of carbohydrate including 3 g of fiber, 0 g of sugar and 620 mg of sodium. The tub holds 10 servings.
+          </p>
+
+          <p>
+            The ingredient list is longer than the whey's: a protein blend of pea protein, rice protein and quinoa seed powder; erythritol; alkalized cocoa; natural flavors; a sunflower oil creamer made with maltodextrin, modified food starch and mono- and diglycerides; a gum blend of gum arabic, cellulose gum, xanthan gum and carrageenan; a BCAA blend of leucine, isoleucine and valine; sea salt; and sucralose. Walmart's listing says it supplies 3.9 g of BCAAs per serving.
+          </p>
+
+          <p>
+            Pairing pea with rice is a sensible formula choice, because the two proteins cover each other's weaker amino acids, and the added leucine nudges the blend closer to whey for muscle building. The creamer and gums are there to fix the gritty texture plant proteins are known for. What stands out on the panel is the sodium: 620 mg per serving is about a quarter of the 2,300 mg daily value and roughly double what many plant powders carry. If you watch your salt intake, that matters more than the protein.
+          </p>
+
+          <p>
+            Erythritol is a sugar alcohol that most people tolerate, though large amounts can cause bloating; combined with gums, it is a common reason buyers report stomach upset from plant powders. The 21 g of protein is fine, but it costs 40 g of powder and 150 calories to get there, compared with 31 g and 120 calories for Equate's whey. For a wider look at dairy-free tubs, see our <a href="/best-plant-based-protein-powder/">best plant-based protein powder</a> ranking and our <a href="/whey-vs-plant-protein/">whey vs plant protein</a> explainer.
+          </p>
+
+          <p>
+            Plant proteins also tend to carry more heavy metals than whey, because rice and pea plants take up lead and cadmium from soil. We found no published heavy-metal result for the Equate plant powder. That does not mean it is high, only that nobody has published a number. If you choose a plant powder for daily use, our <a href="/best-protein-powder-without-heavy-metals/">protein powder without heavy metals</a> guide lists tubs with published test results.
+          </p>
+        </div>
+
+        <div id="cost" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            6. How Much Does Equate Protein Powder Cost per 25 g of Protein?
+          </h2>
+
+          <p>
+            Equate whey costs about $0.94 per 25 g of protein at the $19.87 Walmart price we saw: 22 servings of 24 g is 528 g of protein, or 21.1 portions of 25 g. That puts it among the cheapest wheys in any regular store, below Gold Standard, Premier Protein, Muscle Milk and most small tubs of Six Star and Body Fortress at their usual prices. The plant tub works out to about $1.54 per 25 g, since 10 servings of 21 g gives only 210 g of protein for $12.94.
+          </p>
+
+          <p>
+            We use cost per 25 g because tub prices and scoop sizes vary so much that the sticker price tells you very little. A $12.94 plant tub looks cheaper than a $19.87 whey tub, but it holds less than half the protein. The same trap catches shoppers comparing a 2 lb name-brand tub with a 24 oz store-brand tub. Divide the price by the total grams of protein on the panel, multiply by 25, and the ranking becomes obvious.
+          </p>
+
+          <div class="overflow-hidden border border-gray-200 rounded-2xl my-8">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Product</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Price seen</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Servings x protein</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Cost per 25 g</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Equate Whey, 24 oz (Walmart)</td>
+                    <td class="px-4 py-4 text-gray-700">$19.87</td>
+                    <td class="px-4 py-4 text-gray-700">22 x 24 g</td>
+                    <td class="px-4 py-4 text-gray-700">About $0.94</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Equate Plant-Based, 14.1 oz (Walmart)</td>
+                    <td class="px-4 py-4 text-gray-700">$12.94</td>
+                    <td class="px-4 py-4 text-gray-700">10 x 21 g</td>
+                    <td class="px-4 py-4 text-gray-700">About $1.54</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">ON Gold Standard, 5 lb (Amazon)</td>
+                    <td class="px-4 py-4 text-gray-700">$105.99</td>
+                    <td class="px-4 py-4 text-gray-700">About 73 x 24 g</td>
+                    <td class="px-4 py-4 text-gray-700">About $1.51</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Muscle Milk Genuine, 1.93 lb (Amazon)</td>
+                    <td class="px-4 py-4 text-gray-700">$23.18</td>
+                    <td class="px-4 py-4 text-gray-700">12 x 32 g</td>
+                    <td class="px-4 py-4 text-gray-700">About $1.51</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Orgain Organic Vegan, 2.03 lb (Amazon)</td>
+                    <td class="px-4 py-4 text-gray-700">$31.98</td>
+                    <td class="px-4 py-4 text-gray-700">20 x 21 g</td>
+                    <td class="px-4 py-4 text-gray-700">About $1.90</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <p>
+            Prices are the ones we saw on Walmart.com and Amazon in November 2026, and both move often with Rollbacks, flavor and region. Store shelf prices can differ from Walmart.com, and some Walmart listings for Equate are sold in multi-packs that change the per-tub price. Re-run the arithmetic with the price in front of you; the gap between Equate whey and the name brands is wide enough that it usually survives a sale on the other side.
+          </p>
+
+          <p>
+            Equate's collagen and shakes are a different calculation. The 10 oz collagen tub was $16.94 with 9 g of protein per serving per Walmart, but collagen lacks tryptophan and is low in leucine, so it is not a substitute for whey when the goal is muscle; see our <a href="/collagen-vs-protein-powder/">collagen vs protein powder</a> breakdown. Equate's ready-to-drink shakes are convenient, but bottled protein nearly always costs more per gram than a tub of powder.
+          </p>
+        </div>
+
+        <div id="third-party" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            7. Is Equate Protein Powder Third-Party Tested?
+          </h2>
+
+          <p>
+            No: Equate protein powder carries no third-party certification. Neither the whey nor the plant-based label or Walmart listing mentions NSF Certified for Sport, Informed Sport, Informed Choice or a Clean Label Project award, and Walmart does not name the manufacturer that makes the powder. Supplement database Supp.co also reports that it found no record of any certifications for the Equate whey.
+          </p>
+
+          <p>
+            There is one independent data point, and it is a good one for the whey. In its January 2026 heavy-metal tests, Consumer Reports bought and lab-tested Equate Whey Protein Powder in Rich Chocolate among five reader-picked powders. Per <a href="https://article.images.consumerreports.org/image/upload/v1767807742/prod/content/dam/CRO-images-2026/Special%20Projects/Consumer-Reports-Protein-Supplements-Test-Methodology-and-Test-Results-January-2026.pdf">CR's published test results</a>, a 30.4 g serving contained about 0.27 mcg of lead, 0.22 mcg of cadmium, 0.19 mcg of total arsenic and 0.016 mcg of mercury, and CR grouped it with the products it rated low enough in lead for daily or near-daily use.
+          </p>
+
+          <p>
+            That is reassuring, but it is not the same as a certification. CR tested two or three samples of one flavor bought in late 2025; a certification program tests lots on an ongoing schedule and, in the sport programs, screens for banned substances. CR did not test the vanilla whey or the plant-based powder, and we found no published contaminant result for either. Treat the CR number as a snapshot, not a guarantee for every tub.
+          </p>
+
+          <p>
+            For most shoppers, that is enough. For athletes subject to drug testing, it is not: a store-brand powder from an unnamed contract manufacturer, with no banned-substance screening, is a risk you do not need to take. Muscle Milk Genuine, which Walmart also stocks, is listed by Muscle Milk as NSF Certified for Sport, and our <a href="/best-protein-powder-without-heavy-metals/">heavy-metals guide</a> covers powders with published lab results.
+          </p>
+
+          <div class="bg-gray-900 text-white rounded-2xl p-6 lg:p-8 my-8">
+            <p class="text-xs font-black uppercase tracking-widest text-[#38BDF8] mb-3">THE RULE</p>
+            <p class="text-xl font-bold text-white mb-3">Cheap and tested are separate questions.</p>
+            <p class="text-gray-300 leading-relaxed m-0">Equate whey's low cost per gram and its good Consumer Reports lead result do not add up to a certification. If a drug test, pregnancy or a medical condition is involved, pick a powder certified by NSF or Informed Sport and talk to your doctor or a registered dietitian.</p>
+          </div>
+        </div>
+
+        <div id="buyers" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            8. What Do Buyers Say About Equate's Taste and Mixing?
+          </h2>
+
+          <p>
+            Buyers mostly rate Equate whey as good for the price: Walmart reviewers praise how easily it mixes and how close the macros are to Gold Standard, while the most common complaint is that the chocolate tastes thin or artificial. We have not tasted it ourselves; this is a summary of what Walmart reviewers and other buyers report.
+          </p>
+
+          <p>
+            The <strong>Smooth Vanilla</strong> gets the more consistent praise. Reviewers describe a light vanilla that blends cleanly into water or milk and works as a base for smoothies, oats and coffee, where a mild flavor is an advantage. Several call it a staple they reorder. Light flavors are also easier to dress up with fruit or peanut butter, which is a practical reason vanilla tends to win in store-brand whey.
+          </p>
+
+          <p>
+            The <strong>Rich Chocolate</strong> splits opinion. Some buyers call it rich and satisfying; others say it lacks depth or tastes like artificial cocoa, especially in water. Mixing it with milk is the usual fix buyers suggest. A few reviews mention small clumps in cold liquid unless it is shaken well or blended, which is typical for whey with lecithin and carrageenan rather than a quality defect.
+          </p>
+
+          <p>
+            Feedback on the <strong>plant-based</strong> powder is thinner and more mixed, in line with plant proteins generally. Buyers who like it point to the chocolate flavor and the low price per tub. Those who do not mention an earthy or gritty texture and, for some, the sweetness from erythritol and sucralose together. If you have not used a plant powder before, the small tub is a cheap way to find out whether you can live with the texture.
+          </p>
+
+          <p>
+            Across both, the complaints rarely concern quality problems such as off smells or spoiled tubs. They are about flavor and the limited choice of two flavors per product. If flavor variety matters to you, Gold Standard's dozen flavors are the main thing Equate cannot match.
+          </p>
+        </div>
+
+        <div id="vs-name-brands" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            9. Is Equate Whey as Good as Optimum Nutrition Gold Standard?
+          </h2>
+
+          <p>
+            On the label, Equate whey and Optimum Nutrition Gold Standard are almost identical: both give 24 g of protein in a 31 g scoop at about 120 calories with 3 g of carbohydrate, from a blend that lists whey isolate first. The differences are price, flavors and testing. Equate costs about $0.94 per 25 g at Walmart; Gold Standard was about $1.51 per 25 g in the 5 lb tub on Amazon.
+          </p>
+
+          <p>
+            What the extra money buys is a long track record, a dozen flavors and Optimum Nutrition's statement that Gold Standard is banned-substance tested. Gold Standard also lists hydrolyzed whey in its blend and is sweetened with acesulfame potassium rather than Equate's sucralose and acesulfame pair. None of that changes how much protein you absorb. If you like Equate's flavor and you are not drug-tested, the label gives you no reason to pay the premium. Our <a href="/optimum-nutrition-protein-powder-review/">Optimum Nutrition review</a> covers the rest of the ON line.
+          </p>
+
+          <h3 class="text-2xl font-bold text-gray-900 mt-10 mb-4">Equate vs Six Star and Body Fortress</h3>
+
+          <p>
+            Six Star and Body Fortress are Walmart's other budget anchors. They give 30 g of protein per scoop but in much larger scoops with more calories and more filler, and their cost per 25 g in the big tubs can come close to Equate's when they are on Rollback. Body Fortress carries an NSF Contents Certified claim, which checks that contents match the label rather than screening for banned substances; see our <a href="/body-fortress-protein-powder-review/">Body Fortress review</a> for the details. If you want lean protein per scoop, Equate wins; if you want the most protein in one serving, the 30 g blends do.
+          </p>
+
+          <h3 class="text-2xl font-bold text-gray-900 mt-10 mb-4">Equate vs Muscle Milk and Premier Protein</h3>
+
+          <p>
+            Muscle Milk Genuine is a heavier, creamier shake with about 270 calories per serving, and Muscle Milk lists it as NSF Certified for Sport, which Equate cannot offer. Premier Protein powder gives 30 g of protein with no added sugar and costs more per gram than Equate. Our <a href="/muscle-milk-protein-powder-review/">Muscle Milk review</a> and <a href="/premier-protein-powder-review/">Premier Protein review</a> break each one down, and the programmatic pages in our <a href="/compare/">compare</a> section set name brands side by side on every label figure.
+          </p>
+        </div>
+
+        <div id="who-should-buy" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            10. Who Should Buy Equate Protein Powder, and Who Should Skip It?
+          </h2>
+
+          <p>
+            Equate whey is the right buy for anyone who shops at Walmart, wants a plain everyday whey and cares most about cost per gram. That covers most people using protein powder to hit a daily protein target, including beginners, recreational lifters and people adding a shake to breakfast. At under a dollar per 25 g of protein, it stretches a grocery budget further than nearly anything else in the aisle.
+          </p>
+
+          <p>
+            Skip it if you are tested for banned substances in sport or at work, because nothing on the label or the listing covers that. Skip it too if you avoid sucralose, acesulfame potassium or carrageenan, or if you want flavors beyond vanilla and chocolate. And if you need a dairy-free powder, weigh the Equate plant tub's sodium and price per gram against a certified or organic option before you settle on it.
+          </p>
+
+          <p>
+            Equate is also Walmart-only. It is not sold on Amazon, and listings that appear on third-party marketplaces are resellers with no guarantee of storage or freshness. If you shop online, Gold Standard is the closest match for the whey and Orgain Organic is the closest for the plant powder; both are linked in the cards above. Walmart.com does ship Equate, and Walmart+ members can get it delivered with their groceries.
+          </p>
+
+          <p>
+            If you shop at other chains, the same store-brand logic applies with different results. Costco shoppers should read our <a href="/kirkland-protein-powder-review/">Kirkland protein powder review</a> and our look at <a href="/bobby-approved-protein-powder-review/">Bobby Approved protein powder</a>; grocery shoppers can compare our <a href="/sprouts-protein-powder/">Sprouts protein powder</a> and <a href="/trader-joes-protein-powder/">Trader Joe's protein powder</a> guides. Among them, Equate whey is one of the few store brands that is genuinely cheaper per gram than the name brands beside it.
+          </p>
+
+          <p>
+            One last practical point: buy the tub size you will finish. Whey keeps for many months sealed, but once opened it is best used within the time printed on the tub, and a 22-serving tub lasts about three weeks at one scoop a day. For everyone else in the household, our <a href="/best-walmart-protein-powder/">Walmart protein powder rankings</a> list the name-brand tubs worth picking up on the same trip.
+          </p>
+        </div>
+
+        <!-- Common Mistakes -->
+        <div id="mistakes" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            11. Common Mistakes to Avoid
+          </h2>
+
+          <div class="space-y-6 my-8">
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Comparing Sticker Prices Instead of Protein</h3>
+              <p class="text-gray-700 text-sm m-0">
+                The $12.94 Equate plant tub looks cheaper than the $19.87 whey, but it holds 210 g of protein against the whey's 528 g. Per 25 g of protein, the plant tub costs about $1.54 and the whey about $0.94. Always divide the price by total grams of protein before you decide which tub is the bargain.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Assuming Store Brand Means Tested</h3>
+              <p class="text-gray-700 text-sm m-0">
+                A Walmart label does not mean the powder is certified. Equate lists no NSF, Informed Sport or Clean Label Project program, and Walmart does not name the manufacturer. Consumer Reports' low lead result for the chocolate whey is encouraging, but it is a one-time snapshot, not ongoing lot testing or banned-substance screening.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Trusting the Product Title Over the Panel</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Equate listings mix old and new formulas. One older whey tub lists 30 g of protein per two-scoop serving with maltodextrin, and 2 lb plant listings quote different protein figures from the small tub. Read the supplement-facts panel on the container in your hand, not the headline on the shelf tag or website.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Ignoring the Plant Powder's Sodium</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Equate's plant-based powder has 620 mg of sodium per serving, about a quarter of the daily value. Two shakes a day would add roughly 1,240 mg before any food. If you have high blood pressure or follow a low-sodium diet, check the panel and consider Orgain's 390 mg or another lower-sodium plant tub.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Buying Equate Collagen for Muscle</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Equate's collagen peptides give 9 g of protein per serving, but collagen has no tryptophan and little leucine, so it does not support muscle the way whey does. It fills a different role. If building or keeping muscle is the goal, spend the money on Equate whey, which costs less per gram anyway.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ -->
+        <div id="faq" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            12. Frequently Asked Questions
+          </h2>
+
+          <div class="faq-list">
+            <details class="faq-item">
+              <summary><h3>Is Equate protein powder third-party tested?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  No. Equate protein powder carries no third-party certification: neither the whey nor the plant label lists NSF Certified for Sport, Informed Sport or a Clean Label Project award. Consumer Reports did lab-test the Rich Chocolate whey in January 2026 and found about 0.27 mcg of lead per serving, low enough for daily use by its measure, but that is a single independent test, not a certification.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>Is Equate protein powder healthy?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  Equate whey is a lean, simple protein: 24 g of protein, about 120 calories and 2 g of sugar per scoop, per the label. Its ingredient list is short, though it uses sucralose, acesulfame potassium and carrageenan. The plant powder is sugar-free but high in sodium at 620 mg. People with kidney disease, allergies or other conditions should ask a doctor or dietitian first.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>Does Equate whey protein contain artificial sweeteners?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  Yes. Equate whey protein powder is sweetened with sucralose and acesulfame potassium, per the label at the time of writing, and the plant-based powder uses erythritol and sucralose. Both are FDA-approved, but if you avoid artificial sweeteners you will need a different tub. The whey also contains milk and a small amount of lactose from its whey concentrate.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>Which Equate protein flavor is best?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  Buyers most consistently recommend Equate whey in Smooth Vanilla, describing a light flavor that mixes well into water, milk, smoothies and coffee. Rich Chocolate splits opinion: some reviewers like it, others call it thin or artificial, especially in water. For the plant powder, chocolate is the flavor with the most reviews. This reflects buyer reports, not our own tasting.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>What are the common complaints about Equate protein powder?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  The most common complaints are about flavor, not quality: some buyers find the chocolate whey thin or artificial, and only two flavors are offered for each powder. A few report small clumps in cold liquid unless shaken well. Plant-powder buyers sometimes mention a gritty texture or strong sweetness. Shoppers who want certified testing also note that none is published.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>Who makes Equate protein powder?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  Equate is Walmart's private-label brand, and Walmart does not name the contract manufacturer that produces its protein powders on the listing or label information we found. Supp.co lists the whey as made in the USA with globally sourced ingredients. That anonymity is normal for store brands, but it is one reason a third-party certification would add useful assurance here.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>Can you buy Equate protein powder on Amazon?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  No, not from Walmart. Equate is sold in Walmart stores and on Walmart.com, which offers shipping and Walmart+ delivery. Any Equate tubs on third-party marketplaces come from resellers. If you prefer Amazon, Optimum Nutrition Gold Standard is the closest match to Equate whey on the label, and Orgain Organic Vegan is the closest to the Equate plant-based powder.
+                </p>
+              </div>
+            </details>
+
+          </div>
+        </div>
+
+        <!-- Related Guides -->
+        <div class="mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">Related Store-Brand Protein Guides</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <a href="/best-walmart-protein-powder/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#FF4500] font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Walmart Protein Powder</h3>
+              <p class="text-gray-500 text-sm mt-2">Every major tub in the Walmart aisle ranked by cost per 25 g of protein.</p>
+            </a>
+            <a href="/kirkland-protein-powder-review/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#38BDF8] font-black text-xs uppercase tracking-widest mb-2">Brand Review</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Kirkland Protein Powder Review</h3>
+              <p class="text-gray-500 text-sm mt-2">Costco's store brand, checked label by label against the name brands.</p>
+            </a>
+            <a href="/bobby-approved-protein-powder-review/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#22C55E] font-black text-xs uppercase tracking-widest mb-2">Brand Review</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Bobby Approved Protein Powder Review</h3>
+              <p class="text-gray-500 text-sm mt-2">What is in the tub, what it costs per 25 g, and whether it is tested.</p>
+            </a>
+            <a href="/best-cheap-protein-powder/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#A855F7] font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Cheap Protein Powder</h3>
+              <p class="text-gray-500 text-sm mt-2">The lowest real cost per 25 g of protein, store brands included.</p>
+            </a>
+          </div>
+        </div>
+
+        <!-- Closing -->
+        <div class="mt-16 bg-gray-900 text-white rounded-2xl p-6 md:p-8">
+          <h2 class="text-2xl font-black text-white mb-4">The Bottom Line</h2>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            Equate protein powder is two Walmart-only tubs: a whey with 24 g of protein per 120-calorie scoop and a pea, rice and quinoa plant powder with 21 g per serving. The whey is the reason to buy the brand. At about $0.94 per 25 g of protein it undercuts nearly every name brand in the aisle, with a label that matches Optimum Nutrition Gold Standard almost gram for gram, and Consumer Reports found its chocolate flavor low in lead.
+          </p>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            The plant tub is a weaker deal at about $1.54 per 25 g, with 620 mg of sodium per serving, and neither product carries a third-party certification. Buy Equate whey if you want cheap, lean protein for everyday use. Choose a certified powder such as Muscle Milk Genuine if you are drug-tested, and if you shop on Amazon, Gold Standard and Orgain Organic are the closest swaps.
+          </p>
+        </div>
+
+        <MoreInCategory category="Store Brands" links={moreInCategory} />
+
+        <AuthorBio />
+      </div>
+    </div>
+  </article>
+</Layout>
