@@ -25,6 +25,7 @@ import {
   GLOSSARY_BY_SLUG,
   compareBlocks,
   topComparisons,
+  isArtificial,
   verdict,
   fmt,
   money,
@@ -132,7 +133,27 @@ const metalsAnswer = p.heavyMetals
   ? p.heavyMetals
   : `We have no public third-party heavy-metal result for ${p.fullName}. "No public data" is not the same as a problem; it means the brand has not published a certificate of analysis and the independent testers we track have not reported on this product. ${type.family === "plant" ? "Plant proteins tend to carry more lead and cadmium than dairy proteins because the plants take metals up from soil, so a published test matters more here." : "Dairy proteins have generally tested lower for lead and cadmium than plant proteins in published surveys."}`;
 
+// Pros and cons straight from the label (the sister site's gear pages show both under the verdict).
+const artificialUsed = (p.sweeteners || []).filter((x: string) => isArtificial(x));
+const pros: string[] = [];
+const cons: string[] = [];
+if (p.proteinPct >= MEDIANS.proteinPct) pros.push(`${pct}% protein by weight, above the ${Math.round(MEDIANS.proteinPct * 100)}% database median`);
+else cons.push(`${pct}% protein by weight, below the ${Math.round(MEDIANS.proteinPct * 100)}% database median`);
+if (p.costPer25 != null) (p.costPer25 <= MEDIANS.costPer25 ? pros : cons).push(`${money(p.costPer25)} per 25 g of protein at the dated price, ${p.costPer25 <= MEDIANS.costPer25 ? "below" : "above"} the ${money(MEDIANS.costPer25)} median`);
+else cons.push("No dated price on file, so cost per gram of protein is not scored");
+if (sportCerts.length) pros.push(sportCerts.map((c: string) => `${c} (${verified.includes(c) ? "registry-confirmed" : "per the brand"})`).join(", "));
+else cons.push("No sport certification we could confirm");
+if (p.sweeteners != null && artificialUsed.length === 0) pros.push(p.sweeteners.length ? `No artificial sweeteners (${p.sweeteners.join(", ")})` : "Unsweetened");
+if (artificialUsed.length) cons.push(`Sweetened with ${artificialUsed.join(" and ")}`);
+if (p.ingredients && (p.flaggedAdditives || []).length === 0) pros.push("No gums, carrageenan or dyes on the ingredient list");
+if ((p.flaggedAdditives || []).length) cons.push(`Contains ${p.flaggedAdditives.join(", ")}`);
+if (p.sugarG != null && p.sugarG <= 1) pros.push(`${fmt(p.sugarG)} g of sugar per serving`);
+if (p.sugarG != null && p.sugarG >= 5) cons.push(`${fmt(p.sugarG)} g of sugar per serving`);
+const lc = (t: string) => t.charAt(0).toLowerCase() + t.slice(1);
+const worthIt = `${p.fullName}: ${verdict(p)}. It scores ${p.score.total}/100 on our Label Score, #${familyRank} of ${sameFamily.length} ${p.family === "animal" ? "egg, beef and collagen" : p.family} powders we track.${written?.bestFor && written?.skipIf ? ` Best for ${lc(written.bestFor)}; skip it if ${lc(written.skipIf)}.` : ""}`;
+
 const faq: [string, string][] = [
+  [`Is ${p.fullName} worth it?`, worthIt],
   [`How much protein is in a scoop of ${p.fullName}?`, `${fmt(p.proteinG)} g per ${fmt(p.servingSizeG)} g serving${p.scoopsPerServing && p.scoopsPerServing > 1 ? ` (${p.scoopsPerServing} scoops)` : ""}, for the ${p.labelFlavor} flavor. That is ${pct}% protein by weight. Other flavors usually land within a gram or two; check the panel on the flavor you buy.`],
   [`Is ${p.fullName} good for weight loss?`, goalSections.find((s) => s.g.slug === "weight-loss")!.text + " Total daily calories and protein decide weight loss; a powder only helps you hit the protein number."],
   [`Is ${p.fullName} third-party tested?`, sportCerts.length ? `${sportCerts.every((c) => verified.includes(c)) ? "Yes." : "According to the brand, yes."} It is ${sportCerts.map((c) => `${c} certified (${certSource(c)})`).join(" and ")}. Certification covers specific products and sometimes specific flavors, so check the registry for the exact tub you buy.` : `Not by a sport certifier that we could confirm. ${otherCerts.length ? `It carries ${otherCerts.join(", ")}, which covers sourcing or processing rather than contaminant testing.` : ""} If you are a tested athlete, choose a powder with Informed Sport or NSF Certified for Sport.`],
@@ -234,7 +255,8 @@ const scoreParts = p.score.parts;
     </p>
     <div class="flex items-start gap-5">
       <h1 class="flex-1 text-[1.75rem] leading-[1.15] md:text-4xl font-black tracking-tight text-gray-900 m-0 mb-4">
-        {p.fullName}: {fmt(p.proteinG)} g Protein per Scoop ({fmt(p.calories)} kcal)
+        {p.fullName}
+        <span class="block text-base md:text-lg font-bold text-gray-500 tracking-normal mt-2">{fmt(p.proteinG)} g protein per scoop · {fmt(p.calories)} calories · Label Score {p.score.total}/100</span>
       </h1>
       {image && <img src={image} alt={`${p.fullName} tub`} width="96" height="96" class="hidden sm:block w-24 h-24 object-contain shrink-0" loading="eager" />}
     </div>
@@ -278,6 +300,18 @@ const scoreParts = p.score.parts;
         )}
       </section>
     )}
+
+    <!-- Pros and cons -->
+    <section class="grid sm:grid-cols-2 gap-4 mb-10" aria-label="Pros and cons">
+      <div class="border border-green-200 rounded-2xl p-5">
+        <h2 class="text-sm font-black uppercase tracking-widest text-green-800 m-0 mb-3">Pros</h2>
+        <ul class="m-0 pl-5 space-y-1.5 text-[0.9375rem] text-gray-800">{pros.map((x) => <li>{x}</li>)}</ul>
+      </div>
+      <div class="border border-red-200 rounded-2xl p-5">
+        <h2 class="text-sm font-black uppercase tracking-widest text-red-800 m-0 mb-3">Cons</h2>
+        <ul class="m-0 pl-5 space-y-1.5 text-[0.9375rem] text-gray-800">{cons.length ? cons.map((x) => <li>{x}</li>) : <li>Nothing notable on the label</li>}</ul>
+      </div>
+    </section>
 
     <!-- Spec strip -->
     <dl class="grid grid-cols-2 sm:grid-cols-4 gap-px bg-gray-200 border border-gray-200 rounded-2xl overflow-hidden mb-10 text-center">
@@ -356,7 +390,7 @@ const scoreParts = p.score.parts;
 
       {roundups.length > 0 && (
         <div class="not-prose bg-blue-50 border border-blue-100 rounded-2xl p-5 my-8">
-          <p class="text-xs font-black uppercase tracking-widest text-[#0b64c0] m-0 mb-2">Ranked in our guides</p>
+          <p class="text-xs font-black uppercase tracking-widest text-[#0b64c0] m-0 mb-2">Featured in</p>
           <ul class="list-none p-0 m-0 space-y-1.5 text-sm">
             {roundups.map((r) => (
               <li>
