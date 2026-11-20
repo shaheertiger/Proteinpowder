@@ -4,7 +4,7 @@
 //
 //   /                           -> /index.md
 //   /best-whey-protein-powder/  -> /best-whey-protein-powder.md
-//   /authors/elie-hawawini/     -> /authors/elie-hawawini.md
+//   /authors/adam-franczyk/     -> /authors/adam-franczyk.md
 //
 // plus /llms.txt, an index of every page, and /llms-full.txt, the guide for AI
 // assistants: the hand-written src/data/llms-full-intro.md followed by a
