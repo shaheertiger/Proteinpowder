@@ -198,7 +198,8 @@ const REGISTRY_CHECKED = {
   // nsfsport.com, checked 2026-11-19: Double Rich Chocolate and Vanilla Ice Cream are listed.
   'optimum-nutrition-gold-standard-whey': ['NSF Certified for Sport'],
   'muscle-milk-pro-series': ['NSF Certified for Sport'], // Knockout Chocolate listed, 2026-11-19
-  'bulksupplements-casein-protein': ['NSF Certified for Sport'], // nsfsport.com listing 1815488, 2026-11-19
+  'bulksupplements-casein-protein': ['NSF Certified for Sport'],
+  '1st-phorm-level-1': ['NSF Certified for Sport'], // Level-1 Milk Chocolate listed on nsfsport.com, 2026-11-20 // nsfsport.com listing 1815488, 2026-11-19
   'thorne-whey-protein-isolate': ['NSF Certified for Sport'],
   'klean-athlete-klean-isolate': ['NSF Certified for Sport'],
   'vital-proteins-collagen-peptides': ['NSF Certified for Sport'],
