@@ -89,6 +89,9 @@ const ALIASES = {
   'ora-organic-so-lean-so-clean': ['ora-protein-powder-review-so-lean-so-clean-chocolate'],
   'isopure-infusions': ['isopure-clear-protein-powder-review-isopure-clear-36'],
   'six-star-100-whey-protein-plus': ['six-star-review-100-whey-protein-plus'],
+  'dymatize-super-mass-gainer': ['dymatize-super-mass-gainer-review-vanilla-6lb', 'serious-mass-review-dymatize-super-mass-gainer-6lb'],
+  'transparent-labs-mass-gainer': ['transparent-labs-mass-gainer-review-tl-mass-gainer-chocolate-glaze'],
+  'bucked-up-buck-feed-original-protein': ['bucked-up-protein-powder-review-buck-feed-original'],
   'manitoba-harvest-hemp-pro-70': ['manitoba-harvest-hemp-yeah-max-protein'],
   'ballerina-farm-protein-powder': ['ballerina-farm-farmer-protein-vanilla-bean', 'ballerina-farm-farmer-protein-creamy-chocolate', 'ballerina-farm-farmer-protein-maple-cinnamon'],
   'happy-viking-superfood-protein': ['happy-viking-plant-protein-triple-chocolate', 'happy-viking-plant-protein-vanilla-bean'],
@@ -196,6 +199,9 @@ const DEMAND = {
   'shaklee-life-shake-soy-protein': 1300,
   'ora-organic-so-lean-so-clean': 1300,
   'six-star-100-whey-protein-plus': 720,
+  'bucked-up-buck-feed-original-protein': 720, // 'bucked up protein powder'
+  'dymatize-super-mass-gainer': 590,
+  'transparent-labs-mass-gainer': 590,
 };
 
 // Rows held out of the index until a person checks the label in hand.

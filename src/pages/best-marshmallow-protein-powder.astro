@@ -1,0 +1,868 @@
+---
+import Layout from "../layouts/Layout.astro";
+import ArticleHeader from "../components/ArticleHeader.astro";
+import TableOfContents from "../components/TableOfContents.astro";
+import ProductCard from "../components/ProductCard.astro";
+import MoreInCategory from "../components/MoreInCategory.astro";
+import { AUTHORS, DEFAULT_AUTHOR, authorSchema } from "../data/authors";
+import { SITE_NAME, SITE_URL } from "../data/site";
+import QuickPicks from "../components/QuickPicks.astro";
+import AuthorBio from "../components/AuthorBio.astro";
+import { pageDates } from "../data/dates";
+
+const moreInCategory = [
+  {
+    "title": "Fruity Pebbles Protein Powder",
+    "url": "/fruity-pebbles-protein-powder/"
+  },
+  {
+    "title": "Best Birthday Cake Protein Powder",
+    "url": "/best-birthday-cake-protein-powder/"
+  },
+  {
+    "title": "Best Dole Whip Protein Powder",
+    "url": "/best-dole-whip-protein-powder/"
+  }
+];
+const author = AUTHORS[DEFAULT_AUTHOR];
+const dates = pageDates(Astro.url.pathname, { published: "2026-11-20", modified: "2026-11-20" });
+const title = "Marshmallow Protein Powder: 5 Picks Ranked by Cost per 25 g";
+const description =
+  "RYSE Jet-Puffed is the top marshmallow protein powder at about $1.67 per 25 g. We compare Ghost Lucky Charms, LGXNDS Charmies and toasted marshmallow picks.";
+
+const PRODUCTS: {
+  id: string;
+  name: string;
+  brand?: string;
+  badge: string;
+  category: string;
+  description: string;
+  pros: string[];
+  cons: string[];
+  bottomLine: string;
+  specs?: Record<string, string>;
+  rating?: number;
+  reviewCount?: number;
+  amazonUrl?: string;
+}[] = [
+  {
+    "id": "best-marshmallow-protein-powder-ryse-jet-puffed",
+    "name": "RYSE Loaded Protein, Jet-Puffed Marshmallow (27 servings)",
+    "brand": "RYSE",
+    "badge": "Best Overall: The Jet-Puffed Original",
+    "category": "Whey isolate and concentrate blend with MCTs",
+    "description": "The marshmallow protein most people mean when they search for one: RYSE makes it under license from the Jet-Puffed brand. Per the label at the time of writing, a 33.9 g scoop gives 25 g of protein from whey isolate and concentrate, with 130 calories, 3 g of carbs, 1 g of sugar, 2.5 g of fat and 240 mg of sodium. It adds MCT powder (which carries sodium caseinate) and agave inulin, and is sweetened with sucralose and acesulfame potassium. Contains milk and soy.",
+    "pros": [
+      "Cheapest marshmallow pick per 25 g at the Amazon price we saw",
+      "Licensed Jet-Puffed flavor, sold by RYSE's own Amazon store",
+      "25 g protein for 130 calories",
+      "4 lb tub drops the cost further"
+    ],
+    "cons": [
+      "Two artificial sweeteners (sucralose and acesulfame K)",
+      "Highest sodium here at 240 mg",
+      "No named third-party certifier",
+      "Contains soy as well as milk"
+    ],
+    "bottomLine": "The default marshmallow protein: the familiar flavor, 25 g of protein and the lowest cost per gram of the five.",
+    "specs": {
+      "Protein / serving": "25 g per 33.9 g scoop",
+      "Calories": "130",
+      "Third-party testing": "No named certifier found",
+      "Cost per 25 g": "About $1.67 (Amazon price seen, $44.99)"
+    },
+    "amazonUrl": "https://www.amazon.com/dp/B0BDTMHBC8"
+  },
+  {
+    "id": "best-marshmallow-protein-powder-ghost-lucky-charms",
+    "name": "GHOST Whey x Lucky Charms Cereal Milk (2 lb, 26 servings)",
+    "brand": "GHOST",
+    "badge": "Best Marshmallow Cereal Flavor (Real Marshmallows)",
+    "category": "Whey isolate, concentrate and hydrolyzed isolate blend",
+    "description": "The pick if you want the marshmallow-cereal version, and the only one here with licensed, real Lucky Charms marshmallows mixed into the powder. Per the label at the time of writing, a 35 g scoop gives 25 g of protein, 130 calories, 4 g of carbs, 3 g of sugar (2 g added), 1.5 g of fat and 190 mg of sodium. The marshmallows bring sugar, corn syrup, gelatin and colors including carmine. Sucralose sweetens the shake, and digestive enzymes including lactase are added.",
+    "pros": [
+      "Real Lucky Charms marshmallow pieces, not just flavoring",
+      "Fully disclosed whey blend with added lactase",
+      "Sold by GHOST's own Amazon store"
+    ],
+    "cons": [
+      "Gelatin and carmine, so not vegetarian",
+      "2 g of added sugar from the marshmallows",
+      "Not listed by NSF or Informed programs that we could find"
+    ],
+    "bottomLine": "Buy it for the cereal-bowl flavor and the real marshmallow bits; skip it if you avoid gelatin.",
+    "specs": {
+      "Protein / serving": "25 g per 35 g scoop",
+      "Calories": "130",
+      "Third-party testing": "No NSF or Informed listing found",
+      "Cost per 25 g": "About $2.11 (Amazon price seen, $54.99)"
+    },
+    "amazonUrl": "https://www.amazon.com/dp/B0GPB91TRB"
+  },
+  {
+    "id": "best-marshmallow-protein-powder-pure-choice-frosted",
+    "name": "Pure Choice Farms Whey Protein Isolate, Frosted Marshmallow (2 lb)",
+    "brand": "Pure Choice Farms",
+    "badge": "Most Protein per Scoop",
+    "category": "Cold-filtered whey protein isolate",
+    "description": "A small Wisconsin brand's isolate with the biggest scoop and the most protein of the five. Per the panel the brand publishes at the time of writing, a 37 g scoop gives 28 g of protein, 136 calories, 1.6 g of carbs, 0.4 g of sugar, 0.5 g of fat and only 25 mg of sodium. Other ingredients are listed at under 5 percent: maltodextrin, gum arabic, sunflower oil and lecithin, dextrose, silicon dioxide and sucralose. A 2 lb bag holds about 24.5 servings.",
+    "pros": [
+      "28 g of protein per scoop, the most here",
+      "Lowest sodium of the five by far (25 mg)",
+      "Short ingredient list",
+      "Brand says it is third-party tested"
+    ],
+    "cons": [
+      "Panel image we found lists no flavoring, so check the bag's own panel",
+      "Sucralose and a little maltodextrin and dextrose",
+      "Few independent buyer reviews"
+    ],
+    "bottomLine": "The best macros per scoop for a marshmallow shake, from a smaller brand with less buyer feedback to go on.",
+    "specs": {
+      "Protein / serving": "28 g per 37 g scoop",
+      "Calories": "136",
+      "Third-party testing": "Per Pure Choice (no named certifier)",
+      "Cost per 25 g": "About $2.19 (Amazon price seen, $59.99)"
+    },
+    "amazonUrl": "https://www.amazon.com/dp/B0CJWFGDGQ"
+  },
+  {
+    "id": "best-marshmallow-protein-powder-axe-sledge-marshmallow-milk",
+    "name": "Axe & Sledge Farm Fed Whey Isolate, Marshmallow Milk (25 servings)",
+    "brand": "Axe & Sledge",
+    "badge": "Best Zero-Sugar Isolate",
+    "category": "Whey protein isolate",
+    "description": "Marshmallow Milk is the flavor of the milk left after a bowl of marshmallow cereal, made on a 100% whey isolate base. Per the label at the time of writing, a 31 g scoop gives 25 g of protein, 110 calories, 2 g of carbs, 0 g of sugar, 1 g of fat and 115 mg of sodium. It is sweetened with sucralose and adds a gum blend, MCT oil powder and DigeSEB digestive enzymes. The tub art on the brand's site carries an Informed Protein mark.",
+    "pros": [
+      "0 g of sugar per the panel",
+      "All-isolate protein at 110 calories",
+      "Informed Protein mark on the brand's tub images"
+    ],
+    "cons": [
+      "Most expensive per 25 g of the five",
+      "Amazon offer is from a third-party seller, not the brand",
+      "Amazon title says 1 g of sugar, the panel says 0 g"
+    ],
+    "bottomLine": "The lean pick: the lowest sugar and calories in a marshmallow flavor, if you accept the higher price.",
+    "specs": {
+      "Protein / serving": "25 g per 31 g scoop",
+      "Calories": "110",
+      "Third-party testing": "Informed Protein mark (per Axe & Sledge tub images)",
+      "Cost per 25 g": "About $2.38 (Amazon price seen, $59.49)"
+    },
+    "amazonUrl": "https://www.amazon.com/dp/B0D1W1L7FL"
+  },
+  {
+    "id": "best-marshmallow-protein-powder-lgxnds-charmies",
+    "name": "LGXNDS Premium Whey Isolate, Charmies (2 lb)",
+    "brand": "LGXNDS",
+    "badge": "Isolate With Marshmallow Bits",
+    "category": "Whey protein isolate",
+    "description": "Charmies is LGXNDS's marshmallow cereal flavor, and like the Ghost tub it has colored marshmallow bits in the powder. Per the label at the time of writing, a 31.4 g scoop gives 25 g of protein (the Amazon title says 26 g), 110 calories, 3 g of carbs with 2 g of added sugar, and 0.5 g of fat. The marshmallow bits are made from sugar, corn syrup, modified food starch, dextrose and gelatin, colored with Red 40, Yellow 5, Yellow 6 and Blue 1. Sucralose sweetens it.",
+    "pros": [
+      "Whey isolate base at 110 calories",
+      "Marshmallow bits for the cereal effect",
+      "Sold by the LGXNDS Amazon store"
+    ],
+    "cons": [
+      "Four synthetic dyes and gelatin",
+      "Brand claims no artificial sweeteners, but the panel lists sucralose",
+      "Amazon title and panel disagree on protein (26 g vs 25 g)"
+    ],
+    "bottomLine": "An isolate take on marshmallow cereal; fine as a treat, but Ghost does the same idea for less per gram.",
+    "specs": {
+      "Protein / serving": "25 g per 31.4 g scoop",
+      "Calories": "110",
+      "Third-party testing": "No certifier found",
+      "Cost per 25 g": "About $2.24 (Amazon price seen, $64.99)"
+    },
+    "amazonUrl": "https://www.amazon.com/dp/B0FVJWK7X3"
+  }
+];
+
+const schema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Home",
+          item: `${SITE_URL}/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Best Lists",
+          item: `${SITE_URL}/best-of/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 3,
+          name: "Marshmallow Protein Powder",
+          item: `${SITE_URL}/best-marshmallow-protein-powder/`,
+        },
+      ],
+    },
+    {
+      "@type": "FAQPage",
+      mainEntity: [
+        {
+          "@type": "Question",
+          "name": "What is the best marshmallow protein powder?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "RYSE Loaded Protein in Jet-Puffed Marshmallow is the best pick for most people. It gives 25 g of protein in 130 calories per scoop, per the label at the time of writing, and at the Amazon price we saw it cost about $1.67 per 25 g, the least of the five we compared. Pick GHOST Lucky Charms if you want real marshmallow pieces."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is there a toasted marshmallow protein powder?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Clean Simple Eats sells Toasted Marshmallow with 20 g of grass-fed whey isolate and stevia per scoop, Transparent Labs launched a Toasted Marshmallow whey isolate through The Vitamin Shoppe in October 2026, and ONE OF ONE sells one at Target and Vitacost. We could not find any of them on Amazon from a seller we could verify."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does RYSE Jet-Puffed Marshmallow protein have real marshmallows?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. RYSE gets its marshmallow taste from natural and artificial flavor, not marshmallow pieces, per its ingredient list. The licensed Jet-Puffed name refers to the flavor. If you want actual marshmallow pieces in the powder, GHOST Lucky Charms Cereal Milk and LGXNDS Charmies both include them, though both add gelatin and a little sugar."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is marshmallow protein powder vegetarian?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Some are and some are not. The cereal-style powders from GHOST and LGXNDS contain gelatin in their marshmallow pieces, so they are not vegetarian. RYSE, Axe & Sledge and Pure Choice list no gelatin on the panels we read. All five are whey-based and contain milk, so none of them is vegan."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How much protein is in marshmallow protein powder?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Most marshmallow protein powders give 25 g of protein per scoop, per the labels at the time of writing. That includes RYSE, GHOST, LGXNDS and Axe & Sledge. Pure Choice Farms Frosted Marshmallow gives the most at 28 g in a 37 g scoop, while Clean Simple Eats Toasted Marshmallow gives 20 g in a smaller 27 g scoop."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is marshmallow protein powder healthy?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It is a reasonable way to add protein, with 110 to 136 calories and 0 to 3 g of sugar per scoop on the labels we read. The trade-offs are artificial sweeteners in most of them, synthetic dyes in LGXNDS Charmies and up to 240 mg of sodium in RYSE. People with kidney disease, pregnancy or a milk allergy should ask a doctor first."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is marshmallow protein powder third-party tested?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "None of the five Amazon picks holds an NSF Certified for Sport or Informed Sport certification that we could confirm. Axe & Sledge's tub images carry an Informed Protein mark, which checks protein claims, and Pure Choice and RYSE describe testing without naming a lab. Drug-tested athletes should choose a certified product instead."
+          }
+        }
+      ],
+    },
+    {
+      "@type": "Article",
+      headline: title,
+      author: authorSchema(),
+      datePublished: dates.published,
+      dateModified: dates.modified,
+      publisher: { "@type": "Organization", name: SITE_NAME, url: SITE_URL },
+    },
+    {
+      "@type": "ItemList",
+      name: title,
+      numberOfItems: PRODUCTS.length,
+      itemListElement: PRODUCTS.map((product, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name: product.name,
+        url: new URL(`#${product.id}`, Astro.url).toString(),
+      })),
+    },
+    ...PRODUCTS.map((product) => ({
+      "@type": "Product",
+      name: product.name,
+      description: product.description,
+      brand: {
+        "@type": "Brand",
+        name: product.brand ?? product.name.split(" ")[0],
+      },
+    })),
+  ],
+};
+---
+
+<Layout
+  title={title}
+  description={description}
+  ogType="article"
+  article={{
+    publishedTime: dates.published,
+    modifiedTime: dates.modified,
+    author: author.name,
+    section: "Flavor Guides",
+    tags: [
+      "marshmallow protein powder",
+      "toasted marshmallow protein powder",
+      "ryse jet puffed marshmallow protein",
+      "lucky charms protein powder",
+      "marshmallow cereal protein powder",
+      "marshmallow whey protein"
+    ],
+  }}
+  jsonLd={schema}
+  stickyCta={{
+    text: "See Our Top Tasting Protein Picks",
+    link: "/best-tasting-protein-powder/",
+  }}
+>
+  <article class="relative overflow-hidden">
+    <ArticleHeader kicker={"Buyer's Guide"} badge={"Label-Checked"} author={author} dates={dates} mobileAd={false}>
+      <Fragment slot="title">Marshmallow Protein Powder</Fragment>
+      Five marshmallow protein powders you can buy on Amazon, plus the toasted marshmallow options sold elsewhere, compared on label, sugar, testing and cost per 25 g.
+    </ArticleHeader>
+
+    <TableOfContents>
+      <a href="#short-answer">Short Answer</a>
+      <a href="#top-picks">The 5 Picks</a>
+      <a href="#which-exist">What You Can Buy</a>
+      <a href="#toasted">Toasted Marshmallow</a>
+      <a href="#real-marshmallows">Real Marshmallows?</a>
+      <a href="#how-picked">How We Picked</a>
+      <a href="#cost">Cost per 25 g</a>
+      <a href="#sugar-sweetener">Sugar and Sweetener</a>
+      <a href="#taste">What Buyers Say</a>
+      <a href="#recipes">Recipes</a>
+      <a href="#mistakes">Common Mistakes</a>
+      <a href="#faq">FAQ</a>
+    </TableOfContents>
+
+    <!-- Content -->
+    <div class="max-w-3xl mx-auto px-4 pb-16 lg:pb-24">
+      <div class="prose prose-lg prose-blue max-w-none text-gray-700 leading-relaxed">
+        <p class="lede">
+          RYSE Jet-Puffed Marshmallow is the best marshmallow protein powder for most people, with 25 g of protein per scoop at about $1.67 per 25 g at the Amazon price we saw. Whether you want real marshmallow pieces, zero sugar or a toasted flavor changes the pick. Below are five ranked powders, the cost math, the toasted options and what buyers say about taste.
+        </p>
+
+        <QuickPicks products={PRODUCTS} />
+
+        <div id="short-answer" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            1. Marshmallow Protein Powder: The Short Answer
+          </h2>
+
+          <p>
+            RYSE Loaded Protein in Jet-Puffed Marshmallow is the best-known marshmallow protein powder, and it gives 25 g of protein in 130 calories per scoop, per the label at the time of writing. At the $44.99 Amazon price we saw on 20 November 2026 for 27 servings, it costs about $1.67 per 25 g of protein, the least of the five powders below. If you want marshmallow cereal instead of plain marshmallow, GHOST Whey x Lucky Charms Cereal Milk has real Lucky Charms marshmallows in the tub for about $2.11 per 25 g.
+          </p>
+
+          <p>
+            The other three solve narrower problems. Pure Choice Farms Frosted Marshmallow has the most protein, 28 g per scoop. Axe & Sledge Marshmallow Milk has zero sugar on its panel. LGXNDS Charmies is an isolate with marshmallow bits. If you specifically want toasted marshmallow, the options are real but none of them were on Amazon when we checked; section 3 covers them. For more dessert flavors, see our <a href="/best-tasting-protein-powder/">best-tasting protein powder guide</a>.
+          </p>
+
+          <div class="overflow-hidden border border-gray-200 rounded-2xl my-8">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Product</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Protein / scoop</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Sugar</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Real marshmallow bits?</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Cost per 25 g</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">RYSE Jet-Puffed Marshmallow</td>
+                    <td class="px-4 py-4 text-gray-700">25 g</td>
+                    <td class="px-4 py-4 text-gray-700">1 g</td>
+                    <td class="px-4 py-4 text-gray-700">No</td>
+                    <td class="px-4 py-4 text-gray-700">About $1.67</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">GHOST Lucky Charms Cereal Milk</td>
+                    <td class="px-4 py-4 text-gray-700">25 g</td>
+                    <td class="px-4 py-4 text-gray-700">3 g (2 g added)</td>
+                    <td class="px-4 py-4 text-gray-700">Yes</td>
+                    <td class="px-4 py-4 text-gray-700">About $2.11</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Pure Choice Frosted Marshmallow</td>
+                    <td class="px-4 py-4 text-gray-700">28 g</td>
+                    <td class="px-4 py-4 text-gray-700">0.4 g</td>
+                    <td class="px-4 py-4 text-gray-700">No</td>
+                    <td class="px-4 py-4 text-gray-700">About $2.19</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">LGXNDS Charmies</td>
+                    <td class="px-4 py-4 text-gray-700">25 g</td>
+                    <td class="px-4 py-4 text-gray-700">3 g (2 g added)</td>
+                    <td class="px-4 py-4 text-gray-700">Yes</td>
+                    <td class="px-4 py-4 text-gray-700">About $2.24</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Axe & Sledge Marshmallow Milk</td>
+                    <td class="px-4 py-4 text-gray-700">25 g</td>
+                    <td class="px-4 py-4 text-gray-700">0 g</td>
+                    <td class="px-4 py-4 text-gray-700">No</td>
+                    <td class="px-4 py-4 text-gray-700">About $2.38</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Picks -->
+        <div id="top-picks" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            2. The Marshmallow Protein Powders, Ranked
+          </h2>
+
+          <p>
+            Ranked on label, testing status and cost per 25 g of protein. We have not tasted these; taste notes are what buyers report. Prices are the Amazon prices we saw on 20 November 2026 and change often. Label figures are per each brand's panel at the time of writing and can vary by batch.
+          </p>
+
+          {PRODUCTS.map((product, index) => (
+            <ProductCard product={product} rank={index + 1} />
+          ))}
+        </div>
+
+        <div id="which-exist" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            3. Which Marshmallow Protein Powders Can You Buy Right Now?
+          </h2>
+
+          <p>
+            Five marshmallow-flavored protein powders were listed on Amazon by sellers we could match to the brand when we checked in November 2026, and three more toasted marshmallow powders were sold only through brand sites and other retailers. Marshmallow has moved from a novelty to a regular flavor, mostly because of licensing deals with cereal and candy brands.
+          </p>
+
+          <p>
+            <strong>RYSE Jet-Puffed Marshmallow</strong> is the one with the most reach. RYSE licenses the Jet-Puffed name for its Loaded Protein line, which also includes a Jet-Puffed Birthday Cake flavor, and the marshmallow tub is stocked at Vitamin Shoppe, Walmart, H-E-B and grocery chains as well as Amazon. Amazon had both the 27-serving 2 lb tub at $44.99 and a 54-serving 4 lb tub at $80.99. When we checked RYSE's own store, the 27-serving marshmallow tub was listed at $49.99 and marked sold out, which suggests Amazon is the more reliable place to find it.
+          </p>
+
+          <p>
+            <strong>GHOST Whey x Lucky Charms Cereal Milk</strong> is the newest of the major options. GHOST already sold a Cereal Milk whey inspired by the milk at the bottom of a bowl, and the Lucky Charms version adds licensed marshmallow pieces to the powder itself. GHOST sells it in a 2 lb tub and in single-serve packets, and it also sells a separate Lucky Charms protein cereal. If that pairing appeals, our <a href="/best-protein-cereal/">protein cereal guide</a> covers the cereal side.
+          </p>
+
+          <p>
+            <strong>LGXNDS Charmies</strong> is the same idea from a smaller brand: a marshmallow cereal flavor with colored marshmallow bits, on a whey isolate base. We covered the whole LGXNDS line, including the gap between its label and its marketing, in our <a href="/lgxnds-protein-powder-review/">LGXNDS protein powder review</a>. <strong>Axe & Sledge Farm Fed Marshmallow Milk</strong> and <strong>Pure Choice Farms Frosted Marshmallow</strong> round out the list. Both are whey isolates with marshmallow flavoring but no marshmallow pieces.
+          </p>
+
+          <p>
+            A few names come up in searches that we left out. S'mores flavors from Optimum Nutrition, Nutricost, Legion and others are chocolate-and-graham first, with marshmallow in a supporting role, so they answer a different craving. Pop-Tarts Frosted S'mores from RYSE falls in the same group. We also left out anything we could only find through resellers with no brand connection, since protein is a product where you want a clean chain of custody.
+          </p>
+        </div>
+
+        <div id="toasted" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            4. Is There a Toasted Marshmallow Protein Powder?
+          </h2>
+
+          <p>
+            Yes: Clean Simple Eats, Transparent Labs and ONE OF ONE each sell a toasted marshmallow protein powder, but we could not find any of the three on Amazon from a seller we could verify, which is why none of them has a product card. Toasted marshmallow is a searched flavor in its own right, so here is what each one offers and where to buy it.
+          </p>
+
+          <h3 class="text-2xl font-bold text-gray-900 mt-10 mb-4">Clean Simple Eats Toasted Marshmallow</h3>
+
+          <p>
+            Clean Simple Eats describes this flavor as toasted like a campfire marshmallow. Per the <a href="https://cleansimpleeats.com/products/toasted-marshmallow-protein-powder" rel="nofollow noopener" target="_blank">brand's product page</a> at the time of writing, a 27 g scoop gives 20 g of grass-fed whey isolate protein, 100 calories, 2 g of carbs, under 1 g of sugar and 90 mg of sodium. It is sweetened with stevia leaf extract (Reb M) and contains coconut milk powder, with no sucralose. The brand sold a 20-serving bag for $49.99, which works out to about $3.12 per 25 g, the most expensive marshmallow option in this guide. It suits people avoiding artificial sweeteners. Our <a href="/clean-simple-eats-protein-powder-review/">Clean Simple Eats review</a> covers the rest of the line.
+          </p>
+
+          <h3 class="text-2xl font-bold text-gray-900 mt-10 mb-4">Transparent Labs Toasted Marshmallow</h3>
+
+          <p>
+            Transparent Labs added Toasted Marshmallow to its grass-fed whey isolate in October 2026, sold first through The Vitamin Shoppe, as <a href="https://www.stack3d.com/2026/10/transparent-labs-toasted-marshmallow-grass-fed-whey/" rel="nofollow noopener" target="_blank">Stack3d reported</a>. The report lists 28 g of protein per serving and a 30-serving tub at $64.99, which would be about $1.93 per 25 g. We could not read the flavor's own panel, so check the sweetener on the tub. The core line's details are in our <a href="/transparent-labs-protein-powder-review/">Transparent Labs protein review</a>.
+          </p>
+
+          <h3 class="text-2xl font-bold text-gray-900 mt-10 mb-4">ONE OF ONE Toasted Marshmallow</h3>
+
+          <p>
+            ONE OF ONE sells a 2 lb Toasted Marshmallow whey at Target and Vitacost, listed at $44.99 when we checked. We could not find a readable supplement-facts panel for this flavor, so we cannot give its protein per scoop or cost per 25 g. If the toasted note matters more than the numbers, it is the cheapest tub to try, but read the panel in store.
+          </p>
+        </div>
+
+        <div id="real-marshmallows" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            5. Do Marshmallow Protein Powders Contain Real Marshmallows?
+          </h2>
+
+          <p>
+            Two of the five do: GHOST Lucky Charms Cereal Milk and LGXNDS Charmies both mix small marshmallow pieces into the powder, while RYSE, Axe & Sledge and Pure Choice get their marshmallow taste from flavoring alone. That one difference decides most of the label trade-offs between them.
+          </p>
+
+          <p>
+            Marshmallow pieces are candy, and the labels say so. GHOST lists Lucky Charms marshmallows made from sugar, corn syrup, corn starch and gelatin, colored with vegetable and fruit juice, carmine, spirulina extract, turmeric oleoresin and paprika oleoresin. LGXNDS lists marshmallow bits made from sugar, corn syrup, modified food starch, dextrose and gelatin, colored with Red 40, Yellow 5, Yellow 6 and Blue 1. Each scoop picks up about 2 g of added sugar from the pieces, per the labels at the time of writing.
+          </p>
+
+          <p>
+            The ingredient that matters most is gelatin. It is an animal product, usually from pork or beef, so both cereal-style powders are unsuitable for vegetarians and for anyone keeping halal or kosher rules who has not confirmed the source. Carmine, the red color in the GHOST marshmallows, comes from insects and is a known allergen for a small number of people. If either is a problem for you, the flavoring-only powders avoid both.
+          </p>
+
+          <p>
+            The pieces also change how the shake behaves. Buyers of both cereal-style tubs report that the marshmallow bits soften and partly dissolve in a shaker but survive better when the powder is stirred into cold milk or sprinkled on yogurt, which is the point. Expect uneven distribution, too: the pieces can settle, so a scoop from the top of a new tub may hold more or fewer than one from the bottom. Shake the closed tub before scooping.
+          </p>
+
+          <p>
+            Flavoring-only powders give a more even, vanilla-adjacent marshmallow taste. That makes them the better base for recipes where you want the flavor to blend in, such as overnight oats or a protein hot cocoa, and it is why RYSE remains the default pick for most people.
+          </p>
+        </div>
+
+        <div id="how-picked" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            6. How We Picked These Marshmallow Protein Powders
+          </h2>
+
+          <p>
+            We ranked each marshmallow protein powder on its published label, its testing status and its cost per 25 g of protein at the Amazon price we saw; we did not taste them. Every figure comes from the brand's supplement-facts panel at the time of writing, from the brand's product page or from the Amazon listing sold by the brand or a matched seller.
+          </p>
+
+          <p>
+            First, the label. We read each panel for protein per scoop, calories, sugar and added sugar, sodium and the full ingredient list, including what is in any marshmallow pieces. Where an Amazon title disagreed with the panel, we went with the panel and said so: LGXNDS's Amazon title says 26 g of protein while its panel says 25 g, and the Axe & Sledge title says 1 g of sugar while its panel says 0 g. Small gaps, but they tell you how carefully a listing was written.
+          </p>
+
+          <p>
+            Second, testing. None of the five holds a certification we could confirm in NSF Certified for Sport or Informed Sport. Axe & Sledge's tub images carry an Informed Protein mark, a program that checks protein content claims, which is a different check from banned-substance screening. Pure Choice says its whey is third-party tested without naming the lab, and RYSE's Amazon listing says tested for purity, also with no named lab. We could not find GHOST Whey or LGXNDS listed by NSF or Informed programs. If you compete in a drug-tested sport, none of these is the right choice; buy from the NSF or Informed Sport databases instead.
+          </p>
+
+          <p>
+            Third, cost. We divided the Amazon price by the number of 25 g protein servings in the tub, using the label's servings and protein per scoop, so a 28 g scoop counts for more than a 25 g scoop. Section 6 shows the math. Prices change often, so treat every cost figure as what we saw on 20 November 2026.
+          </p>
+
+          <p>
+            Finally, the health basics. All five are dairy-based and contain milk; RYSE also contains soy. People with kidney disease, those who are pregnant, anyone with a milk allergy and anyone on medication should check with a doctor or registered dietitian before adding a daily protein shake.
+          </p>
+        </div>
+
+        <div id="cost" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            7. How Much Does Marshmallow Protein Powder Cost per 25 g?
+          </h2>
+
+          <p>
+            Marshmallow protein powder costs about $1.67 to $2.38 per 25 g of protein on Amazon, based on the prices we saw on 20 November 2026, and RYSE Jet-Puffed is the cheapest of the five. The 4 lb RYSE tub brings that down to about $1.50 per 25 g at $80.99 for 54 servings.
+          </p>
+
+          <p>
+            Cost per 25 g is the fairest way to compare these because scoop sizes and protein per scoop differ. Pure Choice's 2 lb bag costs more than RYSE's tub and holds fewer servings, but each of its scoops has 28 g of protein, so it closes some of the gap. The formula is simple: price divided by servings times protein per serving divided by 25.
+          </p>
+
+          <div class="overflow-hidden border border-gray-200 rounded-2xl my-8">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Product</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Amazon price seen</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Servings</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Protein / scoop</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Cost per 25 g</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">RYSE Jet-Puffed, 4 lb</td>
+                    <td class="px-4 py-4 text-gray-700">$80.99</td>
+                    <td class="px-4 py-4 text-gray-700">54</td>
+                    <td class="px-4 py-4 text-gray-700">25 g</td>
+                    <td class="px-4 py-4 text-gray-700">About $1.50</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">RYSE Jet-Puffed, 2 lb</td>
+                    <td class="px-4 py-4 text-gray-700">$44.99</td>
+                    <td class="px-4 py-4 text-gray-700">27</td>
+                    <td class="px-4 py-4 text-gray-700">25 g</td>
+                    <td class="px-4 py-4 text-gray-700">About $1.67</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">GHOST Lucky Charms Cereal Milk</td>
+                    <td class="px-4 py-4 text-gray-700">$54.99</td>
+                    <td class="px-4 py-4 text-gray-700">About 26</td>
+                    <td class="px-4 py-4 text-gray-700">25 g</td>
+                    <td class="px-4 py-4 text-gray-700">About $2.11</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Pure Choice Frosted Marshmallow</td>
+                    <td class="px-4 py-4 text-gray-700">$59.99</td>
+                    <td class="px-4 py-4 text-gray-700">About 24.5</td>
+                    <td class="px-4 py-4 text-gray-700">28 g</td>
+                    <td class="px-4 py-4 text-gray-700">About $2.19</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">LGXNDS Charmies</td>
+                    <td class="px-4 py-4 text-gray-700">$64.99</td>
+                    <td class="px-4 py-4 text-gray-700">About 29</td>
+                    <td class="px-4 py-4 text-gray-700">25 g</td>
+                    <td class="px-4 py-4 text-gray-700">About $2.24</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Axe & Sledge Marshmallow Milk</td>
+                    <td class="px-4 py-4 text-gray-700">$59.49</td>
+                    <td class="px-4 py-4 text-gray-700">25</td>
+                    <td class="px-4 py-4 text-gray-700">25 g</td>
+                    <td class="px-4 py-4 text-gray-700">About $2.38</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Clean Simple Eats Toasted Marshmallow (brand site)</td>
+                    <td class="px-4 py-4 text-gray-700">$49.99</td>
+                    <td class="px-4 py-4 text-gray-700">20</td>
+                    <td class="px-4 py-4 text-gray-700">20 g</td>
+                    <td class="px-4 py-4 text-gray-700">About $3.12</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <p>
+            For context, a plain whey concentrate from a budget brand often costs well under $1.50 per 25 g, so you pay a small premium for a licensed or novelty flavor. RYSE's premium is the smallest. Axe & Sledge and LGXNDS cost the most of the Amazon options, and Clean Simple Eats' toasted marshmallow at its brand-site price costs the most overall, which you are paying for its stevia-only sweetening and grass-fed isolate.
+          </p>
+
+          <p>
+            Two buying notes. The Axe & Sledge Amazon offer came from a third-party seller, not the brand, and the brand's own store listed the same tub at $69.99. Buying the brand's listing directly is worth the extra few dollars if freshness and authenticity worry you. And watch the tub size on Amazon: RYSE sells marshmallow in 20, 27 and 54 serving sizes, and the smallest is the worst value per gram.
+          </p>
+        </div>
+
+        <div id="sugar-sweetener" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            8. How Much Sugar and Sweetener Is in Marshmallow Protein Powder?
+          </h2>
+
+          <p>
+            Marshmallow protein powders run from 0 g to 3 g of sugar per scoop, per the labels at the time of writing, and four of the five Amazon picks are sweetened with sucralose. That is far less sugar than real marshmallows, which is the whole appeal, but it is not nothing in the cereal-style tubs.
+          </p>
+
+          <p>
+            Axe & Sledge Marshmallow Milk lists 0 g of sugar, Pure Choice lists 0.4 g and RYSE lists 1 g. GHOST Lucky Charms and LGXNDS Charmies each list 3 g, of which 2 g is added sugar from the marshmallow pieces. For most people 2 g is trivial, about half a teaspoon. For anyone tracking added sugar closely, including people managing diabetes with a clinician's guidance, the flavoring-only powders are the cleaner choice.
+          </p>
+
+          <p>
+            Sweeteners are where the five are most alike. GHOST, LGXNDS, Axe & Sledge and Pure Choice all list sucralose, and RYSE pairs sucralose with acesulfame potassium. LGXNDS markets its isolate as having zero artificial sweeteners, yet the Charmies panel lists sucralose, so read the panel rather than the product copy. If you want to avoid both, Clean Simple Eats Toasted Marshmallow uses stevia only, and our <a href="/best-protein-powder-without-artificial-sweeteners/">guide to protein powder without artificial sweeteners</a> lists more options.
+          </p>
+
+          <p>
+            Sodium varies more than people expect. RYSE lists 240 mg per scoop and GHOST 190 mg, while Axe & Sledge lists 115 mg and Pure Choice only 25 mg. Two shakes a day of RYSE adds nearly 500 mg, about a fifth of the 2,300 mg daily limit in the US Dietary Guidelines, which matters if you are watching blood pressure.
+          </p>
+
+          <p>
+            Lactose is the last label question. The isolates (Axe & Sledge, Pure Choice, LGXNDS) carry the least, and GHOST adds lactase enzyme to its blend. RYSE uses isolate plus concentrate and adds sodium caseinate through its MCT powder, so it is the least suited to lactose-sensitive drinkers. See our <a href="/best-lactose-free-protein-powder/">lactose-free protein powder guide</a> if that applies to you.
+          </p>
+        </div>
+
+        <div id="taste" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            9. What Do Buyers Say About Marshmallow Protein Powder Taste?
+          </h2>
+
+          <p>
+            Buyers mostly describe RYSE Jet-Puffed Marshmallow as sweet and close to the bagged marshmallow, with a vanilla-forward finish, and it is one of the RYSE flavors that comes up most often in buyer praise. We have not tasted any of these powders; what follows is a summary of buyer reviews and feedback on retailer pages.
+          </p>
+
+          <p>
+            The most common complaint about RYSE marshmallow is sweetness. Buyers who like it compare it to a melted marshmallow or a vanilla milkshake; those who do not say it is too sweet with water and better with milk or coffee. Buyers also describe the texture as creamy, which fits the MCT powder and gum blend on the label. If you want to see how it stacks up against GHOST on taste and price overall, our <a href="/ryse-vs-ghost-protein/">RYSE vs GHOST comparison</a> and the programmatic <a href="/compare/ghost-whey-vs-ryse-loaded-protein/">Ghost Whey vs RYSE Loaded label comparison</a> cover it.
+          </p>
+
+          <p>
+            GHOST Lucky Charms buyers mostly react to the marshmallow pieces. Fans like finding them in the shake or in oats, and say the base tastes like sweet cereal milk. The complaints are that the pieces dissolve quickly in a shaker and that some scoops get fewer pieces than others. Buyers of GHOST's earlier Cereal Milk flavor often describe it as one of the brand's best, and the Lucky Charms version builds on that base.
+          </p>
+
+          <p>
+            Feedback on the smaller brands is thinner. Axe & Sledge reviewers describe Marshmallow Milk as a light, sweet marshmallow cereal milk taste, and the brand has a loyal following for its dessert flavors. Independent feedback on LGXNDS Charmies and Pure Choice Frosted Marshmallow is scarce beyond seller-hosted reviews, so treat both as more of a gamble on flavor. Pure Choice's own store calls Frosted Marshmallow its most unusual designer flavor and suggests blending it with others.
+          </p>
+
+          <p>
+            On mixing, the isolates are the thinnest and mix fastest. RYSE and GHOST mix thicker because of their concentrate and gums. All five are whey, so a shaker bottle is enough; a blender only helps if you are adding ice or frozen fruit. Cold liquid helps marshmallow flavors more than most, since buyers find they taste sweeter and flatter when warm.
+          </p>
+        </div>
+
+        <div id="recipes" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            10. What Can You Make With Marshmallow Protein Powder?
+          </h2>
+
+          <p>
+            Marshmallow protein powder works best in cold, no-bake foods such as overnight oats, Greek yogurt bowls, cereal milk and blended shakes, and it can be used in hot cocoa if you whisk it in once the drink has cooled slightly. Its sweet vanilla-like profile pairs with chocolate, peanut butter, strawberry and coffee.
+          </p>
+
+          <p>
+            The easiest upgrade is cereal milk. Shake one scoop of RYSE or Axe & Sledge with 8 to 10 oz of cold milk and pour it over cereal, or stir a scoop of GHOST Lucky Charms into a bowl of plain puffed cereal for the marshmallow pieces. A scoop stirred into 3/4 cup of Greek yogurt makes a thick marshmallow-fluff style dip for strawberries or apples, and adds another 15 g or so of protein from the yogurt.
+          </p>
+
+          <p>
+            For a protein hot cocoa, make the cocoa first, let it drop below a simmer, then whisk in half a scoop at a time. Whey clumps in liquid that is too hot, so add it gradually. For a thicker dessert texture, some people mix marshmallow whey with a scoop of casein, which sets up like pudding in the fridge; our <a href="/best-micellar-casein-protein-powder/">micellar casein protein powder guide</a> covers which casein to pick.
+          </p>
+
+          <p>
+            Baking is where marshmallow powders struggle. Whey dries out in long, hot bakes, and the marshmallow pieces in GHOST and LGXNDS melt and can scorch. Use them in no-bake bars, protein crispy treats made with puffed rice and nut butter, or mug cakes that cook in under two minutes. Our <a href="/best-protein-powder-for-baking/">protein powder for baking guide</a> explains which powders handle heat better.
+          </p>
+
+          <p>
+            If marshmallow is one of several sweet flavors you want to try, the same recipes work with birthday cake and fruity cereal powders. See our guides to <a href="/best-birthday-cake-protein-powder/">birthday cake protein powder</a> and <a href="/fruity-pebbles-protein-powder/">Fruity Pebbles protein powder</a>, and the full <a href="/best-tasting-protein-powder/">best-tasting protein powder rankings</a>.
+          </p>
+        </div>
+
+        <!-- Common Mistakes -->
+        <div id="mistakes" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            11. Common Mistakes to Avoid
+          </h2>
+
+          <div class="space-y-6 my-8">
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Assuming every marshmallow powder is vegetarian</h3>
+              <p class="text-gray-700 text-sm m-0">
+                GHOST Lucky Charms and LGXNDS Charmies both list gelatin in their marshmallow pieces, and the GHOST pieces are colored partly with carmine, which comes from insects. If you avoid animal gelatin, choose a flavoring-only powder such as RYSE, Axe & Sledge or Pure Choice, and still read the panel on the tub you buy.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Buying the 20-serving RYSE tub</h3>
+              <p class="text-gray-700 text-sm m-0">
+                RYSE sells Jet-Puffed Marshmallow in 20, 27 and 54 serving sizes. The smallest costs the most per gram, while the 4 lb tub came to about $1.50 per 25 g at the price we saw. If you already know you like the flavor, the bigger tub saves real money over a year of shakes.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Trusting the Amazon title over the panel</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Listing titles are marketing copy. LGXNDS's Charmies title says 26 g of protein against 25 g on its panel, and the Axe & Sledge title says 1 g of sugar against 0 g. The supplement-facts panel is the legal label, so check it before you compare products or count macros.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Treating S'mores as a marshmallow flavor</h3>
+              <p class="text-gray-700 text-sm m-0">
+                S'mores powders from Optimum Nutrition, Nutricost, Legion and RYSE's Pop-Tarts line lean on chocolate and graham, with marshmallow as a background note. If what you want is the sweet vanilla marshmallow or the toasted campfire taste, pick a powder that names marshmallow as the main flavor instead.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Mixing it into boiling liquid</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Whey clumps and turns grainy in liquid that is too hot, and marshmallow pieces melt into a sticky film. For hot cocoa or coffee, let the drink cool below a simmer and whisk the powder in gradually, or blend it with a splash of cold milk first and then add the hot drink.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ -->
+        <div id="faq" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            12. Frequently Asked Questions
+          </h2>
+
+          <div class="faq-list">
+            <details class="faq-item">
+              <summary><h3>What is the best marshmallow protein powder?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  RYSE Loaded Protein in Jet-Puffed Marshmallow is the best pick for most people. It gives 25 g of protein in 130 calories per scoop, per the label at the time of writing, and at the Amazon price we saw it cost about $1.67 per 25 g, the least of the five we compared. Pick GHOST Lucky Charms if you want real marshmallow pieces.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>Is there a toasted marshmallow protein powder?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  Yes. Clean Simple Eats sells Toasted Marshmallow with 20 g of grass-fed whey isolate and stevia per scoop, Transparent Labs launched a Toasted Marshmallow whey isolate through The Vitamin Shoppe in October 2026, and ONE OF ONE sells one at Target and Vitacost. We could not find any of them on Amazon from a seller we could verify.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>Does RYSE Jet-Puffed Marshmallow protein have real marshmallows?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  No. RYSE gets its marshmallow taste from natural and artificial flavor, not marshmallow pieces, per its ingredient list. The licensed Jet-Puffed name refers to the flavor. If you want actual marshmallow pieces in the powder, GHOST Lucky Charms Cereal Milk and LGXNDS Charmies both include them, though both add gelatin and a little sugar.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>Is marshmallow protein powder vegetarian?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  Some are and some are not. The cereal-style powders from GHOST and LGXNDS contain gelatin in their marshmallow pieces, so they are not vegetarian. RYSE, Axe & Sledge and Pure Choice list no gelatin on the panels we read. All five are whey-based and contain milk, so none of them is vegan.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>How much protein is in marshmallow protein powder?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  Most marshmallow protein powders give 25 g of protein per scoop, per the labels at the time of writing. That includes RYSE, GHOST, LGXNDS and Axe & Sledge. Pure Choice Farms Frosted Marshmallow gives the most at 28 g in a 37 g scoop, while Clean Simple Eats Toasted Marshmallow gives 20 g in a smaller 27 g scoop.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>Is marshmallow protein powder healthy?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  It is a reasonable way to add protein, with 110 to 136 calories and 0 to 3 g of sugar per scoop on the labels we read. The trade-offs are artificial sweeteners in most of them, synthetic dyes in LGXNDS Charmies and up to 240 mg of sodium in RYSE. People with kidney disease, pregnancy or a milk allergy should ask a doctor first.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>Is marshmallow protein powder third-party tested?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  None of the five Amazon picks holds an NSF Certified for Sport or Informed Sport certification that we could confirm. Axe & Sledge's tub images carry an Informed Protein mark, which checks protein claims, and Pure Choice and RYSE describe testing without naming a lab. Drug-tested athletes should choose a certified product instead.
+                </p>
+              </div>
+            </details>
+
+          </div>
+        </div>
+
+        <!-- Related Guides -->
+        <div class="mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">Related Flavor and Brand Guides</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <a href="/best-tasting-protein-powder/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#FF4500] font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best-Tasting Protein Powder</h3>
+              <p class="text-gray-500 text-sm mt-2">The flavor-first rankings this marshmallow guide belongs to.</p>
+            </a>
+            <a href="/ryse-protein-powder-review/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#FF4500] font-black text-xs uppercase tracking-widest mb-2">Brand Review</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">RYSE Protein Powder Review</h3>
+              <p class="text-gray-500 text-sm mt-2">The full Loaded Protein line, label by label, with cost per 25 g.</p>
+            </a>
+            <a href="/ghost-protein-powder-review/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#FF4500] font-black text-xs uppercase tracking-widest mb-2">Brand Review</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">GHOST Protein Powder Review</h3>
+              <p class="text-gray-500 text-sm mt-2">Ghost Whey, Clear Whey and Vegan: what the labels say and what they cost.</p>
+            </a>
+            <a href="/best-micellar-casein-protein-powder/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#FF4500] font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Micellar Casein Protein Powder</h3>
+              <p class="text-gray-500 text-sm mt-2">Slow-digesting casein picks, and the one to mix for pudding-thick desserts.</p>
+            </a>
+          </div>
+        </div>
+
+        <!-- Closing -->
+        <div class="mt-16 bg-gray-900 text-white rounded-2xl p-6 md:p-8">
+          <h2 class="text-2xl font-black text-white mb-4">The Bottom Line</h2>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            RYSE Jet-Puffed Marshmallow is the marshmallow protein powder to buy for most people: it is the licensed flavor people are searching for, it gives 25 g of protein in 130 calories per scoop, per the label at the time of writing, and it was the cheapest of the five at about $1.67 per 25 g at the Amazon price we saw. Its weak points are two artificial sweeteners, 240 mg of sodium and no named testing lab.
+          </p>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            If you want the cereal-bowl version, GHOST Lucky Charms Cereal Milk is the one with real marshmallow pieces, as long as gelatin is not a problem. Pure Choice gives the most protein per scoop, Axe & Sledge has zero sugar, and toasted marshmallow fans should look at Clean Simple Eats or Transparent Labs off Amazon. Whichever you choose, drink it cold, and start with milk if water tastes too sweet.
+          </p>
+        </div>
+
+        <MoreInCategory category="Flavor Guides" links={moreInCategory} />
+
+        <AuthorBio />
+      </div>
+    </div>
+  </article>
+</Layout>
