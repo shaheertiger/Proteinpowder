@@ -82,6 +82,13 @@ const ALIASES = {
   'be-well-by-kelly-beef-protein': ['be-well-by-kelly-beef-protein-vanilla', 'be-well-by-kelly-beef-protein-chocolate', 'be-well-by-kelly-beef-protein-unflavored', 'be-well-by-kelly-beef-protein-chai'],
   'promix-whey-protein': ['promix-protein-powder-review-whey-unflavored-2-5lb', 'promix-protein-powder-review-whey-vanilla-2-5lb'],
   'pb2-performance-peanut-protein': ['pb2-review-performance-peanut-cocoa-2lb'],
+  // 2026-11-20 daily batch.
+  'smoothie-king-gladiator-protein': ['gladiator-smoothie-king-gladiator-protein-2lb'],
+  'designs-for-sport-grass-fed-beef-protein': ['designs-for-sport-beef-protein-chocolate'],
+  'shaklee-life-shake-soy-protein': ['shaklee-protein-powder-review-life-shake-soy'],
+  'ora-organic-so-lean-so-clean': ['ora-protein-powder-review-so-lean-so-clean-chocolate'],
+  'isopure-infusions': ['isopure-clear-protein-powder-review-isopure-clear-36'],
+  'six-star-100-whey-protein-plus': ['six-star-review-100-whey-protein-plus'],
   'manitoba-harvest-hemp-pro-70': ['manitoba-harvest-hemp-yeah-max-protein'],
   'ballerina-farm-protein-powder': ['ballerina-farm-farmer-protein-vanilla-bean', 'ballerina-farm-farmer-protein-creamy-chocolate', 'ballerina-farm-farmer-protein-maple-cinnamon'],
   'happy-viking-superfood-protein': ['happy-viking-plant-protein-triple-chocolate', 'happy-viking-plant-protein-vanilla-bean'],
@@ -184,6 +191,11 @@ const DEMAND = {
   'paleovalley-bone-broth-protein': 5400, // 'paleovalley bone broth protein' (site ranks #10)
   'happy-viking-superfood-protein': 2400, // 'happy viking protein'
   'now-sports-soy-isolate': 1000, // 'now soy protein isolate'
+  'smoothie-king-gladiator-protein': 1900, // 'gladiator protein powder'
+  'designs-for-sport-grass-fed-beef-protein': 1300,
+  'shaklee-life-shake-soy-protein': 1300,
+  'ora-organic-so-lean-so-clean': 1300,
+  'six-star-100-whey-protein-plus': 720,
 };
 
 // Rows held out of the index until a person checks the label in hand.
@@ -199,7 +211,9 @@ const REGISTRY_CHECKED = {
   'optimum-nutrition-gold-standard-whey': ['NSF Certified for Sport'],
   'muscle-milk-pro-series': ['NSF Certified for Sport'], // Knockout Chocolate listed, 2026-11-19
   'bulksupplements-casein-protein': ['NSF Certified for Sport'],
-  '1st-phorm-level-1': ['NSF Certified for Sport'], // Level-1 Milk Chocolate listed on nsfsport.com, 2026-11-20 // nsfsport.com listing 1815488, 2026-11-19
+  '1st-phorm-level-1': ['NSF Certified for Sport'],
+  'smoothie-king-gladiator-protein': ['NSF Certified for Sport'], // NSF listings 1017531-1017533, 2026-11-20
+  'designs-for-sport-grass-fed-beef-protein': ['NSF Certified for Sport'], // Beef Protein Chocolate and Vanilla listed, 2026-11-20 // Level-1 Milk Chocolate listed on nsfsport.com, 2026-11-20 // nsfsport.com listing 1815488, 2026-11-19
   'thorne-whey-protein-isolate': ['NSF Certified for Sport'],
   'klean-athlete-klean-isolate': ['NSF Certified for Sport'],
   'vital-proteins-collagen-peptides': ['NSF Certified for Sport'],
@@ -235,6 +249,7 @@ const NAMES = {
   'happy-viking-superfood-protein': ['High Protein Meal'],
   'puori-pw1-whey': ['PW1 Grass-Fed Whey Protein'],
   'quest-protein-powder': ['Protein Powder'],
+  'isopure-infusions': ['Clear Protein', 'Infusions'],
 };
 
 // Corrections to research rows, decided by the editor.
