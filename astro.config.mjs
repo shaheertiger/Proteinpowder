@@ -36,6 +36,12 @@ const pillarGuides = new Set([
 // sitemap priority than the 0.5 default so crawlers reach them sooner. The daily
 // publishing run adds each new slug here (see .claude/skills/daily-publish).
 const priorityGuides = new Set([
+  // Extra batch (2026-11-20): 5 Google + 5 Bing articles.
+  'best-marshmallow-protein-powder',
+  'best-micellar-casein-protein-powder',
+  'bucked-up-protein-powder-review',
+  'transparent-labs-mass-gainer-review',
+  'dymatize-super-mass-gainer-review',
   // Daily batch (2026-11-20): 5 Google + 5 Bing articles.
   'premier-protein-vs-optimum-nutrition',
   'ryse-vs-ghost-protein',
