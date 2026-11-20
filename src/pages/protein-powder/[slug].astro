@@ -12,6 +12,7 @@ import { SITE_NAME, SITE_URL } from "../../data/site";
 import { amazonLink } from "../../data/affiliate";
 import ASINS from "../../data/product-asins.json";
 import IMAGES from "../../data/product-images.json";
+import VERDICTS from "../../data/db/verdicts.json";
 import {
   PRODUCTS,
   BRAND_BY_SLUG,
@@ -87,6 +88,8 @@ const titleMid = `${p.fullName} Review: ${fmt(p.proteinG)} g Protein, ${p.score.
 const title = titleFull.length <= 66 ? titleFull : titleMid.length <= 66 ? titleMid : `${p.fullName} Review (${p.score.total}/100)`;
 // Its head-to-head pages, strongest rival demand first.
 const versusPages = topComparisons(p, 8);
+// Hand-written verdict for this product (src/data/db/verdicts.json), when one exists.
+const written: { verdict: string[]; bestFor?: string; skipIf?: string } | undefined = (VERDICTS as any)[p.slug];
 const description = `${p.name} (${p.labelFlavor}): ${fmt(p.proteinG)} g protein, ${fmt(p.calories)} calories, ${p.sugarG == null ? "–" : fmt(p.sugarG)} g sugar per ${fmt(p.servingSizeG)} g serving.${p.costPer25 == null ? "" : ` ${money(p.costPer25)} per 25 g protein.`}${sportCerts.length ? ` ${sportCerts[0]} certified.` : ""} Compared with ${total} powders.`;
 
 // %DV uses the FDA Daily Values for adults on a 2,000-calorie diet.
@@ -166,7 +169,7 @@ const productSchema: Record<string, unknown> = {
     author: { "@type": "Organization", name: SITE_NAME, url: SITE_URL },
     publisher: { "@type": "Organization", name: SITE_NAME, url: SITE_URL },
     reviewRating: { "@type": "Rating", ratingValue: p.score.total, bestRating: 100, worstRating: 0 },
-    reviewBody: `${verdict(p)}. Label Score ${p.score.total}/100.`,
+    reviewBody: written ? written.verdict.join(" ") : `${verdict(p)}. Label Score ${p.score.total}/100.`,
   },
   ...(p.price?.usd && p.price?.url
     ? {
@@ -259,6 +262,22 @@ const scoreParts = p.score.parts;
         <ScoreBadge score={p.score} />
       </div>
     </section>
+
+    <!-- Our verdict (hand-written) -->
+    {written && (
+      <section class="mb-10" aria-labelledby="our-verdict">
+        <h2 id="our-verdict" class="text-2xl font-black text-gray-900 mb-3">Our Verdict</h2>
+        <div class="space-y-3 text-[1.0625rem] leading-relaxed text-gray-800">
+          {written.verdict.map((para) => <p class="m-0">{para}</p>)}
+        </div>
+        {(written.bestFor || written.skipIf) && (
+          <dl class="grid sm:grid-cols-2 gap-3 mt-5 text-sm">
+            {written.bestFor && <div class="bg-green-50 border border-green-200 rounded-xl p-4"><dt class="font-black text-green-800 uppercase tracking-widest text-xs mb-1">Best for</dt><dd class="m-0 text-gray-800">{written.bestFor}</dd></div>}
+            {written.skipIf && <div class="bg-red-50 border border-red-200 rounded-xl p-4"><dt class="font-black text-red-800 uppercase tracking-widest text-xs mb-1">Skip it if</dt><dd class="m-0 text-gray-800">{written.skipIf}</dd></div>}
+          </dl>
+        )}
+      </section>
+    )}
 
     <!-- Spec strip -->
     <dl class="grid grid-cols-2 sm:grid-cols-4 gap-px bg-gray-200 border border-gray-200 rounded-2xl overflow-hidden mb-10 text-center">
