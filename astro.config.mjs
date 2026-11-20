@@ -36,6 +36,17 @@ const pillarGuides = new Set([
 // sitemap priority than the 0.5 default so crawlers reach them sooner. The daily
 // publishing run adds each new slug here (see .claude/skills/daily-publish).
 const priorityGuides = new Set([
+  // Daily batch (2026-11-20): 5 Google + 5 Bing articles.
+  'premier-protein-vs-optimum-nutrition',
+  'ryse-vs-ghost-protein',
+  'gladiator-protein-powder-review',
+  'designs-for-sport-beef-protein-review',
+  'best-dole-whip-protein-powder',
+  'shaklee-protein-powder-review',
+  'ora-protein-powder-review',
+  'isopure-clear-protein-powder-review',
+  'six-star-protein-powder-review',
+  'cvs-protein-powder',
   // Chocolate whey guide (2026-11-19).
   'best-chocolate-whey-protein-powder',
   // Daily batch (2026-11-19): 5 Google + 5 Bing articles.
