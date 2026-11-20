@@ -23,6 +23,7 @@ import {
   MEDIANS,
   GLOSSARY_BY_SLUG,
   compareBlocks,
+  topComparisons,
   verdict,
   fmt,
   money,
@@ -78,7 +79,14 @@ const certLine = sportCerts.length
   : "It has no sport certification (Informed Choice, Informed Sport, NSF Certified for Sport or BSCG) that we could confirm.";
 const quick = `${p.fullName} (${p.labelFlavor}) has ${fmt(p.proteinG)} g of protein in a ${fmt(p.servingSizeG)} g serving with ${fmt(p.calories)} calories and ${p.sugarG == null ? "no sugar figure on the panel" : fmt(p.sugarG) + " g of sugar"}. ${densityLine} ${costLine} ${certLine}`;
 
-const title = `${p.fullName}: ${fmt(p.proteinG)} g Protein per Scoop (${fmt(p.calories)} kcal)`;
+// "<Product> Review: ..." matches how people search a single product (model-name + review
+// queries are what the product pages of our sister site rank #1 for), and the score
+// in the title stands out in results. Fall back to shorter forms for long names.
+const titleFull = `${p.fullName} Review: Label, Score & Verdict (${p.score.total}/100)`;
+const titleMid = `${p.fullName} Review: ${fmt(p.proteinG)} g Protein, ${p.score.total}/100`;
+const title = titleFull.length <= 66 ? titleFull : titleMid.length <= 66 ? titleMid : `${p.fullName} Review (${p.score.total}/100)`;
+// Its head-to-head pages, strongest rival demand first.
+const versusPages = topComparisons(p, 8);
 const description = `${p.name} (${p.labelFlavor}): ${fmt(p.proteinG)} g protein, ${fmt(p.calories)} calories, ${p.sugarG == null ? "–" : fmt(p.sugarG)} g sugar per ${fmt(p.servingSizeG)} g serving.${p.costPer25 == null ? "" : ` ${money(p.costPer25)} per 25 g protein.`}${sportCerts.length ? ` ${sportCerts[0]} certified.` : ""} Compared with ${total} powders.`;
 
 // %DV uses the FDA Daily Values for adults on a 2,000-calorie diet.
@@ -417,6 +425,18 @@ const scoreParts = p.score.parts;
       </div>
       <p class="text-sm text-gray-500">Prices change daily. Our cost per 25 g uses the dated price above; the retailer's price at checkout is what you pay.</p>
     </div>
+
+    <!-- Head-to-heads -->
+    {versusPages.length > 0 && (
+      <section class="mt-12">
+        <h2 class="text-2xl font-black text-gray-900 mb-4">Compare {p.fullName}</h2>
+        <ul class="grid sm:grid-cols-2 gap-3 list-none p-0 m-0 text-sm">
+          {versusPages.map((c: any) => (
+            <li><a href={c.url} class="block border border-gray-200 rounded-xl p-4 no-underline font-bold text-gray-900 hover:border-[#1E90FF]">{p.fullName} vs {c.rival.fullName}</a></li>
+          ))}
+        </ul>
+      </section>
+    )}
 
     <!-- Compare blocks -->
     {blocks.length > 0 && (

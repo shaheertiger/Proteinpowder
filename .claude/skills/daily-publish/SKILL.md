@@ -116,6 +116,21 @@ comparison page against every other indexable product in its protein family.
    per scoop, sweetener, third-party testing status, cost per 25 g) in the first
    sentence of its section and in the FAQ.
 
+### Lesson from our sister site (besthometheaterreview.com, Nov 17–19 Google export)
+
+Its single-product pages (`/gear/<model>/`, the same template as our `/protein-powder/<slug>/`
+label pages) are its best format: 119 pages, 44 in the top 10, and #1 for "<model> review".
+Its compare pages and broad "best" guides do worse than ours. What those pages do, and what
+ours now do too:
+
+- Title `<Product> Review: Label, Score & Verdict (NN/100)`, with the score in the title.
+- A "Compare <product>" section linking its strongest head-to-heads.
+- A "Featured in" box naming the roundups that rank it, and a sticky buy bar.
+
+So every product added to the label database is also a page that can rank for its own
+model-name search. When you add a database row, prefer products people search by exact
+name (flavor-neutral product lines such as "isopure zero carb" or "ascent native fuel").
+
 ### Rules for Bing (5 articles)
 
 Mix: **4 brand reviews or "is X good" pages, 1 store-brand or type/flavour guide.**
