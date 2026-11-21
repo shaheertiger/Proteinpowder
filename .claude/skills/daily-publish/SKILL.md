@@ -54,6 +54,8 @@ in the run report and carry on with Vercel data. Use it this way:
   against existing slugs; the matcher is loose).
 - **Page one, no clicks:** fix 1-2 titles and descriptions a day so the snippet
   answers the exact query (one of the day's slots, not on top of ten).
+  Log each change with its baseline in `content/analytics/snippet-changes.md`, and
+  fill in the result column for changes that are 14+ days old.
 - **Rising pages** are winners: link 1-2 of today's new pages from them and add an
   FAQ for any query they rank for but don't answer.
 
