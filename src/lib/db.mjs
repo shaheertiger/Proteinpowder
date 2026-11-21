@@ -282,10 +282,10 @@ export const BRAND_BY_SLUG = new Map(BRANDS.map((b) => [b.slug, b]));
 // ---------------------------------------------------------------------------
 
 /**
- * Every pair in the same protein family. The programmatic /protein-powder-comparison/<a>-vs-<b>/
+ * Every pair in the same protein family. The programmatic /compare/<a>-vs-<b>/
  * pages are gone: opening ~1,800 templated pairs to the index (Nov 17-19, 2026)
  * was followed by Google traffic going to zero on Nov 20, so on Nov 21 every
- * /protein-powder-comparison/ URL was 301-redirected (see src/data/compare-redirects.json and
+ * /compare/ URL was 301-redirected (see src/data/compare-redirects.json and
  * scripts/build-compare-redirects.mjs). A pair keeps `article` (the URL of the
  * hand-written X-vs-Y article for its two brands) when one exists; that article
  * is where its old URL redirects and what internal compare links point to.
@@ -307,7 +307,7 @@ export const COMPARISONS = (() => {
       const article = ARTICLE_BY_BRANDS.get([x.brandSlug, y.brandSlug].sort().join('|')) || null;
       out.push({
         slug: `${x.slug}-vs-${y.slug}`,
-        oldUrl: `/protein-powder-comparison/${x.slug}-vs-${y.slug}/`,
+        oldUrl: `/compare/${x.slug}-vs-${y.slug}/`,
         url: article || COMPARE_FALLBACK,
         a: x,
         b: y,

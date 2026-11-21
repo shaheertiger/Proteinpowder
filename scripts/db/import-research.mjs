@@ -14,12 +14,12 @@ const OUT = join(import.meta.dirname, '..', '..', 'src', 'data', 'db', 'products
 
 // Roundup product ids that are the same product as a database row.
 const ALIASES = {
-  'optimum-nutrition-gold-standard-whey': ['optimum-nutrition-gold-standard-100-whey'],
+  'optimum-nutrition-gold-standard-whey': ['optimum-nutrition-gold-standard-100-whey', 'ghost-vs-optimum-nutrition-on-gold-standard-whey', 'isopure-vs-optimum-nutrition-on-gold-standard-whey'],
   'optimum-nutrition-gold-standard-casein': ['optimum-nutrition-gold-standard-100-casein'],
-  'dymatize-iso100': ['dymatize-iso100-hydrolyzed', 'wpi-dymatize-iso100'],
-  'isopure-zero-carb': ['wpi-isopure-zero-carb', 'isopure-zero-carb-unflavored'],
+  'dymatize-iso100': ['dymatize-iso100-hydrolyzed', 'wpi-dymatize-iso100', 'dymatize-vs-premier-protein-dymatize-iso100-gourmet-chocolate'],
+  'isopure-zero-carb': ['wpi-isopure-zero-carb', 'isopure-zero-carb-unflavored', 'isopure-vs-optimum-nutrition-isopure-zero-carb'],
   'transparent-labs-grass-fed-whey-isolate': ['transparent-labs-grass-fed-whey-protein-isolate', 'wpi-transparent-labs-grass-fed-isolate'],
-  'ghost-whey': ['ghost-whey-protein'],
+  'ghost-whey': ['ghost-whey-protein', 'ghost-vs-optimum-nutrition-ghost-whey'],
   'naked-whey': ['naked-nutrition-naked-whey'],
   'naked-casein': ['naked-nutrition-naked-casein'],
   'naked-pea': ['naked-nutrition-naked-pea', 'plant-naked-pea'],
@@ -34,7 +34,7 @@ const ALIASES = {
   'now-sports-whey-isolate': ['now-sports-whey-protein-isolate', 'wpi-now-sports-whey-isolate'],
   'now-sports-pea-protein': ['plant-now-sports-pea-protein'],
   'now-sports-soy-isolate': ['now-sports-soy-protein-isolate'],
-  'premier-protein-powder': ['premier-protein-100-whey-chocolate-milkshake', 'premier-protein-100-whey-cafe-latte'],
+  'premier-protein-powder': ['premier-protein-100-whey-chocolate-milkshake', 'premier-protein-100-whey-cafe-latte', 'dymatize-vs-premier-protein-premier-whey-chocolate-milkshake'],
   'bsn-syntha-6': ['bsn-syntha-6-protein-powder'],
   'pure-protein-whey': ['pure-protein-100-whey'],
   'nutricost-whey-concentrate': ['nutricost-whey-protein-concentrate'],
@@ -43,13 +43,13 @@ const ALIASES = {
   'quest-protein-powder': ['quest-protein-powder-chocolate-milkshake', 'quest-protein-powder-vanilla-milkshake', 'quest-protein-powder-salted-caramel', 'quest-protein-powder-peanut-butter'],
   'bloom-whey-protein-isolate': ['bloom-whey-isolate-protein'],
   'devotion-nutrition-protein': ['devotion-angel-food-cake-protein', 'devotion-brownie-batter-protein', 'devotion-buttery-blend-protein', 'devotion-wild-blueberry-protein'],
-  'just-ingredients-protein-powder': ['just-ingredients-protein-powder-vanilla', 'just-ingredients-protein-powder-chocolate', 'just-ingredients-protein-powder-strawberry-cream'],
-  'clean-simple-eats-whey-protein': ['clean-simple-eats-whey-protein-powder'],
+  'just-ingredients-protein-powder': ['just-ingredients-protein-powder-vanilla', 'just-ingredients-protein-powder-chocolate', 'just-ingredients-protein-powder-strawberry-cream', 'clean-simple-eats-vs-just-ingredients-just-ingredients-protein'],
+  'clean-simple-eats-whey-protein': ['clean-simple-eats-whey-protein-powder', 'clean-simple-eats-vs-just-ingredients-clean-simple-eats-whey', 'flavcity-vs-clean-simple-eats-cse-brownie-batter'],
   'puori-pw1-whey': ['puori-pw1-whey-protein', 'puori-pw1-unflavored', 'puori-pw1-dark-chocolate'],
   'ritual-essential-protein-18': ['ritual-essential-protein-daily-shake-chocolate'],
   'unjury-unflavored-protein': ['unjury-unflavored-high-whey-protein'],
-  'orgain-organic-plant-protein': ['orgain-organic-protein-plant-based', 'plant-orgain-organic-protein'],
-  'truvani-plant-protein': ['truvani-organic-plant-based-protein', 'truvani-organic-plant-based-protein-chocolate'],
+  'orgain-organic-plant-protein': ['orgain-organic-protein-plant-based', 'plant-orgain-organic-protein', 'orgain-vs-truvani-orgain-organic-plant'],
+  'truvani-plant-protein': ['truvani-organic-plant-based-protein', 'truvani-organic-plant-based-protein-chocolate', 'orgain-vs-truvani-truvani-plant-protein'],
   'vega-sport-premium-protein': ['plant-vega-sport-premium'],
   'vega-protein-and-greens': ['vega-protein-supergreens'],
   'garden-of-life-sport-plant-protein': ['garden-of-life-sport-organic-plant-protein', 'garden-of-life-sport-organic-plant-based-protein', 'plant-garden-of-life-sport'],
@@ -68,7 +68,7 @@ const ALIASES = {
   '1up-iso-protein': ['1up-protein-powder-review-iso-protein'],
   // 2026-11-19 daily batch reviews.
   'ehplabs-blessed-plant-protein': ['blessed-protein-powder-review-blessed-plant-protein-30'],
-  'flavcity-protein-smoothie': ['bobby-approved-protein-powder-review-flavcity-chocolate'],
+  'flavcity-protein-smoothie': ['bobby-approved-protein-powder-review-flavcity-chocolate', 'flavcity-vs-clean-simple-eats-flavcity-chocolate'],
   'equate-whey-protein-powder': ['equate-protein-powder-equate-whey'],
   'glo-ours-protein-powder': ['glo-protein-powder-review-ours-salted-caramel'],
   'lineage-provisions-animal-based-complete': ['lineage-protein-powder-review-abc-original'],
@@ -104,6 +104,7 @@ const ALIASES = {
   'seeq-clear-whey-isolate': ['seeq-clear-whey-protein-isolate'],
   'oath-protein-powder': ['oath-clear-whey-isolate'],
   'prodough-protein-powder': ['prodough-whey-protein-isolate'],
+  'isopure-low-carb': ['isopure-vs-optimum-nutrition-isopure-low-carb'],
 };
 
 // Semrush US monthly volume for the product or brand name (SEO blueprint, Nov 2026).
