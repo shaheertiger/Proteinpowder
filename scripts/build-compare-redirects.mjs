@@ -18,13 +18,16 @@ const isCompare = (r) => r.source === '/compare' || r.source.startsWith(MARK);
 const specific = COMPARISONS.filter((c) => c.article)
   .sort((x, y) => (x.slug < y.slug ? -1 : x.slug > y.slug ? 1 : 0)) // byte order: same on every machine
   .flatMap((c) => [
-    { source: c.oldUrl, destination: c.article, permanent: true },
-    { source: c.oldUrl.slice(0, -1), destination: c.article, permanent: true },
+    { source: c.oldUrl, destination: c.article, statusCode: 301 },
+    { source: c.oldUrl.slice(0, -1), destination: c.article, statusCode: 301 },
   ]);
 const generated = [
   ...specific,
-  { source: '/compare', destination: COMPARE_FALLBACK, permanent: true },
-  { source: '/compare/:path*', destination: COMPARE_FALLBACK, permanent: true },
+  // Everything else under /compare/, with or without a trailing slash (the
+  // :path* form does not match a trailing slash under trailingSlash: true).
+  { source: '/compare', destination: COMPARE_FALLBACK, statusCode: 301 },
+  { source: '/compare/', destination: COMPARE_FALLBACK, statusCode: 301 },
+  { source: '/compare/:path(.*)', destination: COMPARE_FALLBACK, statusCode: 301 },
 ];
 
 const raw = readFileSync(VERCEL, 'utf8');
