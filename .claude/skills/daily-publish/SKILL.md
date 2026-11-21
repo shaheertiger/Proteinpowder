@@ -19,7 +19,58 @@ Queries files; `bing/` holds the Bing Webmaster page, keyword and daily overview
 files). When a newer export lands, re-check the numbers below and update this
 section if the pattern has changed.
 
-### What the data showed
+### READ FIRST: the Nov 20, 2026 Google drop, and what each engine rewards now
+
+Data: `content/search-console/2026-11-21/` (`google/` is the Nov 17-21 Search Console
+export; `vercel/` is Vercel Analytics top pages for Nov 14-21: all referrers, Google
+only, DuckDuckGo only). These rules override anything older below when they conflict.
+
+**What happened.** Over Nov 17-19 the site opened ~1,800 templated `/compare/` pairs
+to the index (about 450 words each, ~65% word-for-word identical across pairs). The
+sitemap went from ~500 to ~2,300 URLs in 72 hours on a site only weeks old. Google
+impressions slid 2,058 → 1,859 → 1,528, then fell to **35 on Nov 20**, and Vercel
+showed **zero Google visitors** that day. Bing and DuckDuckGo did not move. The site
+was technically fine (200s, robots, canonicals), so the cause was the volume of
+templated pages, which reads to Google as scaled content. The fix (commit a2488ac)
+limits indexable compare pairs to the hand-kept list in `src/data/indexable-compares.json`
+(110 pairs that earned impressions or visits). Every other pair renders with
+`noindex, follow` and stays out of the sitemap.
+
+**Hard rules from this:**
+- **Never open more than ~20 new indexable URLs in a day,** of any type, programmatic
+  or hand-written. A day's batch of 10 articles is the ceiling, not a target.
+- **Programmatic pages are only indexable when they have shown demand.** Add a
+  compare pair to `indexable-compares.json` by hand, at most 5 a day, and only once
+  Search Console shows it got impressions as a noindex page linked from a review, or
+  the exact "X vs Y" query has volume in the keyword export. Adding a product to the
+  database no longer unlocks ~50 indexable pairs, and must not.
+- **Never change titles or templates on every page of a type in one push** (Nov 19-20
+  retitled all 100 product pages at once). Change 10-20 at a time and wait for an export.
+- **While Google is recovering** (until a Search Console export shows daily
+  impressions back above ~1,500), the daily run publishes **Bing/DuckDuckGo articles
+  only, 5 a day,** and skips the Google slots.
+
+**What works, by engine (Nov 14-21):**
+
+| Engine | Visitors (7 d) | What earns the clicks |
+|---|---|---|
+| Google | 63 (now ~0) | About 20 compare pairs between brands people actually search (Ascent vs Levels 7 visits; Ballerina Farm vs Naked, CSE vs Premier, Naked vs ON, FlavCity vs Levels), then brand reviews (Ryse, Devotion) and narrow guides (egg white, soy, soy-free, without heavy metals). Compare pages: 14 of 28 clicks at 1.8% CTR, but only 115 of 1,807 pairs ever got an impression. |
+| DuckDuckGo (Bing's index) | 33, steady | **Trust reviews of premium and "clean" brands:** `is-elevation-protein-powder-good` (top page), Equip, Happy Viking, Levels, Sunwarrior, Ballerina Farm, Thorne, Garden of Life, Owyn, Paleovalley, Truvani, Puori, Vega. Also low-histamine and without-heavy-metals guides. |
+| Bing | 24, up 60% | **Store guides and dietary niches:** best-aldi (top), best-low-histamine, best-low-fodmap, best-whey-protein-powder, plus reviews of brands with a trust question (Ghost, Just Ingredients, Elevation). |
+
+**So for the Bing/DuckDuckGo slots:**
+- DuckDuckGo: brand reviews of premium, clean, plant, organic or practitioner brands
+  (search volume 300+ is enough), plus "is <brand> good" pages for brands with no
+  review yet. Lead with third-party testing, heavy metals, sweeteners and the clean
+  label question. These readers are checking trust, not price.
+- Bing: one store guide per batch while stores remain (Aldi-style: what the store
+  stocks, its house brand, cost per 25 g), one dietary-niche guide (low-histamine,
+  low-FODMAP style: a narrow medical or diet restriction, careful and not medical
+  advice), and brand reviews of mass-market brands people ask trust questions about.
+- An "is <brand> good" page must not target a brand that already has a review page,
+  because the two would compete for the same searches.
+
+### What the data showed (Nov 16 export, kept for history)
 
 | Format | Google (24 h, 1,316 impr.) | Bing (~4 weeks, 1,464 impr.) |
 |---|---|---|
@@ -55,11 +106,11 @@ Mix: **2 comparisons, 2 brand reviews (each adds a database row), 1 narrow guide
 | Broad `best-*` guides | 70 | 7 | 4,528 | **45.2** | 12 |
 
 The compare pairs that rank are the ones built from products with search demand
-(Levels, Ascent, Isopure, Premier, Clean Simple Eats, FlavCity, Jocko, Ryse). So the
-lever is **more products in the database**, and each new product unlocks a compare
-page against every other indexable product in its protein family (about 50 pages each).
-That is why brand reviews moved from 1 to 2: every Google brand review must also add
-its product to the database:
+(Levels, Ascent, Isopure, Premier, Clean Simple Eats, FlavCity, Jocko, Ryse).
+**Superseded on Nov 21:** a new product no longer unlocks indexable compare pages
+automatically (see "READ FIRST" above). Every Google brand review still adds its
+product to the database, so its label page and noindex compare pairs exist and can
+be promoted by hand once they show demand:
 
 - Pick brands with **`<brand> protein powder` volume of 1,000 or more** in the newest
   keyword export that are **not yet in `src/data/db/products.json`**.
@@ -79,13 +130,11 @@ History: the earlier 3-comparison mix came from the second Google export (2026-1
 took 3 of 4 clicks at an average position of 6.1, with 18 of them in the top 10.
 Brand reviews sat around position 15 and broad "best" guides around position 47.
 
-**Keep the product database's `demand` field filled in.** The programmatic
-`/compare/<a>-vs-<b>/` pages are only indexable when *both* products have
-`demand >= 1000` (Semrush US volume for the product or brand's "<name> protein
-powder" query; see `DEMAND` in `scripts/db/import-research.mjs`). When a batch adds
-or reviews a brand that is in `src/data/db/products.json`, set its demand from the
-newest keyword export in both places. Each product that crosses 1,000 unlocks a
-comparison page against every other indexable product in its protein family.
+**Keep the product database's `demand` field filled in** (Semrush US volume; see
+`DEMAND` in `scripts/db/import-research.mjs`). It orders compare links and the
+compare hub. It no longer decides indexability: a `/compare/<a>-vs-<b>/` page is
+indexable only when its slug is in `src/data/indexable-compares.json` (at most 5
+added a day, each with demand shown in Search Console or the keyword export).
 
 1. **Comparisons (2): "X vs Y" between well-known brands or products** (e.g.
    "Dymatize ISO100 vs Elite", "Orgain vs Vega", "Optimum Nutrition vs Body Fortress").
@@ -368,7 +417,10 @@ needed — never push a partial batch.
 ## Guardrails
 
 - **Ten articles: five for Google, five for Bing (section 0). Never more.** If a
-  batch finishes early, stop.
+  batch finishes early, stop. While Google is recovering (see "READ FIRST"), five
+  Bing/DuckDuckGo articles only.
+- **Never open more than ~20 new indexable URLs in a day,** and never bulk-flip
+  programmatic pages to indexable.
 - **Never touch an existing article's content** except to add links to the new ones.
 - **Never edit a validator to make a page pass.**
 - **Never invent a product that does not exist**, a price that cannot be checked, or
