@@ -22,7 +22,7 @@ npm run preview
 | `src/pages/*.astro` (others) | **Spokes** — supporting articles; each one's sticky CTA points at its pillar |
 | `src/pages/best-of.astro` | The index of every guide, by category |
 | `src/pages/protein-calculator.astro` | Daily protein calculator (`src/components/ProteinCalculator.tsx`) |
-| `src/pages/protein-powder/`, `brands/`, `compare/`, `glossary/`, `methodology/`, `tools/` | Database templates (see "The label database") |
+| `src/pages/protein-powder/`, `brands/`, `glossary/`, `methodology/`, `tools/` | Database templates (see "The label database") |
 | `middleware.ts` | Serves Markdown twins of every page to AI agents (see "Markdown for AI agents") |
 | `src/data/` | Site constants, authors, nav, affiliate link resolver, product ASIN/image maps |
 | `src/components/` | Shared template: ArticleHeader, TableOfContents, QuickPicks, ProductCard, AuthorBio, AdUnit, SEO, … |
@@ -38,7 +38,7 @@ Most of the page count comes from one label database rendered through templates
 
 | Data | Pages it generates |
 | --- | --- |
-| `src/data/db/products.json` — one row per powder: label panel, ingredients, sweeteners, certifications, a dated price, sources | `/protein-powder/<slug>/` product pages, `/protein-powder/` (all powders in one sortable table), `/brands/<brand>/`, `/compare/<a>-vs-<b>/` |
+| `src/data/db/products.json` — one row per powder: label panel, ingredients, sweeteners, certifications, a dated price, sources | `/protein-powder/<slug>/` product pages, `/protein-powder/` (all powders in one sortable table), `/brands/<brand>/` (the old `/compare/<a>-vs-<b>/` pairs now 301: see `src/data/compare-redirects.json`) |
 | `src/data/db/brands.json` — brand → its hand-written review page | the "full review" links on brand hubs |
 | `src/data/db/glossary.json` — term definitions with sources | `/glossary/<term>/` |
 
@@ -52,10 +52,11 @@ link validator and `astro.config.mjs` share it with the pages.
   search demand, holds and registry-checked certifications. Never guess a number:
   leave it `null`.
 - **Indexing rules:** a product page is noindex (and out of the sitemap) until its label
-  is complete and it has no `hold`. A comparison is indexed only when both products
-  have 1,000+ monthly searches (`demand`). The rest still render for readers.
+  is complete and it has no `hold`. There are no programmatic comparison pages: every
+  `/compare/` URL 301s to a hand-written X-vs-Y article or `/protein-powder-comparison/`
+  (`src/data/compare-redirects.json` → `node scripts/build-compare-redirects.mjs`).
 - **Sitemaps** are split per template: `sitemap-products-0.xml`, `-brands-`,
-  `-compare-`, `-glossary-`, and `-pages-` for everything else.
+  `-glossary-`, and `-pages-` for everything else.
 - **Rows on hold** (`hold` set in the importer) need a person to check the label in
   hand before they are indexed.
 

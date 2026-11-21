@@ -8,7 +8,7 @@ import { AUTHORS, DEFAULT_AUTHOR, authorSchema } from "../data/authors";
 import { SITE_NAME, SITE_URL } from "../data/site";
 import { pageDates } from "../data/dates";
 import ProductTable from "../components/db/ProductTable.astro";
-import { PRODUCTS, COMPARISONS } from "../lib/db.mjs";
+import { PRODUCTS, COMPARE_ARTICLES } from "../lib/db.mjs";
 
 const moreInCategory = [
   {
@@ -27,10 +27,8 @@ const moreInCategory = [
 const author = AUTHORS[DEFAULT_AUTHOR];
 const dates = pageDates(Astro.url.pathname, { published: "2026-10-17", modified: "2026-11-19" });
 const title = `Protein Powder Comparison: ${PRODUCTS.length} Powders, Labels and Cost`;
-// The head-to-heads people search most: pairs where both products have real demand.
-const topPairs = COMPARISONS.filter((c: any) => c.indexable)
-  .sort((x: any, y: any) => Math.min(y.a.demand, y.b.demand) - Math.min(x.a.demand, x.b.demand))
-  .slice(0, 24);
+// The brand-vs-brand head-to-heads people search by name (hand-written articles).
+const topPairs = COMPARE_ARTICLES;
 const description =
   `Compare ${PRODUCTS.length} protein powders on protein per scoop, cost per 25 g, sweeteners and certification in one sortable table, plus the most-searched head-to-heads.`;
 
@@ -345,11 +343,11 @@ const schema = {
           <ProductTable rows={PRODUCTS} filters id="comparison-table" caption={`All ${PRODUCTS.length} protein powders compared`} />
           <h3>The Most-Searched Head-to-Heads</h3>
           <p>
-            These are the pairs people search for by name. Each page puts the two labels side by side and says which wins on protein, calories, price and testing. For any other pair, use the <a href="/compare/">comparison tool</a>.
+            These are the brand pairs people search for by name. Each article puts the labels side by side and says which wins on protein, calories, price and testing. For any other pair, sort the table above.
           </p>
           <ul class="not-prose grid sm:grid-cols-2 gap-3 list-none p-0 m-0 text-sm">
             {topPairs.map((c: any) => (
-              <li><a href={c.url} class="block border border-gray-200 rounded-xl p-4 no-underline font-bold text-gray-900 hover:border-[#1E90FF]">{c.a.fullName} vs {c.b.fullName}</a></li>
+              <li><a href={c.url} class="block border border-gray-200 rounded-xl p-4 no-underline font-bold text-gray-900 hover:border-[#1E90FF]">{c.title}</a></li>
             ))}
           </ul>
         </div>

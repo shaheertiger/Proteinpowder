@@ -10,7 +10,7 @@
 import RAW_PRODUCTS from '../data/db/products.json' with { type: 'json' };
 import RAW_GLOSSARY from '../data/db/glossary.json' with { type: 'json' };
 import BRAND_META from '../data/db/brands.json' with { type: 'json' };
-import INDEXABLE_COMPARE_SLUGS from '../data/indexable-compares.json' with { type: 'json' };
+import COMPARE_REDIRECTS from '../data/compare-redirects.json' with { type: 'json' };
 
 // ---------------------------------------------------------------------------
 // Taxonomy
@@ -282,15 +282,18 @@ export const BRAND_BY_SLUG = new Map(BRANDS.map((b) => [b.slug, b]));
 // ---------------------------------------------------------------------------
 
 /**
- * Every pair in the same protein family. A pair is indexable only when it is
- * listed in src/data/indexable-compares.json: pairs that have earned Google
- * impressions or visits. Opening ~1,800 templated pairs to the index in three
- * days (Nov 17-19, 2026) was followed by Google traffic going to zero on
- * Nov 20, so new pairs are added to that list by hand, a few at a time, only
- * once Search Console shows demand for them. The rest still render for readers
- * who reach them from the compare blocks, but stay out of the index and the sitemap.
+ * Every pair in the same protein family. The programmatic /protein-powder-comparison/<a>-vs-<b>/
+ * pages are gone: opening ~1,800 templated pairs to the index (Nov 17-19, 2026)
+ * was followed by Google traffic going to zero on Nov 20, so on Nov 21 every
+ * /protein-powder-comparison/ URL was 301-redirected (see src/data/compare-redirects.json and
+ * scripts/build-compare-redirects.mjs). A pair keeps `article` (the URL of the
+ * hand-written X-vs-Y article for its two brands) when one exists; that article
+ * is where its old URL redirects and what internal compare links point to.
  */
-const INDEXABLE_COMPARES = new Set(INDEXABLE_COMPARE_SLUGS);
+const ARTICLE_BY_BRANDS = new Map(COMPARE_REDIRECTS.articles.map((a) => [[...a.brands].sort().join('|'), a.url]));
+export const COMPARE_FALLBACK = COMPARE_REDIRECTS.fallback;
+/** The editorial X-vs-Y articles, as listed in compare-redirects.json. */
+export const COMPARE_ARTICLES = COMPARE_REDIRECTS.articles;
 
 export const COMPARISONS = (() => {
   const out = [];
@@ -299,14 +302,16 @@ export const COMPARISONS = (() => {
       const a = PRODUCTS[i];
       const b = PRODUCTS[j];
       if (a.family !== b.family || a.brandSlug === b.brandSlug) continue;
-      // Alphabetical slug order so there is exactly one URL per pair.
+      // Alphabetical slug order so there is exactly one old URL per pair.
       const [x, y] = [a, b].sort((m, n) => m.slug.localeCompare(n.slug));
+      const article = ARTICLE_BY_BRANDS.get([x.brandSlug, y.brandSlug].sort().join('|')) || null;
       out.push({
         slug: `${x.slug}-vs-${y.slug}`,
-        url: `/compare/${x.slug}-vs-${y.slug}/`,
+        oldUrl: `/protein-powder-comparison/${x.slug}-vs-${y.slug}/`,
+        url: article || COMPARE_FALLBACK,
         a: x,
         b: y,
-        indexable: INDEXABLE_COMPARES.has(`${x.slug}-vs-${y.slug}`) && x.labelComplete && y.labelComplete,
+        article,
       });
     }
   }
@@ -323,11 +328,12 @@ export function comparisonFor(a, b) {
 /** Build-time record of which page already shows a product's compare links. */
 export const SHOWN_COMPARE = new Set();
 
-/** The indexable head-to-head pages for a product, strongest rival demand first. */
+/** The X-vs-Y articles for a product, strongest rival demand first, one per article. */
 export function topComparisons(p, n = 3) {
-  return COMPARISONS.filter((c) => c.indexable && (c.a.slug === p.slug || c.b.slug === p.slug))
+  return COMPARISONS.filter((c) => c.article && (c.a.slug === p.slug || c.b.slug === p.slug))
     .map((c) => ({ ...c, rival: c.a.slug === p.slug ? c.b : c.a }))
     .sort((x, y) => (y.rival.demand || 0) - (x.rival.demand || 0))
+    .filter((c, i, all) => all.findIndex((d) => d.url === c.url) === i)
     .slice(0, n);
 }
 
@@ -365,7 +371,6 @@ export function generatedRoutes() {
   return [
     ...PRODUCTS.map((p) => ({ path: p.url, indexable: p.labelComplete })),
     ...BRANDS.map((b) => ({ path: b.url, indexable: true })),
-    ...COMPARISONS.map((c) => ({ path: c.url, indexable: c.indexable })),
     ...GLOSSARY.map((g) => ({ path: g.url, indexable: true })),
   ];
 }

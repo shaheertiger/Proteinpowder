@@ -6,13 +6,13 @@ import { SITE_URL } from './site.config.mjs';
 import markdownTwins from './src/integrations/markdown-twins.mjs';
 import { noindexPaths } from './src/lib/db.mjs';
 
-// Generated pages that carry noindex (comparison pairs without search demand,
-// product pages with an incomplete label) stay out of the sitemap.
+// Generated pages that carry noindex (product pages with an incomplete label)
+// stay out of the sitemap.
 const NOINDEX = noindexPaths();
 
-// Database hubs: the all-powders table, the brand index, the compare tool,
+// Database hubs: the all-powders table, the brand index,
 // the glossary index and the methodology page every score links to.
-const databaseHubs = new Set(['protein-powder', 'brands', 'compare', 'glossary', 'methodology']);
+const databaseHubs = new Set(['protein-powder', 'brands', 'glossary', 'methodology']);
 
 // One sitemap per generated template (sitemap-products-0.xml and so on), so
 // Search Console reports indexing per template. Everything else falls through to
@@ -315,7 +315,6 @@ export default defineConfig({
       chunks: {
         products: chunkFor('/protein-powder/'),
         brands: chunkFor('/brands/'),
-        compare: chunkFor('/compare/'),
         glossary: chunkFor('/glossary/'),
       },
       serialize(item) {

@@ -19,7 +19,7 @@ export const NAV_GROUPS: NavGroup[] = [
     links: [
       { title: 'All Protein Powders Ranked', blurb: 'Every label in one sortable table', icon: '📋', url: '/protein-powder/' },
       { title: 'Brands', blurb: 'Every brand, every powder', icon: '🏷️', url: '/brands/' },
-      { title: 'Compare Two Powders', blurb: 'Labels side by side', icon: '⚖️', url: '/compare/' },
+      { title: 'Protein Powder Comparison', blurb: 'Every label in one table', icon: '⚖️', url: '/protein-powder-comparison/' },
       { title: 'Cost per Gram Calculator', blurb: 'What 25 g of protein costs', icon: '💲', url: '/tools/protein-cost-calculator/' },
       { title: 'Glossary', blurb: 'Label terms explained', icon: '📖', url: '/glossary/' },
       { title: 'How We Score', blurb: 'The Label Score formula', icon: '🧮', url: '/methodology/' },

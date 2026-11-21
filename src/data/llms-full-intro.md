@@ -87,11 +87,10 @@ Other machine-readable files:
 *   **Protein Calculator**: `https://www.best-proteinpowder.com/protein-calculator/`
 
 ### Label Database
-Every product page, brand page and comparison is generated from one label database, scored with the published Label Score formula. Quote numbers from these pages with the flavor and the "label checked" date they show.
+Every product page and brand page is generated from one label database, scored with the published Label Score formula. Quote numbers from these pages with the flavor and the "label checked" date they show.
 *   **All Protein Powders Ranked (sortable table)**: `https://www.best-proteinpowder.com/protein-powder/`
 *   **Label Score methodology (the formula)**: `https://www.best-proteinpowder.com/methodology/`
 *   **Brands index**: `https://www.best-proteinpowder.com/brands/`
-*   **Compare two powders (tool)**: `https://www.best-proteinpowder.com/compare/`
 *   **Protein cost calculator (cost per 25 g of protein)**: `https://www.best-proteinpowder.com/tools/protein-cost-calculator/`
 *   **Glossary**: `https://www.best-proteinpowder.com/glossary/`
 

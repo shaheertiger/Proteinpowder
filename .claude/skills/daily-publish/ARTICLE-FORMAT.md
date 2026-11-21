@@ -194,7 +194,7 @@ best pages run 3,000–5,700. Length comes from more answered questions, not pad
   - "What Is in <Brand> <Product>?" (label: protein, calories, sweetener, additives)
   - "How Much Does <Brand> Cost per 25 g of Protein?"
   - "What Do Buyers Say About Taste and Mixing?" (attributed: "buyers report")
-  - "<Brand> vs <closest competitor>" with a link to the `/compare/` page if it exists
+  - "<Brand> vs <closest competitor>" with a link to the X-vs-Y article if one exists (see `src/data/compare-redirects.json`)
   - "Who Should Buy <Brand>, and Who Should Skip It?"
 - FAQ must include: third-party tested, healthy/clean, contains <casein/lactose/lead/
   sweetener>, best flavour, complaints.
@@ -206,7 +206,9 @@ best pages run 3,000–5,700. Length comes from more answered questions, not pad
 - One product card per side with ASIN.
 - Required H2s: the differences that decide it, each as a question ("Which Has More
   Protein per Scoop?", "Which Is Cheaper per Gram?", "Which Is Third-Party Tested?").
-- Link to both brands' review pages and to the programmatic `/compare/` page.
+- Link to both brands' review pages and both products' `/protein-powder/<slug>/` pages.
+  Register the article in `src/data/compare-redirects.json` and run
+  `node scripts/build-compare-redirects.mjs` so the old `/compare/` pairs 301 to it.
 
 ### D. Narrow buyer's guide
 - Quick comparison table first, then ranked product cards (5–7) with ASINs.
@@ -259,7 +261,7 @@ Each of the following must be on every page:
    "is X healthy", "X reviews and complaints". These exact queries convert on Bing.
 3. **Brand-vs-brand comparisons work on Bing** (Milwaukee vs DeWalt: 6.6% CTR at #3).
    Write them at brand level ("Optimum Nutrition vs Dymatize"), not as another
-   product pair; the programmatic `/compare/` product pairs are the ones Bing ignores.
+   product pair.
 4. **Store pages**: "<product> at <store>" and "best <store> protein powder" pull steady
    Bing traffic.
 5. **The page in the sitemap and submitted via IndexNow** (automatic on each production
@@ -281,6 +283,6 @@ Each of the following must be on every page:
 - [ ] Product cards: live Amazon ASIN + price + cost per 25 g (types B, C, D)
 - [ ] Health caveat where relevant; no claim of hands-on testing
 - [ ] Links: pillar (ctaLink + body), 2+ siblings incl. one from today's batch,
-      matching `/compare/` page if one exists
+      matching X-vs-Y article if one exists
 - [ ] Wired into pillar grid, `best-of.astro`, `priorityGuides`
 - [ ] `npm run validate:all` and `npm run build` pass

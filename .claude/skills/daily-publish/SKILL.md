@@ -101,18 +101,22 @@ impressions slid 2,058 → 1,859 → 1,528, then fell to **35 on Nov 20**, and V
 showed **zero Google visitors** that day. Bing and DuckDuckGo did not move. The site
 was technically fine (200s, robots, canonicals), so the cause was the volume of
 templated pages, which reads to Google as scaled content. The fix (commit a2488ac)
-limits indexable compare pairs to the hand-kept list in `src/data/indexable-compares.json`
-(110 pairs that earned impressions or visits). Every other pair renders with
-`noindex, follow` and stays out of the sitemap.
+limited indexable compare pairs to a hand-kept list. On Nov 21 the programmatic
+`/compare/` pages were removed outright: every `/compare/` URL now 301s, a pair to the
+editorial X-vs-Y article for its two brands where one exists, everything else to
+`/protein-powder-comparison/` (`src/data/compare-redirects.json`, written into
+`vercel.json` by `node scripts/build-compare-redirects.mjs`; the build fails if
+vercel.json is stale). Never recreate `/compare/` pages or link to `/compare/`.
 
 **Hard rules from this:**
 - **Never open more than ~20 new indexable URLs in a day,** of any type, programmatic
   or hand-written. A day's batch of 10 articles is the ceiling, not a target.
-- **Programmatic pages are only indexable when they have shown demand.** Add a
-  compare pair to `indexable-compares.json` by hand, at most 5 a day, and only once
-  Search Console shows it got impressions as a noindex page linked from a review, or
-  the exact "X vs Y" query has volume in the keyword export. Adding a product to the
-  database no longer unlocks ~50 indexable pairs, and must not.
+- **Head-to-heads are hand-written articles only.** When a brand pair shows demand
+  (Search Console impressions, or the exact "X vs Y" query in the keyword export),
+  write a full X-vs-Y article, add it to `src/data/compare-redirects.json` (url,
+  brands, title), and run `node scripts/build-compare-redirects.mjs`. Product cards
+  and product pages then link to it automatically. Adding a product to the database
+  must never create pages beyond its own `/protein-powder/<slug>/` page.
 - **Never change titles or templates on every page of a type in one push** (Nov 19-20
   retitled all 100 product pages at once). Change 10-20 at a time and wait for an export.
 - **While Google is recovering** (until a Search Console export shows daily
@@ -201,20 +205,21 @@ Brand reviews sat around position 15 and broad "best" guides around position 47.
 
 **Keep the product database's `demand` field filled in** (Semrush US volume; see
 `DEMAND` in `scripts/db/import-research.mjs`). It orders compare links and the
-compare hub. It no longer decides indexability: a `/compare/<a>-vs-<b>/` page is
-indexable only when its slug is in `src/data/indexable-compares.json` (at most 5
-added a day, each with demand shown in Search Console or the keyword export).
+order of head-to-head links. The `/compare/` pages no longer exist (see above).
 
 1. **Comparisons (2): "X vs Y" between well-known brands or products** (e.g.
    "Dymatize ISO100 vs Elite", "Orgain vs Vega", "Optimum Nutrition vs Body Fortress").
    This is Google's best format on the site. Rules:
    - Pick pairs people actually search (keyword export, or "vs" queries in the Google
      Queries file). Prefer pairs where both brands already have a review page.
-   - The programmatic `/compare/<a>-vs-<b>/` pages already exist for products in
-     `src/data/db/products.json`. An editorial comparison must be a brand-level or
-     product-line question those pages don't answer (for example two products from
-     the same brand, or brand vs brand), not a copy of an existing pair. Link to the
-     matching `/compare/` page from the body when one exists.
+   - Write it at brand level ("Isopure vs Optimum Nutrition"), covering each
+     brand's main products, so it can absorb every product pair between the two
+     brands. Register it in `src/data/compare-redirects.json` and rerun
+     `node scripts/build-compare-redirects.mjs`. Link to both products' database
+     pages (`/protein-powder/<slug>/`). Follow the section order of the Nov 21
+     articles (e.g. `/ghost-vs-optimum-nutrition/`): Short Answer with a factor table,
+     picks at a glance, product cards, spec sheets side by side, the deciding
+     questions, who should skip both, mistakes, FAQ, sources and recent updates.
    - Use `scaffold-roundup.mjs` with one product card per side. Kicker
      "Head-to-Head", section "Comparisons". Give a clear verdict for each kind of buyer.
 2. **Brand reviews (2): brands or products searched by name (1,000+ volume) that have
@@ -279,8 +284,7 @@ Mix: **4 brand reviews or "is X good" pages, 1 store-brand or type/flavour guide
    mass-gainer queries all land on `best-protein-powder-for-weight-gain`. Mass gainer
    brand reviews, "best mass gainer" and "mass gainer vs whey" are valid Bing slots
    (check for cannibalisation against that page first).
-6. **Programmatic `/compare/` product pairs are not a Bing format yet**, but
-   **brand-vs-brand editorial comparisons are** ("Optimum Nutrition vs Dymatize").
+6. **Brand-vs-brand editorial comparisons work on Bing** ("Optimum Nutrition vs Dymatize").
    On thehonestreviewers.com they have the best Bing CTR of any format (5.5%;
    Milwaukee vs DeWalt 6.6% at #3), so one can take a Bing review slot.
 7. **Pick winnable keywords and build clusters.** See "Choose keywords you can win"
