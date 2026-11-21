@@ -11,6 +11,54 @@ Google Search Console and Bing Webmaster data. They replace the old "five articl
 one cluster" rule. `npm run topics` is still used, but only to fill a slot the rules
 below can't fill.
 
+## 0a. Pull the last 7 days of Vercel traffic for every search engine (do this first)
+
+Every run starts from real visits, not just exports. Use the Vercel MCP tool
+`aggregate_pageviews` (load it with ToolSearch `select:mcp__Vercel__aggregate_pageviews`
+if it is deferred). Project `prj_YjcFnTN8BC1dylJW0y2OuICRSVNE`, team
+`team_pAoikpyeUpvHszE2JvWQKq7c`, `since` = 7 days before today 00:00 UTC, `until` =
+today 23:59:59 UTC, `limit` 100, and this filter on both calls:
+
+```
+referrerHostname in ('google.com','search.google.com','com.google.android.googlequicksearchbox','bing.com','duckduckgo.com','search.yahoo.com','ecosia.org','search.brave.com','startpage.com')
+```
+
+1. `by: ["day", "referrerHostname"]`, saved as `content/analytics/vercel/<today>/daily.json`
+2. `by: ["requestPath", "referrerHostname"]`, saved as `content/analytics/vercel/<today>/pages.json`
+
+Save the tool's JSON as returned, then run:
+
+```bash
+npm run engines -- content/analytics/vercel/<today>
+```
+
+It prints each engine's visitors per day (with a `!! DROP` line when an engine
+falls off), which page types earn its visits, and its top pages, plus a "Bing family"
+total (Bing + DuckDuckGo + Yahoo + Ecosia share Bing's index). Commit the snapshot
+with the batch. If the Vercel tool is unavailable, say so in the run report and use
+the newest snapshot in `content/analytics/vercel/` instead. Never guess the numbers.
+
+**How the report sets today's batch (overrides the fixed 5 + 5 split when they conflict):**
+
+- **Split the 10 slots by engine in proportion to the last 7 days of search
+  visitors,** with at least 2 slots for any engine family that sent 10+ visitors.
+  Google and the Bing family are the two families. If Google shows `!! DROP` or is
+  still recovering (see "READ FIRST" below), Google gets 0 new-page slots and the
+  batch is 5 Bing-family articles only.
+- **Inside each engine, copy the page types that earn its visits.** Write the next
+  pages of the engine's top two page types, choosing brands, stores or niches that
+  have search volume in the keyword export and no page yet. For the Nov 21 numbers this
+  meant: DuckDuckGo = brand reviews of premium/clean brands and "is X good" (74% of
+  its visits); Bing = brand reviews (46%), type/diet guides (21%) and store guides (13%);
+  Ecosia/Yahoo = the same pages as DuckDuckGo.
+- **Grow the winners.** Any page with 3+ visitors from one engine in the week is a
+  winner. Before writing new pages, check that each winner links to its newest
+  siblings (add an in-body link to 1-2 of today's pages from it), and that today's
+  pages link back to it. That is how a new page borrows the winner's standing.
+- **An engine whose visits fell 60%+ for two days gets no new pages that day.**
+  Write for the engines that are holding up, and say why in the run report.
+- Report the engine table (visitors, trend, top page types) at the top of the run report.
+
 ## 0. Search-engine rules: 5 for Google, 5 for Bing
 
 These rules come from the November 2026 exports committed in
