@@ -10,6 +10,7 @@
 import RAW_PRODUCTS from '../data/db/products.json' with { type: 'json' };
 import RAW_GLOSSARY from '../data/db/glossary.json' with { type: 'json' };
 import BRAND_META from '../data/db/brands.json' with { type: 'json' };
+import INDEXABLE_COMPARE_SLUGS from '../data/indexable-compares.json' with { type: 'json' };
 
 // ---------------------------------------------------------------------------
 // Taxonomy
@@ -281,11 +282,16 @@ export const BRAND_BY_SLUG = new Map(BRANDS.map((b) => [b.slug, b]));
 // ---------------------------------------------------------------------------
 
 /**
- * Every pair in the same protein family. A pair is indexable only when both
- * products have real search demand (the `demand` field, Semrush US monthly
- * volume for the product or brand name); the rest render for readers who reach
- * them from the compare blocks but stay out of the index and the sitemap.
+ * Every pair in the same protein family. A pair is indexable only when it is
+ * listed in src/data/indexable-compares.json: pairs that have earned Google
+ * impressions or visits. Opening ~1,800 templated pairs to the index in three
+ * days (Nov 17-19, 2026) was followed by Google traffic going to zero on
+ * Nov 20, so new pairs are added to that list by hand, a few at a time, only
+ * once Search Console shows demand for them. The rest still render for readers
+ * who reach them from the compare blocks, but stay out of the index and the sitemap.
  */
+const INDEXABLE_COMPARES = new Set(INDEXABLE_COMPARE_SLUGS);
+
 export const COMPARISONS = (() => {
   const out = [];
   for (let i = 0; i < PRODUCTS.length; i++) {
@@ -300,7 +306,7 @@ export const COMPARISONS = (() => {
         url: `/compare/${x.slug}-vs-${y.slug}/`,
         a: x,
         b: y,
-        indexable: (x.demand || 0) >= 1000 && (y.demand || 0) >= 1000 && x.labelComplete && y.labelComplete,
+        indexable: INDEXABLE_COMPARES.has(`${x.slug}-vs-${y.slug}`) && x.labelComplete && y.labelComplete,
       });
     }
   }
