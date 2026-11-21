@@ -1,0 +1,825 @@
+---
+import Layout from "../layouts/Layout.astro";
+import ArticleHeader from "../components/ArticleHeader.astro";
+import TableOfContents from "../components/TableOfContents.astro";
+import ProductCard from "../components/ProductCard.astro";
+import MoreInCategory from "../components/MoreInCategory.astro";
+import { AUTHORS, DEFAULT_AUTHOR, authorSchema } from "../data/authors";
+import { SITE_NAME, SITE_URL } from "../data/site";
+import QuickPicks from "../components/QuickPicks.astro";
+import AuthorBio from "../components/AuthorBio.astro";
+import { pageDates } from "../data/dates";
+
+const moreInCategory = [
+  {
+    "title": "Paleovalley Bone Broth Protein Review",
+    "url": "/paleovalley-bone-broth-protein-review/"
+  },
+  {
+    "title": "Designs for Sport Beef Protein Review",
+    "url": "/designs-for-sport-beef-protein-review/"
+  },
+  {
+    "title": "Best Collagen Protein Powder",
+    "url": "/best-collagen-protein-powder/"
+  }
+];
+const author = AUTHORS[DEFAULT_AUTHOR];
+const dates = pageDates(Astro.url.pathname, { published: "2026-11-21", modified: "2026-11-21" });
+const title = "Ancient Nutrition Protein Powder Review: What's Worth Buying";
+const description =
+  "Mostly yes: Bone Broth Protein gives 20 g of dairy-free protein for about $1.78 per 25 g, but carries no NSF seal. We check all four powders and their costs.";
+
+const PRODUCTS: {
+  id: string;
+  name: string;
+  brand?: string;
+  badge: string;
+  category: string;
+  description: string;
+  pros: string[];
+  cons: string[];
+  bottomLine: string;
+  specs?: Record<string, string>;
+  rating?: number;
+  reviewCount?: number;
+  amazonUrl?: string;
+}[] = [
+  {
+    "id": "ancient-nutrition-protein-powder-review-bone-broth-protein-pure",
+    "name": "Ancient Nutrition Bone Broth Protein, Pure, 40 Servings",
+    "brand": "Ancient Nutrition",
+    "badge": "Best Overall",
+    "category": "Bone broth protein (chicken and beef)",
+    "description": "The product Ancient Nutrition is known for. Per the label at the time of writing, one 22.3 g scoop of Pure gives 20 g of protein, 90 calories, 163 mg of sodium and 191 mg of potassium, from a blend of chicken and beef bone broth protein concentrates and nothing else. It has no sweetener, gum or flavoring, so it tastes like mild broth and works in soup as well as smoothies. At the $56.86 we saw on Amazon for the 40-serving tub, that is about $1.78 per 25 g of protein.",
+    "pros": [
+      "20 g of protein per scoop with a two-ingredient label",
+      "Dairy-free, soy-free and unsweetened, per the brand",
+      "The cheapest Ancient Nutrition protein per gram at the price we saw",
+      "Works in savory food: soups, stews and sipping broth"
+    ],
+    "cons": [
+      "Collagen-type protein: low in leucine and not ideal as your only muscle-building protein",
+      "No NSF Certified for Sport or Informed Sport listing we could find",
+      "Pure tastes brothy, which some buyers dislike in sweet shakes"
+    ],
+    "bottomLine": "The one to buy if you want Ancient Nutrition for dairy-free protein. Pick Pure for cooking and Chocolate or Vanilla for shakes.",
+    "specs": {
+      "Protein / serving": "20 g (label)",
+      "Calories": "90",
+      "Third-party testing": "Brand says tested; no NSF or Informed Sport",
+      "Cost per 25 g": "About $1.78 (Amazon price seen)"
+    },
+    "amazonUrl": "https://www.amazon.com/dp/B01MFHXX8E"
+  },
+  {
+    "id": "ancient-nutrition-protein-powder-review-multi-collagen-protein",
+    "name": "Ancient Nutrition Multi Collagen Protein, Unflavored, 45 Servings",
+    "brand": "Ancient Nutrition",
+    "badge": "Best for Coffee and Collagen",
+    "category": "Collagen peptides blend",
+    "description": "Multi Collagen Protein is a collagen supplement more than a protein shake. Per the label at the time of writing, one 10.1 g scoop gives 9 g of protein, 35 calories and 90 mg of vitamin C, from hydrolyzed bovine hide collagen, fermented eggshell membrane, chicken bone broth protein, hydrolyzed fish collagen and a Bacillus coagulans probiotic. The brand markets it as 10 collagen types. At the $32.22 we saw on Amazon for 45 servings, that is about $1.99 per 25 g of protein.",
+    "pros": [
+      "Dissolves into hot coffee, per buyer reviews",
+      "Small 35-calorie scoop that is easy to add to a daily routine",
+      "Vitamin C and a probiotic strain included"
+    ],
+    "cons": [
+      "Only 9 g of protein per scoop, and collagen is an incomplete protein",
+      "Contains fish and egg-derived ingredients",
+      "The 10-types pitch is marketing; collagen is digested into amino acids and peptides either way"
+    ],
+    "bottomLine": "Buy it as a collagen add-in for coffee, not as a protein powder for hitting a daily protein target.",
+    "specs": {
+      "Protein / serving": "9 g (label)",
+      "Calories": "35",
+      "Third-party testing": "Brand says tested; no NSF or Informed Sport",
+      "Cost per 25 g": "About $1.99 (Amazon price seen)"
+    },
+    "amazonUrl": "https://www.amazon.com/dp/B01LXADO9Z"
+  },
+  {
+    "id": "ancient-nutrition-protein-powder-review-multi-protein-vanilla",
+    "name": "Ancient Nutrition Grass Fed Multi Protein, Vanilla Bean, 15 Servings",
+    "brand": "Ancient Nutrition",
+    "badge": "Most Protein per Scoop",
+    "category": "Multi-source blend (whey, bone broth, milk, collagen, colostrum)",
+    "description": "Multi Protein is Ancient Nutrition's answer to a regular shake. Per the label at the time of writing, a 34.6 g scoop of the vanilla gives 26 g of protein, 135 calories, 3 g of carbs and 2 g of sugar, from grass-fed whey, bone broth, A2/A2 milk protein, collagen peptides and colostrum, plus a protease and probiotic digestion blend. It is sweetened with stevia and monk fruit and contains milk, egg and fish. At the $44.16 we saw for 15 servings, that is about $2.83 per 25 g.",
+    "pros": [
+      "26 g of protein per scoop, the most in the range",
+      "Whey and milk protein make it a complete, leucine-rich protein",
+      "No sucralose or added sugar, per the label"
+    ],
+    "cons": [
+      "About $2.83 per 25 g at the Amazon price we saw, roughly double a mainstream whey",
+      "Only 15 servings per tub",
+      "Contains milk, egg and fish; not for dairy-free buyers"
+    ],
+    "bottomLine": "A well-made shake if you like the brand, but you pay a large premium for the extra ingredients.",
+    "specs": {
+      "Protein / serving": "26 g (label)",
+      "Calories": "135",
+      "Third-party testing": "Brand says tested; no NSF or Informed Sport",
+      "Cost per 25 g": "About $2.83 (Amazon price seen)"
+    },
+    "amazonUrl": "https://www.amazon.com/dp/B0FSMD8NKS"
+  },
+  {
+    "id": "ancient-nutrition-protein-powder-review-whey-protein-unflavored",
+    "name": "Ancient Nutrition Grass Fed Whey Protein, Unflavored, 20 Servings",
+    "brand": "Ancient Nutrition",
+    "badge": "Simplest Whey Option",
+    "category": "Whey concentrate and milk protein blend",
+    "description": "The newest line. Per the brand's supplement facts at the time of writing, a scoop of the Unflavored gives 23 g of protein, 120 calories, 2 g of fat and 3 g of carbs from grass-fed whey protein concentrate, organic A2/A2 nonfat milk protein and fermented eggshell membrane collagen, with no added flavors or sweeteners. It is the plainest dairy option Ancient Nutrition makes. At the $69.95 we saw on Amazon for 20 servings, it costs about $3.80 per 25 g, the most expensive protein in the range.",
+    "pros": [
+      "No sweeteners or flavors in the Unflavored version",
+      "23 g of complete dairy protein per scoop",
+      "Grass-fed whey and A2/A2 milk protein, per the brand"
+    ],
+    "cons": [
+      "About $3.80 per 25 g at the Amazon price we saw",
+      "Concentrate-based, so it contains lactose",
+      "Contains egg-derived eggshell membrane"
+    ],
+    "bottomLine": "Hard to justify on price. A single-ingredient grass-fed whey does the same job for well under half the cost.",
+    "specs": {
+      "Protein / serving": "23 g (brand)",
+      "Calories": "120",
+      "Third-party testing": "Brand says tested; no NSF or Informed Sport",
+      "Cost per 25 g": "About $3.80 (Amazon price seen)"
+    },
+    "amazonUrl": "https://www.amazon.com/dp/B0HBD785WF"
+  }
+];
+
+const schema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Home",
+          item: `${SITE_URL}/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Best Lists",
+          item: `${SITE_URL}/best-of/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 3,
+          name: "Ancient Nutrition Review",
+          item: `${SITE_URL}/ancient-nutrition-protein-powder-review/`,
+        },
+      ],
+    },
+    {
+      "@type": "FAQPage",
+      mainEntity: [
+        {
+          "@type": "Question",
+          "name": "Is Ancient Nutrition third-party tested?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Ancient Nutrition says its products are tested for identity, purity, heavy metals and safety in third-party audited GMP facilities, but we found no NSF Certified for Sport or Informed Sport listing for any of its protein powders. The certifications on its pages are Carbon Neutral, Non-GMO Tested and B Corp, which do not test for contaminants or banned substances. Tested athletes should choose a certified product."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is Ancient Nutrition Bone Broth Protein healthy?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "For most people, yes. The Pure version lists 20 g of protein and 90 calories with only chicken and beef bone broth protein concentrates, no sweetener and no added sugar. Its limitation is that collagen-type protein is low in leucine and incomplete, so it should not be your only protein for muscle. People with kidney disease or other medical conditions should ask a doctor first."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does Ancient Nutrition Bone Broth Protein contain dairy?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Bone Broth Protein contains no dairy, soy, gluten or nuts, per Ancient Nutrition, and its protein comes only from chicken and beef bone broth. The label does warn that it is made on equipment that also processes milk and other allergens. The newer Multi Protein and Whey Protein lines do contain dairy, so check which product you are buying."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Which Ancient Nutrition Bone Broth Protein flavor is best?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Buyer reviews split by use. Pure is the favorite for soups, sipping broth and cooking because it tastes like mild broth and has no sweetener. For shakes and smoothies, buyers lean toward Chocolate and Vanilla, which are sweetened with stevia and keep 20 g of protein. Reviewers who try Pure in sweet drinks are the most likely to complain about the taste."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What are the common complaints about Ancient Nutrition?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "In buyer reviews, the most common complaints are the brothy taste of Pure in cold or sweet drinks, some difficulty mixing without a blender or frother, and price, especially for the whey-based Multi Protein and Whey lines. Ancient Nutrition notes that taste, color and mixability can vary by batch. Multi Collagen draws the fewest complaints and is praised for dissolving in hot coffee."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How much protein is in Ancient Nutrition Multi Collagen?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "One 10.1 g scoop of unflavored Multi Collagen Protein gives 9 g of protein and 35 calories, per the label at the time of writing, with 10 g of the Multi Collagen Complex and 90 mg of vitamin C. Two scoops give 18 g of protein. Because collagen lacks tryptophan, it does not count as complete protein, so treat it as a supplement."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is Ancient Nutrition protein powder good for building muscle?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Only Multi Protein and the Whey Protein line are well suited, because their whey and milk protein supply complete protein and plenty of leucine. Bone Broth Protein and Multi Collagen are collagen-based and much weaker for muscle protein synthesis. Even then, Ancient Nutrition's whey products cost about $2.83 to $3.80 per 25 g at the prices we saw, well above standard whey."
+          }
+        }
+      ],
+    },
+    {
+      "@type": "Article",
+      headline: title,
+      author: authorSchema(),
+      datePublished: dates.published,
+      dateModified: dates.modified,
+      publisher: { "@type": "Organization", name: SITE_NAME, url: SITE_URL },
+    },
+    {
+      "@type": "ItemList",
+      name: title,
+      numberOfItems: PRODUCTS.length,
+      itemListElement: PRODUCTS.map((product, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name: product.name,
+        url: new URL(`#${product.id}`, Astro.url).toString(),
+      })),
+    },
+    ...PRODUCTS.map((product) => ({
+      "@type": "Product",
+      name: product.name,
+      description: product.description,
+      brand: {
+        "@type": "Brand",
+        name: product.brand ?? product.name.split(" ")[0],
+      },
+    })),
+  ],
+};
+---
+
+<Layout
+  title={title}
+  description={description}
+  ogType="article"
+  article={{
+    publishedTime: dates.published,
+    modifiedTime: dates.modified,
+    author: author.name,
+    section: "Brand Reviews",
+    tags: [
+      "ancient nutrition protein powder",
+      "ancient nutrition bone broth protein powder",
+      "ancient nutrition multi collagen protein",
+      "ancient nutrition multi protein",
+      "ancient nutrition whey protein",
+      "is ancient nutrition third party tested"
+    ],
+  }}
+  jsonLd={schema}
+  stickyCta={{
+    text: "See Our Top Bone Broth Protein Picks",
+    link: "/best-bone-broth-protein-powder/",
+  }}
+>
+  <article class="relative overflow-hidden">
+    <ArticleHeader kicker={"Brand Review"} badge={"Label-Checked"} author={author} dates={dates} mobileAd={false}>
+      <Fragment slot="title">Ancient Nutrition Protein Powder Review</Fragment>
+      Ancient Nutrition sells four kinds of protein powder: bone broth, multi collagen, a five-source Multi Protein and a grass-fed whey. We read every label and worked out what each costs per 25 g of protein.
+    </ArticleHeader>
+
+    <TableOfContents>
+      <a href="#short-answer">Short Answer</a>
+      <a href="#top-picks">The Products</a>
+      <a href="#lineup">The Full Lineup</a>
+      <a href="#bone-broth">Bone Broth Protein Label</a>
+      <a href="#multi-collagen">Multi Collagen Protein</a>
+      <a href="#multi-protein-whey">Multi Protein and Whey</a>
+      <a href="#third-party-tested">Third-Party Testing</a>
+      <a href="#cost">Cost per 25 g</a>
+      <a href="#buyer-reviews">Taste and Mixing</a>
+      <a href="#vs">Vs Paleovalley and Others</a>
+      <a href="#who">Who Should Buy It</a>
+      <a href="#mistakes">Common Mistakes</a>
+      <a href="#faq">FAQ</a>
+    </TableOfContents>
+
+    <!-- Content -->
+    <div class="max-w-3xl mx-auto px-4 pb-16 lg:pb-24">
+      <div class="prose prose-lg prose-blue max-w-none text-gray-700 leading-relaxed">
+        <p class="lede">
+          Ancient Nutrition protein powder is worth buying if you want dairy-free bone broth protein: Bone Broth Protein Pure lists 20 g of protein in 90 calories and cost about $1.78 per 25 g at the Amazon price we saw. The answer changes for the rest of the range, because Multi Collagen is a 9 g supplement scoop and the whey-based powders cost far more per gram. Here is the full label, testing and price breakdown.
+        </p>
+
+        <QuickPicks products={PRODUCTS} />
+
+        <div id="short-answer" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            1. Ancient Nutrition Protein Powder: The Short Answer
+          </h2>
+
+          <p>
+            Ancient Nutrition is a good choice for one job: dairy-free protein from bone broth. Its Bone Broth Protein lists 20 g of protein in 90 calories per scoop, and the Pure flavor contains only chicken and beef bone broth protein concentrates. The rest of the range is either a collagen supplement with 9 g of protein per scoop or a whey-based shake that costs two to four times what a standard whey does per gram. None of it carries an NSF Certified for Sport or Informed Sport seal that we could find.
+          </p>
+
+          <p>
+            <strong>Buy it if</strong> you avoid dairy, eat paleo or simply want a protein you can stir into soup. <strong>Skip it if</strong> your goal is muscle at the lowest cost, you are a tested athlete who needs a certified product, or you have a fish or egg allergy and are looking at Multi Collagen or Multi Protein. If bone broth is the draw, compare it with the other tubs in our <a href="/best-bone-broth-protein-powder/">best bone broth protein powder</a> roundup before you buy.
+          </p>
+
+          <div class="overflow-hidden border border-gray-200 rounded-2xl my-8">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Product</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Protein / scoop</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Calories</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Cost per 25 g*</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Bone Broth Protein Pure</td>
+                    <td class="px-4 py-4 text-gray-700">20 g</td>
+                    <td class="px-4 py-4 text-gray-700">90</td>
+                    <td class="px-4 py-4 text-gray-700">About $1.78</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Multi Collagen Protein</td>
+                    <td class="px-4 py-4 text-gray-700">9 g</td>
+                    <td class="px-4 py-4 text-gray-700">35</td>
+                    <td class="px-4 py-4 text-gray-700">About $1.99</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Multi Protein (Vanilla)</td>
+                    <td class="px-4 py-4 text-gray-700">26 g</td>
+                    <td class="px-4 py-4 text-gray-700">135</td>
+                    <td class="px-4 py-4 text-gray-700">About $2.83</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Whey Protein (Unflavored)</td>
+                    <td class="px-4 py-4 text-gray-700">23 g</td>
+                    <td class="px-4 py-4 text-gray-700">120</td>
+                    <td class="px-4 py-4 text-gray-700">About $3.80</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <p>
+            *At the Amazon prices we saw on November 21, 2026. Label figures are per Ancient Nutrition's supplement facts at the time of writing and vary by flavor.
+          </p>
+        </div>
+
+        <!-- Picks -->
+        <div id="top-picks" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            2. Ancient Nutrition Protein Powders, Label by Label
+          </h2>
+
+          <p>
+            All four are sold by Ancient Nutrition on Amazon. Prices are the Amazon prices we saw on November 21, 2026; label figures are per the brand's supplement facts at the time of writing and vary by flavor.
+          </p>
+
+          {PRODUCTS.map((product, index) => (
+            <ProductCard product={product} rank={index + 1} />
+          ))}
+        </div>
+
+        <div id="lineup" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            3. Which Protein Powders Does Ancient Nutrition Sell?
+          </h2>
+
+          <p>
+            Ancient Nutrition sells four protein powder families: Bone Broth Protein, Multi Collagen Protein, Multi Protein and Whey Protein. The brand started with bone broth, and that is still the product most people mean when they search for Ancient Nutrition protein powder. The newer lines push the brand toward the mainstream shake market, with whey and milk protein doing most of the work.
+          </p>
+
+          <p>
+            Bone Broth Protein comes in a long list of flavors on the brand's site: Pure, Chocolate, Vanilla, Salted Caramel, Turmeric, Hot Cocoa and Pumpkin Spice, plus savory Chicken Soup, Tomato Basil and Butternut Squash. Most of the sweet and plain flavors list 20 g of protein per scoop. The savory soup flavors are different products in practice: the Chicken Soup label lists 15 g of protein, 2 g of fat and added tomato, carrot, garlic and herbs. The brand also lists a Bone Broth Protein Max tub in 40 servings, which shows the same 20 g and 90 calorie panel as Pure, and a separate Bone Broth Collagen line that the brand says gives 14 g of protein.
+          </p>
+
+          <p>
+            Multi Collagen Protein is the brand's other big seller. It comes unflavored and in flavors such as Vanilla, Chocolate and Strawberry Lemonade, plus spin-offs with names like Beauty Within, Brain Boost and Gut Restore that add extra ingredients. It is closer to a collagen supplement than a protein powder, with 9 g of protein in a 10.1 g scoop of the unflavored version.
+          </p>
+
+          <p>
+            Multi Protein is a newer five-source shake built on grass-fed whey, bone broth, A2/A2 milk protein, collagen peptides and colostrum, with 26 g of protein per scoop. A version with 5 g of creatine monohydrate costs a little more, and a plant-based Multi Protein with 25 g of protein per scoop uses pea and other plant proteins for vegan buyers. Finally, Whey Protein pairs grass-fed whey concentrate with A2/A2 milk protein for 23 g per scoop, and a Whey Protein + Fat Loss version adds ashwagandha and cinnamon. If you mainly want whey, our <a href="/best-grass-fed-whey-protein/">best grass-fed whey protein</a> guide covers cheaper options.
+          </p>
+
+          <p>
+            The practical point is that the four families answer four different questions. Bone broth is for dairy-free protein. Multi Collagen is for collagen. Multi Protein and Whey are for building muscle. Judging the whole brand on one product, as many reviews do, gives a misleading answer for the other three.
+          </p>
+        </div>
+
+        <div id="bone-broth" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            4. What Is in Ancient Nutrition Bone Broth Protein Powder?
+          </h2>
+
+          <p>
+            Ancient Nutrition Bone Broth Protein Pure contains 20 g of protein, 90 calories, 163 mg of sodium and 191 mg of potassium in a 22.3 g scoop, per the label at the time of writing. The ingredient list is a single Bone Broth Protein Blend made of chicken bone broth protein concentrate and beef bone broth protein concentrate. There is no sweetener, flavoring, gum or filler in the Pure version. The panel does not print carbohydrate, sugar or fat lines, although the brand's product page describes the line as 20 g of protein and 2 g of carbs.
+          </p>
+
+          <p>
+            The flavored versions add a few ingredients. Chocolate uses a larger 25.2 g scoop that still lists 20 g of protein and 90 calories, with 2 g of carbs, 193 mg of sodium and 295 mg of potassium. Its other ingredients are natural chocolate flavor, organic cocoa powder processed with alkali, xanthan gum and stevia leaf extract. Vanilla follows the same pattern with stevia. None of the flavors we checked uses sucralose, acesulfame potassium or added sugar.
+          </p>
+
+          <p>
+            The protein itself is the important caveat. Bone broth protein is mostly collagen-type protein, rich in glycine, proline and hydroxyproline but low in leucine, the amino acid most linked to muscle protein synthesis. Collagen also lacks tryptophan, so it is not a complete protein on its own. The brand highlights the collagen types, glucosamine, chondroitin and hyaluronic acid that occur naturally in broth, and those are the real reasons people buy it. If you want the full explanation of how this differs from whey, read our guide to <a href="/collagen-vs-protein-powder/">collagen vs protein powder</a>.
+          </p>
+
+          <p>
+            Allergen-wise, Bone Broth Protein is free of dairy, soy, gluten and nuts, per the brand, and it is marketed as paleo and keto friendly. Every Ancient Nutrition label now carries the line that it is produced on equipment that also processes peanuts, tree nuts, milk, soybean, wheat, sesame, shellfish, fish and egg. The brand describes this as a voluntary disclaimer backed by allergen swab testing, but anyone with a severe allergy should treat it as a real cross-contact warning and check with their doctor.
+          </p>
+
+          <p>
+            Ancient Nutrition says its broth comes from pasture-raised, grass-fed and hormone-free animals, and it lists Carbon Neutral, Non-GMO tested and B Corp credentials on its product pages. Those are sourcing and company credentials rather than purity tests. You can see how the Pure label scores against other products on our <a href="/protein-powder/ancient-nutrition-bone-broth-protein/">Bone Broth Protein label page</a>.
+          </p>
+
+          <div class="bg-gray-900 text-white rounded-2xl p-6 lg:p-8 my-8">
+            <p class="text-xs font-black uppercase tracking-widest text-[#38BDF8] mb-3">THE LABEL IN ONE LINE</p>
+            <p class="text-xl font-bold text-white mb-3">20 g protein, 90 calories, two ingredients</p>
+            <p class="text-gray-300 leading-relaxed m-0">Bone Broth Protein Pure is chicken and beef bone broth protein concentrate and nothing else, per the label at the time of writing. That simplicity is its strength. Its weakness is that collagen-type protein does less for muscle than whey or a complete plant blend.</p>
+          </div>
+        </div>
+
+        <div id="multi-collagen" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            5. Is Multi Collagen Protein a Real Protein Powder?
+          </h2>
+
+          <p>
+            Multi Collagen Protein is a collagen supplement, not a full protein powder: one 10.1 g scoop of the unflavored version gives 9 g of protein and 35 calories, per the label at the time of writing. The label lists 10 g of a Multi Collagen Complex, 90 mg of vitamin C from lipid metabolite ascorbate and a Bacillus coagulans probiotic at 2 billion CFU at the time of manufacture. The brand's own comparison describes it as giving 20 g of collagen per two scoops, which shows how it is meant to be used.
+          </p>
+
+          <p>
+            The collagen comes from four sources: hydrolyzed bovine hide collagen peptides, fermented eggshell membrane, chicken bone broth protein concentrate and hydrolyzed fish collagen peptides from haddock, cod and pollock, per Ancient Nutrition. The brand markets this as 10 collagen types, from type I through type XXIII. That is accurate as a description of the sources, but your gut breaks every type down into the same pool of amino acids and small peptides, so the number of types matters far less than the dose.
+          </p>
+
+          <p>
+            That dose question is where Multi Collagen sits well. Most collagen studies for skin and joints use roughly 2.5 to 15 g a day, and one or two scoops covers that range. The brand says most people take one scoop and some take up to three. What it will not do is replace a protein shake: 9 g of incomplete protein is a supplement, and if you count it toward a daily protein target you will overestimate how much useful protein you are eating.
+          </p>
+
+          <p>
+            The allergen picture is also different from Bone Broth Protein. Because it contains fish collagen and eggshell membrane, Multi Collagen is not suitable for anyone with a fish or egg allergy, and it is not pescatarian or vegetarian. For alternatives with a larger collagen dose per scoop or a single source, see our <a href="/best-collagen-protein-powder/">best collagen protein powder</a> rankings, where Multi Collagen is judged against single-source peptides like Vital Proteins.
+          </p>
+
+          <p>
+            If you want collagen in your coffee and like the idea of vitamin C and a probiotic in the same scoop, Multi Collagen is a reasonable buy at around $32 for 45 servings at the Amazon price we saw. If you want protein for muscle, look further down this page.
+          </p>
+        </div>
+
+        <div id="multi-protein-whey" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            6. What About Ancient Nutrition Multi Protein and Whey Protein?
+          </h2>
+
+          <p>
+            Ancient Nutrition Multi Protein gives 26 g of protein in a 34.6 g scoop with 135 calories, 1.5 g of fat, 3 g of carbs and 2 g of sugar, per the vanilla label at the time of writing. The protein comes from a 32.8 g Multi Protein Animal Blend of grass-fed whey, chicken and beef bone broth, A2/A2 milk protein, collagen peptides and grass-fed colostrum. A 284 mg Protein Digestion Blend adds a protease enzyme and a Bacillus coagulans probiotic. The other ingredients are natural flavors, sea salt, stevia leaf extract and monk fruit extract.
+          </p>
+
+          <p>
+            Because whey and milk protein are in the mix, Multi Protein is a complete protein with a useful amount of leucine, which bone broth and collagen are not. That makes it the only Ancient Nutrition product we would call a genuine all-purpose protein shake. The trade-off is that it contains milk, egg and fish, per its allergen statement, so it loses the dairy-free appeal that made the brand popular. The brand also advises against heating it, because whey and colostrum can clump and curdle in hot liquids.
+          </p>
+
+          <p>
+            The Multi Protein + Creatine version keeps the same 26 g protein formula and adds 5 g of creatine monohydrate per scoop, the standard daily dose. At the Amazon price we saw, it cost about $6.70 more per 15-serving tub than plain Multi Protein. Buying creatine separately is almost always cheaper; our <a href="/best-protein-powder-with-creatine/">protein powder with creatine</a> guide runs that math.
+          </p>
+
+          <p>
+            Whey Protein Unflavored is the simpler option: 23 g of protein, 120 calories, 2 g of fat, 3 g of carbs and 2 g of sugar per scoop, per the brand's supplement facts at the time of writing. It combines grass-fed whey protein concentrate, organic regenerative A2/A2 nonfat milk protein and fermented eggshell membrane collagen, with no added flavors or sweeteners. The flavored versions add flavoring and sweetener, and the Fat Loss version adds ashwagandha and Ceylon cinnamon.
+          </p>
+
+          <p>
+            Both whey-based products are well formulated, with no sucralose or added sugar. Their problem is price, which the cost section below sets out. A standard grass-fed whey such as the ones in our <a href="/best-whey-protein-powder/">best whey protein powder</a> guide gives similar protein for much less.
+          </p>
+        </div>
+
+        <div id="third-party-tested" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            7. Is Ancient Nutrition Third-Party Tested?
+          </h2>
+
+          <p>
+            Ancient Nutrition says its products are tested, but none of its protein powders carries an NSF Certified for Sport or Informed Sport certification that we could find. On its FAQ, the brand says products are tested for ingredient identification, purity, heavy metals and safety, and that its US manufacturing facilities are audited by third parties for current Good Manufacturing Practice compliance. It does not publish batch test results or heavy metal numbers on the product pages we read.
+          </p>
+
+          <p>
+            The badges on the product pages are a different kind of claim. Bone Broth Protein lists Carbon Neutral Certified, Non-GMO Tested and B Corp under a 3rd Party Certified heading. Those are real credentials, but they cover carbon accounting, GMO status and company practices. None of them checks a tub for lead, banned substances or label accuracy, which is what most people mean when they ask whether a protein powder is third-party tested.
+          </p>
+
+          <p>
+            This matters most for two groups. Athletes in tested sports should use products with NSF Certified for Sport or Informed Sport status, because those programs screen every lot for banned substances; Ancient Nutrition does not offer that. People worried about heavy metals in bone broth and collagen products should know that animal bones and hides can carry trace metals, and without published results you are relying on the brand's word. Our <a href="/best-nsf-certified-protein-powder/">best NSF certified protein powder</a> list is the place to start if a certified seal is a requirement.
+          </p>
+
+          <p>
+            For everyone else, a large brand with audited facilities and a stated heavy metal testing program is better than a no-name tub with no claims at all. Treat it as a brand claim rather than independent proof. The same is true of most bone broth brands: our <a href="/paleovalley-bone-broth-protein-review/">Paleovalley bone broth protein review</a> found the same gap, and none of the five products in our bone broth roundup had an NSF or Informed Sport listing we could confirm.
+          </p>
+        </div>
+
+        <div id="cost" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            8. How Much Does Ancient Nutrition Cost per 25 g of Protein?
+          </h2>
+
+          <p>
+            Ancient Nutrition Bone Broth Protein Pure costs about $1.78 per 25 g of protein at the $56.86 Amazon price we saw on November 21, 2026 for the 40-serving tub. That is the brand's best value. The math is simple: 40 servings times 20 g is 800 g of protein, which is 32 portions of 25 g, and $56.86 divided by 32 is $1.78. The 20-serving tub was $38.26 on the same day, which works out to about $2.39 per 25 g, so the bigger tub is clearly the better buy.
+          </p>
+
+          <div class="overflow-hidden border border-gray-200 rounded-2xl my-8">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Product (size)</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Amazon price seen</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Total protein</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Cost per 25 g</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Bone Broth Protein Pure (40 servings)</td>
+                    <td class="px-4 py-4 text-gray-700">$56.86</td>
+                    <td class="px-4 py-4 text-gray-700">800 g</td>
+                    <td class="px-4 py-4 text-gray-700">About $1.78</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Multi Collagen Protein (45 servings)</td>
+                    <td class="px-4 py-4 text-gray-700">$32.22</td>
+                    <td class="px-4 py-4 text-gray-700">405 g</td>
+                    <td class="px-4 py-4 text-gray-700">About $1.99</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Multi Protein Vanilla (15 servings)</td>
+                    <td class="px-4 py-4 text-gray-700">$44.16</td>
+                    <td class="px-4 py-4 text-gray-700">390 g</td>
+                    <td class="px-4 py-4 text-gray-700">About $2.83</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Whey Protein Unflavored (20 servings)</td>
+                    <td class="px-4 py-4 text-gray-700">$69.95</td>
+                    <td class="px-4 py-4 text-gray-700">460 g</td>
+                    <td class="px-4 py-4 text-gray-700">About $3.80</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <p>
+            Multi Collagen comes next at about $1.99 per 25 g of protein, based on 45 servings of 9 g for $32.22. The 100-serving bag was $72.59, about $2.02 per 25 g, so the larger size does not save money at the prices we saw. Remember that this is collagen protein: the fairer way to judge it is cost per serving of collagen, which is about 72 cents a scoop.
+          </p>
+
+          <p>
+            The whey-based products are where the price climbs. Multi Protein Vanilla gives 15 servings of 26 g for $44.16, about $2.83 per 25 g. Whey Protein Unflavored gives 20 servings of 23 g for $69.95, about $3.80 per 25 g, which matched the price on Ancient Nutrition's own site. For context, mainstream whey usually lands around $1 to $1.50 per 25 g, and our <a href="/best-cheap-protein-powder/">best cheap protein powder</a> picks go lower still.
+          </p>
+
+          <p>
+            Buying direct rarely beats Amazon unless you subscribe. Ancient Nutrition's site listed the 20-serving Bone Broth Protein Pure at $52.95 on our check, with a subscription discount of 35 percent on the first order. Prices on Amazon move often, so check the live price on the card before you buy; the per-gram ranking between products tends to hold even when the exact numbers change.
+          </p>
+        </div>
+
+        <div id="buyer-reviews" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            9. What Do Buyers Say About Taste and Mixing?
+          </h2>
+
+          <p>
+            Buyers mostly praise Bone Broth Protein Pure for being easy on the stomach and genuinely neutral in savory food. On Vitacost, where reviews are pooled with iHerb, 86 percent of the ratings we saw for the 2 lb Pure tub were five stars. Reviewers describe adding it to smoothies, muffins and soup, and several say it does not upset their gut the way dairy proteins do. One reviewer who reacts to casein called it their safe choice.
+          </p>
+
+          <p>
+            The common complaint is flavor and texture in cold drinks. Pure tastes like a mild chicken broth, which suits soup but not a fruit smoothie, and some buyers say it is a little hard to mix. The brand itself recommends a frother or blender and says that mixability, taste, odor and color can vary between batches because it is made from broth concentrate. If you want a shake, buyers generally steer toward Chocolate or Vanilla, which are sweetened with stevia.
+          </p>
+
+          <p>
+            Multi Collagen gets the best mixing feedback of the range. Reviewers say the unflavored powder dissolves fully in hot coffee and tea with no clumping, and most notice no change in taste. A minority report a faint protein-powder taste in plain tea or black coffee. On Vitacost, 81 percent of the ratings we saw for the 8.6 oz tub were five stars.
+          </p>
+
+          <p>
+            Multi Protein and the whey line are too new to have a deep review history. The brand describes Multi Protein as lightly sweet without chalkiness, which is a marketing description rather than buyer evidence. The most common complaints across the range in reviews are about price and, for the bone broth line, the savory taste of Pure. We have not tasted these products; everything in this section is reported buyer feedback.
+          </p>
+        </div>
+
+        <div id="vs" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            10. Ancient Nutrition vs Paleovalley, Vital Proteins and Beef Protein
+          </h2>
+
+          <p>
+            Ancient Nutrition Bone Broth Protein gives more protein per scoop than Paleovalley and usually costs less per gram. Paleovalley's bone broth protein lists about 13 to 15 g of protein per serving depending on flavor, against Ancient Nutrition's 20 g. Paleovalley's case is sourcing: it uses grass-fed beef bones only, while Ancient Nutrition blends chicken and beef. Our <a href="/paleovalley-bone-broth-protein-review/">Paleovalley review</a> covers that brand's label in full, and the <a href="/compare/ancient-nutrition-bone-broth-protein-vs-paleovalley-bone-broth-protein/">Ancient Nutrition vs Paleovalley comparison</a> puts the two labels side by side.
+          </p>
+
+          <p>
+            Against plain collagen peptides, the choice depends on what you want. Vital Proteins Collagen Peptides gives a bigger collagen dose per serving from a single bovine source, while Ancient Nutrition's Multi Collagen gives 9 to 10 g per scoop from four sources plus vitamin C and a probiotic. If you want bone broth rather than peptides, our <a href="/compare/ancient-nutrition-bone-broth-protein-vs-vital-proteins-collagen-peptides/">Bone Broth Protein vs Vital Proteins comparison</a> lays out the label differences.
+          </p>
+
+          <p>
+            If you want a dairy-free animal protein for muscle, beef protein isolate is the stronger option. Products such as MuscleMeds Carnivor, covered in our <a href="/carnivor-protein-powder-review/">Carnivor protein powder review</a>, are built on beef protein isolate, a more concentrated protein than broth, while Designs for Sport's grass-fed beef protein is another single-source choice; see the <a href="/compare/ancient-nutrition-bone-broth-protein-vs-designs-for-sport-grass-fed-beef-protein/">Ancient Nutrition vs Designs for Sport comparison</a>. Our <a href="/best-beef-protein-powder/">best beef protein powder</a> guide ranks the field.
+          </p>
+
+          <p>
+            Against whey, Ancient Nutrition's own whey and Multi Protein lose on price. Single-ingredient grass-fed whey from brands in our <a href="/best-grass-fed-whey-protein/">grass-fed whey</a> guide gives similar protein per scoop for less than half the cost per gram. The reason to choose Ancient Nutrition's version is the extra ingredients, colostrum, A2/A2 milk protein, collagen and enzymes, and whether those are worth paying for is a personal call rather than something the research settles.
+          </p>
+
+          <p>
+            For a broader view of the brand, including how its products sit in our label database, see the <a href="/brands/ancient-nutrition/">Ancient Nutrition brand page</a>. For other dairy-free options, our <a href="/best-dairy-free-protein-powder/">best dairy-free protein powder</a> and <a href="/best-paleo-protein-powder/">best paleo protein powder</a> guides cover alternatives.
+          </p>
+        </div>
+
+        <div id="who" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            11. Who Should Buy Ancient Nutrition, and Who Should Skip It?
+          </h2>
+
+          <p>
+            Buy Ancient Nutrition Bone Broth Protein if you want a dairy-free, soy-free protein with a short label and you like the idea of cooking with it. It is a natural fit for paleo and keto eaters, people who react to whey or casein, and anyone who would rather add 20 g of protein to a bowl of soup than drink a shake. The 40-serving Pure tub is the version that makes the most sense on price.
+          </p>
+
+          <p>
+            Buy Multi Collagen if your aim is collagen for skin, hair or joints and you want something that disappears into your morning coffee. Count it as a supplement, not as protein. Buy Multi Protein only if you specifically want the colostrum, enzymes and five-source formula and accept paying close to double a regular whey for them.
+          </p>
+
+          <p>
+            Skip the brand if your main goal is building muscle on a budget. Whey or a complete plant blend will give you more leucine for less money. Skip it if you compete in a tested sport, because no Ancient Nutrition protein carries an NSF Certified for Sport or Informed Sport seal that we could find. Skip Multi Collagen and Multi Protein if you have a fish or egg allergy, and skip Multi Protein and Whey if you avoid dairy.
+          </p>
+
+          <p>
+            A health note: protein powders are food supplements, not medicine. If you have kidney disease, are pregnant or breastfeeding, take regular medication or are an older adult with a medical condition, check with your doctor or a registered dietitian before adding a protein or collagen supplement. Older adults looking for an easy protein boost can also compare options in our <a href="/best-protein-powder-for-seniors/">best protein powder for seniors</a> guide.
+          </p>
+        </div>
+
+        <!-- Common Mistakes -->
+        <div id="mistakes" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            12. Common Mistakes to Avoid
+          </h2>
+
+          <div class="space-y-6 my-8">
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Counting Multi Collagen as a protein shake</h3>
+              <p class="text-gray-700 text-sm m-0">
+                A scoop of Multi Collagen gives 9 g of incomplete protein. It supports a collagen routine, but if you log it as a protein shake you will think you are eating far more useful protein than you are. Pair it with complete protein from food, whey or a plant blend if muscle is the goal.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Buying the savory flavors for protein</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Chicken Soup and Tomato Basil look like Bone Broth Protein but list about 15 g of protein, not 20 g, plus fat, salt and vegetables. They are good sipping broths. If protein per scoop is why you are buying, stick to Pure, Chocolate or Vanilla and check the panel first.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Assuming B Corp means lab tested</h3>
+              <p class="text-gray-700 text-sm m-0">
+                The 3rd Party Certified badges on Ancient Nutrition pages are Carbon Neutral, Non-GMO Tested and B Corp. None of them tests for lead or banned substances. If you need that assurance, look for NSF Certified for Sport or Informed Sport, which this brand does not carry.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Buying the small tub</h3>
+              <p class="text-gray-700 text-sm m-0">
+                At the Amazon prices we saw, the 20-serving Bone Broth Protein Pure worked out to about $2.39 per 25 g of protein, against about $1.78 for the 40-serving tub. Unless you are trying it for the first time, the larger tub saves around a quarter on every gram of protein.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Missing the fish and egg in the blends</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Bone Broth Protein is free of the major allergens apart from shared equipment, but Multi Collagen contains fish collagen and eggshell membrane, and Multi Protein lists milk, egg and fish. People with those allergies should read the Contains line on each label rather than assuming the whole brand is allergen-friendly.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ -->
+        <div id="faq" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            13. Frequently Asked Questions
+          </h2>
+
+          <div class="faq-list">
+            <details class="faq-item">
+              <summary><h3>Is Ancient Nutrition third-party tested?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  Ancient Nutrition says its products are tested for identity, purity, heavy metals and safety in third-party audited GMP facilities, but we found no NSF Certified for Sport or Informed Sport listing for any of its protein powders. The certifications on its pages are Carbon Neutral, Non-GMO Tested and B Corp, which do not test for contaminants or banned substances. Tested athletes should choose a certified product.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>Is Ancient Nutrition Bone Broth Protein healthy?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  For most people, yes. The Pure version lists 20 g of protein and 90 calories with only chicken and beef bone broth protein concentrates, no sweetener and no added sugar. Its limitation is that collagen-type protein is low in leucine and incomplete, so it should not be your only protein for muscle. People with kidney disease or other medical conditions should ask a doctor first.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>Does Ancient Nutrition Bone Broth Protein contain dairy?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  No. Bone Broth Protein contains no dairy, soy, gluten or nuts, per Ancient Nutrition, and its protein comes only from chicken and beef bone broth. The label does warn that it is made on equipment that also processes milk and other allergens. The newer Multi Protein and Whey Protein lines do contain dairy, so check which product you are buying.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>Which Ancient Nutrition Bone Broth Protein flavor is best?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  Buyer reviews split by use. Pure is the favorite for soups, sipping broth and cooking because it tastes like mild broth and has no sweetener. For shakes and smoothies, buyers lean toward Chocolate and Vanilla, which are sweetened with stevia and keep 20 g of protein. Reviewers who try Pure in sweet drinks are the most likely to complain about the taste.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>What are the common complaints about Ancient Nutrition?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  In buyer reviews, the most common complaints are the brothy taste of Pure in cold or sweet drinks, some difficulty mixing without a blender or frother, and price, especially for the whey-based Multi Protein and Whey lines. Ancient Nutrition notes that taste, color and mixability can vary by batch. Multi Collagen draws the fewest complaints and is praised for dissolving in hot coffee.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>How much protein is in Ancient Nutrition Multi Collagen?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  One 10.1 g scoop of unflavored Multi Collagen Protein gives 9 g of protein and 35 calories, per the label at the time of writing, with 10 g of the Multi Collagen Complex and 90 mg of vitamin C. Two scoops give 18 g of protein. Because collagen lacks tryptophan, it does not count as complete protein, so treat it as a supplement.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>Is Ancient Nutrition protein powder good for building muscle?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  Only Multi Protein and the Whey Protein line are well suited, because their whey and milk protein supply complete protein and plenty of leucine. Bone Broth Protein and Multi Collagen are collagen-based and much weaker for muscle protein synthesis. Even then, Ancient Nutrition's whey products cost about $2.83 to $3.80 per 25 g at the prices we saw, well above standard whey.
+                </p>
+              </div>
+            </details>
+
+          </div>
+        </div>
+
+        <!-- Related Guides -->
+        <div class="mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">Related Bone Broth and Collagen Guides</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <a href="/best-bone-broth-protein-powder/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#FF4500] font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Bone Broth Protein Powder</h3>
+              <p class="text-gray-500 text-sm mt-2">Five bone broth tubs ranked by protein per scoop, label and cost per 25 g.</p>
+            </a>
+            <a href="/paleovalley-bone-broth-protein-review/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#38BDF8] font-black text-xs uppercase tracking-widest mb-2">Brand Review</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Paleovalley Bone Broth Protein Review</h3>
+              <p class="text-gray-500 text-sm mt-2">The grass-fed, bone-only rival: lower protein per scoop, higher price.</p>
+            </a>
+            <a href="/best-collagen-protein-powder/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#FF4500] font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Collagen Protein Powder</h3>
+              <p class="text-gray-500 text-sm mt-2">Collagen peptides ranked by dose, sourcing and value, Multi Collagen included.</p>
+            </a>
+            <a href="/carnivor-protein-powder-review/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#38BDF8] font-black text-xs uppercase tracking-widest mb-2">Brand Review</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Carnivor Protein Powder Review</h3>
+              <p class="text-gray-500 text-sm mt-2">A dairy-free beef protein isolate built for muscle rather than broth.</p>
+            </a>
+          </div>
+        </div>
+
+        <!-- Closing -->
+        <div class="mt-16 bg-gray-900 text-white rounded-2xl p-6 md:p-8">
+          <h2 class="text-2xl font-black text-white mb-4">The Bottom Line</h2>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            Ancient Nutrition is worth buying for its Bone Broth Protein. The Pure tub gives 20 g of dairy-free protein in 90 calories from a two-ingredient label, and at about $1.78 per 25 g at the Amazon price we saw it is fairly priced for the category. Multi Collagen is a sensible collagen add-in for coffee, as long as you treat its 9 g scoop as a supplement rather than a protein shake.
+          </p>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            The whey-based Multi Protein and Whey Protein are carefully made but expensive, at roughly two to four times the cost of a standard whey per gram. And no Ancient Nutrition powder carries an NSF or Informed Sport seal, so tested athletes should look elsewhere. If bone broth is what brought you here, compare Ancient Nutrition with the rest of the field in our <a href="/best-bone-broth-protein-powder/">best bone broth protein powder</a> guide.
+          </p>
+        </div>
+
+        <MoreInCategory category="Brand Reviews" links={moreInCategory} />
+
+        <AuthorBio />
+      </div>
+    </div>
+  </article>
+</Layout>

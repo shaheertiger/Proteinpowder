@@ -1,0 +1,857 @@
+---
+import Layout from "../layouts/Layout.astro";
+import ArticleHeader from "../components/ArticleHeader.astro";
+import TableOfContents from "../components/TableOfContents.astro";
+import ProductCard from "../components/ProductCard.astro";
+import MoreInCategory from "../components/MoreInCategory.astro";
+import { AUTHORS, DEFAULT_AUTHOR, authorSchema } from "../data/authors";
+import { SITE_NAME, SITE_URL } from "../data/site";
+import QuickPicks from "../components/QuickPicks.astro";
+import AuthorBio from "../components/AuthorBio.astro";
+import { pageDates } from "../data/dates";
+
+const moreInCategory = [
+  {
+    "title": "Isopure Protein Powder Review",
+    "url": "/isopure-protein-powder-review/"
+  },
+  {
+    "title": "Dymatize Protein Powder Review",
+    "url": "/dymatize-protein-powder-review/"
+  },
+  {
+    "title": "Mikuna Protein Powder Review",
+    "url": "/mikuna-protein-powder-review/"
+  }
+];
+const author = AUTHORS[DEFAULT_AUTHOR];
+const dates = pageDates(Astro.url.pathname, { published: "2026-11-21", modified: "2026-11-21" });
+const title = "Ketogenics Protein Powder Review: Is Zero Carb Really Zero?";
+const description =
+  "Yes, 0 g carbs and stevia only, but not third-party tested: Ketogenics Zero Carb gives 22 g protein for about $2.03 per 25 g. Iso-Whey, taste, Amazon swaps.";
+
+const PRODUCTS: {
+  id: string;
+  name: string;
+  brand?: string;
+  badge: string;
+  category: string;
+  description: string;
+  pros: string[];
+  cons: string[];
+  bottomLine: string;
+  specs?: Record<string, string>;
+  rating?: number;
+  reviewCount?: number;
+  amazonUrl?: string;
+}[] = [
+  {
+    "id": "ketogenics-protein-powder-review-zero-carb-protein",
+    "name": "KetoGenics Zero Carb, Zero Sugar Keto Protein Powder (Zero Carb Natural Protein), 28 Servings",
+    "brand": "KetoGenics",
+    "badge": "The Reviewed Product",
+    "category": "Whey isolate and micellar casein blend (80/20, per KetoGenics)",
+    "description": "The brand's flagship. Per the label at the time of writing, a 27.1 g scoop of Chocolate Milkshake gives 22 g of protein, 100 calories, 0 g of fat, 0 g of carbohydrate and 0 g of sugar, with 28 servings in a 1.67 lb bag. The ingredients are whey protein isolate, micellar casein, natural flavors, sunflower lecithin, cocoa, stevia and sea salt. It is sold on KetoShop.com, not Amazon. At the $49.99 brand-site price we saw on November 21, 2026, that is about $2.03 per 25 g of protein before shipping.",
+    "pros": [
+      "0 g carbs, 0 g sugar and 0 g sugar alcohol per scoop, per the label",
+      "Sweetened only with stevia; no sucralose or aspartame",
+      "Short ingredient list: seven items in Chocolate Milkshake, three in Unflavored",
+      "Casein share makes it thicker and better for baking and pudding than a pure isolate"
+    ],
+    "cons": [
+      "No third-party certification (NSF, Informed Choice or similar) that we could find",
+      "22 g of protein per scoop, a few grams below most whey isolates",
+      "Not sold on Amazon; you pay shipping on the brand site",
+      "Stevia-only sweetening gives a milder flavor, as KetoGenics itself says"
+    ],
+    "bottomLine": "A clean, genuinely zero-carb label at a fair price per gram. Buy it for keto shakes and baking; skip it if you need a tested product.",
+    "specs": {
+      "Protein / serving": "22 g (label)",
+      "Calories": "100",
+      "Third-party testing": "None published",
+      "Cost per 25 g": "About $2.03 (brand-site price seen, before shipping)"
+    }
+  },
+  {
+    "id": "ketogenics-protein-powder-review-iso-whey",
+    "name": "KetoGenics ISO-WHEY Whey Protein Isolate, Keto Friendly Protein Powder, 24 Servings",
+    "brand": "KetoGenics",
+    "badge": "Most Protein per Scoop",
+    "category": "100% whey protein isolate",
+    "description": "The second KetoGenics powder, and the one with more protein. Per the label at the time of writing, a 31 g scoop of Chocolate Cereal Milk gives 25 g of protein, 115 calories, 0.5 g of fat, 1.5 g of carbohydrate and under 1 g of sugar, with 24 servings per bag. Unlike Zero Carb, the flavored versions we checked use sucralose and natural and artificial flavors; Unflavored is just whey isolate and sunflower lecithin. At the $49.99 brand-site price we saw, it works out to about $2.08 per 25 g.",
+    "pros": [
+      "25 g of protein per scoop from whey isolate alone, per the label",
+      "Unflavored version is two ingredients with 0 g of carbs",
+      "Eleven flavors, many of them dessert and cereal styles",
+      "Very strong ratings on the brand's own review widget"
+    ],
+    "cons": [
+      "Flavored versions use sucralose, despite the brand page listing natural flavors",
+      "About 1.5 g of carbs in the flavored scoop we read, so not zero carb",
+      "No third-party certification that we could find",
+      "Brand-site only; not sold on Amazon"
+    ],
+    "bottomLine": "The better pick if you want the most protein per scoop and don't mind sucralose. Choose Unflavored if you want zero carbs and no sweetener.",
+    "specs": {
+      "Protein / serving": "25 g (label)",
+      "Calories": "115 (Chocolate Cereal Milk), 100 (Unflavored)",
+      "Third-party testing": "None published",
+      "Cost per 25 g": "About $2.08 (brand-site price seen, before shipping)"
+    }
+  },
+  {
+    "id": "ketogenics-protein-powder-review-alt-isopure-zero-carb",
+    "name": "Isopure Zero Carb Whey Isolate Protein Powder, Creamy Vanilla, 1 lb",
+    "brand": "Isopure",
+    "badge": "Closest Amazon Alternative",
+    "category": "100% whey protein isolate",
+    "description": "The best-known zero-carb powder and the closest match you can buy on Amazon. Per the label at the time of writing, a scoop of Creamy Vanilla gives 25 g of protein from whey isolate, about 110 calories and 0 g of carbohydrate, with added vitamins. It is sweetened with sucralose, not stevia. The 1 lb bag holds about 15 servings, per the Amazon listing. At the $34.99 Amazon price we saw on November 21, 2026, that is about $2.33 per 25 g; bigger tubs cost less per gram.",
+    "pros": [
+      "25 g of protein and 0 g of carbs per scoop, per the label",
+      "Sold and shipped by Amazon, with larger sizes that cut the cost per gram",
+      "Long track record and wide flavor range",
+      "Added vitamins for people using it as a light meal stand-in"
+    ],
+    "cons": [
+      "Sucralose-sweetened, so not a match for stevia-only buyers",
+      "About $2.33 per 25 g in the 1 lb size at the price we saw",
+      "No NSF or Informed certification listed in our database",
+      "Thin, juice-like body compared with a casein blend"
+    ],
+    "bottomLine": "The default zero-carb whey if you want Amazon shipping and don't mind sucralose.",
+    "specs": {
+      "Protein / serving": "25 g (label)",
+      "Calories": "About 110 (Creamy Vanilla)",
+      "Third-party testing": "None listed",
+      "Cost per 25 g": "About $2.33 (Amazon price seen, 1 lb)"
+    },
+    "amazonUrl": "https://www.amazon.com/dp/B0H6R346BC"
+  },
+  {
+    "id": "ketogenics-protein-powder-review-alt-dymatize-iso100",
+    "name": "Dymatize ISO100 Hydrolyzed Whey Protein Isolate, Gourmet Vanilla, 20 Servings",
+    "brand": "Dymatize",
+    "badge": "Best Third-Party Tested Swap",
+    "category": "Hydrolyzed whey protein isolate",
+    "description": "The pick for keto dieters who want a certification KetoGenics doesn't offer. Per the label at the time of writing, a scoop gives 25 g of protein and about 1 to 2 g of carbohydrate depending on flavor, and Dymatize says ISO100 carries the Informed Choice mark. It uses sucralose and stevia. The 1.3 lb tub holds 20 servings, per the Amazon listing. At the $42.49 Amazon price we saw on November 21, 2026, that is about $2.12 per 25 g.",
+    "pros": [
+      "Informed Choice certified, per Dymatize",
+      "25 g of protein per scoop",
+      "Hydrolyzed isolate that buyers say mixes thin and fast",
+      "Cheaper per gram than KetoGenics once shipping is counted on small orders"
+    ],
+    "cons": [
+      "1 to 2 g of carbs per scoop rather than zero",
+      "Uses sucralose alongside stevia",
+      "Pure isolate, so not as thick as the Zero Carb blend for baking",
+      "Small tub; the 5 lb size is far cheaper per gram"
+    ],
+    "bottomLine": "Choose it over KetoGenics if testing matters more to you than a stevia-only label.",
+    "specs": {
+      "Protein / serving": "25 g (label)",
+      "Calories": "About 110 to 120",
+      "Third-party testing": "Informed Choice (per Dymatize)",
+      "Cost per 25 g": "About $2.12 (Amazon price seen)"
+    },
+    "amazonUrl": "https://www.amazon.com/dp/B099J2SWXV"
+  },
+  {
+    "id": "ketogenics-protein-powder-review-alt-naked-whey-isolate",
+    "name": "Naked Whey Isolate Protein, Unflavored, 28 Servings",
+    "brand": "Naked Nutrition",
+    "badge": "Unflavored, No-Sweetener Swap",
+    "category": "Grass-fed whey protein isolate",
+    "description": "An Amazon stand-in for KetoGenics Unflavored ISO-WHEY. Per the Amazon listing at the time of writing, it has only two ingredients, 30 g of grass-fed whey isolate protein per serving, zero carbs, no soy and no gluten, with 28 servings per tub. With no sweetener at all, it suits keto dieters who flavor their own shakes or bake with protein. At the $74.99 Amazon price we saw on November 21, 2026, that is about $2.23 per 25 g of protein.",
+    "pros": [
+      "Two ingredients and no sweetener, per the listing",
+      "30 g of protein per serving",
+      "Zero carbs, per the listing",
+      "Good base for coffee, baking and DIY flavoring"
+    ],
+    "cons": [
+      "Tastes of plain milk protein; you flavor it yourself",
+      "About $2.23 per 25 g at the price we saw",
+      "Larger serving than a single KetoGenics scoop",
+      "Not a casein blend, so thinner in pudding recipes"
+    ],
+    "bottomLine": "The cleanest Amazon option for people who wanted KetoGenics Unflavored.",
+    "specs": {
+      "Protein / serving": "30 g (listing)",
+      "Calories": "Not stated in the listing we saw",
+      "Third-party testing": "Not stated in the listing we saw",
+      "Cost per 25 g": "About $2.23 (Amazon price seen)"
+    },
+    "amazonUrl": "https://www.amazon.com/dp/B0DJ3KYNQ5"
+  }
+];
+
+const schema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Home",
+          item: `${SITE_URL}/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Best Lists",
+          item: `${SITE_URL}/best-of/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 3,
+          name: "Ketogenics Protein Powder Review",
+          item: `${SITE_URL}/ketogenics-protein-powder-review/`,
+        },
+      ],
+    },
+    {
+      "@type": "FAQPage",
+      mainEntity: [
+        {
+          "@type": "Question",
+          "name": "Is Ketogenics third-party tested?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. KetoGenics does not say its protein powders are third-party tested, and we found no NSF, Informed Choice, Informed Sport or Clean Label Project certification for them at the time of writing. The labels show GMP, non-GMO and FDA-registered facility badges, which cover manufacturing, not independent batch testing. For a tested low-carb option, Dymatize ISO100 carries the Informed Choice mark, per Dymatize."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is Ketogenics protein powder healthy and clean?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The labels are clean by protein powder standards. Zero Carb Chocolate Milkshake lists seven ingredients, sweetened with stevia, and Unflavored lists three. Flavored ISO-WHEY adds sucralose and artificial flavors. Both are low in sodium and have no added sugar. Clean labels are not the same as tested purity, though, and KetoGenics publishes no contaminant results, so heavy-metal levels are unknown."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does Ketogenics Zero Carb contain casein?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Zero Carb is a blend of whey protein isolate and micellar casein, which KetoGenics describes as 80% whey isolate and 20% casein, and micellar casein is printed second in the ingredient list. That is what makes it thicker than a pure isolate. If you want whey only, ISO-WHEY lists whey protein isolate as its sole protein source, per its label."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does Ketogenics protein powder contain sucralose?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It depends on the product. Zero Carb, Zero Sugar Keto Protein Powder is sweetened only with stevia, per its label. The flavored ISO-WHEY we checked, Chocolate Cereal Milk, lists sucralose and natural and artificial flavors. The Unflavored versions of both products contain no sweetener at all. Check the back-panel photo for your flavor on the brand's product page before ordering."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Which Ketogenics flavor is best?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Buyer reviews on the brand's site most often praise Zero Carb's Strawberry Milk and Iced Oatmeal Cookie, plus ISO-WHEY's Peanut Butter Cookie and Fruity Cereal. Unflavored ISO-WHEY gets credit from bakers. We have not tasted them ourselves. Because stevia-sweetened Zero Carb tastes milder, buyers suggest mixing it with cold almond or coconut milk rather than water."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What are the most common Ketogenics complaints?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Most complaints concern buying rather than the powder. KetoGenics isn't on Amazon, so orders carry shipping costs and take longer. Some buyers find stevia-only Zero Carb milder than artificially sweetened shakes, which the brand itself acknowledges. Zero Carb's 22 g of protein per scoop is also a few grams lower than most isolates. The brand's own reviews average about 4.95 stars."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I buy Ketogenics protein powder on Amazon?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Not from the brand, as far as we could find on November 21, 2026. Our Amazon searches returned no KetoGenics protein listings, and the brand sells through its own store at KetoShop.com, where both proteins were $49.99. The closest Amazon alternative is Isopure Zero Carb, which also lists 0 g of carbs and 25 g of protein per scoop but uses sucralose."
+          }
+        }
+      ],
+    },
+    {
+      "@type": "Article",
+      headline: title,
+      author: authorSchema(),
+      datePublished: dates.published,
+      dateModified: dates.modified,
+      publisher: { "@type": "Organization", name: SITE_NAME, url: SITE_URL },
+    },
+    {
+      "@type": "ItemList",
+      name: title,
+      numberOfItems: PRODUCTS.length,
+      itemListElement: PRODUCTS.map((product, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name: product.name,
+        url: new URL(`#${product.id}`, Astro.url).toString(),
+      })),
+    },
+    ...PRODUCTS.map((product) => ({
+      "@type": "Product",
+      name: product.name,
+      description: product.description,
+      brand: {
+        "@type": "Brand",
+        name: product.brand ?? product.name.split(" ")[0],
+      },
+    })),
+  ],
+};
+---
+
+<Layout
+  title={title}
+  description={description}
+  ogType="article"
+  article={{
+    publishedTime: dates.published,
+    modifiedTime: dates.modified,
+    author: author.name,
+    section: "Brand Reviews",
+    tags: [
+      "ketogenics protein powder",
+      "ketogenics zero carb zero sugar keto protein powder",
+      "ketogenics iso-whey whey protein isolate keto friendly protein powder",
+      "ketogenics zero carb protein",
+      "ketogenics iso whey",
+      "ketoshop protein powder",
+      "keto protein powder"
+    ],
+  }}
+  jsonLd={schema}
+  stickyCta={{
+    text: "See Our Top Low Carb Picks",
+    link: "/best-low-carb-protein-powder/",
+  }}
+>
+  <article class="relative overflow-hidden">
+    <ArticleHeader kicker={"Brand Review"} badge={"Label-Checked"} author={author} dates={dates} mobileAd={false}>
+      <Fragment slot="title">Ketogenics Protein Powder Review</Fragment>
+      What is on the labels of KetoGenics Zero Carb and ISO-WHEY, whether either is third-party tested, what each 25 g of protein costs, and which Amazon powders come closest.
+    </ArticleHeader>
+
+    <TableOfContents>
+      <a href="#short-answer">Short Answer</a>
+      <a href="#top-picks">The Products</a>
+      <a href="#zero-carb">Zero Carb Label</a>
+      <a href="#iso-whey">ISO-WHEY Label</a>
+      <a href="#third-party-tested">Third-Party Tested?</a>
+      <a href="#zero-carb-keto">Really Zero Carb?</a>
+      <a href="#cost">Cost per 25 g</a>
+      <a href="#buyers">Taste and Complaints</a>
+      <a href="#vs-isopure">vs Isopure Zero Carb</a>
+      <a href="#who">Who Should Buy It</a>
+      <a href="#mistakes">Common Mistakes</a>
+      <a href="#faq">FAQ</a>
+    </TableOfContents>
+
+    <!-- Content -->
+    <div class="max-w-3xl mx-auto px-4 pb-16 lg:pb-24">
+      <div class="prose prose-lg prose-blue max-w-none text-gray-700 leading-relaxed">
+        <p class="lede">
+          KetoGenics Zero Carb is a genuinely zero-carb, stevia-sweetened whey and casein blend with 22 g of protein per scoop for about $2.03 per 25 g, but it has no third-party certification and sells only on the brand's site. ISO-WHEY adds protein but, in flavored versions, sucralose. Below: both labels, testing, cost, buyer feedback and Amazon alternatives.
+        </p>
+
+        <QuickPicks products={PRODUCTS} />
+
+        <div id="short-answer" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            1. Ketogenics Protein Powder: The Short Answer
+          </h2>
+
+          <p>
+            KetoGenics makes a genuinely zero-carb protein powder with a short, stevia-sweetened label, and at about $2.03 per 25 g of protein it is fairly priced, but it carries no third-party certification and you can only buy it on the brand's own site. Its flagship, <strong>Zero Carb, Zero Sugar Keto Protein Powder</strong>, gives 22 g of protein, 100 calories and 0 g of carbohydrate per scoop, per the label at the time of writing. The second product, <strong>ISO-WHEY</strong>, gives 25 g of protein but uses sucralose in the flavored versions we checked.
+          </p>
+
+          <p>
+            <strong>Buy it if</strong> you are on keto or low carb, you want stevia rather than sucralose, and you like a thicker shake you can also bake with. <strong>Skip it if</strong> you need an NSF or Informed Choice certified powder, you want the most protein per scoop, or you would rather order through Amazon. For the full low-carb field, see our <a href='/best-low-carb-protein-powder/'>best low carb protein powder</a> guide.
+          </p>
+
+          <div class="overflow-hidden border border-gray-200 rounded-2xl my-8">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm"></th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Zero Carb (Chocolate Milkshake)</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">ISO-WHEY (Chocolate Cereal Milk)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Protein per scoop</td>
+                    <td class="px-4 py-4 text-gray-700">22 g</td>
+                    <td class="px-4 py-4 text-gray-700">25 g</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Calories</td>
+                    <td class="px-4 py-4 text-gray-700">100</td>
+                    <td class="px-4 py-4 text-gray-700">115</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Carbohydrate</td>
+                    <td class="px-4 py-4 text-gray-700">0 g</td>
+                    <td class="px-4 py-4 text-gray-700">1.5 g</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Protein source</td>
+                    <td class="px-4 py-4 text-gray-700">Whey isolate + micellar casein</td>
+                    <td class="px-4 py-4 text-gray-700">Whey isolate</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Sweetener</td>
+                    <td class="px-4 py-4 text-gray-700">Stevia</td>
+                    <td class="px-4 py-4 text-gray-700">Sucralose</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Servings / price</td>
+                    <td class="px-4 py-4 text-gray-700">28 / $49.99</td>
+                    <td class="px-4 py-4 text-gray-700">24 / $49.99</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Cost per 25 g</td>
+                    <td class="px-4 py-4 text-gray-700">About $2.03</td>
+                    <td class="px-4 py-4 text-gray-700">About $2.08</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Third-party certified</td>
+                    <td class="px-4 py-4 text-gray-700">No</td>
+                    <td class="px-4 py-4 text-gray-700">No</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <p>
+            Label figures are per the KetoGenics supplement-facts panels at the time of writing and vary by flavor. Prices are the brand-site prices we saw on November 21, 2026, before shipping.
+          </p>
+        </div>
+
+        <!-- Picks -->
+        <div id="top-picks" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            2. Both KetoGenics Proteins and Three Amazon Alternatives
+          </h2>
+
+          <p>
+            The first two cards are the KetoGenics products this review covers; they are sold on KetoShop.com, not Amazon, so their prices are brand-site prices before shipping. The next three are the closest powders you can buy on Amazon. All prices are the ones we saw on November 21, 2026, and they change often.
+          </p>
+
+          {PRODUCTS.map((product, index) => (
+            <ProductCard product={product} rank={index + 1} />
+          ))}
+        </div>
+
+        <div id="zero-carb" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            3. What Is in Ketogenics Zero Carb Zero Sugar Keto Protein Powder?
+          </h2>
+
+          <p>
+            KetoGenics Zero Carb is a blend of whey protein isolate and micellar casein, sweetened only with stevia, with 22 g of protein and 0 g of carbohydrate in each 27.1 g scoop of Chocolate Milkshake, per the label at the time of writing. The brand describes the blend as 80% whey isolate and 20% micellar casein. The bag itself is printed "Zero Carb Natural Protein", while the store lists it as "Zero Carb, Zero Sugar Keto Protein Powder", so both names refer to the same product.
+          </p>
+
+          <p>
+            The rest of the Chocolate Milkshake panel is just as lean: 100 calories, 0 g of fat, 0 g of total sugars, 0 g of added sugar, 0 g of sugar alcohol and 0 g of fiber, with 115 mg of sodium, 106 mg of calcium and 115 mg of potassium. There are 28 servings in a 1.67 lb (758.8 g) bag. The printed ingredient list is whey protein isolate, micellar casein, natural flavors, sunflower lecithin, cocoa, stevia and sea salt. The only declared allergen is milk.
+          </p>
+
+          <p>
+            The Unflavored/Unsweetened version is even simpler. Per its label, a 25 g scoop gives the same 22 g of protein and 100 calories with only three ingredients: whey protein isolate, micellar casein and sunflower lecithin. That makes it the cleanest option in the whole KetoGenics range for people who want to add protein to coffee, soups or baking without any sweetener.
+          </p>
+
+          <h3 class="text-2xl font-bold text-gray-900 mt-10 mb-4">Why the casein matters</h3>
+
+          <p>
+            Micellar casein digests more slowly than whey and thickens liquids. That is why KetoGenics pitches Zero Carb for baking, protein "pudding" stirred into Greek yogurt, and a pre-bed shake. It also explains the slightly lower protein per scoop: a 27 g scoop delivering 22 g is about 81% protein by weight, which is good, and the brand's own Unflavored ISO-WHEY reaches about 90%, since it has nothing but isolate and lecithin. If you plan to bake, the blend is the more practical choice; if you only drink shakes after training, either works.
+          </p>
+
+          <p>
+            The front of the bag also says lactose free, gluten free, aspartame free and soy free, and labels the product "keto friendly". The back carries GMP, non-GMO and "FDA registered facility" badges. Those are manufacturing and sourcing claims, not independent testing, a point we come back to below. Zero Carb comes in eleven flavors, from Chocolate Milkshake and Unicorn Vanilla Milkshake to Cinnamon Roll, Blueberry Donut, Iced Oatmeal Cookie and Peach Cobbler.
+          </p>
+        </div>
+
+        <div id="iso-whey" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            4. What Is in Ketogenics Iso-Whey Whey Protein Isolate Keto Friendly Protein Powder?
+          </h2>
+
+          <p>
+            KetoGenics ISO-WHEY is a 100% whey protein isolate with 25 g of protein per scoop, per the label at the time of writing, and in the flavored version we read it is sweetened with sucralose rather than stevia. The store calls it "ISO-WHEY Whey Protein Isolate, Keto Friendly Protein Powder", which is why searchers type the long name. It is the brand's higher-protein option, built for people who care more about grams per scoop than about a stevia-only label.
+          </p>
+
+          <p>
+            A 31 g scoop of Chocolate Cereal Milk gives 115 calories, 0.5 g of fat, 15 mg of cholesterol, 150 mg of sodium, 1.5 g of carbohydrate, 0 g of fiber, less than 1 g of total sugars and 0 g of added sugar, with 24 servings per bag. The printed ingredient list is whey protein isolate, natural and artificial flavors, sunflower lecithin, cocoa, sea salt and sucralose. Milk is the only declared allergen.
+          </p>
+
+          <p>
+            That label differs from the product page in two ways. The page lists "natural flavors" and "no aspartame" among the features, which is true as far as aspartame goes, but the Chocolate Cereal Milk panel shows artificial flavors and sucralose. The page also quotes "1 to 1.5 net carbs" and 110 to 115 calories, which matches the label better. If you avoid sucralose, read the back-panel photo for your flavor on the KetoShop product page before ordering, because sweeteners can vary by flavor.
+          </p>
+
+          <p>
+            The exception is Unflavored/Unsweetened ISO-WHEY. Per its label, a 27.8 g scoop gives 25 g of protein, 100 calories, 0 g of fat, 0 g of carbohydrate and 55 mg of sodium, and the only ingredients are whey protein isolate and sunflower lecithin. At about 90% protein by weight, that is the most protein-dense product KetoGenics sells, and it suits people who flavor their own shakes or want a neutral base for baking.
+          </p>
+
+          <p>
+            ISO-WHEY comes in eleven flavors, including Peanut Butter Cookie, Cold Brew Coffee, Strawberry Shortcake, Fruity Cereal, Cinnamon Cereal Milk, Maple Syrup French Toast and Pumpkin Spice Glazed Donut. KetoGenics says the whey is cold-processed with microfiltration and ultrafiltration and is non-denatured. Those are processing claims we can't verify independently, and they don't change the numbers on the panel, which is what matters for macros.
+          </p>
+        </div>
+
+        <div id="third-party-tested" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            5. Is Ketogenics Protein Powder Third-Party Tested?
+          </h2>
+
+          <p>
+            No: KetoGenics does not say its protein powders are third-party tested, and we found no certification for them from NSF, Informed Choice, Informed Sport, BSCG or the Clean Label Project at the time of writing. The product pages and labels mention GMP manufacturing, non-GMO ingredients and an FDA-registered facility, and the bags say "Formulated in the U.S.A." None of those is an independent check of what is in the bag.
+          </p>
+
+          <p>
+            The difference matters. GMP (good manufacturing practice) is the baseline set of rules every US supplement maker is supposed to follow. "FDA registered" means the facility is on the FDA's list, not that the FDA has approved or tested the product. A third-party certification like NSF Certified for Sport or Informed Choice means an outside lab tests batches for banned substances, and for NSF also checks that the label matches the contents. KetoGenics publishes no certificates of analysis on its product pages either.
+          </p>
+
+          <p>
+            The labels also show that the product is "manufactured for" KetoGenics Inc. of Mahopac, New York, which means another company makes it under contract. That is normal across the supplement industry and not a red flag in itself, but it does mean you are trusting the contract manufacturer's quality controls without public test results.
+          </p>
+
+          <p>
+            For most people on keto who simply want a low-carb shake, the lack of certification is a mild concern rather than a deal-breaker. For drug-tested athletes, anyone worried about heavy metals, or anyone who wants proof the protein figure is accurate, it is a reason to choose a certified powder instead. <a href='/dymatize-protein-powder-review/'>Dymatize ISO100</a> carries the Informed Choice mark, per Dymatize, with 1 to 2 g of carbs per scoop. Our guide to <a href='/best-protein-powder-without-heavy-metals/'>protein powders without heavy metals</a> lists the products with published contaminant results.
+          </p>
+
+          <div class="bg-gray-900 text-white rounded-2xl p-6 lg:p-8 my-8">
+            <p class="text-xs font-black uppercase tracking-widest text-[#38BDF8] mb-3">THE RULE</p>
+            <p class="text-xl font-bold text-white mb-3">Badges are not testing.</p>
+            <p class="text-gray-300 leading-relaxed m-0">GMP, non-GMO and FDA-registered badges describe how and where a product is made. Only an outside certifier such as NSF or Informed Choice, or a published lab report, tells you a batch was checked.</p>
+          </div>
+        </div>
+
+        <div id="zero-carb-keto" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            6. Is Ketogenics Zero Carb Really Zero Carb and Keto Friendly?
+          </h2>
+
+          <p>
+            Yes, as far as labels go: KetoGenics Zero Carb lists 0 g of carbohydrate, 0 g of sugar and 0 g of sugar alcohol per scoop, which fits easily into a strict keto diet. US labeling rules let a food declare 0 g when a serving has less than 0.5 g, so a scoop may hold a trace of carbohydrate from the milk proteins and cocoa. Even if it did contain just under half a gram, two shakes a day would use about 1 g of a typical 20 to 50 g daily keto budget.
+          </p>
+
+          <p>
+            The zero figure is believable for this kind of formula. Whey isolate is filtered until most of the lactose and fat are removed, and micellar casein is similarly low in lactose. Stevia adds no carbohydrate at the amounts used for sweetening. Compare that with many "keto" shakes that rely on fiber or sugar alcohols to advertise low net carbs while their total carbohydrate is several grams higher.
+          </p>
+
+          <p>
+            ISO-WHEY is a little different. The flavored scoop we read lists 1.5 g of total carbohydrate and under 1 g of sugar, so it is low carb rather than zero carb. That is still trivial for most keto dieters, and Unflavored ISO-WHEY lists 0 g. If you count every gram, Zero Carb or Unflavored ISO-WHEY are the two to pick.
+          </p>
+
+          <h3 class="text-2xl font-bold text-gray-900 mt-10 mb-4">What about insulin and blood sugar?</h3>
+
+          <p>
+            Protein itself causes some insulin release, and whey does so more than most proteins. That doesn't break ketosis for most people at normal serving sizes, but it is worth knowing if you are using keto for medical reasons. One buyer on the brand's review page says she was recently diagnosed with type 2 diabetes and that the shake doesn't spike her blood sugar. That is a single report, not a study. If you have diabetes, take glucose-lowering medication, or have kidney disease, talk to your doctor or a registered dietitian before adding a protein powder. Our guide to the <a href='/best-protein-powder-for-diabetics/'>best protein powder for diabetics</a> covers what to look for.
+          </p>
+
+          <p>
+            The lactose-free claim also deserves a caveat. Whey isolate and casein both start as milk, and "lactose free" on a protein powder usually means very low lactose rather than none at all. Most people with lactose intolerance handle isolate well, but anyone with a milk allergy should avoid both KetoGenics dairy powders entirely. The brand's Iso Plant line, a pea and rice protein blend, is its dairy-free option.
+          </p>
+        </div>
+
+        <div id="cost" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            7. How Much Does Ketogenics Cost per 25 g of Protein?
+          </h2>
+
+          <p>
+            KetoGenics Zero Carb costs about $2.03 per 25 g of protein and ISO-WHEY about $2.08, at the $49.99 brand-site prices we saw on November 21, 2026, before shipping. Both were shown discounted from a $59.99 list price. At the list price, Zero Carb would be about $2.43 per 25 g and ISO-WHEY about $2.50.
+          </p>
+
+          <p>
+            The math is simple. Zero Carb has 28 servings of 22 g, which is 616 g of protein, or 24.6 portions of 25 g; $49.99 divided by 24.6 is about $2.03. ISO-WHEY has 24 servings of 25 g, which is exactly 24 portions; $49.99 divided by 24 is about $2.08. Neither price includes shipping, which is added at checkout on KetoShop.com, so a single-bag order will cost more per gram than these figures.
+          </p>
+
+          <div class="overflow-hidden border border-gray-200 rounded-2xl my-8">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Powder</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Price seen</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Servings x protein</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Cost per 25 g</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">KetoGenics Zero Carb</td>
+                    <td class="px-4 py-4 text-gray-700">$49.99 (brand site)</td>
+                    <td class="px-4 py-4 text-gray-700">28 x 22 g</td>
+                    <td class="px-4 py-4 text-gray-700">About $2.03</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">KetoGenics ISO-WHEY</td>
+                    <td class="px-4 py-4 text-gray-700">$49.99 (brand site)</td>
+                    <td class="px-4 py-4 text-gray-700">24 x 25 g</td>
+                    <td class="px-4 py-4 text-gray-700">About $2.08</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Dymatize ISO100, 20 servings</td>
+                    <td class="px-4 py-4 text-gray-700">$42.49 (Amazon)</td>
+                    <td class="px-4 py-4 text-gray-700">20 x 25 g</td>
+                    <td class="px-4 py-4 text-gray-700">About $2.12</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Naked Whey Isolate, Unflavored</td>
+                    <td class="px-4 py-4 text-gray-700">$74.99 (Amazon)</td>
+                    <td class="px-4 py-4 text-gray-700">28 x 30 g</td>
+                    <td class="px-4 py-4 text-gray-700">About $2.23</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Isopure Zero Carb, 1 lb</td>
+                    <td class="px-4 py-4 text-gray-700">$34.99 (Amazon)</td>
+                    <td class="px-4 py-4 text-gray-700">15 x 25 g</td>
+                    <td class="px-4 py-4 text-gray-700">About $2.33</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <p>
+            That puts KetoGenics in the middle of the whey isolate market: cheaper per gram than small tubs of Isopure or Naked, similar to a small tub of ISO100, and well above budget whey concentrates that run closer to $1 per 25 g. Larger tubs of the Amazon alternatives bring their cost down, while KetoGenics sells one bag size for its proteins, so the gap closes if you buy in bulk elsewhere.
+          </p>
+
+          <p>
+            If you want to try a flavor before committing, KetoGenics sells sample packs: an 11-pack of Zero Carb or ISO-WHEY for $29.99 and a 12-pack of Iso Plant for $26.99, at the prices we saw. Those cost far more per gram than a full bag but are a cheaper way to avoid a flavor you don't like. For more ways to pay less, see our <a href='/best-cheap-protein-powder/'>cheap protein powder</a> guide.
+          </p>
+        </div>
+
+        <div id="buyers" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            8. What Do Buyers Say About Ketogenics Taste and Mixing?
+          </h2>
+
+          <p>
+            Buyers rate KetoGenics very highly on its own site: Zero Carb shows a 4.95 average from 816 reviews and ISO-WHEY a 4.99 average from 462 reviews on the brand's review widget at the time of writing. Every review shown is four or five stars. Those are reviews hosted by the brand, though, so treat them as a sign that regular customers are happy, not as an independent rating. There are no Amazon reviews to compare against because the products aren't sold there.
+          </p>
+
+          <p>
+            The praise is consistent. Buyers report that the powders mix easily, taste sweet enough to satisfy a sweet tooth, and feel creamy rather than gritty. Several reviewers mix Zero Carb with unsweetened almond milk or other plant milks, add it to coffee for flavor and creaminess, or blend it with ice into a smoothie. ISO-WHEY reviewers single out Peanut Butter Cookie and Fruity Cereal, and one with a sensitive stomach reports no digestive trouble.
+          </p>
+
+          <h3 class="text-2xl font-bold text-gray-900 mt-10 mb-4">Which flavor is best?</h3>
+
+          <p>
+            Among the reviews we read, Zero Carb's Strawberry Milk and Iced Oatmeal Cookie get named often, and Chocolate Milkshake is the brand's lead image. For ISO-WHEY, buyers mention Peanut Butter Cookie, Fruity Cereal and Unflavored for baking. Taste is personal, and we have not tasted these ourselves, which is exactly why the sample packs are worth considering before a full bag.
+          </p>
+
+          <h3 class="text-2xl font-bold text-gray-900 mt-10 mb-4">Common complaints</h3>
+
+          <p>
+            The complaints are less about the powder than about buying it. The biggest is availability: KetoGenics is not on Amazon, so you pay shipping and wait for a direct order. The second is flavor strength. KetoGenics itself says the stevia-sweetened Zero Carb has a "much lighter and more mild flavor" than artificially sweetened powders, so buyers used to sucralose-heavy shakes may find it muted, especially mixed with water. The brand's tip is to use 10 to 12 oz of very cold almond milk instead of water. The third is protein per scoop: 22 g in Zero Carb is a few grams short of most isolates.
+          </p>
+        </div>
+
+        <div id="vs-isopure" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            9. Ketogenics vs Isopure Zero Carb: Which Keto Protein Is Better?
+          </h2>
+
+          <p>
+            Isopure Zero Carb has more protein per scoop and is easier to buy, while KetoGenics Zero Carb has the cleaner, stevia-only label and costs a little less per gram at the prices we saw. Both list 0 g of carbohydrate per scoop, per their labels. Isopure gives 25 g of protein from pure whey isolate for about 110 calories in Creamy Vanilla; KetoGenics gives 22 g from whey isolate and casein for 100 calories.
+          </p>
+
+          <p>
+            The sweetener is the clearest split. Isopure uses sucralose, and KetoGenics Zero Carb uses only stevia. People who avoid artificial sweeteners will prefer KetoGenics; people who find stevia bitter will prefer Isopure. Isopure also adds a vitamin blend, which KetoGenics doesn't. Neither carries an NSF or Informed certification in our database. Our <a href='/isopure-protein-powder-review/'>Isopure review</a> and the <a href='/protein-powder/isopure-zero-carb/'>Isopure Zero Carb label page</a> go further, and the <a href='/compare/'>side-by-side compare tool</a> lines up labels for any two products in our database.
+          </p>
+
+          <p>
+            On price, the 1 lb Isopure bag we saw on Amazon works out to about $2.33 per 25 g, against about $2.03 for KetoGenics before shipping. Larger Isopure tubs cost less per gram and ship free with Prime, so for regular buyers the two end up close. If you want a third-party tested option instead of either, <a href='/dymatize-protein-powder-review/'>Dymatize ISO100</a> is the closest, at about $2.12 per 25 g in the 20-serving tub.
+          </p>
+
+          <p>
+            Plant-based keto dieters have a different set of choices. KetoGenics' own Iso Plant blends pea and rice protein with stevia and lists 21 to 23 g of protein per scoop and about 1 net carb, per the brand. Today's <a href='/aloha-protein-powder-review/'>Aloha protein powder review</a> covers another plant blend popular with low-carb eaters, and our <a href='/best-unflavored-protein-powder/'>unflavored protein powder</a> guide lists the plain options that suit keto baking.
+          </p>
+        </div>
+
+        <div id="who" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            10. Who Should Buy Ketogenics, and Who Should Skip It?
+          </h2>
+
+          <p>
+            KetoGenics Zero Carb is a good buy for keto and low-carb dieters who want a stevia-sweetened, zero-carb shake they can also bake with, and who are happy to order from the brand's site. The label is short, the macros are as lean as protein powders get, and the price per gram is fair for a whey isolate blend. If the casein-thickened texture and dessert flavors appeal, it is one of the better-designed keto proteins we have looked at on paper.
+          </p>
+
+          <p>
+            ISO-WHEY makes more sense for people who mainly drink protein after training and want 25 g per scoop. Choose Unflavored ISO-WHEY if you want zero carbs, no sweetener and a two-ingredient label; choose a flavored one only if sucralose doesn't bother you. Either way, the cost per 25 g lands within a few cents of Zero Carb.
+          </p>
+
+          <p>
+            Skip KetoGenics if you are a drug-tested athlete or simply want proof of what is in the bag, since it has no third-party certification; Dymatize ISO100 is the obvious swap. Skip it if you want Prime shipping or store pickup, since it isn't on Amazon or in stores as far as we could find. If you'd rather buy protein on a pharmacy run, our <a href='/walgreens-protein-powder/'>Walgreens protein powder</a> guide covers what is on the shelf there. And skip both dairy powders if you have a milk allergy.
+          </p>
+
+          <p>
+            Finally, a health note. Protein powder is food, but people with kidney disease, those who are pregnant or breastfeeding, older adults with medical conditions, and anyone on medication for diabetes should check with a doctor or registered dietitian first, especially before combining a high-protein shake with a strict ketogenic diet. KetoGenics' own label warns that pregnant or nursing women, people under 18 and anyone with a known medical condition should consult a physician.
+          </p>
+        </div>
+
+        <!-- Common Mistakes -->
+        <div id="mistakes" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            11. Common Mistakes to Avoid
+          </h2>
+
+          <div class="space-y-6 my-8">
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Assuming every KetoGenics powder is stevia-sweetened</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Zero Carb uses stevia, but the flavored ISO-WHEY we checked lists sucralose and artificial flavors. If you avoid sucralose, read the back-panel photo for your exact flavor on the KetoShop page, or stick with Zero Carb, which uses stevia, or Unflavored ISO-WHEY, which has no sweetener at all.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Treating GMP and FDA badges as third-party testing</h3>
+              <p class="text-gray-700 text-sm m-0">
+                The KetoGenics bags carry GMP, non-GMO and FDA-registered badges. These describe the facility and sourcing, not independent batch testing. If you are subject to drug testing or want verified label accuracy, choose a product certified by NSF or Informed Choice rather than relying on manufacturing badges.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Comparing price per bag instead of per gram</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Both KetoGenics proteins cost $49.99, but Zero Carb gives 616 g of protein and ISO-WHEY 600 g. The fair comparison is cost per 25 g: about $2.03 and $2.08 before shipping. Add the shipping charge from checkout before comparing with Amazon tubs that ship free.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Mixing Zero Carb with water and expecting a rich shake</h3>
+              <p class="text-gray-700 text-sm m-0">
+                KetoGenics says its stevia-only formula tastes lighter than artificially sweetened powders. Buyers who like it mostly use cold almond, coconut or other low-carb milk, or blend it with ice. Water alone gives the thinnest, mildest result, which is where most flavor disappointment comes from.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Ordering a full bag of an untried flavor</h3>
+              <p class="text-gray-700 text-sm m-0">
+                With eleven flavors per line and no Amazon return route, a flavor you dislike means a wasted $49.99. The 11-serving sample packs cost $29.99 and let you try several first. Start with the flavors buyers name most often, such as Strawberry Milk or Peanut Butter Cookie.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ -->
+        <div id="faq" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            12. Frequently Asked Questions
+          </h2>
+
+          <div class="faq-list">
+            <details class="faq-item">
+              <summary><h3>Is Ketogenics third-party tested?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  No. KetoGenics does not say its protein powders are third-party tested, and we found no NSF, Informed Choice, Informed Sport or Clean Label Project certification for them at the time of writing. The labels show GMP, non-GMO and FDA-registered facility badges, which cover manufacturing, not independent batch testing. For a tested low-carb option, Dymatize ISO100 carries the Informed Choice mark, per Dymatize.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>Is Ketogenics protein powder healthy and clean?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  The labels are clean by protein powder standards. Zero Carb Chocolate Milkshake lists seven ingredients, sweetened with stevia, and Unflavored lists three. Flavored ISO-WHEY adds sucralose and artificial flavors. Both are low in sodium and have no added sugar. Clean labels are not the same as tested purity, though, and KetoGenics publishes no contaminant results, so heavy-metal levels are unknown.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>Does Ketogenics Zero Carb contain casein?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  Yes. Zero Carb is a blend of whey protein isolate and micellar casein, which KetoGenics describes as 80% whey isolate and 20% casein, and micellar casein is printed second in the ingredient list. That is what makes it thicker than a pure isolate. If you want whey only, ISO-WHEY lists whey protein isolate as its sole protein source, per its label.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>Does Ketogenics protein powder contain sucralose?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  It depends on the product. Zero Carb, Zero Sugar Keto Protein Powder is sweetened only with stevia, per its label. The flavored ISO-WHEY we checked, Chocolate Cereal Milk, lists sucralose and natural and artificial flavors. The Unflavored versions of both products contain no sweetener at all. Check the back-panel photo for your flavor on the brand's product page before ordering.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>Which Ketogenics flavor is best?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  Buyer reviews on the brand's site most often praise Zero Carb's Strawberry Milk and Iced Oatmeal Cookie, plus ISO-WHEY's Peanut Butter Cookie and Fruity Cereal. Unflavored ISO-WHEY gets credit from bakers. We have not tasted them ourselves. Because stevia-sweetened Zero Carb tastes milder, buyers suggest mixing it with cold almond or coconut milk rather than water.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>What are the most common Ketogenics complaints?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  Most complaints concern buying rather than the powder. KetoGenics isn't on Amazon, so orders carry shipping costs and take longer. Some buyers find stevia-only Zero Carb milder than artificially sweetened shakes, which the brand itself acknowledges. Zero Carb's 22 g of protein per scoop is also a few grams lower than most isolates. The brand's own reviews average about 4.95 stars.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>Can I buy Ketogenics protein powder on Amazon?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  Not from the brand, as far as we could find on November 21, 2026. Our Amazon searches returned no KetoGenics protein listings, and the brand sells through its own store at KetoShop.com, where both proteins were $49.99. The closest Amazon alternative is Isopure Zero Carb, which also lists 0 g of carbs and 25 g of protein per scoop but uses sucralose.
+                </p>
+              </div>
+            </details>
+
+          </div>
+        </div>
+
+        <!-- Related Guides -->
+        <div class="mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">Related Low Carb Protein Guides</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <a href="/best-low-carb-protein-powder/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#FF4500] font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Low Carb Protein Powder</h3>
+              <p class="text-gray-500 text-sm mt-2">The full field of zero- and low-carb powders, ranked by label and cost per 25 g.</p>
+            </a>
+            <a href="/isopure-protein-powder-review/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#38BDF8] font-black text-xs uppercase tracking-widest mb-2">Brand Review</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Isopure Protein Powder Review</h3>
+              <p class="text-gray-500 text-sm mt-2">The best-known zero-carb whey isolate, label by label.</p>
+            </a>
+            <a href="/aloha-protein-powder-review/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#22C55E] font-black text-xs uppercase tracking-widest mb-2">Brand Review</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Aloha Protein Powder Review</h3>
+              <p class="text-gray-500 text-sm mt-2">A plant-based blend popular with low-carb eaters who skip dairy.</p>
+            </a>
+            <a href="/best-protein-powder-for-diabetics/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#A855F7] font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Protein Powder for Diabetics</h3>
+              <p class="text-gray-500 text-sm mt-2">Low-sugar powders and what to check if you manage blood glucose.</p>
+            </a>
+          </div>
+        </div>
+
+        <!-- Closing -->
+        <div class="mt-16 bg-gray-900 text-white rounded-2xl p-6 md:p-8">
+          <h2 class="text-2xl font-black text-white mb-4">The Bottom Line</h2>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            KetoGenics Zero Carb delivers what its name promises: 0 g of carbohydrate, 0 g of sugar and a stevia-only label, with 22 g of protein per scoop for about $2.03 per 25 g before shipping. ISO-WHEY trades the stevia for sucralose in its flavored versions but gives 25 g of protein, and its Unflavored version is a two-ingredient isolate. Buyers on the brand's site are overwhelmingly happy with the taste and mixing.
+          </p>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            The catches are verification and convenience. KetoGenics publishes no third-party testing and sells only through its own store, so you pay shipping and trust the label. If that is fine, Zero Carb is a well-made keto protein. If not, Dymatize ISO100 adds Informed Choice certification and Isopure Zero Carb adds Amazon shipping, and our <a href='/best-low-carb-protein-powder/'>best low carb protein powder</a> guide covers the rest.
+          </p>
+        </div>
+
+        <MoreInCategory category="Brand Reviews" links={moreInCategory} />
+
+        <AuthorBio />
+      </div>
+    </div>
+  </article>
+</Layout>

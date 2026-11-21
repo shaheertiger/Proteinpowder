@@ -1,0 +1,888 @@
+---
+import Layout from "../layouts/Layout.astro";
+import ArticleHeader from "../components/ArticleHeader.astro";
+import TableOfContents from "../components/TableOfContents.astro";
+import ProductCard from "../components/ProductCard.astro";
+import MoreInCategory from "../components/MoreInCategory.astro";
+import { AUTHORS, DEFAULT_AUTHOR, authorSchema } from "../data/authors";
+import { SITE_NAME, SITE_URL } from "../data/site";
+import QuickPicks from "../components/QuickPicks.astro";
+import AuthorBio from "../components/AuthorBio.astro";
+import { pageDates } from "../data/dates";
+
+const moreInCategory = [
+  {
+    "title": "CVS Protein Powder",
+    "url": "/cvs-protein-powder/"
+  },
+  {
+    "title": "Equate Protein Powder",
+    "url": "/equate-protein-powder/"
+  },
+  {
+    "title": "Best Target Protein Powder",
+    "url": "/best-target-protein-powder/"
+  }
+];
+const author = AUTHORS[DEFAULT_AUTHOR];
+const dates = pageDates(Astro.url.pathname, { published: "2026-11-21", modified: "2026-11-21" });
+const title = "Walgreens Protein Powder: Store-Brand Whey vs Amazon Prices";
+const description =
+  "Yes: Walgreens sells its own 32 oz whey with 30 g protein, about $1.39 per 25 g at $29.99. Name brands there cost up to 70% more than on Amazon. Full list.";
+
+const PRODUCTS: {
+  id: string;
+  name: string;
+  brand?: string;
+  badge: string;
+  category: string;
+  description: string;
+  pros: string[];
+  cons: string[];
+  bottomLine: string;
+  specs?: Record<string, string>;
+  rating?: number;
+  reviewCount?: number;
+  amazonUrl?: string;
+}[] = [
+  {
+    "id": "walgreens-protein-powder-walgreens-whey-blend",
+    "name": "Walgreens Whey Protein Powder Blend, Vanilla or Chocolate, 32 oz",
+    "brand": "Walgreens",
+    "badge": "Walgreens Store Brand",
+    "category": "Whey protein blend with added creatine, taurine and glutamine",
+    "description": "Walgreens' own protein powder comes in vanilla and chocolate 32 oz tubs, both listed at $29.99 on Walgreens.com when we checked. Per the label as reproduced by SuppCo and FatSecret at the time of writing, two scoops (50 g) give 30 g of protein and about 180 calories, with 9 g of carbohydrate and 2.5 g of fat, across about 18 servings. It adds a 4.5 g blend of taurine, creatine monohydrate and L-glutamine, and is sweetened with sucralose, acesulfame potassium and some sugar. That is about $1.39 per 25 g at full price.",
+    "pros": [
+      "30 g of protein per two-scoop serving, per the label",
+      "About $1.39 per 25 g at full price, and far less on buy-one-get-one deals",
+      "Easy to find: Walgreens lists it for store pickup in most locations"
+    ],
+    "cons": [
+      "No NSF, Informed Sport or other third-party certification published",
+      "Dextrose, maltodextrin, corn starch and sugar sit on the ingredient list",
+      "The 4.5 g creatine, taurine and glutamine blend is proprietary, so amounts are not disclosed"
+    ],
+    "bottomLine": "The cheapest protein per gram in a Walgreens aisle, especially on a promotion. Skip it if you want a short ingredient list or a testing seal.",
+    "specs": {
+      "Protein / serving": "30 g (2 scoops, 50 g)",
+      "Calories": "About 180",
+      "Third-party testing": "None published",
+      "Cost per 25 g": "About $1.39 (Walgreens price seen, about 18 servings)"
+    }
+  },
+  {
+    "id": "walgreens-protein-powder-on-gold-standard-small",
+    "name": "Optimum Nutrition Gold Standard 100% Whey, Double Rich Chocolate, 0.68 lb",
+    "brand": "Optimum Nutrition",
+    "badge": "Best Name Brand at Walgreens",
+    "category": "Whey isolate, concentrate and peptide blend",
+    "description": "Gold Standard is the name-brand whey Walgreens stocks most widely, in the same small 10.9 oz (0.68 lb) tub Amazon sells. Per the label at the time of writing, a 31 g scoop gives 24 g of protein and about 120 calories, with whey isolate listed first, and Optimum Nutrition describes it as banned-substance tested. The small tub holds about 10 servings. Amazon had the chocolate at $19.99 when we checked, about $2.08 per 25 g, against $21.99 at Walgreens, about $2.29. The 5 lb Amazon tub drops it to about $1.44.",
+    "pros": [
+      "24 g of protein in about 120 calories, a leaner scoop than Walgreens whey",
+      "Banned-substance tested, per Optimum Nutrition",
+      "Small tub is priced almost the same at Walgreens and on Amazon, so it is a fair in-store buy"
+    ],
+    "cons": [
+      "About $2.08 per 25 g in the small tub at the Amazon price we saw",
+      "Small tubs are the most expensive way to buy it; the big sizes are online",
+      "Contains acesulfame potassium"
+    ],
+    "bottomLine": "The name brand to grab at Walgreens if you need a tub today. For regular use, buy the 5 lb tub online.",
+    "specs": {
+      "Protein / serving": "24 g (31 g scoop)",
+      "Calories": "About 120",
+      "Third-party testing": "Banned-substance tested (brand)",
+      "Cost per 25 g": "About $2.08 (Amazon price seen, 0.68 lb)"
+    },
+    "amazonUrl": "https://www.amazon.com/dp/B0F1ZV7PWW"
+  },
+  {
+    "id": "walgreens-protein-powder-premier-protein-whey",
+    "name": "Premier Protein 100% Whey Protein Powder, Vanilla, 17 servings",
+    "brand": "Premier Protein",
+    "badge": "Most Protein per Scoop",
+    "category": "Whey concentrate and isolate blend",
+    "description": "Walgreens sells Premier Protein's powder in a 28 oz tub at $42.99, which Walgreens itself prices at $1.54 per ounce. Per the label at the time of writing, one scoop gives 30 g of protein and about 150 calories with no added sugar, sweetened with sucralose and acesulfame potassium. Amazon had the 17-serving, 1.5 lb vanilla tub at $29.99 when we checked, about $1.25 per ounce and about $1.47 per 25 g of protein. By weight, the Walgreens tub works out near $1.80 per 25 g.",
+    "pros": [
+      "30 g of protein in a single scoop, per the label",
+      "No added sugar, per Premier Protein",
+      "About $1.47 per 25 g at the Amazon price we saw"
+    ],
+    "cons": [
+      "Roughly 20% more per ounce at Walgreens than on Amazon",
+      "No NSF or Informed certification we could find",
+      "Two artificial sweeteners"
+    ],
+    "bottomLine": "A strong whey if you want 30 g a scoop without Walgreens' added sugars. Buy it online; the shelf price is the weak point.",
+    "specs": {
+      "Protein / serving": "30 g (1 scoop)",
+      "Calories": "About 150",
+      "Third-party testing": "No sport certification found",
+      "Cost per 25 g": "About $1.47 (Amazon price seen)"
+    },
+    "amazonUrl": "https://www.amazon.com/dp/B06ZZ3PJQD"
+  },
+  {
+    "id": "walgreens-protein-powder-orgain-organic-vegan",
+    "name": "Orgain Organic Vegan Protein Powder, Creamy Chocolate Fudge, 1.02 lb",
+    "brand": "Orgain",
+    "badge": "Plant Pick Walgreens Stocks",
+    "category": "Organic pea, brown rice and chia protein blend",
+    "description": "Walgreens has no store-brand plant protein, so Orgain is the dairy-free tub most stores carry, in a 16.32 oz (1.02 lb) size listed at $26.99. Per the label at the time of writing, a two-scoop, 46 g serving gives 21 g of protein and about 150 calories from organic pea, brown rice and chia, sweetened with stevia, across about 10 servings. Amazon had the same 1.02 lb tub at $19.98 when we checked, about $2.38 per 25 g; at the Walgreens price it is about $3.21. The 2.03 lb Amazon tub at $31.98 is about $1.90.",
+    "pros": [
+      "Dairy-free and vegan for anyone who cannot use whey",
+      "USDA Organic and stevia-sweetened, per Orgain",
+      "Same tub is about $7 cheaper on Amazon than on the Walgreens shelf"
+    ],
+    "cons": [
+      "About $2.38 per 25 g in the small tub even on Amazon",
+      "21 g of protein per serving, less than any whey here",
+      "Some buyers find it thick or chalky"
+    ],
+    "bottomLine": "The plant protein to buy if you shop at Walgreens, but buy the 2 lb tub online rather than the 1 lb tub in store.",
+    "specs": {
+      "Protein / serving": "21 g (46 g, 2 scoops)",
+      "Calories": "About 150",
+      "Third-party testing": "USDA Organic only",
+      "Cost per 25 g": "About $2.38 (Amazon price seen, 1.02 lb)"
+    },
+    "amazonUrl": "https://www.amazon.com/dp/B01BGQ1HF8"
+  },
+  {
+    "id": "walgreens-protein-powder-premier-protein-shake",
+    "name": "Premier Protein 30g High Protein Shake, Chocolate, 11 oz, 12 Pack",
+    "brand": "Premier Protein",
+    "badge": "Best Protein Shake at Walgreens",
+    "category": "Ready-to-drink milk protein shake",
+    "description": "Premier Protein shakes fill more of the Walgreens cooler aisle than any other brand, sold in 11 oz four-packs at $15.49, or two for $29 on promotion. Per the label at the time of writing, each shake gives 30 g of protein and 160 calories with no added sugar. Amazon had the 12-pack at $26.74 when we checked, about $2.23 a shake and $1.86 per 25 g of protein. At Walgreens, a single four-pack works out to $3.87 a shake, about $3.23 per 25 g.",
+    "pros": [
+      "30 g of protein in 160 calories, per the label",
+      "No mixing, no shaker, shelf-stable until opened",
+      "About $1.86 per 25 g in the Amazon 12-pack"
+    ],
+    "cons": [
+      "Walgreens four-packs cost about 70% more per shake than the Amazon 12-pack",
+      "Any ready-to-drink shake costs more per gram than powder",
+      "Sucralose and acesulfame potassium"
+    ],
+    "bottomLine": "The shake to grab at Walgreens when you need one now. For a weekly habit, the Amazon 12-pack is the far cheaper way to buy the same bottle.",
+    "specs": {
+      "Protein / serving": "30 g (11 oz shake)",
+      "Calories": "160",
+      "Third-party testing": "No sport certification found",
+      "Cost per 25 g": "About $1.86 (Amazon price seen, 12-pack)"
+    },
+    "amazonUrl": "https://www.amazon.com/dp/B008JGIZGS"
+  }
+];
+
+const schema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Home",
+          item: `${SITE_URL}/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Best Lists",
+          item: `${SITE_URL}/best-of/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 3,
+          name: "Walgreens Protein Powder",
+          item: `${SITE_URL}/walgreens-protein-powder/`,
+        },
+      ],
+    },
+    {
+      "@type": "FAQPage",
+      mainEntity: [
+        {
+          "@type": "Question",
+          "name": "Is Walgreens protein powder third-party tested?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Not that Walgreens publishes. Walgreens Whey Protein Powder Blend carries no NSF Certified for Sport, Informed Sport or Clean Label Project seal we could find, and SuppCo notes it has not verified product-specific testing. Walgreens also does not advertise a retailer testing program like CVS's. If you need verified testing, choose a product listed in the NSF or Informed Sport databases."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does Walgreens have its own brand of protein powder?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Walgreens sells Walgreens Whey Protein Powder Blend in vanilla and chocolate 32 oz tubs, listed at $29.99 each on Walgreens.com when we checked. Per the label, two scoops give 30 g of protein and about 180 calories. There is no Walgreens-brand plant protein, isolate or casein; the store also makes its own ready-to-drink nutritional shakes."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is Walgreens whey protein healthy and clean?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It is a reasonable protein source but not a clean label. Alongside the whey, the ingredient list includes dextrose, maltodextrin, corn starch, sugar, sucralose, acesulfame potassium and a proprietary creatine, taurine and glutamine blend. Healthy adults can use it, but if you want a short ingredient list, a whey such as Gold Standard or Premier Protein is simpler."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does Walgreens protein powder contain creatine?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, a little. Each serving includes a 4.5 g proprietary blend of taurine, creatine monohydrate and L-glutamine, per the label, but the amount of each is not disclosed, so the creatine dose is unknown and probably below the 3 to 5 g a day used in studies. People with kidney disease or on medication should ask a doctor before using it."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the best flavor of Walgreens protein powder?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Buyers report the chocolate is the safer pick. Reviewers more often describe the vanilla as artificial or too sweet, while chocolate's cocoa covers the sweetener better. Both flavors rate about 3.5 out of 5 on Walgreens.com. If you plan to blend it into smoothies or oatmeal, the vanilla is more versatile despite those comments. We did not taste either."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What are the common complaints about Walgreens protein powder?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The most common complaints are that it is too sweet, that the vanilla tastes artificial, that the two-scoop serving empties the tub in about 18 shakes, and that it carries more carbohydrate and sugar than a lean whey. Deal-site commenters also point to the maltodextrin and the 4.5 g of non-protein add-ins in every serving."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is protein powder cheaper at Walgreens or Amazon?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Name brands are usually cheaper on Amazon. When we checked, Premier Protein powder cost about 23% more per ounce at Walgreens, the small Orgain tub about 35% more, and Premier shakes up to 74% more per bottle. Optimum Nutrition's small tub was about the same. Walgreens' own whey is not on Amazon and is cheapest on buy-one-get-one weeks."
+          }
+        }
+      ],
+    },
+    {
+      "@type": "Article",
+      headline: title,
+      author: authorSchema(),
+      datePublished: dates.published,
+      dateModified: dates.modified,
+      publisher: { "@type": "Organization", name: SITE_NAME, url: SITE_URL },
+    },
+    {
+      "@type": "ItemList",
+      name: title,
+      numberOfItems: PRODUCTS.length,
+      itemListElement: PRODUCTS.map((product, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name: product.name,
+        url: new URL(`#${product.id}`, Astro.url).toString(),
+      })),
+    },
+    ...PRODUCTS.map((product) => ({
+      "@type": "Product",
+      name: product.name,
+      description: product.description,
+      brand: {
+        "@type": "Brand",
+        name: product.brand ?? product.name.split(" ")[0],
+      },
+    })),
+  ],
+};
+---
+
+<Layout
+  title={title}
+  description={description}
+  ogType="article"
+  article={{
+    publishedTime: dates.published,
+    modifiedTime: dates.modified,
+    author: author.name,
+    section: "Store Brands",
+    tags: [
+      "walgreens protein powder",
+      "protein shakes at walgreens",
+      "whey protein powder walgreens",
+      "walgreens whey protein",
+      "is walgreens protein powder good"
+    ],
+  }}
+  jsonLd={schema}
+  stickyCta={{
+    text: "See Our Top Cheap Protein Picks",
+    link: "/best-cheap-protein-powder/",
+  }}
+>
+  <article class="relative overflow-hidden">
+    <ArticleHeader kicker={"Buyer's Guide"} badge={"Label-Checked"} author={author} dates={dates} mobileAd={false}>
+      <Fragment slot="title">Walgreens Protein Powder</Fragment>
+      What Walgreens sells under its own name, which name-brand tubs and shakes sit on the same shelf, what each costs per 25 g of protein, and which ones are cheaper on Amazon.
+    </ArticleHeader>
+
+    <TableOfContents>
+      <a href="#short-answer">Short Answer</a>
+      <a href="#top-picks">The Products</a>
+      <a href="#own-brand">Does Walgreens Have Its Own?</a>
+      <a href="#label">Walgreens Whey Label</a>
+      <a href="#third-party">Third-Party Testing</a>
+      <a href="#brands">Brands at Walgreens</a>
+      <a href="#vs-amazon">Walgreens vs Amazon Prices</a>
+      <a href="#shakes">Protein Shakes at Walgreens</a>
+      <a href="#is-it-good">Is It Good?</a>
+      <a href="#pay-less">How to Pay Less</a>
+      <a href="#mistakes">Common Mistakes</a>
+      <a href="#faq">FAQ</a>
+    </TableOfContents>
+
+    <!-- Content -->
+    <div class="max-w-3xl mx-auto px-4 pb-16 lg:pb-24">
+      <div class="prose prose-lg prose-blue max-w-none text-gray-700 leading-relaxed">
+        <p class="lede">
+          Walgreens protein powder means one store-brand line, Walgreens Whey Protein Powder Blend, a 32 oz tub with 30 g of protein per two-scoop serving that Walgreens listed at $29.99, or about $1.39 per 25 g. Promotions change that math more than anything else. Below: the label, the testing gap, every name brand on the shelf, and the Walgreens versus Amazon price check.
+        </p>
+
+        <QuickPicks products={PRODUCTS} />
+
+        <div id="short-answer" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            1. Walgreens Protein Powder: The Short Answer
+          </h2>
+
+          <p>
+            Walgreens protein powder is a reasonable budget buy if you catch a promotion: Walgreens Whey Protein Powder Blend gives 30 g of protein per two-scoop serving, per the label, and at the $29.99 Walgreens listed for the 32 oz tub it works out to about $1.39 per 25 g of protein. That is cheaper per gram than any name-brand powder on the same shelf at full price, and on a buy-one-get-one-50%-off week it falls to about $1.04.
+          </p>
+
+          <p>
+            The catch is the label and the testing. Walgreens' whey adds dextrose, maltodextrin, corn starch and a little sugar, plus an undisclosed blend of creatine, taurine and glutamine, and Walgreens publishes no NSF Certified for Sport or Informed Sport status for it. <strong>Buy it if</strong> you want the cheapest grams of protein in a Walgreens and do not mind a sweeter, carb-heavier scoop. <strong>Skip it if</strong> you are a drug-tested athlete, you want a short ingredient list, or you can wait two days for an Amazon delivery.
+          </p>
+
+          <div class="overflow-hidden border border-gray-200 rounded-2xl my-8">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Product at Walgreens</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Walgreens price seen</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Amazon price seen</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Cost per 25 g (Amazon)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Walgreens Whey Protein Blend, 32 oz</td>
+                    <td class="px-4 py-4 text-gray-700">$29.99</td>
+                    <td class="px-4 py-4 text-gray-700">Not sold on Amazon</td>
+                    <td class="px-4 py-4 text-gray-700">About $1.39 (Walgreens)</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Optimum Nutrition Gold Standard, 0.68 lb</td>
+                    <td class="px-4 py-4 text-gray-700">$21.99</td>
+                    <td class="px-4 py-4 text-gray-700">$19.99</td>
+                    <td class="px-4 py-4 text-gray-700">About $2.08</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Premier Protein whey powder</td>
+                    <td class="px-4 py-4 text-gray-700">$42.99 (28 oz)</td>
+                    <td class="px-4 py-4 text-gray-700">$29.99 (1.5 lb)</td>
+                    <td class="px-4 py-4 text-gray-700">About $1.47</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Orgain Organic Vegan, 1.02 lb</td>
+                    <td class="px-4 py-4 text-gray-700">$26.99</td>
+                    <td class="px-4 py-4 text-gray-700">$19.98</td>
+                    <td class="px-4 py-4 text-gray-700">About $2.38</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Premier Protein shakes</td>
+                    <td class="px-4 py-4 text-gray-700">$15.49 (4-pack)</td>
+                    <td class="px-4 py-4 text-gray-700">$26.74 (12-pack)</td>
+                    <td class="px-4 py-4 text-gray-700">About $1.86</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <p>
+            Prices are what Walgreens.com and Amazon showed on November 21, 2026, and change by store, flavor and week. Label figures are per the labels at the time of writing and vary by flavor. If price per gram is all that matters, our <a href="/best-cheap-protein-powder/">best cheap protein powder</a> rankings cover the lowest-cost tubs anywhere, store brands included.
+          </p>
+        </div>
+
+        <!-- Picks -->
+        <div id="top-picks" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            2. Walgreens Whey and the Name Brands Walgreens Stocks That Are Also on Amazon
+          </h2>
+
+          <p>
+            The first card is Walgreens' own whey. Walgreens-brand products are sold in Walgreens stores, on Walgreens.com and through delivery apps, not on Amazon, so that card has no Amazon link of its own. The other four are products Walgreens shelves that we matched to verified Amazon listings, with the Amazon price we saw on November 21, 2026 and the cost per 25 g of protein.
+          </p>
+
+          {PRODUCTS.map((product, index) => (
+            <ProductCard product={product} rank={index + 1} />
+          ))}
+        </div>
+
+        <div id="own-brand" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            3. Does Walgreens Have Its Own Protein Powder?
+          </h2>
+
+          <p>
+            Yes. Walgreens sells one store-brand protein powder, Walgreens Whey Protein Powder Blend, in vanilla and chocolate 32 oz tubs. Both carry the Walgreens logo, both were listed at $29.99 on Walgreens.com when we checked, and both were available for store pickup at the location the site defaulted to. Older tubs and deal posts call it Walgreens Whey Protein Powder with Creatine and Amino Acids, which is the same product described by what is added to it.
+          </p>
+
+          <p>
+            There is no Walgreens-brand plant protein, casein, isolate or clear whey. Searching Walgreens.com for protein powder returns around a hundred items, and the only two with the Walgreens label are the vanilla and chocolate whey blends. Everything else on the shelf is a national brand: Optimum Nutrition, Premier Protein, Six Star, Orgain and Garden of Life are the names that appear first. If you want a dairy-free tub at Walgreens, it will be one of the organic plant brands.
+          </p>
+
+          <p>
+            Walgreens does make its own ready-to-drink shakes, and they are a bigger part of the store-brand range than the powder. The cooler and nutrition aisles carry Walgreens High Protein Nutritional Shakes in 11 oz four-packs and Walgreens Plus Protein Nutritional Shakes in 8 oz six- and sixteen-packs, often on buy-one-get-one-free promotions. We cover those in the shakes section below, because they answer a different need from a tub of powder.
+          </p>
+
+          <p>
+            Who makes Walgreens whey is not something Walgreens publishes. Store-brand supplements are usually made by contract manufacturers, and the Walgreens formula, with 30 g of protein in a 50 g serving plus creatine, taurine and glutamine, looks very like the 30 g fitness whey blends sold under other grocery and pharmacy store labels. That is a resemblance, not a confirmed supplier, so we do not name one. It matters less than it sounds: what decides whether a store-brand whey is a good buy is its label and price, which we can check.
+          </p>
+        </div>
+
+        <div id="label" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            4. What Is in Walgreens Whey Protein Powder Blend?
+          </h2>
+
+          <p>
+            Walgreens whey gives 30 g of protein, about 180 calories, 9 g of carbohydrate and 2.5 g of fat in a two-scoop, 50 g serving, per the label as reproduced by SuppCo and FatSecret at the time of writing. The tub holds about 18 servings. Walgreens.com did not load its product pages for us during research, so treat these as label figures from third-party databases and check the panel on the tub you pick up; formulas and flavors can differ.
+          </p>
+
+          <p>
+            The protein comes from a whey blend, which on budget tubs usually means mostly whey protein concentrate with some isolate. Thirty grams in a 50 g scoop is 60% protein by weight. For comparison, Optimum Nutrition Gold Standard is about 77% protein by weight (24 g in 31 g) and Premier Protein's powder is close to that. The rest of the Walgreens scoop is the carbohydrate, fat, flavoring and the add-in blend.
+          </p>
+
+          <h3 class="text-2xl font-bold text-gray-900 mt-10 mb-4">What is the creatine, taurine and glutamine blend?</h3>
+
+          <p>
+            Each serving includes a 4.5 g proprietary blend of taurine, creatine monohydrate and L-glutamine, per the label listing. Proprietary means the label gives the total but not how much of each is inside. That makes it impossible to know whether you get a useful dose of creatine; the dose studied for strength training is about 3 to 5 g a day, and a 4.5 g blend shared with two other ingredients almost certainly holds less. If you want creatine, buy plain creatine monohydrate separately and dose it properly.
+          </p>
+
+          <h3 class="text-2xl font-bold text-gray-900 mt-10 mb-4">Sweeteners, carbs and allergens</h3>
+
+          <p>
+            The inactive ingredients listed include dextrose, maltodextrin, corn starch, sugar, cocoa in the chocolate, natural and artificial flavors, sucralose and acesulfame potassium, plus thickeners such as cellulose gum and gum arabic and soy lecithin. Buyers in a Slickdeals thread about the tub flagged the same points: the added sugar, the maltodextrin and the 4.5 g of non-protein add-ins. None of that is unsafe, but it is why the scoop runs 180 calories where a cleaner whey gives about 120 to 150 for a similar dose of protein.
+          </p>
+
+          <p>
+            It contains milk, and the soy lecithin means it is not a fit for strict soy avoidance. Anyone with kidney disease, who is pregnant, or who takes medication should ask a doctor or registered dietitian before adding a creatine-containing powder or a large daily protein dose. The same goes for older adults with medical conditions who are using powder or shakes to hit a protein target.
+          </p>
+        </div>
+
+        <div id="third-party" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            5. Is Walgreens Protein Powder Third-Party Tested?
+          </h2>
+
+          <p>
+            Not that Walgreens publishes. Walgreens Whey Protein Powder Blend carries no NSF Certified for Sport, Informed Sport, Informed Choice or Clean Label Project seal that we could find, and SuppCo, which scores supplements partly on verified testing, notes it has not verified product-specific testing for it. That is the main thing separating it from the better name brands on the same shelf.
+          </p>
+
+          <p>
+            This puts Walgreens behind CVS on paper. CVS runs a retailer program, Tested to Be Trusted, that requires third-party testing of the supplements it sells, which we covered in our <a href="/cvs-protein-powder/">CVS protein powder</a> guide. Walgreens does not advertise an equivalent program for its store-brand protein. All supplements sold in the US must follow FDA manufacturing rules, but those rules rely on the manufacturer's own testing, not an independent lab checking each batch.
+          </p>
+
+          <p>
+            If testing matters to you, the name brands at Walgreens give you more. Optimum Nutrition describes Gold Standard as banned-substance tested, and NSF's Certified for Sport registry lists some Optimum Nutrition products; check the registry for the exact flavor and size before relying on it. Garden of Life, also on Walgreens' shelf, sells some sport-certified products, though the organic protein Walgreens lists is certified organic rather than sport certified. Our <a href="/optimum-nutrition-protein-powder-review/">Optimum Nutrition review</a> covers what its testing does and does not include.
+          </p>
+
+          <p>
+            For most people, the practical risk with an untested budget whey is not a banned substance; it is that nobody outside the company has confirmed the protein count or checked for heavy metals. If you compete in a tested sport, use only a product listed in the NSF Certified for Sport or Informed Sport databases. If you do not, Walgreens whey is a reasonable risk at its price, but it is not the safest choice in the aisle.
+          </p>
+        </div>
+
+        <div id="brands" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            6. Which Protein Powder Brands Does Walgreens Sell?
+          </h2>
+
+          <p>
+            Walgreens sells about a dozen protein powder brands, and the whey protein powder Walgreens stocks most widely comes from Optimum Nutrition, Premier Protein and Six Star, alongside its own blend. The plant side is Orgain and Garden of Life. What any single store carries varies a lot; Walgreens.com marks many name-brand tubs as not sold or out of stock at a given store, while the store-brand whey and the small Gold Standard tubs show up for pickup almost everywhere.
+          </p>
+
+          <div class="overflow-hidden border border-gray-200 rounded-2xl my-8">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Brand and product</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Size at Walgreens</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Walgreens price seen</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Type</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Walgreens Whey Protein Powder Blend</td>
+                    <td class="px-4 py-4 text-gray-700">32 oz</td>
+                    <td class="px-4 py-4 text-gray-700">$29.99</td>
+                    <td class="px-4 py-4 text-gray-700">Whey blend</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Optimum Nutrition Gold Standard 100% Whey</td>
+                    <td class="px-4 py-4 text-gray-700">10.9 oz; 1 lb</td>
+                    <td class="px-4 py-4 text-gray-700">$21.99; $38.99 (sale $25.99)</td>
+                    <td class="px-4 py-4 text-gray-700">Whey blend</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Optimum Nutrition 100% Whey</td>
+                    <td class="px-4 py-4 text-gray-700">1.47 lb</td>
+                    <td class="px-4 py-4 text-gray-700">$38.99</td>
+                    <td class="px-4 py-4 text-gray-700">Whey blend</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Six Star 100% Whey Protein Plus</td>
+                    <td class="px-4 py-4 text-gray-700">1.82 lb</td>
+                    <td class="px-4 py-4 text-gray-700">$34.99 sale ($39.99 list)</td>
+                    <td class="px-4 py-4 text-gray-700">Whey blend</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Premier Protein 100% Whey</td>
+                    <td class="px-4 py-4 text-gray-700">28 oz</td>
+                    <td class="px-4 py-4 text-gray-700">$42.99</td>
+                    <td class="px-4 py-4 text-gray-700">Whey blend</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Orgain Organic Plant Based Protein</td>
+                    <td class="px-4 py-4 text-gray-700">16.32 oz</td>
+                    <td class="px-4 py-4 text-gray-700">$26.99</td>
+                    <td class="px-4 py-4 text-gray-700">Plant blend</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Orgain Organic Protein + Superfoods</td>
+                    <td class="px-4 py-4 text-gray-700">18 oz</td>
+                    <td class="px-4 py-4 text-gray-700">$29.99</td>
+                    <td class="px-4 py-4 text-gray-700">Plant blend</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Garden of Life Organic Protein</td>
+                    <td class="px-4 py-4 text-gray-700">18 oz</td>
+                    <td class="px-4 py-4 text-gray-700">$19.99</td>
+                    <td class="px-4 py-4 text-gray-700">Plant blend</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <p>
+            Optimum Nutrition is the brand Walgreens leans on hardest, mostly in small sizes. The 10.9 oz Gold Standard tub at $21.99 is about 10 servings, and the store also lists a 1 lb tub and a 1.47 lb tub of the plainer ON 100% Whey. Small tubs are a convenient way to try a flavor, but they are the most expensive way to buy the brand. See our <a href="/optimum-nutrition-protein-powder-review/">Optimum Nutrition protein powder review</a> for the label in detail.
+          </p>
+
+          <p>
+            Six Star is the budget name brand. Walgreens had the 1.82 lb tub of 100% Whey Protein Plus on sale at $34.99 against a $39.99 list price when we checked, at $1.09 per ounce. We did not give it a card because Amazon no longer sells that exact tub directly: Amazon itself lists a newer Six Star Complete Whey Protein Powder Plus at $44.99 for 1.93 lb, and the older tub only through a third-party seller at $99.97, which is not a price worth paying. Our <a href="/six-star-protein-powder-review/">Six Star review</a> covers the line.
+          </p>
+
+          <p>
+            Premier Protein's powder is the priciest whey on the shelf at $42.99 for 28 oz, which Walgreens shows as $1.54 per ounce, but it gives a full 30 g of protein per scoop with no added sugar. Our <a href="/premier-protein-powder-review/">Premier Protein powder review</a> has the full label, and <a href="/premier-protein-vs-optimum-nutrition/">Premier Protein vs Optimum Nutrition</a> settles which of the two big shelf brands suits you. For plant protein, <a href="/orgain-protein-powder-review/">Orgain</a> and <a href="/garden-of-life-protein-powder-review/">Garden of Life</a> are the two organic brands Walgreens carries.
+          </p>
+        </div>
+
+        <div id="vs-amazon" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            7. Is Protein Powder Cheaper at Walgreens or on Amazon?
+          </h2>
+
+          <p>
+            Name-brand protein is cheaper on Amazon in almost every case we checked, by anywhere from about 0% to 70%, while Walgreens' own whey is the cheapest per gram of anything in a Walgreens store. The gap is smallest on Optimum Nutrition's small tub, which costs about the same in both places, and biggest on Premier Protein shakes and the small Orgain tub.
+          </p>
+
+          <div class="overflow-hidden border border-gray-200 rounded-2xl my-8">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Same product</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Walgreens</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Amazon</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Walgreens premium</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">ON Gold Standard, 10.9 oz / 0.68 lb</td>
+                    <td class="px-4 py-4 text-gray-700">$21.99</td>
+                    <td class="px-4 py-4 text-gray-700">$19.99 chocolate; $22.99 vanilla</td>
+                    <td class="px-4 py-4 text-gray-700">About 0% to 10%</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Premier Protein whey powder, per ounce</td>
+                    <td class="px-4 py-4 text-gray-700">$1.54/oz (28 oz)</td>
+                    <td class="px-4 py-4 text-gray-700">$1.25/oz (1.5 lb)</td>
+                    <td class="px-4 py-4 text-gray-700">About 23%</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Orgain Organic Vegan, 1.02 lb</td>
+                    <td class="px-4 py-4 text-gray-700">$26.99</td>
+                    <td class="px-4 py-4 text-gray-700">$19.98</td>
+                    <td class="px-4 py-4 text-gray-700">About 35%</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Premier Protein shake, per bottle</td>
+                    <td class="px-4 py-4 text-gray-700">$3.87 (4-pack); $3.63 on 2 for $29</td>
+                    <td class="px-4 py-4 text-gray-700">$2.23 (12-pack)</td>
+                    <td class="px-4 py-4 text-gray-700">About 63% to 74%</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <p>
+            Here is the math behind the cards. Cost per 25 g is the price divided by the number of 25 g portions of protein in the container. Walgreens whey: 18 servings times 30 g is 540 g of protein, or 21.6 portions, so $29.99 works out to about $1.39 per 25 g. Gold Standard's small tub: 10 servings times 24 g is 240 g, or 9.6 portions, so $19.99 on Amazon is about $2.08 and $21.99 at Walgreens is about $2.29. Premier powder on Amazon: 17 servings times 30 g is 510 g, or 20.4 portions, so $29.99 is about $1.47.
+          </p>
+
+          <p>
+            For Orgain's 1.02 lb tub, about 10 servings times 21 g is 210 g, or 8.4 portions: $19.98 on Amazon is about $2.38 per 25 g, and $26.99 at Walgreens is about $3.21. Premier shakes: a 12-pack holds 360 g of protein, or 14.4 portions, so $26.74 on Amazon is about $1.86 per 25 g, while a $15.49 Walgreens four-pack holds 4.8 portions, about $3.23. These are snapshots; both retailers move prices weekly.
+          </p>
+
+          <p>
+            Size is the other half of the story. Walgreens mostly stocks small and mid-size tubs, and small tubs always cost more per gram. Amazon's 5 lb Gold Standard at $101 works out to about $1.44 per 25 g, and the 2.03 lb Orgain at $31.98 to about $1.90, both sizes Walgreens does not usually carry. If you use protein daily, buying the big size online saves more than any Walgreens coupon.
+          </p>
+
+          <div class="bg-gray-900 text-white rounded-2xl p-6 lg:p-8 my-8">
+            <p class="text-xs font-black uppercase tracking-widest text-[#38BDF8] mb-3">THE RULE</p>
+            <p class="text-xl font-bold text-white mb-3">Buy Walgreens' own whey in store; buy name brands online</p>
+            <p class="text-gray-300 leading-relaxed m-0">Walgreens whey has no Amazon version and is cheapest on a buy-one-get-one week. Every name brand on the same shelf was the same price or cheaper on Amazon when we checked, often in a bigger, cheaper-per-gram size.</p>
+          </div>
+        </div>
+
+        <div id="shakes" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            8. What Protein Shakes Can You Buy at Walgreens?
+          </h2>
+
+          <p>
+            Protein shakes at Walgreens come from Premier Protein, Core Power, Muscle Milk, OWYN and Walgreens' own nutritional shake line, and the store brand is the cheapest by a wide margin when it is on buy-one-get-one-free. Walgreens.com returns around a hundred results for protein shakes, and the brand mix in the cooler is broader than in the powder aisle.
+          </p>
+
+          <p>
+            Walgreens High Protein Nutritional Shakes come in vanilla and chocolate 11 fl oz four-packs at $9.99, and both were on buy-one-get-one-free when we checked, which makes eight shakes $9.99, or about $1.25 a bottle. The Walgreens pages we could read did not show the nutrition panel, and third-party databases disagree on the figures by size and version, so check the protein count on the pack before comparing; Walgreens' own nutrition guide says its pre-packaged high protein shakes give 12 g or more per serving. Walgreens Plus Protein Nutritional Shakes, an 8 oz meal-supplement style drink, sell at $11.99 for six and $26.99 for sixteen.
+          </p>
+
+          <p>
+            Of the name brands, Premier Protein gets the most shelf space: 11 oz four-packs at $15.49, or two for $29, in chocolate, vanilla, caramel, cake batter, cinnamon roll, cookies and cream, bananas and cream and chocolate peanut butter. Core Power 14 oz bottles were $4.89, or two for $9, and Core Power Elite $5.99. Muscle Milk 14 oz bottles were $4.79, and OWYN's dairy-free four-pack was $11.99, or two for $20.
+          </p>
+
+          <p>
+            Ready-to-drink shakes cost far more per gram than powder. Even the Amazon 12-pack of Premier, at about $1.86 per 25 g, costs more than Walgreens whey powder at full price, and a single Premier four-pack from Walgreens is more than double that. Shakes earn their price in convenience: no shaker, no water, and shelf-stable until opened. If you drink one most days, our <a href="/best-premier-protein-flavor/">best Premier Protein flavor</a> guide and our <a href="/premier-protein-vs-ensure/">Premier Protein vs Ensure</a> comparison help you pick what to stock up on, and <a href="/muscle-milk-vs-premier-protein/">Muscle Milk vs Premier Protein</a> covers the other big cooler brand.
+          </p>
+
+          <p>
+            One distinction matters for older shoppers. Walgreens' Plus Protein shakes, like Ensure and Boost, are built as meal supplements with more calories, carbohydrate and added vitamins, not as lean protein shakes. They suit someone trying to eat more overall, while a 30 g, 160-calorie shake like Premier suits someone trying to add protein without many calories. Anyone using either to manage weight loss, diabetes or a medical condition should ask a doctor or registered dietitian which fits.
+          </p>
+        </div>
+
+        <div id="is-it-good" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            9. Is Walgreens Protein Powder Good?
+          </h2>
+
+          <p>
+            Walgreens protein powder is good value but not a good label: it delivers 30 g of protein per serving at the lowest cost per gram in the store, but it gets there with added sugars, starches and a proprietary add-in blend, and with no third-party testing published. Walgreens.com shows the vanilla at 3.5 out of 5 from 32 reviews and the chocolate at 3.5 from 22 reviews, which is middling for a protein powder.
+          </p>
+
+          <p>
+            Buyers report that it mixes easily in a shaker and that the chocolate is the safer flavor, with the vanilla more often described as artificial or overly sweet. The recurring complaints are the sweetness, the carbohydrate count relative to a lean whey, and the two-scoop serving, which empties the tub faster than buyers expect; 18 servings is fewer than many 2 lb tubs. Treat this as buyer feedback rather than a verdict; we did not taste it.
+          </p>
+
+          <p>
+            Against the name brands on the same shelf, it wins on price and loses on everything else. Gold Standard gives 24 g of protein in about 120 calories with a cleaner ingredient list and brand-stated banned-substance testing. Premier gives 30 g in about 150 calories with no added sugar. Walgreens gives 30 g in about 180 calories with sugar, dextrose and maltodextrin. If your priority is grams of protein per dollar, Walgreens wins. If it is grams of protein per calorie, it comes last.
+          </p>
+
+          <p>
+            It also compares fairly with other store brands. Walmart's Equate whey, covered in our <a href="/equate-protein-powder/">Equate protein powder</a> guide, is usually cheaper per gram, and CVS Health Whey has the edge on testing. For a broader look at what Walmart stocks, see our <a href="/best-walmart-protein-powder/">best Walmart protein powder</a> page. Walgreens sits between them: a convenient pharmacy whey that is worth buying on promotion and easy to skip at full price.
+          </p>
+        </div>
+
+        <div id="pay-less" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            10. How Do You Pay Less for Protein Powder at Walgreens?
+          </h2>
+
+          <p>
+            The cheapest way to buy protein powder at Walgreens is to wait for a buy-one-get-one promotion on its own whey and pair it with a site-wide coupon. Walgreens runs these regularly: on the $29.99 tub, buy one get one 50% off makes two tubs $44.99, about $1.04 per 25 g. A late-2025 Walgreens.com deal posted on Slickdeals priced two tubs at $16.48, roughly 38 cents per 25 g, though deals that deep are rare and that one has expired.
+          </p>
+
+          <p>
+            Walgreens' myWalgreens rewards add Walgreens Cash back on many purchases, and store-brand items often earn more. Stacking a store-brand promotion with a digital coupon is where Walgreens whey goes from fair to genuinely cheap. Check the weekly ad and the Walgreens app before you buy, because the shelf price alone is rarely the lowest price available.
+          </p>
+
+          <p>
+            For name brands, the honest advice is to buy them somewhere else unless you need a tub today. Walgreens' promotions on Optimum Nutrition and Premier Protein bring them close to Amazon's everyday price at best, and Walgreens rarely stocks the large sizes where the per-gram savings are. A 5 lb tub of Gold Standard or a 2 lb Orgain bought online will undercut any small Walgreens tub.
+          </p>
+
+          <p>
+            If you are choosing a store for protein in general, warehouse and big-box chains beat pharmacies. Our <a href="/best-costco-protein-powder/">Costco</a>, <a href="/sams-club-protein-powder/">Sam's Club</a> and <a href="/best-target-protein-powder/">Target</a> guides show what those shelves cost per 25 g. And if you want a plant protein with a different flavor profile than Orgain, our new <a href="/aloha-protein-powder-review/">Aloha protein powder review</a> checks a brand sold widely in grocery stores.
+          </p>
+        </div>
+
+        <!-- Common Mistakes -->
+        <div id="mistakes" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            11. Common Mistakes to Avoid
+          </h2>
+
+          <div class="space-y-6 my-8">
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Buying name brands at Walgreens shelf price</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Every name-brand tub and shake we matched cost the same or less on Amazon, and the Premier shake four-pack cost about 70% more per bottle at Walgreens. Unless you need the product today, check Amazon or a warehouse club first, especially for anything you plan to buy more than once.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Counting the scoop, not the serving</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Walgreens whey uses a two-scoop, 50 g serving to reach 30 g of protein. Use one scoop and you get about 15 g, and the tub's roughly 18 servings become 36 smaller shakes. Compare powders by protein per serving and cost per 25 g, not by tub size or scoop count.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Relying on the blend for creatine</h3>
+              <p class="text-gray-700 text-sm m-0">
+                The 4.5 g taurine, creatine and glutamine blend is proprietary, so you cannot tell how much creatine each serving holds, and it is very likely below the 3 to 5 g studied for strength. Buy plain creatine monohydrate if you actually want its benefits, and ask a doctor first if you have kidney concerns.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Assuming a pharmacy brand is tested</h3>
+              <p class="text-gray-700 text-sm m-0">
+                A Walgreens logo on a supplement does not mean an independent lab checked it. Walgreens publishes no NSF Certified for Sport or Informed Sport status for its whey. Drug-tested athletes should use only a product listed in those certifiers' databases, whatever store it comes from.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Treating meal shakes as protein shakes</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Walgreens Plus Protein Nutritional Shakes, like Ensure, are meal supplements with more calories and carbohydrate, not lean protein drinks. Read the protein and calorie counts on the pack; a shake chosen for weight loss can easily add more calories than it replaces if it is the wrong kind.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ -->
+        <div id="faq" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            12. Frequently Asked Questions
+          </h2>
+
+          <div class="faq-list">
+            <details class="faq-item">
+              <summary><h3>Is Walgreens protein powder third-party tested?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  Not that Walgreens publishes. Walgreens Whey Protein Powder Blend carries no NSF Certified for Sport, Informed Sport or Clean Label Project seal we could find, and SuppCo notes it has not verified product-specific testing. Walgreens also does not advertise a retailer testing program like CVS's. If you need verified testing, choose a product listed in the NSF or Informed Sport databases.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>Does Walgreens have its own brand of protein powder?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  Yes. Walgreens sells Walgreens Whey Protein Powder Blend in vanilla and chocolate 32 oz tubs, listed at $29.99 each on Walgreens.com when we checked. Per the label, two scoops give 30 g of protein and about 180 calories. There is no Walgreens-brand plant protein, isolate or casein; the store also makes its own ready-to-drink nutritional shakes.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>Is Walgreens whey protein healthy and clean?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  It is a reasonable protein source but not a clean label. Alongside the whey, the ingredient list includes dextrose, maltodextrin, corn starch, sugar, sucralose, acesulfame potassium and a proprietary creatine, taurine and glutamine blend. Healthy adults can use it, but if you want a short ingredient list, a whey such as Gold Standard or Premier Protein is simpler.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>Does Walgreens protein powder contain creatine?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  Yes, a little. Each serving includes a 4.5 g proprietary blend of taurine, creatine monohydrate and L-glutamine, per the label, but the amount of each is not disclosed, so the creatine dose is unknown and probably below the 3 to 5 g a day used in studies. People with kidney disease or on medication should ask a doctor before using it.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>What is the best flavor of Walgreens protein powder?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  Buyers report the chocolate is the safer pick. Reviewers more often describe the vanilla as artificial or too sweet, while chocolate's cocoa covers the sweetener better. Both flavors rate about 3.5 out of 5 on Walgreens.com. If you plan to blend it into smoothies or oatmeal, the vanilla is more versatile despite those comments. We did not taste either.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>What are the common complaints about Walgreens protein powder?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  The most common complaints are that it is too sweet, that the vanilla tastes artificial, that the two-scoop serving empties the tub in about 18 shakes, and that it carries more carbohydrate and sugar than a lean whey. Deal-site commenters also point to the maltodextrin and the 4.5 g of non-protein add-ins in every serving.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>Is protein powder cheaper at Walgreens or Amazon?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  Name brands are usually cheaper on Amazon. When we checked, Premier Protein powder cost about 23% more per ounce at Walgreens, the small Orgain tub about 35% more, and Premier shakes up to 74% more per bottle. Optimum Nutrition's small tub was about the same. Walgreens' own whey is not on Amazon and is cheapest on buy-one-get-one weeks.
+                </p>
+              </div>
+            </details>
+
+          </div>
+        </div>
+
+        <!-- Related Guides -->
+        <div class="mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">Related Store-Brand Protein Guides</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <a href="/best-cheap-protein-powder/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#FF4500] font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Cheap Protein Powder</h3>
+              <p class="text-gray-500 text-sm mt-2">The lowest real cost per 25 g of protein, store brands included.</p>
+            </a>
+            <a href="/cvs-protein-powder/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#38BDF8] font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">CVS Protein Powder</h3>
+              <p class="text-gray-500 text-sm mt-2">The other big pharmacy whey: CVS Health's label, testing program and cost.</p>
+            </a>
+            <a href="/best-walmart-protein-powder/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#22C55E] font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Walmart Protein Powder</h3>
+              <p class="text-gray-500 text-sm mt-2">What Walmart's shelf costs per 25 g, Equate included.</p>
+            </a>
+            <a href="/premier-protein-powder-review/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#A855F7] font-black text-xs uppercase tracking-widest mb-2">Brand Review</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Premier Protein Powder Review</h3>
+              <p class="text-gray-500 text-sm mt-2">The 30 g whey and shakes that fill Walgreens' protein aisle, reviewed by label.</p>
+            </a>
+          </div>
+        </div>
+
+        <!-- Closing -->
+        <div class="mt-16 bg-gray-900 text-white rounded-2xl p-6 md:p-8">
+          <h2 class="text-2xl font-black text-white mb-4">The Bottom Line</h2>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            Walgreens protein powder is worth buying for one reason: price per gram. Walgreens Whey Protein Powder Blend gives 30 g of protein per serving for about $1.39 per 25 g at full price and about $1.04 on a buy-one-get-one week, cheaper than any name brand in the store. You trade that for added sugars and starches, an undisclosed add-in blend and no published third-party testing.
+          </p>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            For everything else on the Walgreens shelf, Amazon is the better place to buy. Optimum Nutrition's small tub costs about the same in both places, but Premier Protein powder, Orgain and especially Premier shakes cost noticeably more at Walgreens, and the big, cheap-per-gram sizes live online. Grab Walgreens whey on promotion, buy name brands in bulk elsewhere, and see our <a href="/best-cheap-protein-powder/">best cheap protein powder</a> picks for the lowest prices overall.
+          </p>
+        </div>
+
+        <MoreInCategory category="Store Brands" links={moreInCategory} />
+
+        <AuthorBio />
+      </div>
+    </div>
+  </article>
+</Layout>

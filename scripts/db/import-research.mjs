@@ -92,6 +92,12 @@ const ALIASES = {
   'dymatize-super-mass-gainer': ['dymatize-super-mass-gainer-review-vanilla-6lb', 'serious-mass-review-dymatize-super-mass-gainer-6lb'],
   'transparent-labs-mass-gainer': ['transparent-labs-mass-gainer-review-tl-mass-gainer-chocolate-glaze'],
   'bucked-up-buck-feed-original-protein': ['bucked-up-protein-powder-review-buck-feed-original'],
+  'aloha-organic-plant-based-protein': ['aloha-protein-powder-review-chocolate'],
+  'ketogenics-zero-carb-protein': ['ketogenics-protein-powder-review-zero-carb-protein'],
+  'mikuna-chocho-plant-protein': ['mikuna-protein-powder-review-pure-chocho'],
+  'musclemeds-carnivor-beef-protein-isolate': ['carnivor-protein-powder-review-musclemeds-carnivor-chocolate'],
+  'rule-1-r1-protein': ['rule-1-protein-powder-review-r1-protein-5lb'],
+  'ancient-nutrition-bone-broth-protein': ['ancient-nutrition-protein-powder-review-bone-broth-protein-pure'],
   'manitoba-harvest-hemp-pro-70': ['manitoba-harvest-hemp-yeah-max-protein'],
   'ballerina-farm-protein-powder': ['ballerina-farm-farmer-protein-vanilla-bean', 'ballerina-farm-farmer-protein-creamy-chocolate', 'ballerina-farm-farmer-protein-maple-cinnamon'],
   'happy-viking-superfood-protein': ['happy-viking-plant-protein-triple-chocolate', 'happy-viking-plant-protein-vanilla-bean'],
@@ -202,6 +208,11 @@ const DEMAND = {
   'bucked-up-buck-feed-original-protein': 720, // 'bucked up protein powder'
   'dymatize-super-mass-gainer': 590,
   'transparent-labs-mass-gainer': 590,
+  'aloha-organic-plant-based-protein': 1300, // 'aloha protein powder'
+  'ketogenics-zero-carb-protein': 2900, // 'ketogenics zero carb zero sugar keto protein powder'
+  'mikuna-chocho-plant-protein': 1000, // 'mikuna protein powder'
+  'musclemeds-carnivor-beef-protein-isolate': 880, // 'carnivor protein powder'
+  'rule-1-r1-protein': 720, // 'rule 1 protein powder'
 };
 
 // Rows held out of the index until a person checks the label in hand.
@@ -262,6 +273,8 @@ const NAMES = {
 const FIX = {
   // Whey (type unstated) with collagen, colostrum and hemp; whey is the main protein.
   'ballerina-farm-protein-powder': { proteinType: 'whey-blend' },
+  // Ascent's product page and FAQ: "Informed Sport Certified, every batch" (checked 2026-11-21).
+  'ascent-native-fuel-whey': { certifications: ['Informed Sport'] },
 };
 
 const files = process.argv.slice(2);
