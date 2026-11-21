@@ -37,6 +37,11 @@ const pillarGuides = new Set([
 // publishing run adds each new slug here (see .claude/skills/daily-publish).
 const priorityGuides = new Set([
   // X-vs-Y articles that replaced the /compare/ pairs (2026-11-21).
+  'flavcity-vs-just-ingredients',
+  'clean-simple-eats-vs-isopure',
+  'isopure-vs-levels',
+  'body-fortress-vs-premier-protein',
+  'ryse-vs-dymatize',
   'ghost-vs-optimum-nutrition',
   'isopure-vs-optimum-nutrition',
   'clean-simple-eats-vs-just-ingredients',
