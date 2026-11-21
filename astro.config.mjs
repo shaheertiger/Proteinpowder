@@ -36,6 +36,17 @@ const pillarGuides = new Set([
 // sitemap priority than the 0.5 default so crawlers reach them sooner. The daily
 // publishing run adds each new slug here (see .claude/skills/daily-publish).
 const priorityGuides = new Set([
+  // Bing/DuckDuckGo batch (2026-11-21b): 5 for DuckDuckGo, 5 for Bing.
+  'plantfusion-protein-powder-review',
+  'sprout-living-protein-powder-review',
+  'designer-whey-protein-review',
+  'gainful-protein-powder-review',
+  'metagenics-protein-powder-review',
+  'vital-proteins-collagen-peptides-review',
+  'ensure-protein-powder-review',
+  'shakeology-review',
+  'whole-foods-protein-powder',
+  'natures-bounty-protein-powder-review',
   // Daily batch (2026-11-21): 5 Google + 5 Bing articles.
   'ascent-vs-optimum-nutrition',
   'levels-vs-ascent-protein',
