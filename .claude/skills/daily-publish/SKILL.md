@@ -38,6 +38,25 @@ total (Bing + DuckDuckGo + Yahoo + Ecosia share Bing's index). Commit the snapsh
 with the batch. If the Vercel tool is unavailable, say so in the run report and use
 the newest snapshot in `content/analytics/vercel/` instead. Never guess the numbers.
 
+**Then pull Bing Webmaster data (step 0b):**
+
+```bash
+npm run bing
+```
+
+It uses the Bing Webmaster API key in the `apikey` environment variable (never print
+or commit it), saves `content/analytics/bing/<today>/`, and reports Bing's daily
+trend, top queries and pages (7 and 28 days), page-one queries with no clicks, queries
+with no page, and rising pages. If it exits with "No Bing key" or an API error, say so
+in the run report and carry on with Vercel data. Use it this way:
+
+- **Queries with no page** are the first source of Bing-family topics (check each
+  against existing slugs; the matcher is loose).
+- **Page one, no clicks:** fix 1-2 titles and descriptions a day so the snippet
+  answers the exact query (one of the day's slots, not on top of ten).
+- **Rising pages** are winners: link 1-2 of today's new pages from them and add an
+  FAQ for any query they rank for but don't answer.
+
 **How the report sets today's batch (overrides the fixed 5 + 5 split when they conflict):**
 
 - **Split the 10 slots by engine in proportion to the last 7 days of search
