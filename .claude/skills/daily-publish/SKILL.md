@@ -11,6 +11,9 @@ Google Search Console and Bing Webmaster data. They replace the old "five articl
 one cluster" rule. `npm run topics` is still used, but only to fill a slot the rules
 below can't fill.
 
+**Two of each day's articles come from the X-vs-Y queue (`VS-QUEUE.md`, 47 brand pairs
+ranked by demand).** See "X-vs-Y queue" in section 0.
+
 ## 0a. Pull the last 7 days of Vercel traffic for every search engine (do this first)
 
 Every run starts from real visits, not just exports. Use the Vercel MCP tool
@@ -158,6 +161,35 @@ In short, Google rewards specific comparisons and narrow guides and buries broad
 terms. Bing ranks almost everything on page one and sends its clicks to brand reviews
 that answer trust questions.
 
+### X-vs-Y queue: 2 articles every run (do these first)
+
+The programmatic `/compare/` pages were removed on Nov 21, 2026 (they 301 now). Every
+brand pair that showed Google demand and has no article yet is queued, highest demand
+first, in **`VS-QUEUE.md`** (this folder). Every run:
+
+1. Take the **top 2 unticked rows** of `VS-QUEUE.md`. Check the slug is not taken and
+   no existing article already covers the pair (`src/data/compare-redirects.json`).
+2. Write each as a brand-level head-to-head (`ARTICLE-FORMAT.md` type C) in the
+   section order of `/ghost-vs-optimum-nutrition/`: Short Answer with a factor table,
+   picks at a glance, one product card per side, spec sheets side by side, the deciding
+   questions, what each does well and where it falls short, which to buy, who should
+   skip both, 5 mistakes, 7 FAQs, sources and recent updates. Label numbers come from
+   `src/data/db/products.json`; the "Searched as" phrasings go in the title, an H2 and
+   FAQ 1.
+3. Add `{ url, brands, title }` to `src/data/compare-redirects.json` and run
+   `node scripts/build-compare-redirects.mjs` (the build fails if `vercel.json` is
+   stale). Product cards and product pages start linking to the article automatically.
+4. Alias the cards' ids to the database rows (`ALIASES` in
+   `scripts/db/import-research.mjs` and the row's `aliases` in `products.json`), add
+   ASINs and images for the ids, a `best-of.astro` row and a `priorityGuides` entry.
+5. Tick the rows in `VS-QUEUE.md` with the date, in the same commit.
+
+The two queue articles count toward the day's batch: they fill the 2 comparison slots
+on a Google day, and 2 of the 5 slots while the run is Bing/DuckDuckGo-only
+(brand-vs-brand pages work on Bing too, see rule 6 below). When a new Search Console
+export lands, re-rank the remaining rows by it and add any new pair that shows demand.
+When the queue is empty, say so in the run report.
+
 ### The daily split
 
 Every batch is exactly **5 Google articles + 5 Bing articles = 10**. Label each one
@@ -195,8 +227,7 @@ be promoted by hand once they show demand:
 - Product cards whose id resolves to a database row automatically show "Compare: vs …"
   links to that product's strongest compare pages (`topComparisons` in
   `src/lib/db.mjs`), so the alias is what connects the review to its compare pages.
-- Editorial "X vs Y" articles (Nov 16-18) have barely been seen yet (2 pages, 6
-  impressions). Keep 2 a day until a later export shows how they do.
+- Editorial "X vs Y" articles come from the queue below, 2 a day.
 
 History: the earlier 3-comparison mix came from the second Google export (2026-11-17, in
 `content/search-console/2026-11-17/google/`), which repeated the first. Comparison pages
@@ -484,7 +515,7 @@ IndexNow automatically. No PR — that is the configured workflow.
 ## 7. Report
 
 End the run with: the ten slugs published, each labelled `google` or `bing` with its
-primary keyword and monthly volume, the gate results, and anything skipped and why. If the run failed, say exactly which gate and what is
+primary keyword and monthly volume, which `VS-QUEUE.md` rows were written and how many remain, the gate results, and anything skipped and why. If the run failed, say exactly which gate and what is
 needed — never push a partial batch.
 
 ## Guardrails
