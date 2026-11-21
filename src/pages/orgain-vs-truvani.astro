@@ -1,0 +1,861 @@
+---
+import Layout from "../layouts/Layout.astro";
+import ArticleHeader from "../components/ArticleHeader.astro";
+import TableOfContents from "../components/TableOfContents.astro";
+import ProductCard from "../components/ProductCard.astro";
+import MoreInCategory from "../components/MoreInCategory.astro";
+import { AUTHORS, DEFAULT_AUTHOR, authorSchema } from "../data/authors";
+import { SITE_NAME, SITE_URL } from "../data/site";
+import QuickPicks from "../components/QuickPicks.astro";
+import AuthorBio from "../components/AuthorBio.astro";
+import { pageDates } from "../data/dates";
+
+const moreInCategory = [
+  {
+    "title": "Best Protein Powder Without Heavy Metals",
+    "url": "/best-protein-powder-without-heavy-metals/"
+  },
+  {
+    "title": "Best Organic Protein Powder",
+    "url": "/best-organic-protein-powder/"
+  },
+  {
+    "title": "Whey vs Plant Protein",
+    "url": "/whey-vs-plant-protein/"
+  }
+];
+const author = AUTHORS[DEFAULT_AUTHOR];
+const dates = pageDates(Astro.url.pathname, { published: "2026-11-21", modified: "2026-11-21" });
+const title = "Truvani vs Orgain: Which Plant Protein Has Less Lead?";
+const description =
+  "Truvani tested lower for lead and has a 6-ingredient label; Orgain is cheaper at about $2.26 vs $3.75 per 25 g of protein. Labels, cost and taste compared.";
+
+const PRODUCTS: {
+  id: string;
+  name: string;
+  brand?: string;
+  badge: string;
+  category: string;
+  description: string;
+  pros: string[];
+  cons: string[];
+  bottomLine: string;
+  specs?: Record<string, string>;
+  rating?: number;
+  reviewCount?: number;
+  amazonUrl?: string;
+}[] = [
+  {
+    "id": "orgain-vs-truvani-orgain-organic-plant",
+    "name": "Orgain Organic Protein Plant-Based Protein Powder, Creamy Chocolate Fudge (2.03 lb)",
+    "brand": "Orgain",
+    "badge": "Best Value",
+    "category": "Organic pea, brown rice, mung bean and chia blend",
+    "description": "Orgain Organic Protein Plant-Based gives 21 g of protein in a 46 g scoop with 150 calories, 15 g of carbohydrate, 7 g of fiber, 4.5 g of fat and 390 mg of sodium in Creamy Chocolate Fudge, per the label at the time of writing. The protein is an organic pea, brown rice, mung bean and chia blend with a creamer base, guar and xanthan gums, and Reb A stevia. Consumer Reports measured it at about 143% of its lead level of concern in October 2025.",
+    "pros": [
+      "About $2.26 per 25 g in the 2.03 lb canister (brand site, Nov 21, 2026)",
+      "7 g of fiber and a creamy, filling texture",
+      "All-organic ingredients; vegan, gluten-free and soy-free per Orgain",
+      "Sold in most supermarkets and big-box stores"
+    ],
+    "cons": [
+      "Measured 143% of Consumer Reports' lead level of concern",
+      "About 16 ingredients, including three gums and inulin",
+      "390 mg of sodium per scoop; some versions add erythritol",
+      "No sport certification"
+    ],
+    "bottomLine": "The cheaper, creamier and easier-to-find of the two, best for a few smoothies a week. Skip it if you want a short label or plan to drink plant protein every day.",
+    "specs": {
+      "Protein / serving": "21 g in 46 g (label)",
+      "Calories": "150",
+      "Third-party testing": "No sport certification; USDA Organic, Kosher",
+      "Cost per 25 g": "About $2.26 ($37.99, 2.03 lb, brand site)"
+    },
+    "amazonUrl": "https://www.amazon.com/dp/B00J074W7Q"
+  },
+  {
+    "id": "orgain-vs-truvani-truvani-plant-protein",
+    "name": "Truvani Organic Plant Based Protein Powder, Chocolate (20 servings)",
+    "brand": "Truvani",
+    "badge": "Cleanest Label",
+    "category": "Organic pea, pumpkin seed and chia protein",
+    "description": "Truvani Organic Plant Based Protein gives 20 g of protein in a 33 g scoop with 130 calories, 5 g of carbohydrate, 2 g of sugar, 3 g of fat and 290 mg of sodium in Chocolate, per the label at the time of writing. The six ingredients are organic pea protein, cocoa, vanilla, pumpkin seed, monk fruit and chia seed protein, with no gums or stevia. Consumer Reports reported 0.46 micrograms of lead per serving in January 2026, under its 0.5 microgram level of concern.",
+    "pros": [
+      "Six organic ingredients, no gums, no stevia",
+      "Lower lead reading than Orgain in Consumer Reports' testing",
+      "Publishes batch heavy-metal results at truvani.com/testresults",
+      "About 61% protein by weight"
+    ],
+    "cons": [
+      "About $3.75 per 25 g (brand site, Nov 21, 2026)",
+      "20 g per scoop, below a full post-workout dose",
+      "Buyers report grit when mixed in water",
+      "No sport certification"
+    ],
+    "bottomLine": "The cleaner-label, lower-lead pick for daily use, if you can live with the price. Skip it if cost per gram or a smooth shaker-bottle texture matters more than the ingredient list.",
+    "specs": {
+      "Protein / serving": "20 g in 33 g (label)",
+      "Calories": "130",
+      "Third-party testing": "No sport certification; USDA Organic",
+      "Cost per 25 g": "About $3.75 ($59.99, 20 servings, brand site)"
+    },
+    "amazonUrl": "https://www.amazon.com/dp/B0DDQHJ2NG"
+  }
+];
+
+const schema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Home",
+          item: `${SITE_URL}/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Best Lists",
+          item: `${SITE_URL}/best-of/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 3,
+          name: "Truvani vs Orgain",
+          item: `${SITE_URL}/orgain-vs-truvani/`,
+        },
+      ],
+    },
+    {
+      "@type": "FAQPage",
+      mainEntity: [
+        {
+          "@type": "Question",
+          "name": "Truvani vs Orgain protein powder: which is better?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Truvani is better for a clean label and lower lead; Orgain is better for price. Truvani lists six organic ingredients and tested at 0.46 micrograms of lead per serving in Consumer Reports' January 2026 follow-up, under its 0.5 microgram level of concern. Orgain measured 143% of that level in October 2025 but costs about $2.26 per 25 g of protein against Truvani's $3.75."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does Orgain protein powder have lead?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, at a measurable level. Consumer Reports' October 2025 investigation put Orgain Organic Plant-Based Protein Powder at about 143% of its daily level of concern for lead per serving and listed it as fine to have occasionally. Orgain responded that its products are tested for heavy metals and fall below established food safety thresholds. Use it a few times a week rather than daily."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is Truvani protein powder safe from heavy metals?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Truvani's chocolate plant protein read 0.46 micrograms of lead per serving in Consumer Reports' January 2026 testing, just under its 0.5 microgram level of concern, and the brand publishes batch results at truvani.com/testresults. No plant protein is free of heavy metals, because peas and cacao absorb them from soil, so vanilla and rotation still help."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Which has more protein, Truvani or Orgain?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Orgain has slightly more per scoop, 21 g against 20 g, per the labels. Truvani is more protein-dense: its 33 g scoop is about 61% protein, while Orgain's 46 g scoop is about 46% protein because of its creamer base and added fiber. Per 25 g of protein, Truvani also carries fewer calories, about 163 against 179."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is Truvani or Orgain third-party tested?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Neither carries NSF Certified for Sport or Informed Sport, per the labels we checked. Both are USDA Organic, and Orgain adds a Kosher seal. Truvani posts its own batch heavy-metal results online, and Consumer Reports has lead-tested both. That is useful information, but it is not banned-substance screening, so tested athletes should look elsewhere."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Which tastes better, Orgain or Truvani?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Buyers tend to call Orgain creamier and sweeter, thanks to its creamer base, gums and stevia, and Truvani more natural and earthy, with real-cocoa chocolate but some grit in water. We have not tasted either. If you mostly use a shaker bottle, Orgain mixes more smoothly; if you blend smoothies, Truvani's texture matters much less."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is Orgain or Truvani better for weight loss?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Truvani is slightly better: about 163 calories per 25 g of protein against 179 for Orgain, with 5 g of carbs rather than 15 g per scoop. Orgain's 7 g of fiber can make a shake more filling, though, which helps some dieters. Either works inside a calorie target; the protein and total calories matter more than the brand."
+          }
+        }
+      ],
+    },
+    {
+      "@type": "Article",
+      headline: title,
+      author: authorSchema(),
+      datePublished: dates.published,
+      dateModified: dates.modified,
+      publisher: { "@type": "Organization", name: SITE_NAME, url: SITE_URL },
+    },
+    {
+      "@type": "ItemList",
+      name: title,
+      numberOfItems: PRODUCTS.length,
+      itemListElement: PRODUCTS.map((product, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name: product.name,
+        url: new URL(`#${product.id}`, Astro.url).toString(),
+      })),
+    },
+    ...PRODUCTS.map((product) => ({
+      "@type": "Product",
+      name: product.name,
+      description: product.description,
+      brand: {
+        "@type": "Brand",
+        name: product.brand ?? product.name.split(" ")[0],
+      },
+    })),
+  ],
+};
+---
+
+<Layout
+  title={title}
+  description={description}
+  ogType="article"
+  article={{
+    publishedTime: dates.published,
+    modifiedTime: dates.modified,
+    author: author.name,
+    section: "Comparisons",
+    tags: [
+      "truvani vs orgain",
+      "truvani vs orgain protein powder",
+      "orgain vs truvani",
+      "orgain organic plant protein",
+      "truvani plant protein",
+      "plant protein lead"
+    ],
+  }}
+  jsonLd={schema}
+  stickyCta={{
+    text: "See Our Top Plant-Based Protein Picks",
+    link: "/best-plant-based-protein-powder/",
+  }}
+>
+  <article class="relative overflow-hidden">
+    <ArticleHeader kicker={"Head-to-Head"} badge={"Label-Checked"} author={author} dates={dates} mobileAd={false}>
+      <Fragment slot="title">Truvani vs Orgain Protein Powder</Fragment>
+      Two organic plant proteins sold to label readers. Here is how Truvani and Orgain differ on lead testing, ingredients, protein, cost per 25 g and what buyers say about taste.
+    </ArticleHeader>
+
+    <TableOfContents>
+      <a href="#short-answer">Short Answer</a>
+      <a href="#at-a-glance">At a Glance</a>
+      <a href="#top-picks">The Products</a>
+      <a href="#spec-sheets">Spec Sheets</a>
+      <a href="#lead">Lead and Heavy Metals</a>
+      <a href="#clean-label">Cleaner Label</a>
+      <a href="#protein">Protein per Scoop</a>
+      <a href="#cost">Cost per 25 g</a>
+      <a href="#testing">Third-Party Testing</a>
+      <a href="#taste">Taste and Mixing</a>
+      <a href="#truvani-strengths">Truvani Pros and Cons</a>
+      <a href="#orgain-strengths">Orgain Pros and Cons</a>
+      <a href="#which-to-buy">Which to Buy</a>
+      <a href="#skip-both">Who Should Skip Both</a>
+      <a href="#sources">Sources and Updates</a>
+      <a href="#mistakes">Common Mistakes</a>
+      <a href="#faq">FAQ</a>
+    </TableOfContents>
+
+    <!-- Content -->
+    <div class="max-w-3xl mx-auto px-4 pb-16 lg:pb-24">
+      <div class="prose prose-lg prose-blue max-w-none text-gray-700 leading-relaxed">
+        <p class="lede">
+          Truvani is the better plant protein for clean-label shoppers: six ingredients, monk fruit, and a lower lead reading than Orgain in Consumer Reports' testing. Orgain wins if price comes first, at about $2.26 per 25 g of protein against $3.75, and how often you drink it changes the answer. Below we compare lead, labels, protein, cost, testing and buyer-reported taste.
+        </p>
+
+        <QuickPicks products={PRODUCTS} />
+
+        <div id="short-answer" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            1. Truvani vs Orgain: The Short Answer
+          </h2>
+
+          <p>
+            Truvani is the better pick if a short, clean label and lower lead are what you care about; Orgain is the better pick if you want the lower price, more fiber and an easy supermarket find. <a href="/protein-powder/truvani-plant-protein/">Truvani Organic Plant Based Protein</a> lists six ingredients and came in under Consumer Reports' lead level of concern in its January 2026 testing, while <a href="/protein-powder/orgain-organic-plant-protein/">Orgain Organic Protein Plant-Based</a> lists about sixteen and measured 143% of that level in the October 2025 round. Orgain costs roughly $2.26 per 25 g of protein in its 2.03 lb canister against about $3.75 for Truvani, at brand-site prices on Nov 21, 2026.
+          </p>
+
+          <p>
+            Pick Truvani if you are buying for pregnancy, for a child, or simply for daily use and want the fewest additives and the lower lead reading. Pick Orgain if price per gram matters most, if you like a thicker, creamier shake, or if you want 7 g of fiber in the scoop. Pick neither if you are a drug-tested athlete, because neither carries NSF Certified for Sport or Informed Sport.
+          </p>
+
+          <div class="overflow-hidden border border-gray-200 rounded-2xl my-8">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Factor</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Orgain Organic Plant</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Truvani Plant Protein</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Protein per scoop</td>
+                    <td class="px-4 py-4 text-gray-700">21 g in 46 g</td>
+                    <td class="px-4 py-4 text-gray-700">20 g in 33 g</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Ingredients</td>
+                    <td class="px-4 py-4 text-gray-700">About 16, incl. three gums</td>
+                    <td class="px-4 py-4 text-gray-700">6</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Lead (Consumer Reports)</td>
+                    <td class="px-4 py-4 text-gray-700">143% of level of concern</td>
+                    <td class="px-4 py-4 text-gray-700">0.46 µg/serving, under the 0.5 µg level</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Sweetener</td>
+                    <td class="px-4 py-4 text-gray-700">Stevia (Reb A)</td>
+                    <td class="px-4 py-4 text-gray-700">Monk fruit</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Cost per 25 g protein</td>
+                    <td class="px-4 py-4 text-gray-700">About $2.26</td>
+                    <td class="px-4 py-4 text-gray-700">About $3.75</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Label Score</td>
+                    <td class="px-4 py-4 text-gray-700">21/100</td>
+                    <td class="px-4 py-4 text-gray-700">41/100</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div id="at-a-glance" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            2. Compare Truvani and Orgain at a Glance
+          </h2>
+
+          <p>
+            The two brands sell to the same shopper, the one who reads the back of the tub, but they make different trade-offs. Orgain builds a creamy, dessert-like shake with a creamer base and gums, and keeps the price down. Truvani strips the formula back to pea protein, cocoa, vanilla, pumpkin seed, chia and monk fruit, and charges more for it. The table below sums up who each one suits.
+          </p>
+
+          <div class="overflow-hidden border border-gray-200 rounded-2xl my-8">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Pick</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Best for</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Skip it if</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Label Score</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Cost per 25 g</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Truvani Plant Protein</td>
+                    <td class="px-4 py-4 text-gray-700">Short labels, daily use, lower lead reading</td>
+                    <td class="px-4 py-4 text-gray-700">You want 25 g+ per scoop or a low price</td>
+                    <td class="px-4 py-4 text-gray-700">41/100</td>
+                    <td class="px-4 py-4 text-gray-700">About $3.75</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Orgain Organic Plant</td>
+                    <td class="px-4 py-4 text-gray-700">Budget, fiber, creamy texture, grocery-store access</td>
+                    <td class="px-4 py-4 text-gray-700">You avoid gums, stevia or higher-lead plant powders</td>
+                    <td class="px-4 py-4 text-gray-700">21/100</td>
+                    <td class="px-4 py-4 text-gray-700">About $2.26</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <p>
+            Both Label Scores are low by our standards because neither powder carries a third-party certification and neither is protein-dense. Our <a href="/methodology/">Label Score method</a> weighs protein density, cost per 25 g, sugar and additives, certification and amino acid completeness, so a plant blend with no seal starts behind. Truvani scores 20 points higher mainly on its shorter ingredient list and higher protein density.
+          </p>
+        </div>
+
+        <!-- Picks -->
+        <div id="top-picks" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            3. The Two Powders Compared
+          </h2>
+
+          <p>
+            One card per brand, using each one's flagship organic plant protein in chocolate. Prices are one-time brand-site prices read on Nov 21, 2026.
+          </p>
+
+          {PRODUCTS.map((product, index) => (
+            <ProductCard product={product} rank={index + 1} />
+          ))}
+        </div>
+
+        <div id="spec-sheets" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            4. Spec Sheets Side by Side
+          </h2>
+
+          <p>
+            Here is everything on both labels, with the chocolate flavor of each as the reference. Orgain's panel comes from a Giant Food Stores listing of the 16.3 oz Creamy Chocolate Fudge can; Truvani's comes from the Whole Foods Market listing of the 23.63 oz Chocolate tub. Prices are the one-time brand-site prices we read on Nov 21, 2026.
+          </p>
+
+          <div class="overflow-hidden border border-gray-200 rounded-2xl my-8">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Spec</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Orgain Organic Plant</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Truvani Plant Protein</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Protein</td>
+                    <td class="px-4 py-4 text-gray-700">21 g</td>
+                    <td class="px-4 py-4 text-gray-700">20 g</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Scoop size</td>
+                    <td class="px-4 py-4 text-gray-700">46 g</td>
+                    <td class="px-4 py-4 text-gray-700">33 g (33.5 g per Truvani)</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Calories</td>
+                    <td class="px-4 py-4 text-gray-700">150</td>
+                    <td class="px-4 py-4 text-gray-700">130</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Carbs</td>
+                    <td class="px-4 py-4 text-gray-700">15 g</td>
+                    <td class="px-4 py-4 text-gray-700">5 g</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Fiber</td>
+                    <td class="px-4 py-4 text-gray-700">7 g</td>
+                    <td class="px-4 py-4 text-gray-700">2 g</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Sugar</td>
+                    <td class="px-4 py-4 text-gray-700">Under 1 g (retailer note)</td>
+                    <td class="px-4 py-4 text-gray-700">2 g</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Fat</td>
+                    <td class="px-4 py-4 text-gray-700">4.5 g</td>
+                    <td class="px-4 py-4 text-gray-700">3 g</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Sodium</td>
+                    <td class="px-4 py-4 text-gray-700">390 mg</td>
+                    <td class="px-4 py-4 text-gray-700">290 mg</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Sweeteners</td>
+                    <td class="px-4 py-4 text-gray-700">Stevia (Reb A)</td>
+                    <td class="px-4 py-4 text-gray-700">Monk fruit extract</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Certification</td>
+                    <td class="px-4 py-4 text-gray-700">USDA Organic, Kosher</td>
+                    <td class="px-4 py-4 text-gray-700">USDA Organic</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Servings</td>
+                    <td class="px-4 py-4 text-gray-700">10 (1.02 lb) or about 20 (2.03 lb)</td>
+                    <td class="px-4 py-4 text-gray-700">10 or 20</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Price</td>
+                    <td class="px-4 py-4 text-gray-700">$25.99 (1.02 lb), $37.99 (2.03 lb)</td>
+                    <td class="px-4 py-4 text-gray-700">$29.99 (10), $59.99 (20)</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Cost per 25 g</td>
+                    <td class="px-4 py-4 text-gray-700">About $2.26 (2.03 lb), $3.09 (1.02 lb)</td>
+                    <td class="px-4 py-4 text-gray-700">About $3.75</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Label Score</td>
+                    <td class="px-4 py-4 text-gray-700">21/100</td>
+                    <td class="px-4 py-4 text-gray-700">41/100</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <p>
+            Two numbers jump out. Orgain carries 390 mg of sodium and 15 g of carbohydrate per scoop, which is a lot for a protein powder and reflects the creamer base, fiber and sea salt. Truvani's scoop is 13 g lighter, so 61% of it is protein against 46% for Orgain. The Orgain 2.03 lb serving count is our estimate from weight (2.03 lb divided by a 46 g scoop is about 20); Orgain's page did not list it.
+          </p>
+        </div>
+
+        <div id="lead" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            5. Which Has More Lead, Truvani or Orgain?
+          </h2>
+
+          <p>
+            Orgain measured higher for lead in Consumer Reports' testing than Truvani did. In its <a href="https://www.consumerreports.org/health/supplements/protein-powders-and-shakes-contain-high-levels-of-lead-a4206364640/" rel="nofollow noopener" target="_blank">October 2025 investigation</a>, Consumer Reports put Orgain Organic Plant-Based Protein Powder at about 143% of its 0.5 microgram daily level of concern for lead per serving and listed it as fine to have occasionally through the week rather than daily. Consumer Reports' January 2026 <a href="https://www.consumerreports.org/health/food-safety/these-five-protein-powders-had-low-lead-levels-a1151050701" rel="nofollow noopener" target="_blank">follow-up on five more powders</a>, which included Truvani's chocolate plant protein, reported 0.46 micrograms of lead per serving for Truvani, just under that 0.5 microgram level.
+          </p>
+
+          <p>
+            That gives Truvani the edge, but read it with care. The two powders were tested months apart, in different rounds, and a single sample of one flavor is not a guarantee for every lot. Lead in plant protein comes mostly from the soil the peas, rice and seeds grow in, and cacao adds its own share, so chocolate flavors of any plant powder tend to read higher than vanilla or unflavored. Both readings are also measured against a level built on California's Proposition 65, which is far stricter than federal limits; critics quoted in coverage of the report called it a cautious benchmark rather than a safety line.
+          </p>
+
+          <p>
+            Truvani also does something Orgain does not do as visibly: it publishes batch test results for heavy metals at <a href="https://www.truvani.com/testresults" rel="nofollow noopener" target="_blank">truvani.com/testresults</a>. Those are the brand's own results, not an independent certification, and our database has not recorded a number from them. Orgain told reporters after the Consumer Reports investigation that its products are tested for heavy metals and fall below established food safety thresholds, but we did not find a public batch-by-batch page for it.
+          </p>
+
+          <p>
+            If lead is your main worry, the practical moves matter more than the brand. Choose vanilla or unflavored over chocolate, rotate between protein sources instead of drinking one plant powder twice a day, and consider whey or egg protein on most days. Our guide to <a href="/best-protein-powder-without-heavy-metals/">protein powder without heavy metals</a> lists the options with the lowest published readings.
+          </p>
+        </div>
+
+        <div id="clean-label" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            6. Which Has the Cleaner Label, Truvani or Orgain?
+          </h2>
+
+          <p>
+            Truvani has the cleaner label by a wide margin: six ingredients against roughly sixteen. The chocolate tub lists organic pea protein, organic alkalized cocoa, organic vanilla powder, organic pumpkin seed, organic monk fruit extract and organic chia seed protein, and nothing else, per the Whole Foods Market listing. There are no gums, no oils, no added fiber and no stevia.
+          </p>
+
+          <p>
+            Orgain's list is longer because the shake is engineered for texture. Its protein blend is pea, brown rice, mung bean and chia, and then comes the Orgain Creamer Base of organic acacia, high-oleic sunflower oil, rice dextrin, sunflower lecithin and rosemary extract, followed by cocoa, natural flavors, agave inulin fiber, Reb A stevia, sea salt, more acacia, guar gum and xanthan gum. None of these is unsafe, and every ingredient is organic, but three gums plus inulin are the usual suspects when a plant shake causes bloating.
+          </p>
+
+          <p>
+            There is one more Orgain wrinkle: retailer listings note that sweetener and fiber sources vary across package versions, and some versions list erythritol alongside stevia. If you avoid sugar alcohols, check the panel on the exact tub in your hand rather than trusting a photo online. Truvani's sweetener is monk fruit only, and the brand markets the line as stevia-free, which matters to people who taste a bitter finish from stevia.
+          </p>
+
+          <p>
+            Clean does not mean tested, though. USDA Organic rules cover farming and pesticides, not the heavy metals a plant draws from soil, so a short organic label and a low lead reading are two separate questions. Truvani happens to win both here, but that is the result of testing, not of the organic seal.
+          </p>
+        </div>
+
+        <div id="protein" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            7. Which Has More Protein per Scoop?
+          </h2>
+
+          <p>
+            Orgain has 1 g more protein per scoop, 21 g against 20 g, but Truvani packs more protein into each gram of powder. Orgain's 46 g scoop is 46% protein; Truvani's 33 g scoop is about 61% protein. The difference is the creamer base and fiber Orgain adds, which bulk up the scoop without adding protein.
+          </p>
+
+          <p>
+            Per 25 g of protein, Truvani also costs you fewer calories: about 163 against about 179 for Orgain, using each label's calories scaled up. That gap is small in a smoothie that already has fruit and milk, but it is real if you drink the powder in water to hit a protein target on a calorie budget.
+          </p>
+
+          <p>
+            Neither reaches the 25 g that many lifters aim for in one shake, and neither publishes a leucine figure on the panels we read. Pea-based blends usually need a slightly bigger dose to match whey for muscle building, so plan on a scoop and a half if that is your goal. Our <a href="/whey-vs-plant-protein/">whey vs plant protein</a> guide covers when a plant blend is the right base and when whey does the job for less.
+          </p>
+        </div>
+
+        <div id="cost" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            8. Which Is Cheaper per 25 g of Protein, Orgain or Truvani?
+          </h2>
+
+          <p>
+            Orgain is cheaper, at about $2.26 per 25 g of protein in the 2.03 lb canister against about $3.75 for Truvani. Those figures use one-time prices on <a href="https://orgain.com/products/organic-protein-plant-based-protein-powder" rel="nofollow noopener" target="_blank">Orgain's product page</a> ($37.99 for 2.03 lb) and <a href="https://shop.truvani.com/products/plant-based-protein-powder-20-servings-recharge-new" rel="nofollow noopener" target="_blank">Truvani's shop</a> ($59.99 for 20 servings), read on Nov 21, 2026. Orgain listed a subscription price of $32.29 for the 2.03 lb canister in our Nov 1 check, which would bring it closer to $1.92 per 25 g.
+          </p>
+
+          <p>
+            The small Orgain can is a worse deal: $25.99 for 10 servings works out to about $3.09 per 25 g, so the bigger canister saves about a quarter. Truvani's 10-serving tub ($29.99) costs the same per serving as its 20-serving tub, so there is no bulk saving on the brand site; single-serve packets ($39.99 for a box of 10) cost more still.
+          </p>
+
+          <p>
+            Retail prices move. Orgain is a supermarket staple and also sells on Amazon, while Truvani sells mainly direct, on Amazon and at Whole Foods Market, so sale prices at a store can beat the brand-site figures above. Use the cost-per-25 g number, not the tub price, when you compare offers. Our <a href="/protein-powder-comparison/">protein powder comparison table</a> ranks every powder we track on that number.
+          </p>
+        </div>
+
+        <div id="testing" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            9. Is Truvani or Orgain Third-Party Tested?
+          </h2>
+
+          <p>
+            Neither Truvani nor Orgain carries a sport certification such as NSF Certified for Sport or Informed Sport, per the labels and listings we checked. Orgain's seals are USDA Organic and Kosher; Truvani's plant protein carries USDA Organic. Those certify how the ingredients were grown and handled, not that the finished powder was screened for banned substances or contaminants.
+          </p>
+
+          <p>
+            The difference is transparency. Truvani publishes its own batch test results at <a href="https://www.truvani.com/testresults" rel="nofollow noopener" target="_blank">truvani.com/testresults</a>, so you can at least see what the brand says it found. Orgain says it tests for heavy metals but we did not find a public results page. Consumer Reports' lead testing is the only independent figure we have for either product, and it is a single snapshot.
+          </p>
+
+          <p>
+            If you compete in a tested sport, skip both and buy a certified powder. If you simply want independent checks, the Consumer Reports results above and the brand's own Truvani results are the best evidence currently available for this pair.
+          </p>
+        </div>
+
+        <div id="taste" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            10. Which Tastes Better and Mixes Easier?
+          </h2>
+
+          <p>
+            Buyers generally describe Orgain as the creamier, sweeter shake and Truvani as the earthier, more natural-tasting one. We have not tasted either powder; this section summarizes what buyers report in retailer reviews. Orgain's creamer base, gums and stevia give it a thicker, milkshake-like body, and its Creamy Chocolate Fudge and Vanilla Bean flavors are the ones most shoppers know from the grocery aisle.
+          </p>
+
+          <p>
+            Truvani's short ingredient list means less to mask the taste of pea and pumpkin seed. Buyers who like it say the chocolate tastes like real cocoa rather than candy; buyers who do not say it is gritty in water and better blended into a smoothie with banana or nut butter. Truvani offers a longer flavor list, including Vanilla Chai, Banana Cinnamon, Matcha, Lemon Cookie and an Unflavored and Unsweetened version for cooking.
+          </p>
+
+          <p>
+            For mixing, the gums in Orgain help it stay suspended in a shaker, while Truvani, with no gums, tends to settle and does best in a blender. If texture is a deal-breaker, start with Truvani's 10-serving tub or a sample box before committing to the larger size.
+          </p>
+        </div>
+
+        <div id="truvani-strengths" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            11. What Truvani Does Well and Where It Falls Short
+          </h2>
+
+          <p>
+            Truvani's strength is restraint: six organic ingredients, monk fruit instead of stevia, no gums, 61% protein by weight and the lower of the two lead readings. It is the easier recommendation for anyone reading labels for a child, a pregnancy or a sensitive stomach, and its <a href="https://www.truvani.com/testresults" rel="nofollow noopener" target="_blank">truvani.com/testresults</a> page gives more visibility than most plant brands. Our <a href="/truvani-protein-powder-review/">Truvani protein powder review</a> covers the rest of the range, including the whey and the Protein + Greens blend.
+          </p>
+
+          <p>
+            Its weaknesses are price and dose. At about $3.75 per 25 g it is one of the pricier plant proteins we track, and 20 g per scoop is below a full post-workout serving. Buyers also report a gritty texture in water. Truvani Protein + Greens is not a cheaper way in: it gives only 10 g of protein in an 18 g scoop, and its label carries a California Prop 65 lead warning, per our database notes.
+          </p>
+        </div>
+
+        <div id="orgain-strengths" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            12. What Orgain Does Well and Where It Falls Short
+          </h2>
+
+          <p>
+            Orgain's strength is value and convenience. At about $2.26 per 25 g in the big canister it costs roughly 40% less than Truvani per gram of protein, it is on the shelf in most supermarkets, and its 7 g of fiber and creamy texture make it a filling smoothie base. Every ingredient is organic, and it is vegan, gluten-free and soy-free, per Orgain.
+          </p>
+
+          <p>
+            Its weaknesses are the label and the lead. The formula leans on a creamer base, three gums, inulin and stevia, sodium runs to 390 mg a scoop, and some package versions add erythritol. Consumer Reports' 143% lead reading puts it in the occasional-use column. Our <a href="/orgain-protein-powder-review/">Orgain protein powder review</a> covers its other lines, including the 30 g vegan formula and the grass-fed whey, for readers who like the brand but want a better fit.
+          </p>
+        </div>
+
+        <div id="which-to-buy" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            13. Which Should You Buy, Truvani or Orgain Protein Powder?
+          </h2>
+
+          <p>
+            Buy Truvani if you read labels first: it is the one with six ingredients, monk fruit and the lower lead reading. Buy Orgain if you read the price first: it is the cheaper per gram, easier to find and creamier. Here is how that breaks down by buyer.
+          </p>
+
+          <p>
+            Pregnant, nursing or buying for kids: Truvani, ideally in vanilla or unflavored, and not as a twice-daily habit. Budget shopper with a smoothie routine: Orgain in the 2.03 lb canister. Sensitive to gums, inulin or stevia: Truvani. Wants fiber and fullness in a meal-replacement shake: Orgain. Wants the most protein per calorie: Truvani, though neither is efficient. Drug-tested athlete: neither; pick a certified powder from our <a href="/best-plant-based-protein-powder/">best plant-based protein powder</a> guide.
+          </p>
+
+          <p>
+            If you are torn, the tie-breaker is how often you drink it. For one or two shakes a week, Orgain's lower price wins and its lead reading matters less. For a daily shake, Truvani's cleaner label and lower reading are worth the extra $1.50 or so per 25 g.
+          </p>
+        </div>
+
+        <div id="skip-both" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            14. Who Should Skip Both?
+          </h2>
+
+          <p>
+            Skip both if you want 25 g or more of protein in one scoop at a low price; a whey isolate or a 30 g vegan blend does that for less. Skip both if you are a tested athlete, since neither carries a sport certification. And skip both if minimizing heavy metals is your top priority, because whey and egg protein generally read lower than any plant powder.
+          </p>
+
+          <p>
+            People with a pea allergy should skip both as well, since pea protein is the first ingredient in each. Neither label carries a 'Contains' allergen statement in the listings we read, so if you have a severe allergy, contact the brand about shared facilities before buying.
+          </p>
+        </div>
+
+        <div id="sources" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            15. Sources and Recent Updates
+          </h2>
+
+          <h3 class="text-2xl font-bold text-gray-900 mt-10 mb-4">Recent updates</h3>
+
+          <p>
+            Nov 21, 2026: published. This page replaces the old /compare/ pages for every Orgain and Truvani product pair, which now redirect here. Prices were re-read on both brand sites the same day.
+          </p>
+
+          <h3 class="text-2xl font-bold text-gray-900 mt-10 mb-4">What this page is based on</h3>
+
+          <p>
+            Orgain label: the <a href="https://giantfoodstores.com/groceries/product/orgain-organic-chocolate-fudge-21g-plant-based-protein-powder-16-3-oz-can/236964" rel="nofollow noopener" target="_blank">Giant Food Stores listing</a> and <a href="https://orgain.com/products/organic-protein-plant-based-protein-powder" rel="nofollow noopener" target="_blank">Orgain's product page</a>. Truvani label: the <a href="https://www.wholefoodsmarket.com/grocery/product/truvani-organic-chocolate-plant-protein-powder-2363-oz-b07m95n225" rel="nofollow noopener" target="_blank">Whole Foods Market listing</a>, <a href="https://shop.truvani.com/products/plant-based-protein-powder-20-servings-recharge-new" rel="nofollow noopener" target="_blank">Truvani's shop</a> and <a href="https://www.truvani.com/testresults" rel="nofollow noopener" target="_blank">truvani.com/testresults</a>. Lead: Consumer Reports' <a href="https://www.consumerreports.org/health/supplements/protein-powders-and-shakes-contain-high-levels-of-lead-a4206364640/" rel="nofollow noopener" target="_blank">October 2025 investigation</a> and its January 2026 <a href="https://www.consumerreports.org/health/food-safety/these-five-protein-powders-had-low-lead-levels-a1151050701" rel="nofollow noopener" target="_blank">follow-up on five more powders</a>. Scores and cost per 25 g follow our <a href="/methodology/">methodology</a>; how we gather label data is on <a href="/how-we-test/">how we test</a>. Both database entries were last label-checked on Nov 1, 2026: <a href="/protein-powder/orgain-organic-plant-protein/">Orgain Organic Protein Plant-Based</a> and <a href="/protein-powder/truvani-plant-protein/">Truvani Organic Plant Based Protein</a>.
+          </p>
+        </div>
+
+        <!-- Common Mistakes -->
+        <div id="mistakes" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            16. Common Mistakes to Avoid
+          </h2>
+
+          <div class="space-y-6 my-8">
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Treating the organic seal as a heavy-metal test</h3>
+              <p class="text-gray-700 text-sm m-0">
+                USDA Organic governs farming, pesticides and handling. It says nothing about the lead or cadmium a pea plant pulls from soil. Orgain and Truvani are both organic, yet Consumer Reports measured them on different sides of its lead level of concern. Judge lead by test results, not by the seal.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Comparing tub prices instead of cost per 25 g</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Truvani's $29.99 tub and Orgain's $25.99 can look close, but the Orgain can holds 21 g servings and its bigger canister drops to about $2.26 per 25 g. Truvani stays near $3.75 at either size. Divide by grams of protein, not by the sticker.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Assuming every Orgain tub has the same sweetener</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Retailer listings note Orgain's sweetener and fiber sources vary by package version, and some list erythritol next to stevia. If sugar alcohols upset your stomach, read the panel on the tub you are buying, not a photo from a review or an old listing.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Drinking chocolate plant protein twice a day</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Cacao adds its own heavy metals on top of the plant protein, so chocolate is usually the highest-reading flavor in any plant line. If you use either brand daily, switch to vanilla or unflavored, or alternate with a whey or egg shake to spread the exposure out.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Counting one scoop as a full post-workout dose</h3>
+              <p class="text-gray-700 text-sm m-0">
+                At 20 g and 21 g, neither scoop reaches the 25 g many people aim for after training, and pea-based blends carry less leucine than whey. Use a scoop and a half, or add Greek yogurt or milk, if muscle building is the reason you bought it.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ -->
+        <div id="faq" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            17. Frequently Asked Questions
+          </h2>
+
+          <div class="faq-list">
+            <details class="faq-item">
+              <summary><h3>Truvani vs Orgain protein powder: which is better?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  Truvani is better for a clean label and lower lead; Orgain is better for price. Truvani lists six organic ingredients and tested at 0.46 micrograms of lead per serving in Consumer Reports' January 2026 follow-up, under its 0.5 microgram level of concern. Orgain measured 143% of that level in October 2025 but costs about $2.26 per 25 g of protein against Truvani's $3.75.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>Does Orgain protein powder have lead?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  Yes, at a measurable level. Consumer Reports' October 2025 investigation put Orgain Organic Plant-Based Protein Powder at about 143% of its daily level of concern for lead per serving and listed it as fine to have occasionally. Orgain responded that its products are tested for heavy metals and fall below established food safety thresholds. Use it a few times a week rather than daily.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>Is Truvani protein powder safe from heavy metals?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  Truvani's chocolate plant protein read 0.46 micrograms of lead per serving in Consumer Reports' January 2026 testing, just under its 0.5 microgram level of concern, and the brand publishes batch results at truvani.com/testresults. No plant protein is free of heavy metals, because peas and cacao absorb them from soil, so vanilla and rotation still help.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>Which has more protein, Truvani or Orgain?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  Orgain has slightly more per scoop, 21 g against 20 g, per the labels. Truvani is more protein-dense: its 33 g scoop is about 61% protein, while Orgain's 46 g scoop is about 46% protein because of its creamer base and added fiber. Per 25 g of protein, Truvani also carries fewer calories, about 163 against 179.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>Is Truvani or Orgain third-party tested?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  Neither carries NSF Certified for Sport or Informed Sport, per the labels we checked. Both are USDA Organic, and Orgain adds a Kosher seal. Truvani posts its own batch heavy-metal results online, and Consumer Reports has lead-tested both. That is useful information, but it is not banned-substance screening, so tested athletes should look elsewhere.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>Which tastes better, Orgain or Truvani?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  Buyers tend to call Orgain creamier and sweeter, thanks to its creamer base, gums and stevia, and Truvani more natural and earthy, with real-cocoa chocolate but some grit in water. We have not tasted either. If you mostly use a shaker bottle, Orgain mixes more smoothly; if you blend smoothies, Truvani's texture matters much less.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>Is Orgain or Truvani better for weight loss?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  Truvani is slightly better: about 163 calories per 25 g of protein against 179 for Orgain, with 5 g of carbs rather than 15 g per scoop. Orgain's 7 g of fiber can make a shake more filling, though, which helps some dieters. Either works inside a calorie target; the protein and total calories matter more than the brand.
+                </p>
+              </div>
+            </details>
+
+          </div>
+        </div>
+
+        <!-- Related Guides -->
+        <div class="mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">Related Plant Protein Guides</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <a href="/best-plant-based-protein-powder/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#16A34A] font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Plant-Based Protein Powder</h3>
+              <p class="text-gray-500 text-sm mt-2">Every plant protein we track, ranked by Label Score and cost per 25 g.</p>
+            </a>
+            <a href="/truvani-protein-powder-review/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#FF4500] font-black text-xs uppercase tracking-widest mb-2">Brand Review</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Truvani Protein Powder Review</h3>
+              <p class="text-gray-500 text-sm mt-2">The plant, whey and Protein + Greens lines read off the label.</p>
+            </a>
+            <a href="/orgain-protein-powder-review/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#2563EB] font-black text-xs uppercase tracking-widest mb-2">Brand Review</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Orgain Protein Powder Review</h3>
+              <p class="text-gray-500 text-sm mt-2">The 21 g plant tub, the 30 g vegan, Simple and grass-fed whey compared.</p>
+            </a>
+            <a href="/whey-vs-plant-protein/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#7C3AED] font-black text-xs uppercase tracking-widest mb-2">Head-to-Head</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Whey vs Plant Protein</h3>
+              <p class="text-gray-500 text-sm mt-2">When a plant blend makes sense and when whey does the job for less.</p>
+            </a>
+            <a href="/clean-simple-eats-vs-just-ingredients/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#0EA5E9] font-black text-xs uppercase tracking-widest mb-2">Head-to-Head</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Clean Simple Eats vs Just Ingredients</h3>
+              <p class="text-gray-500 text-sm mt-2">Two more clean-label brands compared on sweeteners, testing and cost.</p>
+            </a>
+          </div>
+        </div>
+
+        <!-- Closing -->
+        <div class="mt-16 bg-gray-900 text-white rounded-2xl p-6 md:p-8">
+          <h2 class="text-2xl font-black text-white mb-4">The Bottom Line</h2>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            Truvani vs Orgain comes down to label against price. Truvani gives you six organic ingredients, monk fruit, no gums and the lower lead reading of the two in Consumer Reports' testing, for about $3.75 per 25 g of protein. Orgain gives you a creamier, higher-fiber shake that is easy to find, for about $2.26 per 25 g, with a longer ingredient list and a lead reading above Consumer Reports' level of concern.
+          </p>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            For a daily shake, especially for pregnancy or kids, buy Truvani and favor vanilla. For an occasional smoothie on a budget, Orgain's big canister is the better deal. If you need a sport certification or the lowest possible heavy metals, skip both and start from our plant-based and low-heavy-metal guides.
+          </p>
+        </div>
+
+        <MoreInCategory category="Comparisons" links={moreInCategory} />
+
+        <AuthorBio />
+      </div>
+    </div>
+  </article>
+</Layout>
