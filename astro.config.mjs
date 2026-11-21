@@ -36,6 +36,17 @@ const pillarGuides = new Set([
 // sitemap priority than the 0.5 default so crawlers reach them sooner. The daily
 // publishing run adds each new slug here (see .claude/skills/daily-publish).
 const priorityGuides = new Set([
+  // Daily batch (2026-11-21): 5 Google + 5 Bing articles.
+  'ascent-vs-optimum-nutrition',
+  'levels-vs-ascent-protein',
+  'rule-1-protein-powder-review',
+  'aloha-protein-powder-review',
+  'best-boba-protein-powder',
+  'ketogenics-protein-powder-review',
+  'mikuna-protein-powder-review',
+  'carnivor-protein-powder-review',
+  'ancient-nutrition-protein-powder-review',
+  'walgreens-protein-powder',
   // Extra batch (2026-11-20): 5 Google + 5 Bing articles.
   'best-marshmallow-protein-powder',
   'best-micellar-casein-protein-powder',
