@@ -17,8 +17,8 @@ old pair URLs 301 to it. Then tick the row here (`[x] 2026-MM-DD`).
 | [x] 2026-11-21 | 3 | FlavCity vs Just Ingredients | `/flavcity-vs-just-ingredients/` | `flavcity`, `just-ingredients` | 63 | 0 | flavcity vs just ingredients (3) | `flavcity-protein-smoothie-vs-just-ingredients-protein-powder` |
 | [x] 2026-11-21 | 4 | Ryse vs Dymatize | `/ryse-vs-dymatize/` | `ryse`, `dymatize` | 53 | 2 | ryse vs dymatize (2) | `dymatize-iso100-vs-ryse-loaded-protein` |
 | [x] 2026-11-21 | 5 | Body Fortress vs Premier Protein | `/body-fortress-vs-premier-protein/` | `body-fortress`, `premier-protein` | 53 | 0 | - | `body-fortress-super-advanced-whey-vs-premier-protein-powder` |
-| [ ] | 6 | Naked vs Optimum Nutrition | `/naked-vs-optimum-nutrition/` | `naked-nutrition`, `optimum-nutrition` | 51 | 2 | - | `naked-whey-vs-optimum-nutrition-gold-standard-whey` |
-| [ ] | 7 | Clean Simple Eats vs Levels | `/clean-simple-eats-vs-levels/` | `clean-simple-eats`, `levels` | 49 | 2 | - | `clean-simple-eats-whey-protein-vs-levels-grass-fed-whey` |
+| [x] 2026-11-22 | 6 | Naked vs Optimum Nutrition | `/naked-vs-optimum-nutrition/` | `naked-nutrition`, `optimum-nutrition` | 51 | 2 | - | `naked-whey-vs-optimum-nutrition-gold-standard-whey` |
+| [x] 2026-11-22 | 7 | Clean Simple Eats vs Levels | `/clean-simple-eats-vs-levels/` | `clean-simple-eats`, `levels` | 49 | 2 | - | `clean-simple-eats-whey-protein-vs-levels-grass-fed-whey` |
 | [ ] | 8 | Levels vs Premier Protein | `/levels-vs-premier-protein/` | `levels`, `premier-protein` | 46 | 0 | - | `levels-grass-fed-whey-vs-premier-protein-powder` |
 | [ ] | 9 | Isopure vs Premier Protein | `/isopure-vs-premier-protein/` | `isopure`, `premier-protein` | 45 | 2 | isopure vs premier protein (2) | `isopure-low-carb-vs-premier-protein-powder` |
 | [ ] | 10 | FlavCity vs Premier Protein | `/flavcity-vs-premier-protein/` | `flavcity`, `premier-protein` | 45 | 0 | - | `flavcity-protein-smoothie-vs-premier-protein-powder` |
