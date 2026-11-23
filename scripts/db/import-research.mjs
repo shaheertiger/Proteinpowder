@@ -14,11 +14,11 @@ const OUT = join(import.meta.dirname, '..', '..', 'src', 'data', 'db', 'products
 
 // Roundup product ids that are the same product as a database row.
 const ALIASES = {
-  'optimum-nutrition-gold-standard-whey': ['optimum-nutrition-gold-standard-100-whey', 'ghost-vs-optimum-nutrition-on-gold-standard-whey', 'isopure-vs-optimum-nutrition-on-gold-standard-whey', 'naked-vs-optimum-nutrition-on-gold-standard-whey'],
+  'optimum-nutrition-gold-standard-whey': ['optimum-nutrition-gold-standard-100-whey', 'ghost-vs-optimum-nutrition-on-gold-standard-whey', 'isopure-vs-optimum-nutrition-on-gold-standard-whey', 'naked-vs-optimum-nutrition-on-gold-standard-whey', 'vitamin-shoppe-on-gold-standard-whey', 'black-friday-on-gold-standard-whey'],
   'optimum-nutrition-gold-standard-casein': ['optimum-nutrition-gold-standard-100-casein'],
-  'dymatize-iso100': ['dymatize-iso100-hydrolyzed', 'wpi-dymatize-iso100', 'dymatize-vs-premier-protein-dymatize-iso100-gourmet-chocolate', 'ryse-vs-dymatize-dymatize-iso100'],
-  'isopure-zero-carb': ['wpi-isopure-zero-carb', 'isopure-zero-carb-unflavored', 'isopure-vs-optimum-nutrition-isopure-zero-carb', 'clean-simple-eats-vs-isopure-isopure-zero-carb', 'isopure-vs-levels-isopure-zero-carb'],
-  'transparent-labs-grass-fed-whey-isolate': ['transparent-labs-grass-fed-whey-protein-isolate', 'wpi-transparent-labs-grass-fed-isolate'],
+  'dymatize-iso100': ['dymatize-iso100-hydrolyzed', 'wpi-dymatize-iso100', 'dymatize-vs-premier-protein-dymatize-iso100-gourmet-chocolate', 'ryse-vs-dymatize-dymatize-iso100', 'black-friday-dymatize-iso100'],
+  'isopure-zero-carb': ['wpi-isopure-zero-carb', 'isopure-zero-carb-unflavored', 'isopure-vs-optimum-nutrition-isopure-zero-carb', 'clean-simple-eats-vs-isopure-isopure-zero-carb', 'isopure-vs-levels-isopure-zero-carb', 'vitamin-shoppe-isopure-zero-carb', 'black-friday-isopure-zero-carb'],
+  'transparent-labs-grass-fed-whey-isolate': ['transparent-labs-grass-fed-whey-protein-isolate', 'wpi-transparent-labs-grass-fed-isolate', 'black-friday-transparent-labs-whey-isolate'],
   'ghost-whey': ['ghost-whey-protein', 'ghost-vs-optimum-nutrition-ghost-whey'],
   'naked-whey': ['naked-nutrition-naked-whey', 'naked-vs-optimum-nutrition-naked-whey'],
   'naked-casein': ['naked-nutrition-naked-casein'],
@@ -31,9 +31,9 @@ const ALIASES = {
   'momentous-essential-grass-fed-whey': ['momentous-essential-grass-fed-whey-protein', 'momentous-whey-protein-isolate'],
   'thorne-whey-protein-isolate': ['wpi-thorne-whey-isolate'],
   'klean-athlete-klean-isolate': ['wpi-klean-isolate'],
-  'now-sports-whey-isolate': ['now-sports-whey-protein-isolate', 'wpi-now-sports-whey-isolate'],
-  'now-sports-pea-protein': ['plant-now-sports-pea-protein'],
-  'now-sports-soy-isolate': ['now-sports-soy-protein-isolate'],
+  'now-sports-whey-isolate': ['now-sports-whey-protein-isolate', 'wpi-now-sports-whey-isolate', 'now-sports-review-whey-isolate'],
+  'now-sports-pea-protein': ['plant-now-sports-pea-protein', 'now-sports-review-pea-protein'],
+  'now-sports-soy-isolate': ['now-sports-soy-protein-isolate', 'now-sports-review-soy-isolate'],
   'premier-protein-powder': ['premier-protein-100-whey-chocolate-milkshake', 'premier-protein-100-whey-cafe-latte', 'dymatize-vs-premier-protein-premier-whey-chocolate-milkshake', 'body-fortress-vs-premier-protein-premier-whey-chocolate-milkshake'],
   'bsn-syntha-6': ['bsn-syntha-6-protein-powder'],
   'pure-protein-whey': ['pure-protein-100-whey'],
@@ -52,7 +52,7 @@ const ALIASES = {
   'truvani-plant-protein': ['truvani-organic-plant-based-protein', 'truvani-organic-plant-based-protein-chocolate', 'orgain-vs-truvani-truvani-plant-protein'],
   'vega-sport-premium-protein': ['plant-vega-sport-premium'],
   'vega-protein-and-greens': ['vega-protein-supergreens'],
-  'garden-of-life-sport-plant-protein': ['garden-of-life-sport-organic-plant-protein', 'garden-of-life-sport-organic-plant-based-protein', 'plant-garden-of-life-sport'],
+  'garden-of-life-sport-plant-protein': ['garden-of-life-sport-organic-plant-protein', 'garden-of-life-sport-organic-plant-based-protein', 'plant-garden-of-life-sport', 'vitamin-shoppe-garden-of-life-sport', 'black-friday-garden-of-life-sport'],
   'owyn-plant-protein-powder': ['owyn-pro-elite-protein-powder'],
   'kachava-superfood-shake': ['kachava-chocolate', 'kachava-vanilla', 'kachava-strawberry'],
   'anthonys-pea-protein': ['anthonys-premium-pea-protein'],
@@ -62,7 +62,7 @@ const ALIASES = {
   'cellucor-c4-whey-protein': ['c4-whey-protein-hersheys-milk-chocolate', 'c4-whey-protein-reeses-peanut-butter-chocolate', 'c4-whey-protein-vanilla-bean'],
   'redcon1-mre-lite': ['mre-lite-review-redcon1-mre-lite-vanilla-milkshake', 'mre-lite-review-redcon1-mre-lite-banana-nut-bread'],
   'swanson-senior-muscle-retention-protein': ['swanson-senior-review-vanilla-1-06-lb', 'swanson-senior-review-chocolate-1-06-lb'],
-  'bodytech-100-whey-isolate': ['bodytech-whey-protein-isolate'],
+  'bodytech-100-whey-isolate': ['bodytech-whey-protein-isolate', 'vitamin-shoppe-bodytech-whey-isolate'],
   '1st-phorm-level-1': ['1st-phorm-protein-powder-review-level-1'],
   'arbonne-feelfit-protein': ['arbonne-review-feelfit-simply1-vanilla'],
   '1up-iso-protein': ['1up-protein-powder-review-iso-protein'],
@@ -73,7 +73,7 @@ const ALIASES = {
   'glo-ours-protein-powder': ['glo-protein-powder-review-ours-salted-caramel'],
   'lineage-provisions-animal-based-complete': ['lineage-protein-powder-review-abc-original'],
   'naked-mass': ['naked-mass-protein-powder-review-naked-mass-unflavored-8lb', 'serious-mass-review-naked-mass-8lb'],
-  'muscle-milk-pro-series': ['muscle-milk-pro-series-protein-powder', 'muscle-milk-vs-premier-muscle-milk-pro-series-powder-2lb', 'optimum-nutrition-vs-muscle-milk-pro-series-powder'],
+  'muscle-milk-pro-series': ['muscle-milk-pro-series-protein-powder', 'muscle-milk-vs-premier-muscle-milk-pro-series-powder-2lb', 'optimum-nutrition-vs-muscle-milk-pro-series-powder', 'black-friday-muscle-milk-pro-series'],
   'optimum-nutrition-serious-mass': ['serious-mass-review-on-serious-mass-6lb-vanilla', 'serious-mass-review-on-serious-mass-12lb-chocolate', 'mass-gainer-vs-protein-powder-on-serious-mass-12lb', 'naked-mass-protein-powder-review-on-serious-mass-6lb'],
   'nutricost-casein-protein': ['nutricost-review-casein-chocolate-5lb'],
   'herbalife-personalized-protein-powder': ['herbalife-review-personalized-protein-powder'],
@@ -108,6 +108,7 @@ const ALIASES = {
   'body-fortress-super-advanced-whey': ['body-fortress-vs-premier-protein-body-fortress-whey-chocolate-3-9lb'],
   'ryse-loaded-protein': ['ryse-vs-dymatize-ryse-loaded'],
   'dymatize-elite-100-whey': ['ryse-vs-dymatize-dymatize-elite-100-whey'],
+  'now-sports-egg-white-protein': ['now-sports-review-egg-white'],
 };
 
 // Semrush US monthly volume for the product or brand name (SEO blueprint, Nov 2026).

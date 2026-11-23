@@ -301,6 +301,11 @@ const priorityGuides = new Set([
   'best-target-protein-powder',
   'best-aldi-protein-powder',
   'best-meijer-protein-powder',
+  // 2026-11-23 batch (Bing formats: cost question, seasonal deals, brand review, store guide).
+  'how-much-does-protein-powder-cost',
+  'black-friday-protein-powder-deals',
+  'now-sports-protein-powder-review',
+  'best-vitamin-shoppe-protein-powder',
   // Aldi cluster spokes (2026-11-11).
   'aldi-vs-costco-protein-powder',
   'how-many-servings-in-aldi-protein-powder',
