@@ -91,6 +91,42 @@ Queries files; `bing/` holds the Bing Webmaster page, keyword and daily overview
 files). When a newer export lands, re-check the numbers below and update this
 section if the pattern has changed.
 
+### READ FIRST (27 Nov 2026): double down / stop, from the Bing API + Vercel
+
+The owner said on 27 Nov 2026 to ignore Google: **all daily slots are Bing/DuckDuckGo slots** until the owner says
+otherwise; skip the Google rules below. Data: Bing Webmaster API (`apikey`, site `https://best-proteinpowder.com/`,
+page/keyword stats to 20 Nov, daily totals to 25 Nov) and Vercel search landings 28 Oct to 27 Nov (DuckDuckGo,
+Bing, Yahoo, Ecosia, Brave). Bing: ~1,000-1,500 impressions and 15-25 clicks a week, flat.
+
+| Type | Pages | Non-Google search visitors (30 d) | Per page | Verdict |
+|---|---:|---:|---:|---|
+| Store guides (`best-aldi`, `best-costco`, `best-walmart`, `how-many-servings-in-aldi-protein-powder`) | 7 | ~17 | **~2.4** | **DOUBLE DOWN** |
+| Brand reviews / "is <brand> good" | 106 | ~110 | ~1.0 | **DOUBLE DOWN** (trust brands) |
+| "Best protein powder for <X>" guides | 112 | ~35 (whey 17, low-histamine 5) | ~0.3 | Only narrow diet niches |
+| X-vs-Y articles | 29 | ~0 | ~0 | **STOP on Bing** |
+
+Top landings: `/best-whey-protein-powder/` 17, `/happy-viking-protein-powder-review/` 17,
+`/is-elevation-protein-powder-good/` 14, `/oath-protein-powder-review/` 9, `/best-aldi-protein-powder/` 8,
+`/just-ingredients-protein-powder-review/` 7, `/prodough-protein-powder-review/` 6.
+
+**Double down:** every remaining store (Sam's Club, Kroger, Trader Joe's, Target, GNC, Vitamin Shoppe, Meijer, HEB,
+Publix, Whole Foods, Amazon house brands) and store follow-ups in the Aldi pattern ("how many servings in <store>
+protein", "<store> protein price per scoop"); reviews of premium/clean/influencer brands with trust questions
+(Happy Viking, Elevation, Oath, Prodough, Ballerina Farm pattern), "third-party tested" as the first FAQ.
+
+**Stop (do not repeat):**
+- **P1. No new X-vs-Y articles for Bing slots.** 29 written, essentially no Bing/DDG landings. This overrides
+  "Rules for Bing" item 6 and the 2-a-day X-vs-Y queue below. Write one only if the exact pair is in the Bing
+  keyword report.
+- **P2. No broad "best protein powder for <goal>" pages** (weight gain 175 impr / 1 click, best-tasting pos 11,
+  PCOS 0 clicks). Narrow diet restrictions (low-histamine, low-FODMAP) are the only exception.
+- **P3. CTR before volume.** Pages at Bing page one with CTR under 2% get a title/description rewrite (answer in the
+  description) before new siblings: `ascent-protein-powder-review` (pos 2.8, 180 impr, 1.1%),
+  `happy-viking` (298, 1.7%), `best-protein-powder-for-weight-gain` (175, 0.6%), `best-walmart` (103, 1.0%),
+  `best-costco` (63, 0%). Max 3 per run.
+- **P4. No `/protein-powder/<product>/` pages as targets**; they get impressions at pos 7-8 and no clicks.
+- **P5. A format is proven only after 14 days and 5+ live pages**; don't clone off one click.
+
 ### READ FIRST: the Nov 20, 2026 Google drop, and what each engine rewards now
 
 Data: `content/search-console/2026-11-21/` (`google/` is the Nov 17-21 Search Console
