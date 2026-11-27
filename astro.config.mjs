@@ -301,6 +301,13 @@ const priorityGuides = new Set([
   'best-target-protein-powder',
   'best-aldi-protein-powder',
   'best-meijer-protein-powder',
+  // 2026-11-27 batch (Bing: store guides and trust brand reviews).
+  'best-kroger-protein-powder',
+  'best-publix-protein-powder',
+  'how-much-is-costco-protein-powder',
+  'bare-performance-nutrition-protein-powder-review',
+  'kaged-protein-powder-review',
+  'is-nuzest-protein-powder-good',
   // 2026-11-23 batch (Bing formats: cost question, seasonal deals, brand review, store guide).
   'how-much-does-protein-powder-cost',
   'black-friday-protein-powder-deals',
