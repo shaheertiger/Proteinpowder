@@ -1,0 +1,812 @@
+---
+import Layout from "../layouts/Layout.astro";
+import ArticleHeader from "../components/ArticleHeader.astro";
+import TableOfContents from "../components/TableOfContents.astro";
+import ProductCard from "../components/ProductCard.astro";
+import MoreInCategory from "../components/MoreInCategory.astro";
+import { AUTHORS, DEFAULT_AUTHOR, authorSchema } from "../data/authors";
+import { SITE_NAME, SITE_URL } from "../data/site";
+import QuickPicks from "../components/QuickPicks.astro";
+import AuthorBio from "../components/AuthorBio.astro";
+import { pageDates } from "../data/dates";
+
+const moreInCategory = [
+  {
+    "title": "Best Kroger Protein Powder",
+    "url": "/best-kroger-protein-powder/"
+  },
+  {
+    "title": "How Much Is Costco Protein Powder",
+    "url": "/how-much-is-costco-protein-powder/"
+  },
+  {
+    "title": "Best Meijer Protein Powder",
+    "url": "/best-meijer-protein-powder/"
+  },
+  {
+    "title": "Best Aldi Protein Powder",
+    "url": "/best-aldi-protein-powder/"
+  },
+  {
+    "title": "Best Walmart Protein Powder",
+    "url": "/best-walmart-protein-powder/"
+  },
+  {
+    "title": "Best Target Protein Powder",
+    "url": "/best-target-protein-powder/"
+  },
+  {
+    "title": "Best Costco Protein Powder",
+    "url": "/best-costco-protein-powder/"
+  },
+  {
+    "title": "Best Cheap Protein Powder",
+    "url": "/best-cheap-protein-powder/"
+  }
+];
+const author = AUTHORS[DEFAULT_AUTHOR];
+const dates = pageDates(Astro.url.pathname, { published: "2026-11-27", modified: "2026-11-27" });
+const title = "Publix Protein Powder: GreenWise Whey Label and the Best Picks";
+const description =
+  "Yes, Publix has its own: GreenWise whey, 15 g protein in an 80-calorie scoop, stevia-sweetened, about 32 servings in the big tub. No third-party seal found.";
+
+const PRODUCTS: {
+  id: string;
+  name: string;
+  brand?: string;
+  badge: string;
+  category: string;
+  description: string;
+  pros: string[];
+  cons: string[];
+  bottomLine: string;
+  specs?: Record<string, string>;
+  rating?: number;
+  reviewCount?: number;
+  amazonUrl?: string;
+}[] = [
+  {
+    "id": "publix-greenwise-whey-vanilla-large",
+    "name": "GreenWise Gluten-Free Vanilla Whey Protein (24.3 oz)",
+    "brand": "GreenWise (Publix)",
+    "badge": "Best Publix House Brand",
+    "category": "Whey isolate and concentrate (Publix house brand)",
+    "description": "The large GreenWise vanilla tub holds 688 g, about 32 servings. Per its label, a 21 g scoop gives 15 g of protein, 80 calories, 1 g of sugar and no added sugar, from whey protein isolate and concentrate with natural flavor, sunflower lecithin, added L-glutamine and the three branched-chain amino acids, sweetened with stevia leaf extract. It claims gluten-free and no artificial colors, flavors or preservatives.",
+    "pros": [
+      "Short label with stevia, no sucralose",
+      "Isolate listed first in the large vanilla tub",
+      "About 32 servings, the most of any Publix tub we found"
+    ],
+    "cons": [
+      "Only 15 g of protein per scoop",
+      "No third-party certification we could find",
+      "Shelf price not shown on publix.com listings we read"
+    ],
+    "bottomLine": "A clean, light whey for shoppers who want a smaller scoop; use two scoops if you want a full 30 g dose.",
+    "specs": {
+      "Protein / serving": "15 g (label)",
+      "Cost per 25 g": "Shelf price x 0.052",
+      "Third-party tested": "None found",
+      "Best for": "Light, stevia-sweetened whey"
+    }
+  },
+  {
+    "id": "publix-optimum-nutrition-gold-standard",
+    "name": "Optimum Nutrition Gold Standard 100% Whey",
+    "brand": "Optimum Nutrition",
+    "badge": "Best Certified Whey at Publix",
+    "category": "Whey blend (isolate listed first)",
+    "description": "Publix lists Gold Standard 100% Whey in Vanilla Ice Cream and Double Rich Chocolate. Per the label at the time of writing, a 31 g scoop gives 24 g of protein and about 120 calories, with 5.5 g of BCAAs, from whey isolate, concentrate and hydrolyzed whey, sweetened with sucralose and acesulfame potassium in most flavors. Several flavors, including those two, are listed in NSF's Certified for Sport registry; confirm yours.",
+    "pros": [
+      "24 g of protein per scoop, 60% more than GreenWise",
+      "NSF Certified for Sport in several flavors",
+      "Consistent label across stores"
+    ],
+    "cons": [
+      "Artificial sweeteners in most flavors",
+      "Usually higher shelf price per tub than GreenWise",
+      "Flavor choice at Publix is narrow"
+    ],
+    "bottomLine": "The best all-round whey on the Publix shelf, and the one to buy if you are drug-tested.",
+    "specs": {
+      "Protein / serving": "24 g (label)",
+      "Cost per 25 g": "Check shelf price",
+      "Third-party tested": "NSF Certified for Sport (some flavors)",
+      "Best for": "Certified everyday whey"
+    }
+  },
+  {
+    "id": "publix-greenwise-organic-plant-protein",
+    "name": "GreenWise Organic Plant Protein (Vanilla or Chocolate, 18.4 oz)",
+    "brand": "GreenWise (Publix)",
+    "badge": "Best Publix Plant Protein",
+    "category": "Organic pea and rice protein (Publix house brand)",
+    "description": "Per its label, the vanilla tub holds 522 g, about 15 servings, and a 35 g scoop gives 21 g of protein, 140 calories and 0 g of sugar. The protein comes from organic pea protein isolate and organic rice protein, with an organic pea and coconut creamer, coconut oil and gums, sweetened with organic stevia (Reb A). It is USDA Organic, certified by CCOF. One grocery listing showed the vanilla tub at $22.76.",
+    "pros": [
+      "USDA Organic, certified by CCOF",
+      "21 g of protein with 0 g of sugar",
+      "Pea and rice blend for a fuller amino acid profile"
+    ],
+    "cons": [
+      "About $1.80 per 25 g at the one price we found",
+      "Coconut oil and creamer add fat",
+      "No third-party contaminant testing published"
+    ],
+    "bottomLine": "A solid organic plant powder at a fair price for a grocery store, if the tub is in stock at yours.",
+    "specs": {
+      "Protein / serving": "21 g (label)",
+      "Cost per 25 g": "About $1.80 ($22.76 seen)",
+      "Third-party tested": "USDA Organic; no sport seal",
+      "Best for": "Organic, dairy-free"
+    }
+  },
+  {
+    "id": "publix-orgain-organic-protein",
+    "name": "Orgain Organic Protein Plant-Based Powder",
+    "brand": "Orgain",
+    "badge": "Most Flavors (Plant)",
+    "category": "Organic plant blend",
+    "description": "Publix lists Orgain Organic Protein in Vanilla Bean and Creamy Chocolate Fudge, plus a version with 50 superfoods. Per the label at the time of writing, a two-scoop, 46 g serving gives 21 g of protein and about 150 calories from pea, brown rice and chia, sweetened with erythritol and stevia. It is USDA Organic and dairy-free.",
+    "pros": [
+      "USDA Organic and dairy-free",
+      "Widely liked flavors, per buyer reviews",
+      "Easy to find across Publix stores"
+    ],
+    "cons": [
+      "Usually costs more per 25 g than GreenWise plant",
+      "Erythritol can bother sensitive stomachs",
+      "No sport certification"
+    ],
+    "bottomLine": "The name-brand organic alternative if your store is out of GreenWise plant protein.",
+    "specs": {
+      "Protein / serving": "21 g (label)",
+      "Cost per 25 g": "Check shelf price",
+      "Third-party tested": "USDA Organic; no sport seal",
+      "Best for": "Organic plant, more flavors"
+    }
+  },
+  {
+    "id": "publix-garden-of-life-sport-whey",
+    "name": "Garden of Life Sport Whey (Certified Grass Fed, Chocolate)",
+    "brand": "Garden of Life",
+    "badge": "Best Grass-Fed Pick",
+    "category": "Grass-fed whey",
+    "description": "Publix lists Garden of Life Sport Whey Certified Grass Fed in chocolate. Garden of Life's Sport line claims NSF Certified for Sport on its listings, and the grass-fed claim is third-party certified, per the brand. It costs more than any GreenWise tub, so it suits shoppers who want both a grass-fed source and a sport certification in a supermarket.",
+    "pros": [
+      "Sport line claims NSF Certified for Sport",
+      "Certified grass-fed claim, per the brand",
+      "A full serving of whey in one scoop"
+    ],
+    "cons": [
+      "Premium price per tub",
+      "Chocolate is the only flavor we found at Publix",
+      "Check the tub for the NSF mark on your lot"
+    ],
+    "bottomLine": "The premium pick at Publix: grass-fed whey with a sport certification, at a price to match.",
+    "specs": {
+      "Protein / serving": "Check label",
+      "Cost per 25 g": "Check shelf price",
+      "Third-party tested": "NSF Certified for Sport (brand claim)",
+      "Best for": "Grass-fed and certified"
+    }
+  }
+];
+
+const schema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Home",
+          item: `${SITE_URL}/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Best Lists",
+          item: `${SITE_URL}/best-of/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 3,
+          name: "Best Publix Protein Powder",
+          item: `${SITE_URL}/best-publix-protein-powder/`,
+        },
+      ],
+    },
+    {
+      "@type": "FAQPage",
+      mainEntity: [
+        {
+          "@type": "Question",
+          "name": "Does Publix have its own protein powder?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Publix's GreenWise brand sells a whey protein in vanilla and chocolate, in a large tub of about 32 servings and a small vanilla tub of about 17, and a GreenWise Organic Plant Protein in vanilla and chocolate. The whey gives 15 g of protein per scoop and the plant powder 21 g, per their labels."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is GreenWise protein powder third-party tested?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "We found no third-party certification for GreenWise protein powders. The labels claim gluten-free and the plant powder is USDA Organic, but we found no NSF Certified for Sport, Informed Sport or Informed Choice mark or database listing. Drug-tested athletes should choose a certified name brand such as Optimum Nutrition Gold Standard."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How much protein is in GreenWise whey protein?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "15 g per scoop, per the label, in a 21 to 22 g scoop with 80 calories. The large vanilla tub holds about 32 servings and the chocolate tub about 32; the small vanilla tub about 17. Many lifters use two scoops for a full post-workout serving."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What sweetener is in GreenWise protein powder?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Stevia. The whey tubs list stevia leaf extract as the only sweetener, and the organic plant powder lists organic Reb A, a stevia extract. There is no sucralose, acesulfame potassium or sugar alcohol in any GreenWise protein label we read."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the best protein powder at Publix?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "For a light, clean daily shake, the large GreenWise vanilla whey. For a full 24 g scoop or a sport certification, Optimum Nutrition Gold Standard 100% Whey in an NSF-listed flavor. For dairy-free shoppers, the GreenWise Organic Plant Protein."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is GreenWise plant protein vegan?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Its label lists only plant ingredients, organic pea protein isolate and organic rice protein with a pea and coconut creamer, coconut oil and gums, and it carries no milk allergen statement on the record we read. Check the label on your tub for a vegan claim if that certification matters to you."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does Publix put protein powder on BOGO?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Publix runs Buy One Get One Free promotions across many categories, and protein and nutrition products appear in them from time to time. When your powder is in the BOGO ad, cost per 25 g of protein halves, which is usually the cheapest it will be at Publix. Check the weekly ad in the Publix app."
+          }
+        }
+      ],
+    },
+    {
+      "@type": "Article",
+      headline: title,
+      author: authorSchema(),
+      datePublished: dates.published,
+      dateModified: dates.modified,
+      publisher: { "@type": "Organization", name: SITE_NAME, url: SITE_URL },
+    },
+    {
+      "@type": "ItemList",
+      name: title,
+      numberOfItems: PRODUCTS.length,
+      itemListElement: PRODUCTS.map((product, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name: product.name,
+        url: new URL(`#${product.id}`, Astro.url).toString(),
+      })),
+    },
+    ...PRODUCTS.map((product) => ({
+      "@type": "Product",
+      name: product.name,
+      description: product.description,
+      brand: {
+        "@type": "Brand",
+        name: product.brand ?? product.name.split(" ")[0],
+      },
+    })),
+  ],
+};
+---
+
+<Layout
+  title={title}
+  description={description}
+  ogType="article"
+  article={{
+    publishedTime: dates.published,
+    modifiedTime: dates.modified,
+    author: author.name,
+    section: "Protein Powder Rankings",
+    tags: [
+      "publix protein powder",
+      "best publix protein powder",
+      "greenwise protein powder",
+      "greenwise whey protein",
+      "publix brand protein powder"
+    ],
+  }}
+  jsonLd={schema}
+>
+  <article class="relative overflow-hidden">
+    <ArticleHeader kicker={"Buyer's Guide"} badge={"Label-Checked"} author={author} dates={dates} mobileAd={false}>
+      <Fragment slot="title">Best Publix Protein Powder</Fragment>
+      What the Southeast's biggest grocery chain stocks, what is actually in its GreenWise whey and plant powders, and which tub gives you the most protein for the money.
+    </ArticleHeader>
+
+    <TableOfContents>
+      <a href="#short-answer">The Short Answer</a>
+      <a href="#what-publix-sells">What Publix Sells</a>
+      <a href="#top-picks">Our Top Picks</a>
+      <a href="#greenwise-whey">GreenWise Whey</a>
+      <a href="#greenwise-plant">GreenWise Plant Protein</a>
+      <a href="#cost-per-25g">Cost per 25 g</a>
+      <a href="#testing">Third-Party Testing</a>
+      <a href="#vs-other-stores">Publix vs Other Stores</a>
+      <a href="#which-to-buy">Which to Buy</a>
+      <a href="#mistakes">Common Mistakes</a>
+      <a href="#faq">FAQ</a>
+    </TableOfContents>
+
+    <!-- Content -->
+    <div class="max-w-3xl mx-auto px-4 pb-16 lg:pb-24">
+      <div class="prose prose-lg prose-blue max-w-none text-gray-700 leading-relaxed">
+        <p class="lede">
+          Publix sells its own protein powder under the GreenWise label: a whey that gives 15 g of protein in a small 21 to 22 g scoop with about 80 calories, sweetened with stevia, and an organic pea and rice powder with 21 g of protein per serving. Both have short ingredient lists, and we found no third-party certification for either. If you want a bigger dose per scoop or a certified powder, Optimum Nutrition Gold Standard, which Publix also stocks, is the better buy for most lifters.
+        </p>
+
+        <QuickPicks products={PRODUCTS} />
+
+        <div id="short-answer" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            1. Publix Protein Powder: The Short Answer
+          </h2>
+
+          <p>
+            GreenWise, Publix's own natural brand, is the house protein powder, and the vanilla whey in the big 24.3 oz tub is the one most shoppers should look at first. Per its label, it gives 15 g of protein in an 80-calorie scoop, with whey isolate listed first, stevia as the only sweetener and about 32 servings per tub. It is a light, clean-label whey, but 15 g is a small dose, and we found no third-party certification for it.
+          </p>
+
+          <div class="overflow-hidden border border-gray-200 rounded-2xl my-8">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Powder at Publix</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Scoop</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Protein</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Calories</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Sweetener</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">GreenWise Vanilla Whey (24.3 oz)</td>
+                    <td class="px-4 py-4 text-gray-700">21 g</td>
+                    <td class="px-4 py-4 text-gray-700">15 g</td>
+                    <td class="px-4 py-4 text-gray-700">80</td>
+                    <td class="px-4 py-4 text-gray-700">Stevia</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">GreenWise Chocolate Whey (24.8 oz)</td>
+                    <td class="px-4 py-4 text-gray-700">22 g</td>
+                    <td class="px-4 py-4 text-gray-700">15 g</td>
+                    <td class="px-4 py-4 text-gray-700">80</td>
+                    <td class="px-4 py-4 text-gray-700">Stevia</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">GreenWise Vanilla Whey (11.7 oz)</td>
+                    <td class="px-4 py-4 text-gray-700">19.5 g</td>
+                    <td class="px-4 py-4 text-gray-700">15 g</td>
+                    <td class="px-4 py-4 text-gray-700">80</td>
+                    <td class="px-4 py-4 text-gray-700">Stevia</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">GreenWise Organic Plant Protein (18.4 oz)</td>
+                    <td class="px-4 py-4 text-gray-700">35 g</td>
+                    <td class="px-4 py-4 text-gray-700">21 g</td>
+                    <td class="px-4 py-4 text-gray-700">140</td>
+                    <td class="px-4 py-4 text-gray-700">Stevia (Reb A)</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">ON Gold Standard 100% Whey</td>
+                    <td class="px-4 py-4 text-gray-700">31 g</td>
+                    <td class="px-4 py-4 text-gray-700">24 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 120</td>
+                    <td class="px-4 py-4 text-gray-700">Sucralose, ace-K</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">Orgain Organic Protein</td>
+                    <td class="px-4 py-4 text-gray-700">46 g</td>
+                    <td class="px-4 py-4 text-gray-700">21 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 150</td>
+                    <td class="px-4 py-4 text-gray-700">Erythritol, stevia</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <p>
+            Figures are per the label at the time of writing and vary by flavor. GreenWise figures come from the label records Publix publishes for each product, which list the net weight, serving size, servings per container and full ingredient list. Name-brand figures come from the brands' labels. Publix's online listings did not show shelf prices for most of these tubs, so the cost section explains how to work out cost per 25 g from the price you see in store.
+          </p>
+
+          <p>
+            In short: buy the large GreenWise vanilla whey for a light daily shake with a short label, Optimum Nutrition Gold Standard if you want 24 g per scoop or need a sport certification, and the GreenWise Organic Plant Protein if you avoid dairy. Skip the small 11.7 oz GreenWise tub unless you are trying the product, because it is made from whey concentrate only and works out more expensive per gram.
+          </p>
+
+          <p>
+            Publix is a convenient place to buy protein if you already shop there, and its house brand is genuinely clean by grocery-store standards. It is not the cheapest place to buy protein by the gram, which is the usual trade-off with a full-service supermarket, and the comparison section below shows where to go if price is what matters most.
+          </p>
+        </div>
+
+        <div id="what-publix-sells" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            2. What Protein Powder Does Publix Sell?
+          </h2>
+
+          <p>
+            Publix sells a small, focused protein shelf. Publix is an employee-owned chain with around 1,400 stores across Florida, Georgia, Alabama, South Carolina, North Carolina, Tennessee, Virginia and Kentucky, and its protein aisle looks like a careful grocery selection rather than a sports-nutrition store. Expect a handful of brands, a few flavors each, and the GreenWise house range.
+          </p>
+
+          <p>
+            In our checks of publix.com listings, the house brand ran to three GreenWise whey tubs (a large vanilla, a large chocolate and a small vanilla) and a GreenWise Organic Plant Protein in vanilla and chocolate. The name brands were Optimum Nutrition Gold Standard 100% Whey in Vanilla Ice Cream and Double Rich Chocolate, Optimum Nutrition Gold Standard 100% Plant in vanilla and chocolate, Orgain Organic Protein in several versions, Garden of Life Sport Whey, and a Vital Performance protein powder made from milk protein isolate and collagen.
+          </p>
+
+          <p>
+            What we did not find were the budget big-tub brands that fill Walmart's shelves, mass gainers in any depth, or most of the direct-to-consumer clean-label brands. Publix GreenWise Market stores, the chain's natural-foods format, tend to carry a wider natural and organic range, so a shopper near one may find more plant and grass-fed options there than in a standard Publix.
+          </p>
+
+          <p>
+            Stock varies by store, as it does at every grocery chain. The Publix app and website let you set your store and see what it carries. Publix also notes that prices shown for delivery and curbside orders, which run through Instacart, are higher than the prices in its physical stores, so the cheapest way to buy a tub is usually off the shelf. For the brands Publix carries, our reviews of <a href="/optimum-nutrition-protein-powder-review/">Optimum Nutrition</a>, <a href="/orgain-protein-powder-review/">Orgain</a> and <a href="/garden-of-life-protein-powder-review/">Garden of Life</a> cover each label in full.
+          </p>
+        </div>
+
+        <!-- Picks -->
+        <div id="top-picks" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            3. The Best Protein Powders at Publix
+          </h2>
+
+          <p>
+            These powders all appeared on publix.com product listings or on the GreenWise label records Publix publishes when we checked in November 2026. They are ranked for most shoppers, weighing protein per scoop, label quality, testing and likely cost per 25 g. Publix's online listings did not show shelf prices for most items, and Publix says its delivery and curbside prices run higher than in store, so we give the arithmetic for working out cost per 25 g from the price you see.
+          </p>
+
+          {PRODUCTS.map((product, index) => (
+            <ProductCard product={product} rank={index + 1} />
+          ))}
+        </div>
+
+        <div id="greenwise-whey" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            4. What Is in GreenWise Whey Protein?
+          </h2>
+
+          <p>
+            GreenWise whey is a short-label, stevia-sweetened whey with a small 15 g protein dose. The large 24.3 oz vanilla tub lists whey protein isolate, whey protein concentrate, natural flavor, sunflower lecithin, L-glutamine, L-leucine, L-isoleucine, L-valine and stevia leaf extract. A 21 g scoop gives 15 g of protein, 80 calories, 1 g of sugar and no added sugar, per the label, and the tub holds about 32 servings.
+          </p>
+
+          <p>
+            The large chocolate tub is a slightly different formula. It is 24.8 oz with about 32 servings of 22 g, and lists whey protein concentrate, organic cocoa powder processed with alkali, natural flavor, xanthan gum, sunflower lecithin and stevia leaf extract, for 15 g of protein, 80 calories and 2 g of sugar per scoop. There is no isolate on the list and no added amino acids. The small 11.7 oz vanilla tub, about 17 servings of 19.5 g, is also concentrate only, with just natural flavor, sunflower lecithin and stevia added.
+          </p>
+
+          <p>
+            The added amino acids in the big vanilla tub deserve a note. L-leucine, L-isoleucine and L-valine are the branched-chain amino acids, and leucine in particular is what switches on muscle protein building. Whey is already rich in them, so the additions mostly top up a small serving. They also count toward the 15 g protein figure on the panel, which is normal and allowed, but it means the whey itself supplies a little less than 15 g.
+          </p>
+
+          <p>
+            Our view is that GreenWise whey is a good label in a small dose. Stevia as the only sweetener, no gums in the vanilla and no fillers puts it ahead of most store-brand wheys we have checked, many of which use maltodextrin, starch and sucralose. The trade-off is that two scoops are needed for the 25 to 30 g that most research uses for a post-workout serving, which halves the servings in the tub. If stevia is a problem for you, our <a href="/best-protein-powder-without-stevia/">protein powder without stevia</a> guide lists alternatives.
+          </p>
+
+          <div class="bg-gray-900 text-white rounded-2xl p-6 lg:p-8 my-8">
+            <p class="text-xs font-black uppercase tracking-widest text-[#38BDF8] mb-3">THE HOUSE-BRAND VERDICT</p>
+            <p class="text-xl font-bold text-white mb-3">A clean, light whey with a small scoop and no certification we could find.</p>
+            <p class="text-gray-300 leading-relaxed m-0">Buy the large vanilla tub for a light daily shake or to add to oats and yogurt. Skip it if you need a sport certification, or if you would rather get a full dose in one scoop.</p>
+          </div>
+        </div>
+
+        <div id="greenwise-plant" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            5. Is GreenWise Plant Protein Any Good?
+          </h2>
+
+          <p>
+            Yes, by grocery-store standards it is one of the better plant powders on the shelf. The vanilla tub's label gives 21 g of protein, 140 calories and 0 g of sugar in a 35 g scoop, from organic pea protein isolate and organic rice protein. It is USDA Organic, certified by California Certified Organic Farmers (CCOF), and gluten-free, and the tub holds about 15 servings.
+          </p>
+
+          <p>
+            Pea and rice together is a sensible base. Pea protein is low in methionine and rice protein is low in lysine, and blending the two gives a more complete amino acid profile than either alone. The rest of the list is there for texture and taste: an organic pea and coconut creamer, coconut oil, rice syrup solids, sodium citrate, tricalcium phosphate, sunflower lecithin, a gum blend of guar, acacia and xanthan, salt and organic stevia (Reb A). The coconut oil and creamer add some fat, which helps the texture but means it is not the leanest plant powder you can buy.
+          </p>
+
+          <p>
+            The chocolate version lists the same proteins with organic cocoa powder, organic flavors, salt, a gum blend and stevia. As with every chocolate plant powder, expect more trace minerals and potentially more heavy metals than the vanilla, because cacao and pea both take metals up from soil. Publix publishes no heavy metal results for the range that we could find, so this is a general caution rather than a finding about GreenWise.
+          </p>
+
+          <p>
+            Against Orgain, which Publix also stocks, GreenWise plant gives the same 21 g of protein in a smaller 35 g scoop against Orgain's 46 g, with stevia alone rather than erythritol and stevia, and it is likely cheaper per gram. Orgain has more flavors and a longer track record with buyers. For a wider comparison, see our <a href="/best-pea-protein-powder/">best pea protein powder</a> and <a href="/best-organic-protein-powder/">best organic protein powder</a> guides.
+          </p>
+        </div>
+
+        <div id="cost-per-25g" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            6. How to Work Out Cost per 25 g at Publix
+          </h2>
+
+          <p>
+            Because Publix's online listings did not show shelf prices for most protein tubs, the most useful thing we can give you is a multiplier for each tub. Multiply the shelf price by the figure in the table and you have the cost per 25 g of protein. It takes the total protein in the tub into account, so it compares a small tub and a big tub fairly.
+          </p>
+
+          <div class="overflow-hidden border border-gray-200 rounded-2xl my-8">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Tub</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Servings x protein</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Protein in tub</th>
+                    <th class="px-4 py-4 font-bold text-gray-600 text-sm">Cost per 25 g =</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">GreenWise Vanilla Whey (24.3 oz)</td>
+                    <td class="px-4 py-4 text-gray-700">About 32 x 15 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 480 g</td>
+                    <td class="px-4 py-4 text-gray-700">Shelf price x 0.052</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">GreenWise Chocolate Whey (24.8 oz)</td>
+                    <td class="px-4 py-4 text-gray-700">About 32 x 15 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 480 g</td>
+                    <td class="px-4 py-4 text-gray-700">Shelf price x 0.052</td>
+                  </tr>
+                  <tr class="bg-white border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">GreenWise Vanilla Whey (11.7 oz)</td>
+                    <td class="px-4 py-4 text-gray-700">About 17 x 15 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 255 g</td>
+                    <td class="px-4 py-4 text-gray-700">Shelf price x 0.098</td>
+                  </tr>
+                  <tr class="bg-gray-50 border-b border-gray-100">
+                    <td class="px-4 py-4 font-black text-gray-900">GreenWise Organic Plant (18.4 oz)</td>
+                    <td class="px-4 py-4 text-gray-700">About 15 x 21 g</td>
+                    <td class="px-4 py-4 text-gray-700">About 315 g</td>
+                    <td class="px-4 py-4 text-gray-700">Shelf price x 0.079</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <p>
+            Two worked examples show how it reads. If the large GreenWise vanilla whey is $30 on your shelf, it costs about $1.56 per 25 g of protein (30 x 0.052). The one price we found for the GreenWise plant tub, $22.76 on a third-party grocery listing, works out to about $1.80 per 25 g (22.76 x 0.079). These are worked examples, not Publix prices; use the price on the shelf tag at your store.
+          </p>
+
+          <p>
+            The small 11.7 oz GreenWise tub is the one to watch. Its multiplier is almost double the big tub's, so unless it costs less than about half the price of the large tub, which is unlikely, it is the worse deal per gram. It is fine as a trial size, but once you know you like the product, the large tub is the better buy.
+          </p>
+
+          <p>
+            For name brands, use the same method: servings per container times grams of protein per serving gives the protein in the tub; divide the price by that and multiply by 25. Publix runs Buy One Get One Free promotions on many products, and when a protein tub is in the BOGO ad, the cost per 25 g halves, which usually makes it the cheapest protein in the store that week. Our <a href="/how-much-does-protein-powder-cost/">how much protein powder costs</a> guide puts these numbers against other stores and formats.
+          </p>
+        </div>
+
+        <div id="testing" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            7. Is Publix Protein Powder Third-Party Tested?
+          </h2>
+
+          <p>
+            We found no third-party certification for any GreenWise protein powder. The GreenWise labels claim gluten-free, and the plant powder is certified organic, but neither range showed an NSF Certified for Sport, Informed Sport or Informed Choice mark, and we did not find them in those programs' databases. That is the norm for grocery house brands and does not mean the powders are unsafe, but it means no outside lab has publicly checked them for banned substances or label accuracy.
+          </p>
+
+          <p>
+            USDA Organic, which the GreenWise plant powder carries, is a farming and handling standard. It controls pesticides, GMOs and processing aids, but it is not a test for heavy metals or banned substances, so it answers a different question from a sport certification. The gluten-free claim on the labels names no certifying body on the records we read.
+          </p>
+
+          <p>
+            Among the name brands at Publix, Optimum Nutrition Gold Standard has the strongest testing record: several flavors are listed in NSF's Certified for Sport registry, which tests for banned substances and checks that the label matches the contents. Garden of Life's Sport line claims NSF Certified for Sport on its listings too. Our <a href="/best-nsf-certified-protein-powder/">best NSF certified protein powder</a> guide lists the certified options across all stores.
+          </p>
+
+          <p>
+            If you are drug-tested, buy only a product and flavor you can find in the NSF Certified for Sport or Informed Sport database on the day you buy it. If heavy metals are your main concern, choose a vanilla whey over a chocolate or plant powder, and see our guide to <a href="/best-protein-powder-without-heavy-metals/">protein powder without heavy metals</a> for brands that publish test results.
+          </p>
+        </div>
+
+        <div id="vs-other-stores" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            8. Is Publix More Expensive Than Walmart, Aldi or Costco for Protein?
+          </h2>
+
+          <p>
+            Usually, yes. Publix is a full-service supermarket and its prices reflect that. Costco's Kirkland whey costs under $1 per 25 g of protein at warehouse prices, and Aldi's Elevation whey has sold for about $1.00 to $1.20 per 25 g when in stock, as our <a href="/best-costco-protein-powder/">Costco</a> and <a href="/best-aldi-protein-powder/">Aldi</a> guides show. Walmart's big tubs of budget brands also tend to beat Publix's smaller tubs per gram.
+          </p>
+
+          <p>
+            Publix's answer is its BOGO ad. When a protein powder is Buy One Get One Free, its cost per gram halves, and that can put a Publix tub below any regular price in the region. If you shop at Publix every week, watching the ad for your powder and buying two at a time is the cheapest way to keep a Publix tub in the cupboard.
+          </p>
+
+          <p>
+            Against other supermarket house brands, GreenWise is cleaner than most. Meijer's own whey, for example, gives 30 g per serving but with maltodextrin, starch and sucralose, while Kroger's Simple Truth Grass Fed Whey gives 19 g in a 24 g scoop with no certification. Our <a href="/best-kroger-protein-powder/">best Kroger protein powder</a> and <a href="/best-meijer-protein-powder/">Meijer</a> guides go through those labels.
+          </p>
+
+          <p>
+            If price per gram is the only thing that matters to you, a big tub bought online will almost always beat any supermarket. Our <a href="/best-cheap-protein-powder/">best cheap protein powder</a> guide ranks the lowest cost per gram anywhere, and Publix is a fine place to top up between orders.
+          </p>
+        </div>
+
+        <div id="which-to-buy" class="scroll-mt-24">
+          <h2 class="text-3xl font-black text-gray-900 mt-16 mb-6">
+            9. Which Publix Protein Powder Should You Buy?
+          </h2>
+
+          <p>
+            For a light daily shake with a short label, buy the large GreenWise vanilla whey. Isolate first, stevia only, about 32 scoops a tub: it is the best house-brand label we have seen at a Southeast grocery chain. Use two scoops after training if you want a full dose, and work out the cost per 25 g with the 0.052 multiplier before you assume it is a bargain.
+          </p>
+
+          <p>
+            For a full serving in one scoop, or a sport certification, buy Optimum Nutrition Gold Standard 100% Whey in a flavor listed in NSF's registry. It gives 24 g of protein per scoop, and it is the only widely stocked powder at Publix with that level of testing documented.
+          </p>
+
+          <p>
+            If you avoid dairy, buy the GreenWise Organic Plant Protein, which is organic, sugar-free and well built for a grocery-store plant powder. If you also want premium sourcing, Garden of Life Sport Whey combines a grass-fed claim with a sport certification, at a premium price.
+          </p>
+
+          <p>
+            If Publix does not carry what you want, our <a href="/best-whey-protein-powder/">best whey protein powder</a> rankings and the store guides below cover the options at Kroger, Walmart, Target and the warehouse clubs. Whatever you buy, compare by cost per 25 g of protein and check the certification databases if testing matters to you.
+          </p>
+        </div>
+
+        <!-- Common Mistakes -->
+        <div id="mistakes" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            10. Common Mistakes to Avoid
+          </h2>
+
+          <div class="space-y-6 my-8">
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Expecting a full dose from one GreenWise scoop</h3>
+              <p class="text-gray-700 text-sm m-0">
+                GreenWise whey gives 15 g of protein per scoop, about half of a typical post-workout serving. Two scoops get you to 30 g, which halves the servings in the tub. Factor that in before you compare its price with 25 g powders.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Buying the small tub to save money</h3>
+              <p class="text-gray-700 text-sm m-0">
+                The 11.7 oz GreenWise tub holds about 255 g of protein against about 480 g in the large tub, and it is concentrate only. Unless it costs less than half the big tub's price, it is the worse deal per gram.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Reading organic as tested</h3>
+              <p class="text-gray-700 text-sm m-0">
+                USDA Organic on the GreenWise plant powder covers farming and handling. It is not a heavy metal or banned-substance test. If you are drug-tested, buy a product listed in NSF Certified for Sport or Informed Sport.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Paying delivery prices for a tub</h3>
+              <p class="text-gray-700 text-sm m-0">
+                Publix says its delivery and curbside prices, which run through Instacart, are higher than shelf prices. For a large protein tub that difference adds up. Buy in store, or wait for the BOGO ad.
+              </p>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-red-900 mt-0 mb-2">Assuming every GreenWise tub is the same formula</h3>
+              <p class="text-gray-700 text-sm m-0">
+                The large vanilla whey lists isolate first and added amino acids; the chocolate and small vanilla tubs are concentrate only. Read the ingredient list on the tub in front of you rather than assuming the range is identical.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ -->
+        <div id="faq" class="scroll-mt-24 mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">
+            11. Frequently Asked Questions
+          </h2>
+
+          <div class="faq-list">
+            <details class="faq-item">
+              <summary><h3>Does Publix have its own protein powder?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  Yes. Publix's GreenWise brand sells a whey protein in vanilla and chocolate, in a large tub of about 32 servings and a small vanilla tub of about 17, and a GreenWise Organic Plant Protein in vanilla and chocolate. The whey gives 15 g of protein per scoop and the plant powder 21 g, per their labels.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>Is GreenWise protein powder third-party tested?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  We found no third-party certification for GreenWise protein powders. The labels claim gluten-free and the plant powder is USDA Organic, but we found no NSF Certified for Sport, Informed Sport or Informed Choice mark or database listing. Drug-tested athletes should choose a certified name brand such as Optimum Nutrition Gold Standard.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>How much protein is in GreenWise whey protein?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  15 g per scoop, per the label, in a 21 to 22 g scoop with 80 calories. The large vanilla tub holds about 32 servings and the chocolate tub about 32; the small vanilla tub about 17. Many lifters use two scoops for a full post-workout serving.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>What sweetener is in GreenWise protein powder?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  Stevia. The whey tubs list stevia leaf extract as the only sweetener, and the organic plant powder lists organic Reb A, a stevia extract. There is no sucralose, acesulfame potassium or sugar alcohol in any GreenWise protein label we read.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>What is the best protein powder at Publix?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  For a light, clean daily shake, the large GreenWise vanilla whey. For a full 24 g scoop or a sport certification, Optimum Nutrition Gold Standard 100% Whey in an NSF-listed flavor. For dairy-free shoppers, the GreenWise Organic Plant Protein.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>Is GreenWise plant protein vegan?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  Its label lists only plant ingredients, organic pea protein isolate and organic rice protein with a pea and coconut creamer, coconut oil and gums, and it carries no milk allergen statement on the record we read. Check the label on your tub for a vegan claim if that certification matters to you.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary><h3>Does Publix put protein powder on BOGO?</h3></summary>
+              <div class="faq-answer">
+                <p>
+                  Publix runs Buy One Get One Free promotions across many categories, and protein and nutrition products appear in them from time to time. When your powder is in the BOGO ad, cost per 25 g of protein halves, which is usually the cheapest it will be at Publix. Check the weekly ad in the Publix app.
+                </p>
+              </div>
+            </details>
+
+          </div>
+        </div>
+
+        <!-- Related Guides -->
+        <div class="mt-16">
+          <h2 class="text-3xl font-black text-gray-900 mb-6">Related Protein Powder Guides</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <a href="/best-kroger-protein-powder/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#1E90FF] font-black text-xs uppercase tracking-widest mb-2">Store Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Kroger Protein Powder</h3>
+              <p class="text-gray-500 text-sm mt-2">Simple Truth whey and plant powders and the name brands at Kroger, by cost per 25 g.</p>
+            </a>
+            <a href="/best-target-protein-powder/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#FF4500] font-black text-xs uppercase tracking-widest mb-2">Store Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Target Protein Powder</h3>
+              <p class="text-gray-500 text-sm mt-2">What Target stocks and which tub gives the most protein for the money.</p>
+            </a>
+            <a href="/best-organic-protein-powder/" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow no-underline group">
+              <p class="text-[#10B981] font-black text-xs uppercase tracking-widest mb-2">Buyer's Guide</p>
+              <h3 class="text-gray-900 font-bold text-lg group-hover:text-[#1E90FF] transition-colors">Best Organic Protein Powder</h3>
+              <p class="text-gray-500 text-sm mt-2">USDA Organic powders ranked on protein, sweetener and price.</p>
+            </a>
+          </div>
+        </div>
+
+        <!-- Closing -->
+        <div class="mt-16 bg-gray-900 text-white rounded-2xl p-6 md:p-8">
+          <h2 class="text-2xl font-black text-white mb-4">The Bottom Line</h2>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            Publix's GreenWise whey is a clean, stevia-sweetened powder with a small 15 g scoop and no certification we could find, and the large vanilla tub is the version to buy. GreenWise Organic Plant Protein is a good dairy-free option, and Optimum Nutrition Gold Standard is the pick when you want a full scoop or a sport certification.
+          </p>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            Work out cost per 25 g with the multipliers above, buy in store rather than through delivery, and watch the weekly ad: a BOGO week is the cheapest time to stock up at Publix.
+          </p>
+        </div>
+
+        <MoreInCategory category="Protein Powder Rankings" links={moreInCategory} />
+
+        <AuthorBio />
+      </div>
+    </div>
+  </article>
+</Layout>
