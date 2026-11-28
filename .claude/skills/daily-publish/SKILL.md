@@ -109,7 +109,7 @@ chart. Protein had almost none.
   in `content/keyword-research/` and say so in the run report.
 - **Low/no-click pages** get the Honest Reviewers low-click rewrite (title led by the most-searched variant, number or
   yes/no from the page, description answers first, lede answers first). Done for ~220 pages on 28 Nov; logged in
-  `content/analytics/snippet-changes.md`. Don't retitle a page again within 14 days of its last change.
+  `content/analytics/snippet-changes.md`. Title patterns that work on the sister sites: roundups "N Best <head term> in 2026: <short hook>" (thehonestreviewers.com), reviews "<Brand> Protein Powder Review 2026: <answer>", cost pages with the price range in the title. On 28 Nov the owner had the 21/27 Nov rewrites redone in these patterns; after that, give a title 14 days before changing it again.
 - The sitemap now carries real per-page `lastmod` (git dates). Never go back to stamping the build time.
 
 Written 28 Nov: `how-much-is-a-scoop-of-protein-powder`, `how-much-protein-powder-per-day`,
