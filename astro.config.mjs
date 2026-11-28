@@ -5,6 +5,53 @@ import sitemap from '@astrojs/sitemap';
 import { SITE_URL } from './site.config.mjs';
 import markdownTwins from './src/integrations/markdown-twins.mjs';
 import { noindexPaths } from './src/lib/db.mjs';
+import { execSync } from 'node:child_process';
+import { readFileSync, existsSync } from 'node:fs';
+
+// Real last-modified dates for the sitemap (ported from thehonestreviewers.com and
+// treadmillreviewsusa.com, the two sister sites Bing sends the most traffic to).
+// Stamping every URL with the build time tells crawlers nothing: Bing ignores
+// lastmod when every URL shares one. Each hand-written page gets the date of its
+// last commit; generated database pages (products, brands, glossary) get the date
+// the database last changed. In a shallow clone the oldest commit lists every file
+// as added, so it is skipped and those pages fall back to their declared date.
+const gitModified = (() => {
+  const out = {};
+  try {
+    const raw = execSync('git log --pretty=format:%x01%cI --name-only --diff-filter=AMR -- src/pages src/data/db', {
+      encoding: 'utf8',
+      maxBuffer: 128 * 1024 * 1024,
+      stdio: ['ignore', 'pipe', 'ignore'],
+    });
+    const shallow = execSync('git rev-parse --is-shallow-repository', { encoding: 'utf8' }).trim() === 'true';
+    const blocks = raw.split('\x01').filter(Boolean);
+    if (shallow) blocks.pop();
+    for (const block of blocks) {
+      const [iso, ...files] = block.split('\n').filter(Boolean);
+      if (!iso) continue;
+      for (const f of files) {
+        if (!out[f]) out[f] = iso.trim();
+        if (f.startsWith('src/data/db/') && !out['src/data/db']) out['src/data/db'] = iso.trim();
+      }
+    }
+  } catch {
+    // no git history available
+  }
+  return out;
+})();
+
+function lastmodFor(slug) {
+  if (/^(protein-powder|brands|glossary)\//.test(slug)) {
+    return gitModified['src/data/db'] ? new Date(gitModified['src/data/db']).toISOString() : undefined;
+  }
+  const file = slug ? `src/pages/${slug}.astro` : 'src/pages/index.astro';
+  if (gitModified[file]) return new Date(gitModified[file]).toISOString();
+  if (existsSync(file)) {
+    const m = readFileSync(file, 'utf8').match(/(?:modified|published):\s*["'](\d{4}-\d{2}-\d{2})["']/);
+    if (m) return new Date(`${m[1]}T12:00:00Z`).toISOString();
+  }
+  return undefined;
+}
 
 // Generated pages that carry noindex (product pages with an incomplete label)
 // stay out of the sitemap.
@@ -36,6 +83,11 @@ const pillarGuides = new Set([
 // sitemap priority than the 0.5 default so crawlers reach them sooner. The daily
 // publishing run adds each new slug here (see .claude/skills/daily-publish).
 const priorityGuides = new Set([
+  // Cost and number-answer pages, the format that wins on the sister sites (2026-11-28).
+  'how-much-is-a-scoop-of-protein-powder',
+  'how-much-protein-powder-per-day',
+  'why-is-protein-powder-so-expensive',
+  'costco-orgain-protein-powder',
   // X-vs-Y articles that replaced the /compare/ pairs (2026-11-21).
   'flavcity-vs-just-ingredients',
   'clean-simple-eats-vs-isopure',
@@ -349,7 +401,13 @@ export default defineConfig({
       serialize(item) {
         const url = item.url.replace(/\/$/, '');
         const slug = url.slice(SITE_URL.length + 1);
-        item.lastmod = new Date().toISOString();
+        // The home page, the guide index and the database hubs list every new
+        // page, so they change on every publish; everything else carries its own
+        // last-changed date.
+        item.lastmod = slug === '' || slug === 'best-of' || databaseHubs.has(slug)
+          ? new Date().toISOString()
+          : lastmodFor(slug);
+        if (!item.lastmod) delete item.lastmod;
 
         if (url === SITE_URL) {
           item.changefreq = 'weekly';
