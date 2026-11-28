@@ -91,6 +91,31 @@ Queries files; `bing/` holds the Bing Webmaster page, keyword and daily overview
 files). When a newer export lands, re-check the numbers below and update this
 section if the pattern has changed.
 
+### READ FIRST (28 Nov 2026): copy what wins on the sister sites (cost/price + number-answer pages)
+
+The owner said on 28 Nov 2026 to apply what is proven to bring traffic on the other sites. Evidence (Bing API +
+Vercel for every review site, `content/analytics/cross-site-2026-11-28.md`): thehonestreviewers.com gets ~20,000
+search visitors a month and treadmillreviewsusa.com went from 3 to 164 Bing clicks a week in 12 weeks, both 95%+
+from Bing/DuckDuckGo/Yahoo. **On both, cost/price pages earn the most clicks per page** (Honest Reviewers 59.7 per
+page, 2x its average; Treadmill 14.7, ~8-15x its average). Next come question pages that answer with a number or a
+chart. Protein had almost none.
+
+- **Every run, at least 2 of the day's slots are cost/price or number-answer pages**: "how much is <store/brand>
+  protein powder", "<brand> protein powder price", "how many servings / scoops / grams ...", "how long does ... last".
+  The Aldi pages are proof this works here. Put the answer (a price range or number) in the title, as
+  `generac-generator-cost` does ("$6,500–$13,000 Installed"). Put it in the first clause of the description too.
+- **Check Bing demand first:** `npm run bing:kw -- "<keyword>" ...` (Bing `GetKeywordStats`, ported from Honest
+  Reviewers). Replace any topic with no Bing data. If the API answers `ThrottleUser`, fall back to the Semrush files
+  in `content/keyword-research/` and say so in the run report.
+- **Low/no-click pages** get the Honest Reviewers low-click rewrite (title led by the most-searched variant, number or
+  yes/no from the page, description answers first, lede answers first). Done for ~220 pages on 28 Nov; logged in
+  `content/analytics/snippet-changes.md`. Don't retitle a page again within 14 days of its last change.
+- The sitemap now carries real per-page `lastmod` (git dates). Never go back to stamping the build time.
+
+Written 28 Nov: `how-much-is-a-scoop-of-protein-powder`, `how-much-protein-powder-per-day`,
+`why-is-protein-powder-so-expensive`, `costco-orgain-protein-powder`. Judge the format by their Bing impressions on
+or after 12 Dec (rule P5).
+
 ### READ FIRST (27 Nov 2026): double down / stop, from the Bing API + Vercel
 
 The owner said on 27 Nov 2026 to ignore Google: **all daily slots are Bing/DuckDuckGo slots** until the owner says
