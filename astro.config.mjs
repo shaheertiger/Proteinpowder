@@ -83,6 +83,11 @@ const pillarGuides = new Set([
 // sitemap priority than the 0.5 default so crawlers reach them sooner. The daily
 // publishing run adds each new slug here (see .claude/skills/daily-publish).
 const priorityGuides = new Set([
+  // Cost and number-answer pages, the format that wins on the sister sites (2026-11-28).
+  'how-much-is-a-scoop-of-protein-powder',
+  'how-much-protein-powder-per-day',
+  'why-is-protein-powder-so-expensive',
+  'costco-orgain-protein-powder',
   // X-vs-Y articles that replaced the /compare/ pairs (2026-11-21).
   'flavcity-vs-just-ingredients',
   'clean-simple-eats-vs-isopure',
